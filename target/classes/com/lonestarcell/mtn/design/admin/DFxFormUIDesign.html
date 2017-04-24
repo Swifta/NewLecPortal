@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-pay sn-c-pay-opt" size-auto="true" _id="cPay"> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true" _id="cMMRightContent"> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref sn-c-opts-popup-header" width-full="true" margin="true" _id="mmPanelHead2"> 
+     <vaadin-label style-name="bold" plain-text="" :expand="">
+       Foreign Exchange Rate 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel" size-auto="true" _id="mmPanel2" :expand=""> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-c-right-panel-v" margin-top="true"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto="true" _id="cBookingDetails"> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-cbd-head" margin-left="true" margin-right="true" _id="cBDHead"> 
+        <vaadin-label style-name="bold sn-label-underline" width="329px" plain-text="">
+          Exchange Details [ USD - UGX ] 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" margin-left="true" margin-right="true" _id="cBDBody"> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true"> 
+         <vaadin-form-layout spacing="false" size-auto="true" margin-top="false" margin-bottom="false"> 
+          <vaadin-label caption="Rate" style-name="small" size-auto="true" plain-text="" _id="lbRate">
+            USD 1 = UGX XXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Set By" style-name="small" size-auto="true" plain-text="" _id="lbSetBy">
+            XXXXXXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Set At [Date/Time] " style-name="small" size-auto="true" plain-text="" _id="lbTimestamp">
+            XXXXXXXX 
+          </vaadin-label> 
+         </vaadin-form-layout> 
+         <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true"> 
+          <vaadin-button style-name="danger" plain-text="" _id="btnClose">
+            Close 
+          </vaadin-button> 
+          <vaadin-button style-name="friendly" plain-text="" _id="btnNewFx" :right="">
+            Add New Rate 
+          </vaadin-button> 
+         </vaadin-horizontal-layout> 
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-popup-form" spacing="true" size-auto="true" margin="true" _id="cNewFxForm"> 
+       <vaadin-label style-name="bold tiny failure" plain-text="" _id="lbErrorMsg">
+         Invalid value. 
+       </vaadin-label> 
+       <vaadin-label style-name="bold tiny success light" immediate="true" plain-text="" _id="lbNormalMsg">
+         Enter new Rate below [ USD 1 = UGX ? ] 
+       </vaadin-label> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-try-pseudo sn-try-fx" width-full="true"> 
+        <vaadin-text-field icon="fonticon://FontAwesome/f02d" width-full="true" _id="tFUGX"></vaadin-text-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-text-field icon="fonticon://FontAwesome/f10b" visible="false" width="442px" _id="fMSISDNX"></vaadin-text-field> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin-top="true" _id="cControls" :right=""> 
+        <vaadin-button style-name="danger" plain-text="" _id="btnCancel">
+          Cancel 
+        </vaadin-button> 
+        <vaadin-button style-name="primary" plain-text="" _id="btnSave">
+          Save 
+        </vaadin-button> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-panel> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

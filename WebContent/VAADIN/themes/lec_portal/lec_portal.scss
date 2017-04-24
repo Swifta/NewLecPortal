@@ -1,0 +1,1771 @@
+// Global variable overrides. Must be declared before importing Valo.
+
+// Defines the plaintext font size, weight and family. Font size affects general component sizing.
+//$v-font-size: 16px;
+//$v-font-weight: 300;
+//$v-font-family: "Open Sans", sans-serif;
+
+// Defines the border used by all components.
+//$v-border: 1px solid (v-shade 0.7);
+//$v-border-radius: 4px;
+
+// Affects the color of some component elements, e.g Button, Panel title, etc
+//$v-background-color: hsl(210, 0%, 98%);
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+//$v-app-background-color: $v-background-color;
+
+// Affects the visual appearance of all components
+//$v-gradient: v-linear 8%;
+//$v-bevel-depth: 30%;
+//$v-shadow-opacity: 5%;
+
+// Defines colors for indicating status (focus, success, failure)
+//$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+//$v-friendly-color: #2c9720;
+//$v-error-indicator-color: #ed473b;
+
+// For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+// Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+
+@import "../valo/valo.scss";
+
+@mixin lec_portal {
+  @include valo;
+
+  // Insert your own theme rules here
+  
+  .snPage {
+  	border: 1px solid #F0F;
+  	backgroundx: #00F;
+  }
+  
+  .eagle-subtext {
+	  font-size:12px;
+  }
+  
+  .sn-error {
+  		color: #e60000 !important;
+  }
+  
+  .sn-footer-platform-boss {
+  		margin-left: 10px;
+  }
+  
+  .sn-footer-yr-separator {
+  	margin-right: 5px;
+  	margin-left: 5px;
+  }
+  
+  .sn-footer-content .v-label{
+  	font-size: 11px;
+  }
+  
+  .sn-in-header-container {
+  		border: 1px solid #00F;
+  }
+  
+  .sn-footer-container {
+  
+  		border: 1px solid #00F;
+  }
+  
+  .sn-left-menu-container {
+   border: 1px solid #00F;
+  }
+  
+  .sn-content-header {
+  	border: 1px solid #00F;
+  }
+  
+   .sn-db {
+   	border: 1px solid #00F;
+   
+   }
+   
+   .sn-default-home-form-header {
+   
+   	margin-bottom: 50px;
+   	color: #0078d7;
+   	
+   }
+   
+    .sn-default-home-form-header .sn-welcome {
+    	font-style: italic;
+    	font-size: 14px;
+    }
+    
+    .sn-default-home-form-header .sn-instructions {
+    	font-size: 12px;
+    	color: #000;
+    }
+    
+    .sn-default-home-form-controls .v-button{
+    	margin-bottom: 6px;
+    }
+    
+    .sn-default-home .v-horizontallayout {
+    	background-color: FFF;
+    }
+    
+    .sn-default-home-footer {
+    	border-top: 1px solid #E4E4E4;
+    }
+    
+    .sn-default-home-form-controls.default-home {
+    	background: #FFF;
+    }
+    
+    .sn-in-header-container.sn-upper {
+    	border:none;
+    	border-bottom: 1px solid #E4E4E4;
+    }
+    
+    .sn-booking-ref-form {
+    
+    	backgroundx: #000;
+    	border-top: 1px solid  #E4E4E4;
+    	border-bottom: 1px solid  #E4E4E4;
+    }
+    
+    .sn-pay-details-c .v-label {
+    		margin-left: 10px;
+    }
+    
+    .sn-default-mid-content {
+    	border-top: 1px solid  #E4E4E4;
+    	border-bottom: 1px solid  #E4E4E4;
+    }
+    
+    .sn-details-form {
+    	
+    	border: 1px solid  #E4E4E4;
+    
+    }
+    
+    .v-progressbar-wrapper {
+    
+    	height: 50%;
+    	vertical-align:center;
+    	
+    }
+    
+    .v-progressbar-indicator {
+    	
+    	height: 100%;
+    }
+    
+    .sn-lb-platform-desc {
+    	font-size: 12px;
+    }
+    
+    .v-panel {
+    	border-radius: 0;
+    }
+    
+    .sn-in-logo {
+    	background:url("logo_eagle.png");
+    	
+    }
+    
+    
+    
+    .sn-left-menu-c .v-button {
+    
+    	color: rgb(193, 211, 233);
+    	
+    	
+    }
+    
+    .sn-left-menu-c .v-icon {
+    
+    	font-size: 40px;
+    }
+    
+    .sn-user-identity {
+    	position:relative;
+    	
+    }
+    
+    .sn-username-morex {
+    	position: absolute;
+    	top: 50px;
+    }
+    
+    .sn-user-morex {
+    	position: absolute;
+    	top: 110px;
+    	z-index: 999;
+    	background: #000;
+    	color: rgb(193, 211, 233);
+    }
+    
+    .sn-username-dropdown-c {
+    	position: absolute;
+    	top: 80px;
+    	right: 0;
+    	z-index: 999;
+    }
+    
+    .sn-more-drop-down {
+    
+    	z-index: 999;
+    	background: #000;
+    	color: rgb(193, 211, 233);
+    }
+    
+    .sn-more-btn {
+    	background: #000;
+    	color: rgb(193, 211, 233);
+    	border-radius: 0;
+    }
+    
+    .sn-more-drop-down .v-button {
+    	text-align: right;
+    	padding: 0px 10px;
+    	
+    }
+    
+     .sn-more-drop-down .v-icon {
+     	text-align: right;
+     	
+     }
+     
+     .sn-platform-identity {
+     	background: #000;
+     	color: rgb(193, 211, 233);
+     }
+     
+     .sn-left-menu-c .v-button-caption {
+     	font-size: 15px;
+     }
+     
+     .sn-dashboard-card-head {
+     	background: #000080;
+     	color: #fff;
+     	font-weight: 400;
+		text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.05);
+     }
+     
+     
+     .sn-dashboard-card-head.sn-flight-all {
+     
+     	background-color: #002800;
+     	border: 1px solid #002800;
+     	
+     	
+     }
+     
+     .sn-fd-all {
+     	background-color: #002800;
+     	border: 10px solid #002800;
+     }
+     
+     .sn-dashboard-card-head.sn-flight-scheduled {
+     
+     	background-color: #000080;
+     	border: 1px solid #000080;
+     	width: 100%;
+     	
+     }
+     
+     .sn-c-details-scheduled-flights.sn-flight-scheduled {
+     	background-color: #000080;
+     	border: 1px solid #000080;
+     	
+     }
+     
+     
+     
+     .sn-dashboard-card-head.sn-flight-chartered {
+     
+     	background-color: #4099FF;
+     }
+     
+       .sn-c-details-scheduled-flights.sn-flight-chartered {
+     
+     	background-color: #4099FF;
+     	border: 1px solid #4099FF;
+     	
+     }
+     
+     .sn-dashboard-card-head.sn-flight-rescheduled {
+     	background-color: #d3d3d3;
+     	border: 1px solid #d3d3d3;
+     }
+     
+      .sn-c-details-scheduled-flights.sn-flight-rescheduled {
+     	background-color: #d3d3d3;
+     	border: 1px solid #d3d3d3;
+     }
+     
+     .sn-dashboard-card-head.sn-flight-cancelled {
+     	background-color: #990000;
+     }
+     
+      .sn-c-details-scheduled-flights.sn-flight-cancelled {
+     	background-color: #990000;
+     	border: 1px solid #990000;
+     }
+     
+     
+     
+     .sn-eagle-blue {
+     	background-color: #21348b;
+     }
+     
+     .sn-eagle-white {
+     	background-color: #fff;
+     	border-bottom: 1px solid rgba(0,0,0,0.1);
+     }
+    
+    .sn-logo-area {
+    	position: absolute;
+    	top: 0;
+		
+    	
+    }
+    
+    .sn-side-page-margin {
+    	margin-left: 9%;
+    }
+    
+    .sn-d-eagle-header-c {
+    	position: relative;
+    }
+    
+    .sn-footer-c {
+    	background-color: #e7140a;
+    }
+    
+    .sn-eagle-panel-no-border {
+    	border: none;
+    	background-color: #f3f4f8;
+    }
+    
+    .sn-c-pay {
+    	background-color: #f3f4f8;
+    	position: relative;
+    }
+    
+   
+    
+   
+    
+    .sn-c-pay-opt .v-panel {
+    	background-color: #fff;
+    }
+    
+    .sn-c-pay-opt {
+    	background-color: #fff;
+    	box-shadow: 1px 6px 12px -8px rgba(0,0,0,0.1);
+    }
+    
+    .sn-c-pay-opt .sn-mm-panel {
+    	border-right: 1px inset #E4E4E4;
+    }
+    
+    .v-panel .sn-c-right-panel-v{
+    	padding-bottom: 50px;
+    }
+    
+    
+    .sn-c-pay-opt .sn-panel-head {
+    	background-color: #5168d8;
+    	padding-top: 20px;
+    	padding-bottom: 20px;
+    	
+    	position:relative;
+    	
+    	
+    	
+    }
+    
+    .sn-mm-lb {
+    	
+    }
+    
+    
+    .sn-panel-head::before {
+    	position: absolute;
+    	font-family: FontAwesome;
+      	content: "\f10b";
+     	color: #fff;
+     	display: inline-block;
+     	position: absolute;
+     	top: 0px;
+     	
+     	right: 0px;
+     	width: 60px;
+     	height: 100%;
+     	font-size: 70px;
+     	line-height: 70px;
+     	
+     	
+    	
+    }
+    
+    .sn-panel-head.sn-panel-head-card::before {
+    	content: "\f09d";
+    	right: 10px;
+    	font-size: 40px;
+    }
+    
+     .sn-c-pay-opt .sn-panel-head .v-label {
+     	color: #fff;
+     	font-size: 18px;
+     	
+     }
+     
+     .sn-mm-image {
+     	background-color: #E4E4E4;
+     }
+     
+     .sn-mm-list-first {
+     	margin-top: 7px;
+     }
+     
+    .sn-c-mm-list .v-horizontallayout {
+    		border:none;
+    		border-bottom: 1px solid rgba(9,9,9,0.1);
+    		cursor: pointer;
+     }
+     
+     .sn-c-mm-list .v-horizontallayout:hover {
+     	background-color: #fce2e0;
+     	position:relative;
+     }
+     
+    
+      .sn-c-mm-list .v-horizontallayout:hover .v-label {
+      	color: #000;
+     	font-weight: bolder;
+      }
+      
+      .sn-c-mm-list .v-horizontallayout:hover::before {
+      
+      	content:'';
+     	color: #000;
+     	width: 9px;
+     	height: 100%;
+     	background-color: #a10a04;
+     	position: absolute;
+     	top: 0px;
+     	left: 0px;
+      	
+      }
+      
+       .sn-c-mm-list .v-horizontallayout:hover::after {
+      	
+      	font-family: FontAwesome;
+      	content: "\f0da";
+     	color: #a10a04;
+     	width: 50px;
+     	height: 100%;
+     	position: absolute;
+     	top: 0px;
+     	right: 0px;
+     	font-size: 50px;
+   		
+     	
+     	
+     	
+      	
+      }
+      
+       .sn-c-mm-list .v-horizontallayout:active {
+     	cursor: wait;
+     }
+     
+     .sn-list-wait .v-horizontallayout:hover {
+     	
+     	cursor: wait;
+     }
+     
+     .sn-list-wait .v-horizontallayout {
+     	cursor: wait;
+     }
+      
+      .sn-step-indicator {
+      	background-color: #172990;
+      	border-radius: 4px;
+      }
+      
+      .sn-step-indicator {
+      	position: relative;
+      	
+      }
+      
+       .sn-step-indicator::after{
+      	
+      	font-family: FontAwesome;
+      	content: '\f0da';
+      	width: 70px;
+		height: 100%;
+		position: absolute;
+		font-size: 152.67pt;
+		right: -45px;
+		padding-left: 0px;
+		line-height: 75px;
+		color: #172a95;
+		top: 0px;
+		overflow: hidden;
+		background: none;
+		
+	   
+	    
+
+      }
+      
+      
+      .sn-step-no {
+      	font-size: 47.67pt;
+      	font-weight: bold;
+      	padding-right: 6px;
+      	line-height: 68px;
+      }
+      
+      .sn-step-word {
+      	font-weight: bold;
+      	font-size: 17.88pt;
+      }
+      
+      .sn-step-role {
+      	font-size: 11.92pt ;
+      }
+      
+      .sn-step-indicator .v-label {
+      	color: #fff;
+      }
+      
+      
+      
+    
+      
+     .sn-c-no-next {
+     	padding-left: 73px;
+     }
+      
+      .sn-step-indicator.sn-step-indicator-next .v-label {
+      	 color: #6c6c6c;
+      }
+      
+      .sn-step-indicator.sn-step-indicator-next {
+      	
+      	background-color: #e9e9e9;
+      	
+      	
+      }
+      
+      .sn-step-indicator.sn-step-indicator-done {
+      	
+      		background-color: #5168d8;
+      }
+      
+      .sn-step-indicator.sn-step-indicator-done::after {
+      		color: #5168d8;
+      }
+      
+      .sn-step-indicator.sn-step-indicator-next::after {
+       		color: #e9e9e9;
+       		text-shadow:  1px 1px 8px #d1cfcf;
+       }
+       
+       .sn-z-index-step-one::after {
+       		z-index: 4;
+       }
+       
+      .sn-z-index-step-two::after {
+       		z-index: 3;
+       }
+       
+       .sn-z-index-step-three::after {
+       		z-index: 2;
+       }
+       
+       .sn-z-index-step-four::after {
+       		z-index: 1;
+       }
+       
+       .sn-step-finish {
+       		padding-right: 100px;
+       }
+       .sn-step-finish::after {
+       		content: '';
+       }
+       
+       .sn-c-steps {
+       		box-shadow: 1px 6px 12px -8px rgba(0, 0, 0, 0.1);
+       		border: 1px solid #d0d1d8;
+       }
+       
+       
+       .sn-c-ref-form {
+       		
+       }
+       
+       .sn-c-ref-form.sn-c-booking-details {
+       		border-left: none;
+       		background-color: #fff;
+       		border-bottom: none;
+       		border-right: 4px solid #b0b4e6;
+       }
+       
+        .sn-c-ref-form.sn-c-booking-details.sn-no-border-left {
+       
+       		border-left: none;
+       		
+       }
+       
+       .sn-cbd-head {
+       		border-bottomx: 1px solid rgba(0,0,0, 0.05);
+       }
+       .sn-cbd-head .sn-label-underline {
+       		border-bottom: 1px solid rgba(0,0,0, 0.05); 
+       }
+       
+       .sn-processing .v-label {
+       		color: #5168d8;
+       		padding-bottom: 10px;
+       }
+       
+       .sn-reminder-c {
+       		font-size: 11pt;
+       		font-weight: bolder;
+       }
+       
+       .sn-bolder {
+       		font-weight: 600;
+       }
+       
+      
+       
+       
+       
+        .sn-cbd-head .v-label {
+       		color: #5168d8;
+       		font-weight: bolder;
+       		font-size: 13pt;
+       }
+       
+       .sn-processing {
+       		border-bottom: 1px solid rgba(0,0,0, 0.05);
+       }
+       
+       .sn-lb-gray {
+       		color: #989696;
+       }
+       
+       .sn-processing-reminder .v-label {
+       		font-size: 3pt;
+       		color: #000;
+       		font-weight: bolder;
+       		text-align: center;
+       }
+       
+       .sn-c-form .v-textfield, .sn-c-form .v-filterselect {
+       		color: #9292f5;
+       		border-radius: 0;
+       }
+       
+       .sn-c-form .v-icon {
+       		color: #fff;
+       }
+       
+       .sn-c-form .v-button {
+       		border-radius: 0;
+       		color: #fff;
+       		font-weight: 400;
+       }
+       
+      .sn-c-form .v-textfield:focus {
+      		box-shadow: 0px 0px 0px 1px rgba(25, 125, 225, 0.5);
+       }
+       
+       .sn-c-form {
+       
+       		background-color: #fef2f1;
+       		
+       }
+       
+       .sn-c-mm-op {
+       
+       		background-color: #fef2f1;
+       		
+       }
+       
+       .sn-c-mm-op sn-c-mm-op-left {
+       		border-bottom: 1px solid #000;
+       }
+       
+       .sn-sel-mm-top {
+       		border-bottom:1px solid #E4E4E4;
+       }
+       
+       .sn-sel-mm-top .v-label {
+       		color: #3b3bba;
+       		font-weight: bolder;
+       }
+       
+       .sn-sel-op-logo {
+       		border-radius: 120px;
+       		background: #fff;
+       }
+       
+       .sn-c-mm-slogan .v-label {
+       		font-size: 9pt;
+       		font-weight: bolder;
+       		text-align: center;
+       		font-style: italic;
+       }
+       
+       
+       
+     .sn-panel-head.sn-panel-head-card.sn-panel-head-step-b-ref::before {
+    	content: "\f02d";
+    }
+       
+       
+      
+       
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+     
+     
+     
+   /**********************************************Ignore***************
+     
+     .sn-mm-list-btn .v-button {
+     	border: none;
+     	margin: 0;
+     	padding:0;
+     	background-image: none;
+     	border-radius: 0;
+     	
+     	text-align: left;
+     	
+     	
+     	
+     	
+     }
+     
+     .sn-mm-list-btn .v-button-wrap {
+     		width: 93%;
+     		height: 100%;
+     		line-height: 78px;
+			display: inline-block;
+			margin-left: 37px;
+			background-color: #f00;
+     }
+     
+     .sn-mm-list-btn .v-button-wrap .v-icon {
+     	width: 80px;
+     	height: 97%;
+     	background-color: #E4E4E4;
+     }
+     
+     .sn-mm-list-btn .v-icon + span {
+     	margin-left: 24px;
+		font-size: 20px;
+		font-weight: bold;
+		display: inline-block;
+		width: 75%;
+		height: 100%;
+     }
+     
+     .sn-mm-list-btn .v-button:hover {
+     	background-color: #FCE2E0;
+     	box-shadow: 0px 1px 0px #FFF inset, 0px -1px 0px #FCE2E0 inset, 0px 2px 3px rgba(0, 0, 0, 0.05);
+     	position: relative;
+     }
+     
+     .sn-mm-list-btn .v-button:hover::before {
+     	content:'';
+     	color: #000;
+     	width: 9px;
+     	height: 100%;
+     	background-color: #df5751;
+     	position: absolute;
+     	top: 0px;
+     	left: 0px;
+     	
+     	}
+     	
+     	.sn-mm-list-btn .v-button:hover .v-button-wrap {
+     		position: relative;
+     		background-color:#00F;
+     		
+     	}
+     
+     
+     
+     **************************************ignore********************************************************/
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     .sn-c-pay-help {
+     	borderx: 1px solid #5168d8;
+     	color: #5168d8;
+     	font-weight: bold;
+     }
+     
+     .sn-font-deep-blue {
+     	color: #3b3bba;
+     }
+     
+     .sn-font-desc {
+     
+     	color: #000;
+     	
+     }
+     
+     .sn-footer-c {
+     		padding-left: 9%;
+     		padding-right: 9%;
+     		color: #fff;
+     		font-size: 11px;
+     		font-weight: bold;
+     }
+     
+     .sn-right-footer-c .v-button {
+     	padding-right: 15px;
+     	border-right: 1px solid rgba(255,255,255, 0.5);
+     	paddig-top: 1px;
+     	padding-bottom: 1px;
+     	border-radius: 0;
+     	font-size: 10px;
+     }
+     
+     .sn-right-footer-c .sn-f-last {
+     	border:none;
+     	padding-right: none;
+     	
+     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     .sn-c-ads {
+    	padding-left: 9%;
+    	padding-right: 9%;
+    	padding-top: 5px;
+    	padding-bottom: 28px;
+    	background-colorx: #fff;
+    }
+    
+    .sn-inner-cards-c .sn-ad-card {
+    	background-color: #fff;
+    }
+    
+    
+    .sn-sel-op-logo.sn-ad-icon {
+    	background-color: #21348b;
+    }
+    
+    .sn-c-mm-slogan .sn-ad-desc{
+    
+    	font-style: normal;
+    	color: #b8b8bc;
+    	font-weight: bold;
+    }
+    
+    .sn-inner-cards-c {
+    	padding: 0;
+ 
+    }
+   
+    
+    .sn-ad-card {
+    	box-shadow: 1px 3px 10px -8px rgba(0,0,255,1);
+    	margin-left: 0px;
+    	margin-right: 80px;
+    	
+    }
+    
+     
+    
+   
+    
+    .sn-left-ad-cardx {
+    	margin-left: 37px;
+    	
+    	
+    }
+    
+     .sn-right-ad-cardx {
+    	margin-right: 37px;
+    	
+    	
+    }
+    
+    
+    /*************************Image link styles *************/
+    
+    .sn-img-button-link {
+    	background: none;
+    	box-shadow: none;
+    	border-radius: 0;
+    	border: none;
+    	padding: 0;
+    	margin: 0;
+    	background-color: #fff;
+    	background: transparent url("img/logo_eagle.png") no-repeat scroll center 30%;
+    	line-height: 16;
+    	color: #e4130a;
+    	
+    	
+    }
+    
+    .sn-logo-c {
+    	background-color: #fff;
+    	box-shadow: 1px 6px 12px -8px rgba(0,0,0,0.5);
+    }
+    
+    
+   
+    .sn-img-button-link:hover {
+    	background: none;
+    	box-shadow: none;
+    	border-radius: 0;
+    	border: none;
+    	padding: 0;
+    	margin: 0;
+    	background: transparent url("img/logo_eagle.png") no-repeat scroll center 30%;
+    	color: #e4130a;
+    	line-height: 14;
+    	
+    	
+    	
+    }
+    
+    
+    
+    
+    
+    
+    /*Client Home page [Payment List icons]*/
+    
+    .sn-home-message {
+    	margin-left: 9%;
+    }
+    
+    .sn-c-get-started {
+    	margin-left: 50px;
+    }
+    
+   	.sn-c-get-started .v-button {
+    	
+
+    }
+    
+   .v-button-friendly.sn-btn-get-started {
+	    
+	    color: #EAF4E9;
+	    font-weight: 400;
+	    border-radius: 0px;
+	    border-color: none;
+	   
+	   	border: none;
+	    box-shadow: none;
+	    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.05);
+    
+    	border-radius: 0;
+    	border-width: 0;
+    	box-shadow: 0px 1px 0px #1E6B15 inset, 0px -1px 0px #2C9720 inset, 0px 2px 3px rgba(0, 0, 0, 0.05);
+		text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.05);
+		font-weight: 400;
+    
+    }
+    
+    .sn-btn-get-started:active {
+    	cursor: wait;
+    }
+    
+    .sn-mm-btn-icon {
+    	border: 1px solid #efefef;
+    	box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #e7e7e7, 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .sn-mm-mtn {
+    		background: transparent url("icon/mm-mtn.png") no-repeat scroll center center;
+   			background-color: #fff;
+    }
+    
+    .sn-mm-aitel {
+    
+    	background: transparent url("icon/mm-airtel.png") no-repeat scroll center center;
+    	background-color: #fff;
+    }
+    
+    .sn-mm-mpesa {
+    
+    	background: transparent url("icon/mm-mpesa.png") no-repeat scroll center center;
+    	background-color: #fff;
+    }
+    
+    .sn-mm-m-sente {
+    
+    	background: transparent url("icon/mm-m-sente.png") no-repeat scroll center center;
+    	background-color: #fff;
+    }
+    
+    
+    
+    
+    
+    
+    /************************* card button styles ************************/
+    
+    .sn-card-visa {
+    		background: transparent url("icon/card-visa.png") no-repeat scroll center center;
+    		background-color: #fff;
+    }
+    
+    .sn-card-paypal {
+    		background: transparent url("icon/card-paypal.png") no-repeat scroll center center;
+    		background-color: #fff;
+    }
+    
+    .sn-ad-mm {
+    	background: transparent url("img/ad-mm.png") no-repeat scroll center center;
+    	
+    }
+    
+    .sn-ad-bank-card {
+    	background: transparent url("img/ad-card-blue.png") no-repeat scroll center center;
+    	
+    }
+    
+    .sn-ad-security {
+    	background: transparent url("img/ad-security-green.png") no-repeat scroll center center;
+    	
+    }
+    
+    /********** Pointer styles ***********/
+    
+     .sn-c-pointer {
+    	background-color: #f00;
+    	z-index: 999;
+    	cursor: pointer;
+    	position: absolute;
+    	left: 50%;
+    	bottom: 2px;
+    	animation-name: heartbeat;
+    	animation-duration: 10s;
+    	animation-iteration-count: infinite;
+    }
+    
+    
+   @keyframes heartbeat{
+    
+    	0% { bottom: -2px }
+    	100% { bottom: -1000px }
+    
+    }
+    
+    
+     .sn-panel-head-smaller {
+       		font-size: 7px;
+       		color: #000;
+  
+       }
+       
+       
+     .sn-dark-red-band {
+     		background-colorx: #b30806;
+     }
+     
+     .sn-test-replace {
+     		borderx: 43px solid #f00;
+     }
+     
+     .sn-c-message-bandx {
+     	background-color: #b30806;
+     }
+     
+     .sn-c-home-all-whitex {
+     	background-color: #f00;
+     }
+     
+     
+     
+     
+     
+     /************************Reference System specific styles **************/
+     
+    .sn-sys-name-small {
+     		font-size: 10pt;
+     		line-height: 18;
+     		font-weight: 600;
+     }
+     
+     .sn-sys-name-small:hover {
+     	font-size: 10pt;
+     	line-height: 18;
+     	font-weight: 600;
+     }
+     
+    .sn-side-page-margin.sn-ref {
+    	margin-left: 0;
+    }
+    
+    .sn-left-menu-c {
+    	border: none;
+    	border-bottom: none;
+    }
+    
+    .sn-footer-content.sn-ref {
+    	font-weight: normal;
+    }
+    
+    .sn-ad-card.sn-ref {
+    	box-shadow: 1px 3px 10px -8px blue;
+    	margin-left: 0px;
+        margin-right: 30px;
+    }
+    
+    .sn-ad-card.sn-ref.sn-last {
+        margin-right: 0px;
+       
+    }
+    
+     
+     .sn-c-ads.sn-ref {
+     	
+     	padding-left: 30px;
+    	padding-top: 5px;
+    	padding-bottom: 0px;
+    	background-colorx: #fff;
+    	padding-right: 30px;
+    	
+    }
+    
+    .sn-inner-cards-c .sn-ad-card {
+    	background-color: #fff;
+    }
+    
+   .sn-content-background-color {
+    		background-color: #f3f4f8;
+    }
+    
+    .sn-ref-left-content-panel {
+        background-color: #00f;
+    }
+    
+    .sn-user-identity.sn-ref {
+    }
+    
+    .sn-username-dropdown-c.sn-ref {
+    	top: 16px;
+    }
+    .sn-username-dropdown-c.sn-ref .v-button:focus, .sn-username-dropdown-c.sn-ref .v-button:active {
+    	border: none;
+    }
+    
+    .sn-c-ref-form.sn-c-form.sn-ref {
+       		
+       	box-shadow: 1px 1px 2px rgba(0,0,255, 0.1);
+       	border-top: 1px solid rgba(0,0,255, 0.05);
+    	
+    }
+    
+    .v-panel .sn-c-right-panel-v.sn-ref{
+    	padding-bottom: 0px;
+    }
+    
+    .sn-c-booking-details.sn-ref {
+    	border: none;
+    	
+    }
+    
+    .sn-c-booking-details.sn-ref {
+    	background-color: #f3f4f8;
+    }
+    
+    
+    
+    
+    /******* Login Page  Styles *********/
+    
+     .sn-eagle-panel-no-border.sn-login {
+    	border: none;
+    	background-color: #21348b;
+    	margin-top: -2px;
+    }
+    
+    .sn-c-form.sn-login {
+       	background-color: #f3f4f8;
+    }
+       
+    .sn-ad-card.sn-left-ad-card.sn-login {
+       		
+       	//box-shadow: 1px 1px 1px rgba(255,255,255, 1);
+       	
+       	margin: 0;
+       
+    	
+    }
+    
+    .sn-c-ref-form.sn-login {
+       		border: 8px solid #fff;
+       		border-radius: 0px 0px 3px 3px;
+       		
+       		
+       		
+     }
+     
+     .sn-c-form.sn-login .sn-login-message {
+     	background-color: #fff;
+     	margin-bottom: 20px;
+     	border-radius: 0;
+     }
+     
+     .sn-cbd-head.sn-ref.sn-login .v-label {
+     	font-weight: 100;
+     	padding-right: 5px;
+     }
+     
+     .sn-eagle-white.sn-login {
+     	background-color: #fff;
+     }
+     
+    
+    
+    .sn-home-message.sn-login {
+    	margin: 0;
+    	padding: 0;
+    }
+    
+    .sn-cbd-head.sn-ref.sn-login {
+    	margin-left: 0px;
+    }
+    
+    .sn-eagle-white.sn-login {
+    	border-bottom: none;
+    }
+    
+    .sn-login-instru.v-label {
+    	font-size: 10.5pt;
+    	line-height: 1;
+    	padding: 10px;
+    }
+    
+    .sn-login-welcome {
+    	padding: 10px 10px 0 10px;
+    }
+    
+    .sn-eagle-white.sn-login {
+    	background-color: #fff;
+    }
+    
+    .v-window-header {
+    	color:#5168D8;
+    	font-weight: bolder;
+    }
+    
+    
+    .sn-try-pseudo {
+    	position: relative;
+    }
+    
+   .sn-try-pseudo input{
+   		
+   		background-colorx: #f00;
+   		padding-left: 75px;
+    }
+    
+  .sn-try-pseudo::before {
+  
+    	position: absolute;
+		content: "+256";
+		width: 51px;
+		height: 34px;
+		bottom: 1px;
+		border-right: 1px dotted #E4E4E4;
+		display: block;
+		z-index: 1;
+		line-height: 2;
+		padding-left: 13px;
+		background-color: #F9F7F7;
+		color: #9292f5;
+		left: 1px;
+		font-weight: bolder;
+	}
+    
+    ::-moz-selection {
+    	background-color: #21348b;
+    	color: #fff;
+    }
+    
+     ::selection {
+    	background-color: #21348b;
+    	color: #fff;
+    }
+    
+    
+    
+    
+    
+    //LATE UI BEHAVIOR
+    
+    .sn-invisible {
+    	visibility: hidden;
+    }
+    
+    .sn-display-none {
+    	display: none;
+    }
+    
+    .sn-display-block {
+    	display: block;
+    }
+    
+    .v-button .btn-icon-green .v-con{
+    	font-weight: bold;
+    	color: solid#2c9720;
+    	font-size: 16px;
+    }
+    
+    
+    .failure {
+       		border: none;
+       		font-size: 9pt;
+       		color: #ca1612;
+       		border-left: 1px solid #ca1612;
+       		border-radius: 0;
+       }
+       
+        .success {
+       		border: none;
+       		font-size: 9pt;
+       		border-left: 1px solid#2c9720;
+       		border-radius: 0;
+       		color: #2c9720;
+       		color: #6c6c6c;
+       }
+       
+       
+       .success:before{
+       
+       		display: none;
+       }
+       
+       .success.progress .v-icon {
+       		display: none;
+       		border-left: 1px solid #DFD;
+       }
+       
+       .sn-approval-steps p {
+       		color: #f00;
+       }
+       
+       .sn-state-ui-phone .v-icon{
+       		color: #444;
+       }
+       
+       
+      /* .sn-gl-trxn-table {
+       		width: 100% !important;
+       		background-color: #f0fx;
+       }
+       
+       .v-gridlayout-slot {
+       
+       		width: 100% !important;
+       		background-color: #f00;
+       }*/
+       
+       
+       .sn-hl-trxn-table {
+       		width: 100%;
+       		background-color: #999;
+       }
+       
+       .sn-p {
+       		background: #eff;
+       }
+       
+        .sn-c {
+       		background: #ffd;
+       }
+       
+       .sn-c-trxn-table {
+       
+       			height: 100%;
+       }
+       
+       
+       .sn-tf-filter {
+       		height: 28px;
+       }
+       
+      .sn-c-more-behavior .sn-more-drop-down {
+      		visibility: hidden;
+      }
+       
+       .sn-c-more-behavior:hover .sn-more-drop-down {
+       
+       		visibility: visible;
+       		
+       }
+       
+       .sn-c-more-behavior:hover .sn-more-btnx {
+       
+       		background-color: #000;
+       		border-radius: 0;
+       		border: none;
+       		color: #c1d3e9;
+       		
+       }
+       
+       
+      .sn-c-opts-popup-header {
+       		width: 100%;
+       }
+       
+       .sn-c-popup-form {
+       		margin-right: 32px;
+       }
+       
+       
+      .sn-try-pseudo.sn-try-fx::before {
+  
+		content: "UGX";
+		
+	   }
+	   
+	   .sn-btn-login-c {
+	   		position: relative;
+	   }
+	   
+	   .sn-btn-login-home {
+	   		top: -75px;
+	   		margin-right: 175px;
+	   		border-radius: 0;
+	   }
+	   
+	   
+	   .sn-lb-card-no {
+	   		color: #fff !important;
+	   		font-size: 25pt !important;
+	   }
+	   
+	   .sn-ad-nobg {
+	   		background-image: none;
+	   }
+	   
+	   .sn-booking-form-header-cx {
+	   		padding-left: 47px;
+	   		padding-right: 47px;
+	   		
+	   }
+	   
+	   
+	   .sn-tb-ctrls-c {
+	   			position: relative;
+	   			
+	   }
+    
+	   
+	   .sn-tb-ctrls-btn {
+	   			position: absolute;
+	   			right: 35px;
+	   			border-radius: 0;
+	   			z-index: 999;
+	   			overflow: visible;
+	   }
+	   
+	    .sn-username-dropdown-c.sn-ref.sn-tb-dropdown-c {
+	   		position: absolute;
+	   		top: 0px;
+	   		z-index: 998;
+	   }
+	   
+	   
+	   .v-loading-indicator {
+	  
+	   	 background-color: #e7140a;
+	   }
+	   
+	   .sn-popup-view {
+	   		background: #024180;
+	   		width: 100px;
+	   		height: 31px;
+	   }
+	   
+	   .v-popupview {
+	   		
+	   		text-decoration: none;
+	   		text-align: center;
+	   		border: 1px dotted #FFFFFF;
+	   		color: #fff;
+	   }
+	   
+	   .v-popupview:hover {
+	   		color: #fff;
+	   }
+	   
+	   
+	   .sn-login-instru.sn-timer {
+	   		font-size: 9pt;
+		    font-weight: bolder;
+		    color: #2C9720;
+	   }
+	   
+	   .sn-try-fx.sn-inline-tf-cap:before {
+	   		content: "USD";
+	   }
+	   
+	  .small-gridx .v-grid-body .v-grid-cell {  
+	    line-height: 18px;
+	    font-size: 10px;
+	  }
+	  
+	  .sn-mm-panel.sn-mm-right-c-panel.sn-panel-noborder {
+	  	border: none;
+	  }
+	  
+	  
+	  
+	/****** Horizontal Menu styles ******/ 
+	
+	.sn-page-location-c .v-label{
+    	position: relative;
+    	margin-right: 23px;
+    	margin-bottom: 7px;
+    	font-size: 11pt;
+    	cursor: pointer;
+    }
+    
+    .sn-page-location-c .v-label::after {
+    	font-family: FontAwesome;
+    	content: '|';
+    	position: absolute;
+    	top: 0;
+    	right: -25px;
+    	color: #E4E4E4;
+    }
+    
+    .sn-page-location-c .v-label:hover{
+    	color: #3B3BBA;
+    }
+    
+    
+    .sn-online::after {
+    	font-family: FontAwesome;
+    	content: '|';
+    	position: absolute;
+    	top: 0;
+    	right: -25px;
+    	color: #E4E4E4;
+    }
+    
+     .sn-pay-type::after {
+     	font-family: FontAwesome;
+    	content: '\f0da';
+    	position: absolute;
+    	top: 0;
+    	right: -25px;
+    	color: #E4E4E4;
+    }
+    
+    .sn-pay-type-provider {
+    	font-weight: 500;
+    }
+    
+	
+	.sn-button-link {
+     
+    	background: none;
+    	box-shadow: none;
+    	border-radius: 0;
+    	border: none;
+    	padding: 0;
+    	margin: 0;
+    	background-color: #fff;
+    	linex-height: 16;
+    	colorx: #e4130a;
+    	font-size: 11pt;
+    	font-weight: 100;
+    	
+    	padding: 2px 14px;
+		height: 25px;
+    	
+    	
+    }
+    
+    .sn-button-link {
+    	position: relative;
+    }
+    
+    .sn-button-link::after {
+    	font-family: FontAwesome;
+    	content: '|';
+    	position: absolute;
+    	top: 0;
+    	text-align: right;
+    	
+    	
+    	color: #E4E4E4;
+    	background-colorx: #ff0;
+    	line-height: 24px;
+    	font-size: 4pt;
+    }
+    
+    
+    .sn-button-link:hover {
+    	color: #3B3BBA;
+    }
+    
+    .sn-button-link-active {
+   		background-color: rgba(186, 186, 186, 0.1);
+   		color: #3B3BBA;
+    }
+    
+    .sn-hor-menu-small {
+     	font-size: 10pt;
+     	font-weight: 100;
+     	background-image: none;
+     }
+     
+     .sn-hor-menu-small:hover {
+     	font-size: 10pt;
+     	font-weight: 100;
+     }
+     
+     .sn-c-ads.sn-ref.sn-ref-less-margin {
+     	padding: 5px 5px 0px;
+     }
+     
+     
+     /*Grid custom styles */
+     
+    .sn-small-grid .v-grid-body .v-grid-cell {  
+    
+    	line-height: 25px;
+   		font-size: 10pt;
+  	}
+  	
+  	.sn-c-ref-form.sn-c-booking-details.sn-details-card {
+  		border-right: none;
+  	}
+  	.sn-c-ref-form.sn-c-booking-details.sn-details-card.sn-barred {
+  	
+  		border-right: 1px solid #b0b4e6;
+  		
+  	}
+  	
+  	.sn-details-card .v-label:first-child {
+  		font-weight: 100;
+  	}
+  	
+  	.sn-details-action {
+  		margin-left: 18px;
+  		
+  	}
+  	
+  	.sn-details-action .v-icon {
+  		color: #2c9720;
+  	
+  	}
+     
+     
+		   
+}

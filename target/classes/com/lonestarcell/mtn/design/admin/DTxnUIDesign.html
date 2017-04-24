@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-horizontal-layout style-name="sn-default-home" width-full> 
+   <vaadin-panel style-name="sn-left-menu-c sn-eagle-blue sn-test3" width="226px" height-full _id="leftBar"> 
+    <vaadin-vertical-layout> 
+     <vaadin-button icon="fonticon://FontAwesome/f274" style-name="icon-align-top borderless" width-full plain-text _id="btnDay">
+       Today 
+     </vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f187" style-name="borderless icon-align-top" width-full plain-text _id="btnUsers">
+       Archive 
+     </vaadin-button> 
+     <vaadin-button visible="false" icon="fonticon://FontAwesome/f02d" style-name="borderless icon-align-top" width-full plain-text _id="btnNewReserv">
+       New Reservation 
+     </vaadin-button> 
+     <vaadin-button visible="false" icon="fonticon://FontAwesome/f133" style-name="borderless icon-align-top" width-full plain-text _id="btnTodaysBooking">
+       Today's Reservations 
+     </vaadin-button> 
+     <vaadin-button visible="false" icon="fonticon://FontAwesome/f187" style-name="borderless icon-align-top" width-full plain-text _id="btnPaymentReports">
+       Payment Reports 
+     </vaadin-button> 
+     <vaadin-button visible="false" icon="fonticon://FontAwesome/f15b" style-name="borderless icon-align-top" width-full plain-text _id="btnBookingReports">
+       Booking Reports 
+     </vaadin-button> 
+    </vaadin-vertical-layout> 
+   </vaadin-panel> 
+   <vaadin-vertical-layout style-name="sn-c-ads sn-ref sn-ref-less-margin" spacing _id="cForms" :expand> 
+    <vaadin-vertical-layout spacing size-auto> 
+     <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto _id="cBookingDetails3" :center> 
+      <vaadin-horizontal-layout style-name="sn-cbd-head sn-ref" margin _id="cBDHead3"> 
+       <vaadin-label style-name="bold" width="442px" plain-text _id="lbFormHeader">
+         Enter New User Details 
+       </vaadin-label> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+     <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-ref" size-auto margin _id="cMobileNumber3" :center> 
+      <vaadin-label visible="false" style-name="bold tiny failure" plain-text>
+        Invalid MTN phone number. 
+      </vaadin-label> 
+      <vaadin-label size-auto plain-text>
+        Username 
+      </vaadin-label> 
+      <vaadin-text-field width="442px" _id="tFUN"></vaadin-text-field> 
+      <vaadin-label size-auto plain-text>
+        First Name 
+      </vaadin-label> 
+      <vaadin-text-field width="442px" _id="tFFN"></vaadin-text-field> 
+      <vaadin-label size-auto plain-text>
+        Last Name 
+      </vaadin-label> 
+      <vaadin-text-field width="442px" _id="tFLN"></vaadin-text-field> 
+      <vaadin-label size-auto plain-text>
+        Surname 
+      </vaadin-label> 
+      <vaadin-text-field width="442px" _id="tFSN"></vaadin-text-field> 
+      <vaadin-label size-auto plain-text>
+        Email Address 
+      </vaadin-label> 
+      <vaadin-text-field width="442px" _id="tFEmail"></vaadin-text-field> 
+      <vaadin-horizontal-layout spacing> 
+       <vaadin-vertical-layout width="359px"> 
+        <vaadin-label size-auto plain-text>
+          User Profile 
+        </vaadin-label> 
+        <vaadin-combo-box item-caption-mode="id" width="348px" _id="comboProfile"> 
+         <option>Option 1</option> 
+         <option>Option 2</option> 
+         <option>Option 3</option> 
+        </vaadin-combo-box> 
+       </vaadin-vertical-layout> 
+       <vaadin-vertical-layout size-auto> 
+        <vaadin-label size-auto plain-text>
+          Enabled 
+        </vaadin-label> 
+        <vaadin-check-box _id="chkStatus"></vaadin-check-box> 
+       </vaadin-vertical-layout> 
+      </vaadin-horizontal-layout> 
+      <vaadin-horizontal-layout spacing margin-top _id="cControls3" :right> 
+       <vaadin-button style-name="danger" plain-text _id="btnCancel">
+         Cancel 
+       </vaadin-button> 
+       <vaadin-button style-name="primary" plain-text _id="btnSave">
+         Save 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-horizontal-layout>  
+ </body>
+</html>

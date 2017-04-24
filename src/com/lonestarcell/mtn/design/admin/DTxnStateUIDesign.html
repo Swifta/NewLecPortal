@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-default-home" size-full> 
+   <vaadin-vertical-layout style-name="sn-c-ads sn-ref" spacing size-full _id="cForms" :expand> 
+    <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details sn-ref" size-full _id="cBookingDetails3" :expand> 
+     <vaadin-vertical-layout style-name="sn-dashboard-card-head sn-flight-scheduled" spacing margin _id="headBookedScheduledFlights2"> 
+      <vaadin-label size-auto plain-text _id="lbDataTitle">
+        Users 
+      </vaadin-label> 
+      <vaadin-horizontal-layout spacing> 
+       <vaadin-check-box icon="fonticon://FontAwesome/f0b0" caption="Filter By Date" description="Toggle Date filters on/off" _id="chkDateFilter"></vaadin-check-box> 
+       <vaadin-popup-date-field description="From" immediate _id="dFStartDate"></vaadin-popup-date-field> 
+       <vaadin-popup-date-field description="To" immediate _id="dFLastDate"></vaadin-popup-date-field> 
+       <vaadin-button icon="fonticon://FontAwesome/f0b0" description="Filter" style-name="primary icon-only" plain-text _id="btnFilter"></vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f0e2" description="Reload" style-name="primary icon-only" plain-text _id="btnReload" :right></vaadin-button> 
+      </vaadin-horizontal-layout> 
+      <vaadin-horizontal-layout visible="false"> 
+       <vaadin-text-field width="619px" :expand></vaadin-text-field> 
+       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-align-right friendly" width="110px" plain-text :right>
+         Search 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+     <vaadin-vertical-layout style-name="sn-c-trxn-table" _id="vlTrxnTable"></vaadin-vertical-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

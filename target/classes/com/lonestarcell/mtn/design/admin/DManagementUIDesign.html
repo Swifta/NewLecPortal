@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-default-home" size-full> 
+   <vaadin-vertical-layout style-name="sn-eagle-header-c" _id="cHeader"> 
+    <vaadin-vertical-layout style-name="sn-eagle-blue" height="175px"> 
+     <vaadin-horizontal-layout style-name="sn-eagle-white" width-full height="54px" :bottom :center> 
+      <vaadin-vertical-layout style-name="sn-user-identity sn-ref" width-auto height-full _id="userIdentity" :middle :right> 
+       <vaadin-vertical-layout style-name="sn-username-dropdown-c sn-ref sn-c-more-behavior" size-auto> 
+        <vaadin-horizontal-layout spacing margin-left _id="usernameMore" :bottom :right> 
+         <vaadin-label size-auto plain-text _id="lbUsername" :middle :center>
+           adminadminadminadminadminadmin 
+         </vaadin-label> 
+         <vaadin-button icon="fonticon://FontAwesome/f142" style-name="borderless sn-more-btnx" plain-text _id="btnUserOps"></vaadin-button> 
+        </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout style-name="sn-more-drop-down" _id="moreDropDown"> 
+         <vaadin-button icon="fonticon://FontAwesome/f085" description="Foreign Exchange Rate" style-name="borderless icon-align-right" width-full plain-text _id="btnFxRate">
+           Fx. Rate 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f085" description="View/add places" style-name="borderless icon-align-right" width-full plain-text _id="btnPlaces">
+           Places 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f085" description="View/add flight Routes" style-name="borderless icon-align-right" width-full plain-text _id="btnRoutes">
+           Routes 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f085" description="User Profile" style-name="borderless icon-align-right" width-full plain-text _id="btnUserProfile">
+           User Profile 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f061" description="Logout" style-name="borderless icon-align-right" width-full plain-text _id="btnLogout">
+           Logout 
+         </vaadin-button> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout style-name="sn-logo-area sn-side-page-margin sn-ref" size-auto _id="logoArea"> 
+     <vaadin-horizontal-layout spacing> 
+      <vaadin-vertical-layout style-name="sn-logo-c" size-auto> 
+       <vaadin-button style-name="icon-align-top sn-img-button-link sn-sys-name-small" width="228px" height="168px" plain-text :expand>
+         Booking &amp; Payment Reference 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+      <vaadin-horizontal-layout style-name="sn-page-location-c" spacing :bottom> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuDash">
+         Dashboard 
+       </vaadin-button> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuTxn">
+         Transaction 
+       </vaadin-button> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuPayment">
+         Payment 
+       </vaadin-button> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuToken">
+         Token 
+       </vaadin-button> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuUser">
+         User 
+       </vaadin-button> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuMisc">
+         Misc. 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+   <vaadin-vertical-layout style-name="sn-default-home-form-controls default-home" immediate size-full _id="midContent" :expand> 
+    <vaadin-horizontal-layout size-full :expand> 
+     <vaadin-panel visible="false" style-name="sn-left-menu-c sn-eagle-blue sn-test3" width="226px" height-full _id="leftBar"> 
+      <vaadin-vertical-layout> 
+       <vaadin-button icon="fonticon://FontAwesome/f080" style-name="icon-align-top borderless" width-full plain-text _id="btnDashboard">
+         Dashboard 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f007" style-name="borderless icon-align-top" width-full plain-text _id="btnNewUser">
+         New User 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f02d" style-name="borderless icon-align-top" width-full plain-text _id="btnNewReserv">
+         New Reservation 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f133" style-name="borderless icon-align-top" width-full plain-text _id="btnTodaysBooking">
+         Today's Reservations 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f0c0" style-name="borderless icon-align-top" width-full plain-text _id="btnUsers">
+         Users 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f187" style-name="borderless icon-align-top" width-full plain-text _id="btnPaymentReports">
+         Payment Reports 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f15b" style-name="borderless icon-align-top" width-full plain-text _id="btnBookingReports">
+         Booking Reports 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+     </vaadin-panel> 
+     <vaadin-vertical-layout style-name="sn-test2" size-full _id="rightContent" :expand> 
+      <vaadin-panel style-name="sn-content-background-color sn-panel-search" size-full :expand> 
+       <vaadin-vertical-layout spacing _id="cMainContent"> 
+        <vaadin-vertical-layout style-name="sn-c-ads sn-ref" spacing size-auto _id="cAds"></vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-panel> 
+      <vaadin-horizontal-layout style-name="sn-default-home-footer sn-lower sn-footer-c" width-full height="36px" _id="footerMain"> 
+       <vaadin-horizontal-layout _id="cOwnership" :middle :center> 
+        <vaadin-horizontal-layout> 
+         <vaadin-label size-auto>
+           Copyright @&nbsp; 
+         </vaadin-label> 
+        </vaadin-horizontal-layout> 
+        <vaadin-label size-auto plain-text _id="lbCRYearStart">
+          2017 
+        </vaadin-label> 
+        <vaadin-label size-auto plain-text _id="lbYearSeparator">
+          - 
+        </vaadin-label> 
+        <vaadin-label size-auto plain-text _id="lbCRYearCurrent">
+          2017 
+        </vaadin-label> 
+        <vaadin-label size-auto _id="lbClient">
+          MTN Liberia 
+        </vaadin-label> 
+        <vaadin-label size-auto>
+          &nbsp; All rights reserved. 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-horizontal-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

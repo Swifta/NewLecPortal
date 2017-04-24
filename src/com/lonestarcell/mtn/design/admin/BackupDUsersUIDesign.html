@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-default-home" size-auto="true"> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ads sn-ref" spacing="true" size-auto="true" _id="cForms"> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-booking-details sn-ref" size-auto="true" _id="cBookingDetails3" :center=""> 
+     <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-dashboard-card-head sn-flight-scheduled" spacing="true" margin="true" _id="headBookedScheduledFlights2"> 
+      <vaadin-label size-auto="true" plain-text="">
+        User Management 
+      </vaadin-label> 
+      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
+       <vaadin-check-box icon="fonticon://FontAwesome/f0b0" caption="Filter By Date"></vaadin-check-box> 
+       <vaadin-popup-date-field></vaadin-popup-date-field> 
+       <vaadin-popup-date-field></vaadin-popup-date-field> 
+       <vaadin-button icon="fonticon://FontAwesome/f0b0" description="Filter" style-name="primary icon-only" plain-text=""></vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f0e2" description="Reload" style-name="primary icon-only" plain-text="" :right=""></vaadin-button> 
+      </vaadin-horizontal-layout> 
+      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true"> 
+       <vaadin-text-field width="619px" :expand=""></vaadin-text-field> 
+       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-align-right friendly" width="110px" plain-text="" :right="">
+         Search 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+     <vaadin-panel style-name="sn-ref-panel-background sn-content-background-color" size-full="true" :expand=""></vaadin-panel> 
+    </vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

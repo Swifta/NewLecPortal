@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-default-home" size-full="true"> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-fd-all" width-full="true" height="118px" _id="headerMain"> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-platform-identity" width="249px" height-full="true" _id="platformIdentity"> 
+     <vaadin-label size-auto="true" plain-text="" :bottom="" :center="">
+       Eagle Air UG 
+     </vaadin-label> 
+     <vaadin-label style-name="sn-lb-platform-desc" size-auto="true" plain-text="" :center="">
+       Booking &amp; Payment Reference System 
+     </vaadin-label> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-user-identity" width-auto="true" height-full="true" _id="userIdentity" :right=""> 
+     <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-username-dropdown-c" size-auto="true"> 
+      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin-left="true" _id="usernameMore" :bottom="" :right=""> 
+       <vaadin-label size-auto="true" plain-text="" _id="username" :middle="" :center="">
+         admin 
+       </vaadin-label> 
+       <vaadin-button icon="fonticon://FontAwesome/f142" style-name="borderless sn-more-btnx" plain-text="" _id="userOps"></vaadin-button> 
+      </vaadin-horizontal-layout> 
+      <vaadin-vertical-layout visible="false" primary-style-name="v-verticallayout" style-name="sn-more-drop-down" _id="moreDropDown"> 
+       <vaadin-button icon="fonticon://FontAwesome/f044" style-name="borderless icon-align-right" width-full="true" plain-text="">
+         Username 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f044" style-name="borderless icon-align-right" width-full="true" plain-text="">
+         Password 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f061" style-name="borderless icon-align-right" width-full="true" plain-text="">
+         Logout 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-default-home-form-controls default-home" immediate="true" size-full="true" _id="midContent" :expand=""> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" size-full="true" :expand=""> 
+     <vaadin-panel style-name="sn-left-menu-c" width="250px" height-full="true" _id="leftBar"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout"> 
+       <vaadin-button icon="fonticon://FontAwesome/f080" style-name="icon-align-top borderless" width-full="true" plain-text="">
+         Dashboard 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f02d" style-name="borderless icon-align-top" width-full="true" plain-text="">
+         New Booking 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f187" style-name="borderless icon-align-top" width-full="true" plain-text="">
+         Report 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+     </vaadin-panel> 
+     <vaadin-vertical-layout primary-style-name="v-verticallayout" size-full="true" _id="rightContent" :expand=""> 
+      <vaadin-panel size-full="true" _id="content" :middle="" :center="" :expand=""> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" spacing="true" margin="true"> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-fd-all" _id="allTodayFlights"> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-dashboard-card-head sn-flight-all" margin="true" _id="headBookedScheduledFlights5" :middle="" :center=""> 
+          <vaadin-label size-auto="true" plain-text="">
+            All Today's Booked Flights 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-fd-all" height="169px" _id="cDetailsScheduledFlights5" :middle="" :center=""> 
+          <vaadin-panel size-full="true" :expand=""> 
+           <vaadin-table width-full="true"></vaadin-table> 
+          </vaadin-panel> 
+         </vaadin-vertical-layout> 
+        </vaadin-vertical-layout> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" _id="bookedScheduledFlights"> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-dashboard-card-head sn-flight-scheduled" margin="true" _id="headBookedScheduledFlights" :middle="" :center=""> 
+          <vaadin-label size-auto="true" plain-text="">
+            Booked Scheduled Flights 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-details-scheduled-flights" height="169px" _id="cDetailsScheduledFlights" :middle="" :center=""> 
+          <vaadin-panel size-full="true" :expand=""> 
+           <vaadin-table width-full="true"></vaadin-table> 
+          </vaadin-panel> 
+         </vaadin-vertical-layout> 
+        </vaadin-vertical-layout> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" _id="bookedChartedFlights"> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-dashboard-card-head sn-flight-chartered" margin="true" _id="headBookedScheduledFlights2" :middle="" :center=""> 
+          <vaadin-label size-auto="true" plain-text="">
+            Booked Chartered Flights 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-details-scheduled-flights" height="169px" _id="cDetailsScheduledFlights2" :middle="" :center=""> 
+          <vaadin-panel size-full="true" :expand=""> 
+           <vaadin-table width-full="true"></vaadin-table> 
+          </vaadin-panel> 
+         </vaadin-vertical-layout> 
+        </vaadin-vertical-layout> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" _id="rescheduledFlights"> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-dashboard-card-head sn-flight-rescheduled" margin="true" _id="headBookedScheduledFlights3" :middle="" :center=""> 
+          <vaadin-label size-auto="true" plain-text="">
+            Rescheduled Flights 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-details-scheduled-flights" height="169px" _id="cDetailsScheduledFlights3" :middle="" :center=""> 
+          <vaadin-panel size-full="true" :expand=""> 
+           <vaadin-table width-full="true"></vaadin-table> 
+          </vaadin-panel> 
+         </vaadin-vertical-layout> 
+        </vaadin-vertical-layout> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" _id="cancelledFlights"> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-dashboard-card-head sn-flight-cancelled" margin="true" _id="headBookedScheduledFlights4" :middle="" :center=""> 
+          <vaadin-label size-auto="true" plain-text="">
+            Cancelled Flights 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-details-scheduled-flights" height="169px" _id="cDetailsScheduledFlights4" :middle="" :center=""> 
+          <vaadin-panel size-full="true" :expand=""> 
+           <vaadin-table width-full="true"></vaadin-table> 
+          </vaadin-panel> 
+         </vaadin-vertical-layout> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-panel> 
+      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-default-home-footer sn-lower" width-full="true" height="36px" _id="footerMain"> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-footer-content" :middle="" :center=""> 
+        <vaadin-label size-auto="true" plain-text="">
+          Copyright @ 2016 
+        </vaadin-label> 
+        <vaadin-label style-name="sn-footer-yr-separator" size-auto="true" plain-text="" _id="footerYearSeparator">
+          - 
+        </vaadin-label> 
+        <vaadin-label style-name="sn-footer-current-yr" size-auto="true" plain-text="" _id="footerCurretYr">
+          2016 
+        </vaadin-label> 
+        <vaadin-label style-name="sn-footer-platform-boss" size-auto="true" plain-text="" _id="footerPlatformBoss">
+          Eagle Air Uganda 
+        </vaadin-label> 
+        <vaadin-label size-auto="true" plain-text="">
+          , All rights reserved. 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-horizontal-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

@@ -1,0 +1,9 @@
+@import "addons.scss";
+@import "lec_portal.scss";
+
+/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
+/* The actual styles should be defined in lec_portal.scss */
+.lec_portal {
+  @include addons;
+  @include lec_portal;
+}

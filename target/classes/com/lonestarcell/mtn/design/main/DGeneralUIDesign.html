@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout size-full> 
+   <vaadin-vertical-layout style-name="sn-eagle-header-c" _id="cHeader"> 
+    <vaadin-vertical-layout style-name="sn-eagle-blue" height="175px"> 
+     <vaadin-horizontal-layout style-name="sn-eagle-white sn-btn-login-c" width-full height="54px" :bottom :center> 
+      <vaadin-button style-name="sn-btn-login-home danger" plain-text _id="btnLoginHome" :right>
+        Login 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout style-name="sn-logo-area sn-side-page-margin" size-auto _id="logoArea"> 
+     <vaadin-horizontal-layout spacing> 
+      <vaadin-vertical-layout style-name="sn-logo-c" size-auto> 
+       <vaadin-button style-name="icon-align-top sn-img-button-link" width="228px" height="168px" plain-text :expand>
+         Online Flight Payment 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+      <vaadin-horizontal-layout style-name="sn-page-location-c" spacing :bottom> 
+       <vaadin-label style-name="sn-online" size-auto plain-text :bottom>
+         Online Payment 
+       </vaadin-label> 
+       <vaadin-label style-name="sn-pay-type" size-auto plain-text :bottom>
+         Mobile Money 
+       </vaadin-label> 
+       <vaadin-label style-name="sn-pay-type-provider" size-auto plain-text :bottom>
+         MTN 
+       </vaadin-label> 
+      </vaadin-horizontal-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+   <vaadin-panel style-name="sn-eagle-panel-no-border" size-full _id="cMidContent" :bottom :expand> 
+    <vaadin-vertical-layout> 
+     <vaadin-vertical-layout style-name="sn-c-pay sn-dark-red-band" _id="cPay" :center> 
+      <vaadin-vertical-layout :center> 
+       <vaadin-vertical-layout style-name="sn-home-message" size-auto _id="cMessage"> 
+        <vaadin-horizontal-layout width-full height="105px" _id="cPayOptHeader"> 
+         <vaadin-vertical-layout _id="cPayWelcomeMsg" :middle :expand> 
+          <vaadin-label style-name="bold large sn-font-deep-blue" size-auto plain-text>
+            Welcome to the Airlines Online Payment System. 
+          </vaadin-label> 
+          <vaadin-label style-name="bold small sn-font-desc" size-auto plain-text>
+            Pay your booked flight using any mobile phone or your bank card. 
+          </vaadin-label> 
+          <vaadin-label style-name="bold small sn-font-desc" size-auto>
+            It's 
+           <em><b>fast</b></em>, 
+           <em><b>convinient</b></em>, and 
+           <em><b>secure</b></em>. 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+         <vaadin-vertical-layout style-name="sn-c-pay-help sn-c-get-started" size-auto _id="cPayHelp" :middle> 
+          <vaadin-button visible="false" icon="fonticon://FontAwesome/f0d7" style-name="icon-align-right borderless bold" size-full plain-text :expand>
+            Need help? 
+          </vaadin-button> 
+          <vaadin-button icon="fonticon://FontAwesome/f061" style-name="icon-align-right friendly sn-btn-get-started" height="32px" plain-text>
+            Get started 
+          </vaadin-button> 
+         </vaadin-vertical-layout> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-vertical-layout> 
+     <vaadin-vertical-layout style-name="sn-c-ads" _id="cAds" :center> 
+      <vaadin-horizontal-layout style-name="sn-inner-cards-c" :center> 
+       <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card" width="375px" height="338px" _id="cMobileAd"> 
+        <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM2"> 
+         <vaadin-vertical-layout spacing size-auto margin-top :center> 
+          <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm" width="120px" height="120px" :center></vaadin-horizontal-layout> 
+          <vaadin-label style-name="large bold" size-auto plain-text>
+            Mobile Money 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+        </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout style-name="sn-c-mm-slogan" margin-left margin-right margin-top _id="cMMSlogan2"> 
+         <vaadin-label style-name="sn-ad-desc" size-full plain-text>
+           Anytime, anywhere, enjoy the convinience of mobile money by paying for your booked flight using any of our registered mobile money service providers! 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+       <vaadin-vertical-layout style-name="sn-ad-card" width="372px" height="338px" _id="cCardAd"> 
+        <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM3"> 
+         <vaadin-vertical-layout spacing size-auto margin-top :center> 
+          <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-bank-card" width="120px" height="120px" :center></vaadin-horizontal-layout> 
+          <vaadin-label style-name="large bold" size-auto plain-text>
+            Card Advantage 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+        </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout style-name="sn-c-mm-slogan" margin-left margin-right margin-top _id="cMMSlogan3"> 
+         <vaadin-label style-name="sn-ad-desc" size-full plain-text>
+           Use any of our card options above to enforce your payment for a booked flight directly. It's easier and faster than lining up in the bank! 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+       <vaadin-vertical-layout style-name="sn-ad-card sn-right-ad-card" width="375px" height="338px" _id="cSecurityAdd"> 
+        <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM4"> 
+         <vaadin-vertical-layout spacing size-auto margin-top :center> 
+          <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-security" width="120px" height="120px" :center></vaadin-horizontal-layout> 
+          <vaadin-label style-name="large bold" size-auto plain-text>
+            Site Security 
+          </vaadin-label> 
+         </vaadin-vertical-layout> 
+        </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout style-name="sn-c-mm-slogan" margin-left margin-right margin-top _id="cMMSlogan4"> 
+         <vaadin-label style-name="sn-ad-desc" size-full plain-text>
+           Have the desired peace of mind when using our platform because it's fully protected! 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-panel> 
+   <vaadin-vertical-layout style-name="sn-footer-c" height="55px" _id="cFooter" :bottom> 
+    <vaadin-horizontal-layout width-full _id="cFooterInner" :middle :center> 
+     <vaadin-label size-auto plain-text>
+       Copyright @ Eagle Air Uganda 2016-2017. All rights reserved. 
+     </vaadin-label> 
+     <vaadin-horizontal-layout visible="false" style-name="sn-right-footer-c" spacing _id="cFooterRight" :right> 
+      <vaadin-button style-name="borderless" height="15px" plain-text>
+        Eagle Air Main Website 
+      </vaadin-button> 
+      <vaadin-button style-name="borderless" height="15px" plain-text>
+        Terms 
+      </vaadin-button> 
+      <vaadin-button style-name="borderless" height="15px" plain-text>
+        Disclaimer 
+      </vaadin-button> 
+      <vaadin-button style-name="borderless" height="15px" plain-text>
+        About 
+      </vaadin-button> 
+      <vaadin-button style-name="borderless sn-f-last" height="16px" plain-text>
+        FAQs 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-horizontal-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

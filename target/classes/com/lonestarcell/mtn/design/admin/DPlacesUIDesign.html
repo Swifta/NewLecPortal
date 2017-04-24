@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-pay sn-c-pay-opt" size-auto="true" _id="cPay"> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true" _id="cMMRightContent"> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref sn-c-opts-popup-header" width-full="true" margin="true" _id="mmPanelHead2"> 
+     <vaadin-label style-name="bold" plain-text="" :expand="">
+       Places 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel sn-panel-noborder" size-auto="true" _id="mmPanel2" :expand=""> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-c-right-panel-v" margin-left="true" margin-top="true"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto="true" _id="cGridParent"> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-cbd-head" width-full="true" margin-left="true" margin-right="true" _id="cBDHead"> 
+        <vaadin-label style-name="bold sn-label-underline" plain-text="">
+          List of Existing Places 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true" margin-left="true" margin-right="true" _id="cAddNewPlace"> 
+        <vaadin-button description="Edit Username/Password" style-name="friendly" plain-text="" _id="btnNewPlace">
+          Add New Place 
+        </vaadin-button> 
+       </vaadin-horizontal-layout> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true" _id="cGridPlaces"> 
+        <vaadin-horizontal-layout primary-style-name="v-horizontallayout" margin-left="true" margin-right="true" _id="cBDBody"></vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-vertical-layout> 
+      <vaadin-vertical-layout visible="false" primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-popup-form" spacing="true" size-auto="true" margin="true" _id="cPlaceForm"> 
+       <vaadin-label style-name="bold tiny failure" width="300px" plain-text="" _id="lbErrorMsg">
+         Invalid value. 
+       </vaadin-label> 
+       <vaadin-label style-name="bold tiny success light" immediate="true" width="300px" _id="lbNormalMsg">
+         Enter New Place Details 
+       </vaadin-label> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true"> 
+        <vaadin-text-field description="Enter new username" caption="Place Full Name [i.e ENTEBBE]" width="99.63%" _id="tFNewPlaceName"></vaadin-text-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true"> 
+        <vaadin-password-field caption="Place Abbreviation [i.e. EBB for ENTEBBE]" width-full="true" _id="tFNewPlaceAbbrv" :expand=""></vaadin-password-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin-top="true" _id="cControls" :right=""> 
+        <vaadin-button style-name="danger" plain-text="" _id="btnCancel">
+          Cancel 
+        </vaadin-button> 
+        <vaadin-button style-name="primary" plain-text="" _id="btnSave">
+          Add 
+        </vaadin-button> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-panel> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

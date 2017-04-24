@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-c-pay sn-c-pay-opt" size-auto> 
+   <vaadin-vertical-layout size-auto _id="cMMRightContent"> 
+    <vaadin-horizontal-layout style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref sn-c-opts-popup-header" width-full margin _id="mmPanelHead2"> 
+     <vaadin-label style-name="bold" plain-text :expand>
+       User Profile 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel" size-auto _id="mmPanel2" :expand> 
+     <vaadin-horizontal-layout style-name="sn-c-right-panel-v" margin-top> 
+      <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto _id="cBookingDetails"> 
+       <vaadin-horizontal-layout style-name="sn-cbd-head" margin-left margin-right _id="cBDHead"> 
+        <vaadin-label style-name="bold sn-label-underline" width="329px" plain-text>
+          Profile Details 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-vertical-layout size-auto> 
+        <vaadin-horizontal-layout margin-left _id="cBDBody"> 
+         <vaadin-form-layout spacing="false" size-auto margin-top="false" margin-bottom="false"> 
+          <vaadin-label caption="Username" style-name="small" size-auto plain-text _id="lbUN">
+            XXXXXXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Password" style-name="small" size-auto plain-text _id="lbPass">
+            ************ 
+          </vaadin-label> 
+          <vaadin-label caption="Full Name" style-name="small" size-auto plain-text _id="lbFullN">
+            XXXXXXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Created By" style-name="small" size-auto plain-text _id="lbCreatedBy">
+            XXXXXXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Date Created" style-name="small" size-auto plain-text _id="lbDateCreated">
+            XXXXXXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Role" style-name="small" size-auto plain-text _id="lbRole">
+            XXXXXXXX 
+          </vaadin-label> 
+          <vaadin-label caption="Last login" style-name="small" size-auto plain-text _id="lbLastLogin">
+            XXXXXXXX 
+          </vaadin-label> 
+         </vaadin-form-layout> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+       <vaadin-button description="Edit Username/Password" style-name="friendly" plain-text _id="btnChangeProfile" :center>
+         Change Username/Password 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+      <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-popup-form" spacing size-auto margin _id="cEditProfileForm"> 
+       <vaadin-label style-name="bold tiny failure" width="300px" plain-text _id="lbErrorMsg">
+         Invalid value. 
+       </vaadin-label> 
+       <vaadin-label style-name="bold tiny success light" immediate width="300px" _id="lbNormalMsg">
+         Change Username/Password 
+        <br> Enter new username or/and Password. 
+       </vaadin-label> 
+       <vaadin-horizontal-layout width-full> 
+        <vaadin-check-box caption="Username" _id="chkUsername"></vaadin-check-box> 
+        <vaadin-check-box caption="Password" _id="chkPass"></vaadin-check-box> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout width-full> 
+        <vaadin-text-field description="Enter new username" caption="New Username" width="99.63%" _id="tFNewUsername"></vaadin-text-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout width-full> 
+        <vaadin-password-field caption="Current Password" width-full _id="tFCurrentPass" :expand></vaadin-password-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout width-full> 
+        <vaadin-password-field caption="New Password" width-full _id="tFNewPass" :expand></vaadin-password-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout width-full> 
+        <vaadin-password-field caption="Confirm New Pass" width-full _id="tFConfirmNewPass" :expand></vaadin-password-field> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout spacing margin-top _id="cControls" :right> 
+        <vaadin-button style-name="danger" plain-text _id="btnCancel">
+          Close 
+        </vaadin-button> 
+        <vaadin-button style-name="primary" plain-text _id="btnSave">
+          Save 
+        </vaadin-button> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-panel> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

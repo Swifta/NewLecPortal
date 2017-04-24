@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-test2" size-auto="true" _id="rightContent3"> 
+   <vaadin-panel style-name="sn-content-background-color sn-eagle-panel-no-border" size-full="true" _id="content3" :middle="" :center="" :expand=""> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" spacing="true" size-auto="true" margin="true"> 
+     <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ads sn-ref" spacing="true" size-auto="true" _id="cForms3"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-right-panel-v sn-ref" spacing="true"> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto="true" _id="cBookingDetails5" :center=""> 
+        <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-cbd-head sn-ref sn-booking-form-header-c" margin="true" _id="cBDHead5"> 
+         <vaadin-label style-name="bold" width="442px" plain-text="" _id="lbFormHeader">
+           Enter Client Booking Details 
+         </vaadin-label> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-ref" size-auto="true" margin="true" _id="cMobileNumber5" :center=""> 
+        <vaadin-label visible="false" style-name="bold tiny failure" plain-text="">
+          Invalid MTN phone number. 
+        </vaadin-label> 
+        <vaadin-label size-auto="true" plain-text="">
+          Client Name 
+        </vaadin-label> 
+        <vaadin-text-field width="442px" _id="tFClient"></vaadin-text-field> 
+        <vaadin-label size-auto="true" plain-text="">
+          Booking Reference 
+        </vaadin-label> 
+        <vaadin-text-field width="442px" _id="tFBookingRef"></vaadin-text-field> 
+        <vaadin-label size-auto="true" plain-text="">
+          Flight Cost (USD) 
+        </vaadin-label> 
+        <vaadin-text-field width="442px" _id="tFCost"></vaadin-text-field> 
+        <vaadin-label size-auto="true" plain-text="">
+          Flight Date 
+        </vaadin-label> 
+        <vaadin-popup-date-field invalid-allowed="false" immediate="true" width="441px" _id="tFDate"></vaadin-popup-date-field> 
+        <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin-top="true" _id="cControls5" :right=""> 
+         <vaadin-button style-name="danger" plain-text="" _id="btnCancel">
+           Cancel 
+         </vaadin-button> 
+         <vaadin-button style-name="primary" plain-text="" _id="btnAdd">
+           Add 
+         </vaadin-button> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-panel> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

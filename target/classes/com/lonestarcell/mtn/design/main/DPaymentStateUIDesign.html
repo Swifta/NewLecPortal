@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-pay sn-c-pay-opt" width="600px" _id="cPay"> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" _id="cMMRightContent" :center="" :expand=""> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref" width-full="true" margin="true" _id="mmPanelHead2"> 
+     <vaadin-label style-name="bold" plain-text="" _id="lbPopupDescription" :expand="">
+       Now Processing... Please check your phone for prompts. 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel" _id="mmPanel2" :center="" :expand=""> 
+     <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-right-panel-v" spacing="true" margin="true"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-booking-details sn-no-border-left" size-auto="true" margin="true" _id="cBookingDetails" :center=""> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-cbd-head" width="259px" margin-top="true" :center=""> 
+        <vaadin-button icon="fonticon://FontAwesome/f164" style-name="icon-only btn-icon-green friendly" plain-text="" _id="btnSuccess" :center="">
+          Button 
+        </vaadin-button> 
+        <vaadin-button icon="fonticon://FontAwesome/f12a" style-name="icon-only btn-icon-green danger" plain-text="" _id="btnFailed" :center="">
+          Button 
+        </vaadin-button> 
+        <vaadin-label style-name="bold spinner" width="442px" plain-text="" _id="lbSpinner" :center=""></vaadin-label> 
+        <vaadin-label width-auto="true" height="30px" plain-text="" _id="lbState" :center="">
+          sending request... 
+        </vaadin-label> 
+       </vaadin-vertical-layout> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true"> 
+        <vaadin-label style-name="bold light tiny sn-bolder" width-auto="true" height="19px" plain-text="" _id="lbDescription" :center="">
+          Y'ello! Please stand by to approve your payment on the phone number below 
+        </vaadin-label> 
+        <vaadin-label style-name="bold light tiny sn-bolder" width-auto="true" height="19px" plain-text="" _id="lbDescription2" :center="">
+          a 
+        </vaadin-label> 
+        <vaadin-horizontal-layout primary-style-name="v-horizontallayout" margin-bottom="true" :center=""> 
+         <vaadin-button icon="fonticon://FontAwesome/f095" style-name="sn-state-ui-phone tiny borderless" plain-text="" _id="btnPhoneIcon"></vaadin-button> 
+         <vaadin-label size-auto="true" plain-text="" _id="lbMSISDN" :center="">
+           0778777875 
+         </vaadin-label> 
+        </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true" _id="cApprovalSteps" :center=""> 
+         <vaadin-label style-name="tiny" width-auto="true" height="19px" plain-text="" _id="lbRefreshWarning2">
+           1. Dial *165# 
+         </vaadin-label> 
+         <vaadin-label style-name="tiny" width-auto="true" height="19px" plain-text="" _id="lbRefreshWarning3">
+           2. select My Account 
+         </vaadin-label> 
+         <vaadin-label style-name="tiny" width-auto="true" height="19px" plain-text="" _id="lbRefreshWarning4">
+           3. select My Approvals 
+         </vaadin-label> 
+         <vaadin-label style-name="tiny" width-auto="true" height="19px" plain-text="" _id="lbRefreshWarning5">
+           ...then proceed with the prompts 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+        <vaadin-label style-name="tiny" width-auto="true" height="19px" plain-text="" _id="lbRefreshWarning" :center="">
+          This page will automatically refresh after 30 seconds. 
+        </vaadin-label> 
+        <vaadin-horizontal-layout primary-style-name="v-horizontallayout" :center=""> 
+         <vaadin-button style-name="primary tiny" plain-text="" _id="btnClose" :center="">
+           Close 
+         </vaadin-button> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-panel> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

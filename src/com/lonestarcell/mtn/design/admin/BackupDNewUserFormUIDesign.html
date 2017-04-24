@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-default-home" size-full="true"> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-eagle-header-c" _id="cHeader"> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-eagle-blue" height="175px"> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-eagle-white" width-full="true" height="54px" :bottom="" :center=""> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-user-identity sn-ref" width-auto="true" height-full="true" _id="userIdentity" :middle="" :right=""> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-username-dropdown-c sn-ref" size-auto="true"> 
+        <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin-left="true" _id="usernameMore" :bottom="" :right=""> 
+         <vaadin-label size-auto="true" plain-text="" _id="username" :middle="" :center="">
+           admin 
+         </vaadin-label> 
+         <vaadin-button icon="fonticon://FontAwesome/f142" style-name="borderless sn-more-btnx" plain-text="" _id="userOps"></vaadin-button> 
+        </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-more-drop-down" _id="moreDropDown"> 
+         <vaadin-button icon="fonticon://FontAwesome/f044" style-name="borderless icon-align-right" width-full="true" plain-text="">
+           Username 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f044" style-name="borderless icon-align-right" width-full="true" plain-text="">
+           Password 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f061" style-name="borderless icon-align-right" width-full="true" plain-text="">
+           Logout 
+         </vaadin-button> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-logo-area sn-side-page-margin sn-ref" size-auto="true" _id="logoArea"> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-logo-c" size-auto="true"> 
+       <vaadin-button style-name="icon-align-top sn-img-button-link sn-sys-name-small" width="228px" height="168px" plain-text="" :expand="">
+         Booking &amp; Payment Reference 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-page-location-c" spacing="true" :bottom=""> 
+       <vaadin-label style-name="sn-online" size-auto="true" plain-text="" :bottom="">
+         Online Payment 
+       </vaadin-label> 
+       <vaadin-label style-name="sn-pay-type" size-auto="true" plain-text="" :bottom="">
+         Mobile Money 
+       </vaadin-label> 
+       <vaadin-label style-name="sn-pay-type-provider" size-auto="true" plain-text="" :bottom="">
+         MTN 
+       </vaadin-label> 
+      </vaadin-horizontal-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-default-home-form-controls default-home" immediate="true" size-full="true" _id="midContent" :expand=""> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" size-full="true" :expand=""> 
+     <vaadin-panel style-name="sn-left-menu-c sn-eagle-blue sn-test3" width="226px" height-full="true" _id="leftBar"> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout"> 
+       <vaadin-button icon="fonticon://FontAwesome/f080" style-name="icon-align-top borderless" width-full="true" plain-text="">
+         Dashboard 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f007" style-name="borderless icon-align-top" width-full="true" plain-text="">
+         New User 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f0c0" style-name="borderless icon-align-top" width-full="true" plain-text="">
+         Users 
+       </vaadin-button> 
+       <vaadin-button icon="fonticon://FontAwesome/f187" style-name="borderless icon-align-top" width-full="true" plain-text="">
+         Reports 
+       </vaadin-button> 
+      </vaadin-vertical-layout> 
+     </vaadin-panel> 
+     <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-test2" size-full="true" _id="rightContent" :expand=""> 
+      <vaadin-panel style-name="sn-content-background-color" size-full="true" _id="content" :middle="" :center="" :expand=""> 
+       <vaadin-vertical-layout primary-style-name="v-verticallayout" spacing="true" size-auto="true" margin="true"> 
+        <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ads sn-ref" spacing="true" size-auto="true" _id="cForms"> 
+         <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-right-panel-v sn-ref" spacing="true"> 
+          <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto="true" _id="cBookingDetails3" :center=""> 
+           <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-cbd-head sn-ref" margin="true" _id="cBDHead3"> 
+            <vaadin-label style-name="bold" width="442px" plain-text="">
+              Enter New User Details 
+            </vaadin-label> 
+           </vaadin-horizontal-layout> 
+          </vaadin-vertical-layout> 
+          <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-ref-form sn-c-form sn-ref" size-auto="true" margin="true" _id="cMobileNumber3" :center=""> 
+           <vaadin-label visible="false" style-name="bold tiny failure" plain-text="">
+             Invalid MTN phone number. 
+           </vaadin-label> 
+           <vaadin-label size-auto="true" plain-text="">
+             First Name 
+           </vaadin-label> 
+           <vaadin-text-field width="442px"></vaadin-text-field> 
+           <vaadin-label size-auto="true" plain-text="">
+             Last Name 
+           </vaadin-label> 
+           <vaadin-text-field width="442px"></vaadin-text-field> 
+           <vaadin-label size-auto="true" plain-text="">
+             Email Address 
+           </vaadin-label> 
+           <vaadin-text-field width="442px"></vaadin-text-field> 
+           <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
+            <vaadin-vertical-layout primary-style-name="v-verticallayout" width="359px"> 
+             <vaadin-label size-auto="true" plain-text="">
+               User Profile 
+             </vaadin-label> 
+             <vaadin-combo-box item-caption-mode="id" width="348px"> 
+              <option>Option 1</option> 
+              <option>Option 2</option> 
+              <option>Option 3</option> 
+             </vaadin-combo-box> 
+            </vaadin-vertical-layout> 
+            <vaadin-vertical-layout primary-style-name="v-verticallayout" size-auto="true"> 
+             <vaadin-label size-auto="true" plain-text="">
+               Enabled 
+             </vaadin-label> 
+             <vaadin-check-box></vaadin-check-box> 
+            </vaadin-vertical-layout> 
+           </vaadin-horizontal-layout> 
+           <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin-top="true" _id="cControls3" :right=""> 
+            <vaadin-button style-name="danger" plain-text="" _id="btnCancel3">
+              Cancel 
+            </vaadin-button> 
+            <vaadin-button style-name="primary" plain-text="" _id="btnNext3">
+              Save 
+            </vaadin-button> 
+           </vaadin-horizontal-layout> 
+          </vaadin-vertical-layout> 
+         </vaadin-vertical-layout> 
+        </vaadin-vertical-layout> 
+       </vaadin-vertical-layout> 
+      </vaadin-panel> 
+      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-default-home-footer sn-lower sn-footer-c" width-full="true" height="36px" _id="footerMain"> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-footer-content sn-ref" :middle="" :center=""> 
+        <vaadin-label size-auto="true" plain-text="">
+          Copyright @ 2016 
+        </vaadin-label> 
+        <vaadin-label style-name="sn-footer-yr-separator" size-auto="true" plain-text="" _id="footerYearSeparator">
+          - 
+        </vaadin-label> 
+        <vaadin-label style-name="sn-footer-current-yr" size-auto="true" plain-text="" _id="footerCurretYr">
+          2016 
+        </vaadin-label> 
+        <vaadin-label style-name="sn-footer-platform-boss" size-auto="true" plain-text="" _id="footerPlatformBoss">
+          Eagle Air Uganda 
+        </vaadin-label> 
+        <vaadin-label size-auto="true" plain-text="">
+          , All rights reserved. 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+      </vaadin-horizontal-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-horizontal-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

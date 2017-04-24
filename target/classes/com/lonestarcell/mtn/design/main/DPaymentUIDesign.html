@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;eagle&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout primary-style-name="v-verticallayout" width="968px" height="543px"> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true" height="105px" _id="cPayOptHeader"> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" _id="cPayWelcomeMsg" :middle="" :expand=""> 
+     <vaadin-label style-name="bold large sn-font-deep-blue" size-auto="true" plain-text="">
+       Choose payment 
+     </vaadin-label> 
+     <vaadin-label style-name="bold small sn-font-desc" size-auto="true">
+       Click on any of the payment options listed below to proceed. 
+     </vaadin-label> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-pay-help" width="134px" height="35px" _id="cPayHelp" :middle="" :right=""> 
+     <vaadin-button icon="fonticon://FontAwesome/f0d7" style-name="icon-align-right borderless bold" size-full="true" plain-text="" :expand="">
+       Need help? 
+     </vaadin-button> 
+    </vaadin-vertical-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-c-pay-opt" size-full="true" _id="cPayOpt" :expand=""> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" size-full="true" _id="cMobileMoney"> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-panel-head" width-full="true" margin="true" _id="mmPanelHead"> 
+      <vaadin-label style-name="sn-mm-lb" plain-text="" :center="" :expand="">
+        Mobile Money 
+      </vaadin-label> 
+     </vaadin-horizontal-layout> 
+     <vaadin-panel style-name="sn-mm-panel" size-full="true" _id="mmPanel" :expand=""> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-mm-list" margin-top="true" _id="cMMList"> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-mm-list-first sn-mm-list-active" spacing="true" width-full="true" height="78px" margin-left="true" margin-right="true" _id="listItemMTN"> 
+        <vaadin-button style-name="sn-mm-mtn icon-only sn-mm-btn-icon" width="80px" height="60px" plain-text="" :middle="" :center="">
+          MTN 
+        </vaadin-button> 
+        <vaadin-label style-name="large bold" plain-text="" :middle="" :expand="">
+          MTN Mobile Money 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout visible="false" primary-style-name="v-horizontallayout" style-name="sn-mm-list-btn" spacing="true" width-full="true" height="78px" _id="btnTrial"> 
+        <vaadin-button icon="fonticon://FontAwesome/f03e" size-full="true" plain-text="" :expand="">
+          Button 
+        </vaadin-button> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" height="78px" margin-left="true" margin-right="true"> 
+        <vaadin-button style-name="sn-mm-aitel icon-only sn-mm-btn-icon" width="80px" height="60px" plain-text="" :middle="" :center="">
+          Airtel 
+        </vaadin-button> 
+        <vaadin-label style-name="large bold" plain-text="" :middle="" :expand="">
+          Airtel Money 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" height="78px" margin-left="true" margin-right="true"> 
+        <vaadin-button style-name="sn-mm-mpesa icon-only sn-mm-btn-icon" width="80px" height="60px" plain-text="" :middle="" :center="">
+          mPesa 
+        </vaadin-button> 
+        <vaadin-label style-name="large bold" plain-text="" :middle="" :expand="">
+          MPesa 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" height="78px" margin-left="true" margin-right="true"> 
+        <vaadin-button style-name="sn-mm-m-sente icon-only sn-mm-btn-icon" width="80px" height="60px" plain-text="" :middle="" :center="">
+          m-sente 
+        </vaadin-button> 
+        <vaadin-label style-name="large bold" plain-text="" :middle="" :expand="">
+          UTL m-sente 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-panel> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" size-full="true" _id="cCard" :right=""> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-panel-head sn-panel-head-card" width-full="true" margin="true" _id="mmPanelHead2"> 
+      <vaadin-label size-auto="true" plain-text="">
+        Card 
+      </vaadin-label> 
+     </vaadin-horizontal-layout> 
+     <vaadin-panel style-name="sn-mm-panel" size-full="true" _id="mmPanel2" :expand=""> 
+      <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="sn-c-mm-list" margin-top="true" _id="cMMList2"> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="sn-mm-list-first sn-mm-list-active" spacing="true" width-full="true" height="78px" margin-left="true" margin-right="true"> 
+        <vaadin-button style-name="icon-only sn-mm-btn-icon sn-card-visa" width="80px" height="60px" plain-text="" :middle="" :center="">
+          Visa 
+        </vaadin-button> 
+        <vaadin-label style-name="large bold" plain-text="" :middle="" :expand="">
+          Visa 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" height="78px" margin-left="true" margin-right="true"> 
+        <vaadin-button style-name="icon-only sn-mm-btn-icon sn-card-paypal" width="80px" height="60px" plain-text="" :middle="" :center="">
+          Paypal 
+        </vaadin-button> 
+        <vaadin-label style-name="large bold" plain-text="" :middle="" :expand="">
+          Paypal 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-panel> 
+    </vaadin-vertical-layout> 
+   </vaadin-horizontal-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>
