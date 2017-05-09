@@ -1,13 +1,13 @@
 package com.lonestarcell.mtn.bean;
 
-public class OutTxn {
+import java.io.Serializable;
+
+public class OutTxn implements Serializable {
 	
+	private static final long serialVersionUID = 7431320759077668024L;
 	private String date, tokenStatus, txnType, itronId, reqCount, sessionVar, mmoId, meterNo, msisdn, token, ReqCurrency, payStatus, statusDesc, swiftaId;
 	private int profileId;
 	private Double amount, rate;
-	//private short PayStatus;
-	
-		
 	public String getSessionVar() {
 		return sessionVar;
 	}
@@ -113,6 +113,8 @@ public class OutTxn {
 	public void setReqCount(String reqCount) {
 		this.reqCount = reqCount;
 	}
+	
+	
 	
 	
 	

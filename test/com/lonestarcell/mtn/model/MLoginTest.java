@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -15,6 +17,8 @@ public class MLoginTest {
 
 	private static MLogin m;
 	
+	Logger log = LogManager.getLogger();
+	
 	@BeforeClass
 	public static void init(){
 		m = new MLogin();
@@ -29,6 +33,7 @@ public class MLoginTest {
 	}
 	
 	@Test
+	//@Ignore
 	public void loginTest(){
 			
 		InLogin inData = new InLogin();
@@ -45,8 +50,12 @@ public class MLoginTest {
 		Assert.assertNotNull( out );
 		Assert.assertNotNull( out.getData() );
 		Assert.assertNotNull( out.getData().getData() );
+		
 		Assert.assertTrue( out.getStatusCode() == 1 );
 	}
+	
+	
+
 	
 	@Test
 	@Ignore( "Closed pool." )

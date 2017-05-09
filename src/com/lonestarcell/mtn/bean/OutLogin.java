@@ -1,10 +1,18 @@
 package com.lonestarcell.mtn.bean;
 
-public class OutLogin {
+import java.io.Serializable;
+
+import com.vaadin.data.Item;
+
+public class OutLogin implements Serializable{
 	
-	private String sessionVar;
+	private static final long serialVersionUID = -5510898681155125171L;
+	private String sessionVar, username, password;
 	private String status, changePassword;
 	private int profileId;
+	private Long userId;
+	
+	private Item record;
 	
 	public String getSessionVar() {
 		return sessionVar;
@@ -30,6 +38,37 @@ public class OutLogin {
 	public void setProfileId(int profileId) {
 		this.profileId = profileId;
 	}
+	public Item getRecord() {
+		return record;
+	}
+	public void setRecord(Item record) {
+		this.record = record;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 

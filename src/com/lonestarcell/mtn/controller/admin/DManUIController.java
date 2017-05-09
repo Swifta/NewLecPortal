@@ -257,12 +257,9 @@ public class DManUIController extends DManagementUIDesign implements View,
 		});
 	}
 
-	private void attachBtnRoutes() {
+	/*private void attachBtnRoutes() {
 		this.btnRoutes.addClickListener(new ClickListener() {
 
-			/**
-				 * 
-				 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -273,7 +270,7 @@ public class DManUIController extends DManagementUIDesign implements View,
 			}
 
 		});
-	}
+	} */
 
 	@Override
 	public void attachCommandListeners() {
@@ -290,7 +287,7 @@ public class DManUIController extends DManagementUIDesign implements View,
 		attachBtnProfile();
 		attachBtnTodayBooking();
 		attachBtnPlaces();
-		attachBtnRoutes();
+		//attachBtnRoutes();
 
 	}
 

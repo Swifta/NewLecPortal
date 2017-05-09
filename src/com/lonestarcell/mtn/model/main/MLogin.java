@@ -44,8 +44,8 @@ public class MLogin extends Model {
 			 conn = dataSource.getConnection();
 			 conn.setReadOnly(true);
 			 
-			 BData< ? > bInData = in.getData();
-			 inLogin = (InLogin) bInData.getData();
+			BData< ? > bInData = in.getData();
+			inLogin = (InLogin) bInData.getData();
 			 
 			conn.setReadOnly( true );
 			ps = conn.prepareStatement( q );
@@ -54,6 +54,7 @@ public class MLogin extends Model {
 			rs = ps.executeQuery();
 			if( !rs.next() ) {
 				log.debug( "No result" );
+				out.setStatusCode( 403 );
 				return out;
 			}
 			
@@ -74,17 +75,21 @@ public class MLogin extends Model {
 				outLogin = new OutLogin();
 				outLogin.setSessionVar( session );
 				outLogin.setProfileId( rs.getInt( "profile_id" ) );
+				outLogin.setUserId(  rs.getLong( "user_id" ) );
+				outLogin.setStatus(  rs.getInt( "status" )+"" );
+				outLogin.setChangePassword( rs.getInt( "change_password" )+"");
+				
+				
 				
 				BData<OutLogin> bOutData = new BData<>();
 				bOutData.setData( outLogin );
 	
 				out.setData( bOutData );
-				if( out.getData() == null )
-					log.error( "Data wrapper is null." );
-				else
-					log.info( "Data wrapper is set." );
 				
 				out.setStatusCode( 1 );
+				
+				
+				
 				out.setMsg( "Login successful, loading data." );
 				
 				
@@ -92,6 +97,7 @@ public class MLogin extends Model {
 				
 			} else {
 				log.debug( "Invalid user!" );
+				out.setStatusCode( 403 );
 				out.setMsg( "Invalid credentials. Please verify and try again." );
 			}
 			
@@ -109,6 +115,8 @@ public class MLogin extends Model {
 		
 		return out;
 	}
+	
+
 	
 	private String nextSessionId() {
 		SecureRandom random = new SecureRandom();

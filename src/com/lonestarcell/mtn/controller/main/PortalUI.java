@@ -15,6 +15,8 @@ import com.vaadin.ui.UI;
 @Theme("lec_portal")
 @Push
 public class PortalUI extends UI {
+	
+
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = PortalUI.class, widgetset = "com.lonestarcell.mtn.controller.main.widgetset.Lec_portalWidgetset")
 	public static class Servlet extends VaadinServlet {

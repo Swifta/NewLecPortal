@@ -38,6 +38,7 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/DSEagleAir-Axis2-Client-0.0.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/componentrenderer-1.0.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ProxyService-Axis2-Client-0.0.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/SendSMS-0.0.1.jar"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

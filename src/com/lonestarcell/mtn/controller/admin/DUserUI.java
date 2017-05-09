@@ -15,12 +15,26 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	 */
 	
 	private DMainUI ancestor;
+	private Component rightContent;
 	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
 	
 	DUserUI(DMainUI a){
 		init( a );
 		
 	}
+	
+	
+
+	public Component getRightContent() {
+		return rightContent;
+	}
+
+	public void setRightContent(Component rightContent) {
+		this.rightContent = rightContent;
+	}
+
+
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -41,6 +55,8 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 			public void buttonClick(ClickEvent event) {
 				
 				new DNewUserUI( getParentUI() );
+				btnNewUser.addStyleName( "sn-left-menu-active" );
+				btnUsers.removeStyleName( "sn-left-menu-active" );
 				
 			}
 			
@@ -59,7 +75,9 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
-				new DUsersUI( getParentUI() );
+				new DUserStateUI( getParentUI() );
+				btnUsers.addStyleName( "sn-left-menu-active" );
+				btnNewUser.removeStyleName( "sn-left-menu-active" );
 				
 			}
 			
@@ -82,7 +100,7 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	public void setContent() {
 		setHeader();
 		setFooter();
-		swap( new DNewUserUI( getParentUI() ) ); 
+		swap( new DUserStateUI( getParentUI() ) ); 
 		attachCommandListeners();
 		
 	}
@@ -96,6 +114,7 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 
 	@Override
 	public void init(DMainUI a) {
+		setRightContent( this.cForms );
 		setAncestorUI( a );
 		setContent();
 		

@@ -5,30 +5,19 @@
   <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
  </head> 
  <body> 
-  <vaadin-horizontal-layout style-name="sn-default-home" width-full> 
+  <vaadin-horizontal-layout style-name="sn-default-home" size-full> 
    <vaadin-panel style-name="sn-left-menu-c sn-eagle-blue sn-test3" width="226px" height-full _id="leftBar"> 
     <vaadin-vertical-layout> 
-     <vaadin-button icon="fonticon://FontAwesome/f080" style-name="icon-align-top borderless" width-full plain-text _id="btnDashboard">
-       Dashboard 
-     </vaadin-button> 
-     <vaadin-button icon="fonticon://FontAwesome/f007" style-name="borderless icon-align-top" width-full plain-text _id="btnNewUser">
-       New User 
-     </vaadin-button> 
-     <vaadin-button icon="fonticon://FontAwesome/f0c0" style-name="borderless icon-align-top" width-full plain-text _id="btnUsers">
-       Users 
-     </vaadin-button> 
-     <vaadin-button visible="false" icon="fonticon://FontAwesome/f02d" style-name="borderless icon-align-top" width-full plain-text _id="btnNewReserv">
-       New Reservation 
-     </vaadin-button> 
-     <vaadin-button visible="false" icon="fonticon://FontAwesome/f133" style-name="borderless icon-align-top" width-full plain-text _id="btnTodaysBooking">
-       Today's Reservations 
-     </vaadin-button> 
-     <vaadin-button visible="false" icon="fonticon://FontAwesome/f187" style-name="borderless icon-align-top" width-full plain-text _id="btnPaymentReports">
-       Payment Reports 
-     </vaadin-button> 
-     <vaadin-button visible="false" icon="fonticon://FontAwesome/f15b" style-name="borderless icon-align-top" width-full plain-text _id="btnBookingReports">
-       Booking Reports 
-     </vaadin-button> 
+     <vaadin-horizontal-layout width-full> 
+      <vaadin-button icon="fonticon://FontAwesome/f0c0" style-name="borderless icon-align-top sn-left-menu-active" plain-text _id="btnUsers" :center>
+        Users 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout width-full> 
+      <vaadin-button icon="fonticon://FontAwesome/f234" style-name="borderless icon-align-top" plain-text _id="btnNewUser" :center>
+        New User 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
     </vaadin-vertical-layout> 
    </vaadin-panel> 
    <vaadin-vertical-layout style-name="sn-c-ads sn-ref sn-ref-less-margin" spacing _id="cForms" :expand> 

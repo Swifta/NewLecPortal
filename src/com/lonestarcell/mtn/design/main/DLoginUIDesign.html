@@ -8,13 +8,13 @@
   <vaadin-vertical-layout size-full> 
    <vaadin-vertical-layout style-name="sn-eagle-header-c sn-login" _id="cHeader"> 
     <vaadin-vertical-layout style-name="sn-eagle-blue" height="175px"> 
-     <vaadin-horizontal-layout style-name="sn-eagle-white sn-login" width-full height="61px" :bottom :center></vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-eagle-white sn-login sn-top-header-bar" width-full height="61px" :bottom :center></vaadin-horizontal-layout> 
     </vaadin-vertical-layout> 
     <vaadin-vertical-layout style-name="sn-logo-area sn-side-page-margin" size-auto _id="logoArea"> 
      <vaadin-horizontal-layout spacing> 
       <vaadin-vertical-layout style-name="sn-logo-c" size-auto> 
        <vaadin-button style-name="icon-align-top sn-img-button-link sn-sys-name-small" width="228px" height="168px" plain-text :expand>
-         Booking &amp; Payment Reference 
+         MTN LEC Token &amp; Payment 
        </vaadin-button> 
       </vaadin-vertical-layout> 
       <vaadin-horizontal-layout visible="false" style-name="sn-page-location-c" spacing :bottom> 
@@ -35,8 +35,8 @@
     <vaadin-vertical-layout> 
      <vaadin-vertical-layout> 
       <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-login" size-auto _id="cMobileAd" :center> 
-       <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-login" size-auto margin _id="cForm"> 
-        <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details sn-login sn-login-message sn-cbd-head sn-ref sn-login" _id="cBookingDetails3" :center> 
+       <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-login sn-form-yellow-border" size-auto margin _id="cForm"> 
+        <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details sn-login sn-login-message sn-cbd-head sn-ref sn-login sn-text-blue-login" width="350px" _id="cBookingDetails3" :center> 
          <vaadin-label style-name="sn-login-welcome" size-auto _id="lbFormState"> 
           <b>Welcome!</b> 
          </vaadin-label> 
@@ -48,18 +48,18 @@
          </vaadin-label> 
         </vaadin-vertical-layout> 
         <vaadin-vertical-layout size-auto> 
+         <vaadin-label style-name="bold tiny failure sn-blink" width="350px" plain-text _id="lbErrorMsg">
+           Invalid value. 
+         </vaadin-label> 
+         <vaadin-label style-name="bold tiny success light" immediate width="350px" height="33px" _id="lbNormalMsg">
+           Edit Details/Cancel to opt out 
+         </vaadin-label> 
          <vaadin-label visible="false" style-name="bold tiny failure">
            Invalid username/password. 
           <br> Please review and try again. 
          </vaadin-label> 
-         <vaadin-label size-auto plain-text _id="lbUsername">
-           Username 
-         </vaadin-label> 
-         <vaadin-text-field description="Enter Username" invalid-allowed="false" null-representation="" immediate width="355px" height="37px" _id="fUsername"></vaadin-text-field> 
-         <vaadin-label size-auto plain-text _id="lbPassword">
-           Password 
-         </vaadin-label> 
-         <vaadin-password-field description="Enter Password" invalid-committed null-representation="" width-full _id="fPassword"></vaadin-password-field> 
+         <vaadin-text-field description="Enter Username" caption="Username" invalid-allowed="false" required null-representation="" immediate width="350px" height="37px" _id="fUsername"></vaadin-text-field> 
+         <vaadin-password-field description="Enter Password" caption="Passowrd" required invalid-committed null-representation="" width="350px" _id="fPassword"></vaadin-password-field> 
          <vaadin-password-field description="Enter Password" caption="Confirm New Password" invalid-committed visible="false" null-representation="" immediate width="355px" _id="fConfirmPassword"></vaadin-password-field> 
         </vaadin-vertical-layout> 
         <vaadin-horizontal-layout spacing width-full margin-top _id="cControls" :center> 

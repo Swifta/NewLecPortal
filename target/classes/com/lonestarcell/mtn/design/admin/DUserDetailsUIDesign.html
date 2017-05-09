@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-c-pay sn-c-pay-opt" size-auto> 
+   <vaadin-vertical-layout size-auto _id="cMMRightContent"> 
+    <vaadin-horizontal-layout style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref sn-c-opts-popup-header sn-user-details" width-full margin _id="detailsHead"> 
+     <vaadin-label style-name="bold" plain-text>
+       User 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel" size-auto _id="detailsPanel" :expand> 
+     <vaadin-vertical-layout size-auto> 
+      <vaadin-vertical-layout size-auto> 
+       <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" width-full margin-left margin-right margin-top _id="cBDHead21"> 
+        <vaadin-label style-name="bold sn-label-underline" plain-text :expand>
+          Details 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout style-name="sn-c-right-panel-v" margin-top> 
+        <vaadin-vertical-layout description="Account Access Control" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card sn-barred" size-auto _id="cBookingDetails2"> 
+         <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead3"> 
+          <vaadin-label width="329px" height="27px" plain-text>
+            Account Access Control 
+          </vaadin-label> 
+         </vaadin-horizontal-layout> 
+         <vaadin-form-layout spacing="false" size-auto margin-left margin-top="false" margin-bottom="false"> 
+          <vaadin-label caption="Profile" style-name="small" size-auto plain-text _id="lbUserProfile">
+            Administrator 
+          </vaadin-label> 
+          <vaadin-label caption="Username" style-name="small" size-auto plain-text _id="lbUsername">
+            admin 
+          </vaadin-label> 
+          <vaadin-label caption="Status" style-name="small" size-auto plain-text _id="lbUserStatus">
+            Active 
+          </vaadin-label> 
+         </vaadin-form-layout> 
+         <vaadin-horizontal-layout spacing margin-left> 
+          <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
+          <vaadin-horizontal-layout> 
+           <vaadin-button icon="fonticon://FontAwesome/f044" description="Change Credentials" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserChangeCreds"></vaadin-button> 
+           <vaadin-button icon="fonticon://FontAwesome/f0f0" description="Change Profile" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserChangeProfile">
+             Change Profile 
+           </vaadin-button> 
+           <vaadin-button icon="fonticon://FontAwesome/f127" description="Expire Login Session" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserExpireSession">
+             Expire Login Session 
+           </vaadin-button> 
+          </vaadin-horizontal-layout> 
+          <vaadin-button icon="fonticon://FontAwesome/f023" description="Block" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserBlock"></vaadin-button> 
+          <vaadin-button icon="fonticon://FontAwesome/f09c" description="Activate" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserActivate"></vaadin-button> 
+          <vaadin-button icon="fonticon://FontAwesome/f084" description="Set/Reset Password" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserSetCreds">
+            Set/Reset Password 
+          </vaadin-button> 
+          <vaadin-button icon="fonticon://FontAwesome/f235" description="Expire Password" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserExpirePassword">
+            Expire Password 
+          </vaadin-button> 
+         </vaadin-horizontal-layout> 
+        </vaadin-vertical-layout> 
+        <vaadin-vertical-layout description="Personal Information" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card" size-auto _id="cBookingDetails11"> 
+         <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead11"> 
+          <vaadin-label width="329px" plain-text>
+            Personal 
+          </vaadin-label> 
+         </vaadin-horizontal-layout> 
+         <vaadin-form-layout spacing="false" size-auto margin-left margin-top="false" margin-bottom="false"> 
+          <vaadin-label caption="First Name" style-name="small" size-auto plain-text _id="lbFirstName">
+            Paul 
+          </vaadin-label> 
+          <vaadin-label caption="Surname" style-name="small" size-auto plain-text _id="lbSurname">
+            Kigozi 
+          </vaadin-label> 
+          <vaadin-label caption="Last Name" style-name="small" size-auto plain-text _id="lbLastName">
+            N/A 
+          </vaadin-label> 
+          <vaadin-label caption="Email" style-name="small" size-auto plain-text _id="lbEmail">
+            pkigozi@swifta.com 
+          </vaadin-label> 
+         </vaadin-form-layout> 
+         <vaadin-horizontal-layout spacing margin-left> 
+          <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
+          <vaadin-button icon="fonticon://FontAwesome/f044" description="Change Personal Info" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserEditPersonalInfo">
+            Change Personal Info 
+          </vaadin-button> 
+         </vaadin-horizontal-layout> 
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout style-name="sn-c-right-panel-v"> 
+        <vaadin-vertical-layout description="Organization info" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card sn-barred" size-auto _id="cBookingDetails21"> 
+         <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead31"> 
+          <vaadin-label width="329px" plain-text>
+            Organization 
+          </vaadin-label> 
+         </vaadin-horizontal-layout> 
+         <vaadin-form-layout spacing="false" size-auto margin-left margin-top="false" margin-bottom="false"> 
+          <vaadin-label caption="Name" style-name="small" size-auto plain-text _id="lbOrg">
+            Swifta 
+          </vaadin-label> 
+          <vaadin-label caption="Domain" style-name="small" size-auto plain-text _id="lbOrgDomain">
+            swifta.com 
+          </vaadin-label> 
+          <vaadin-label caption="Status" style-name="small" size-auto plain-text _id="lbOrgStatus">
+            Active 
+          </vaadin-label> 
+         </vaadin-form-layout> 
+        </vaadin-vertical-layout> 
+        <vaadin-vertical-layout description="Activity log" style-name="sn-c-ref-form sn-c-form sn-details-card sn-c-fx-details" size-auto _id="cBookingDetails111"> 
+         <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead111"> 
+          <vaadin-label width="329px" plain-text>
+            Log 
+          </vaadin-label> 
+         </vaadin-horizontal-layout> 
+         <vaadin-form-layout spacing="false" size-auto margin-left margin-top="false" margin-bottom="false"> 
+          <vaadin-label caption="Date created" style-name="small" size-auto plain-text _id="lbCreateDate">
+            2017-01-19 13:05:42 
+          </vaadin-label> 
+          <vaadin-label caption="Last login" style-name="small" size-auto plain-text _id="lbLoginDate">
+            2017-01-19 13:05:42 
+          </vaadin-label> 
+         </vaadin-form-layout> 
+         <vaadin-horizontal-layout spacing margin-left> 
+          <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
+          <vaadin-button icon="fonticon://FontAwesome/f021" description="Refresh" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserRefresh">
+            Refresh 
+          </vaadin-button> 
+         </vaadin-horizontal-layout> 
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-vertical-layout> 
+    </vaadin-panel> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

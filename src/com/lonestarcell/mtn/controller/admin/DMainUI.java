@@ -5,14 +5,23 @@ import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lonestarcell.mtn.bean.BData;
+import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.bean.InUserDetails;
+import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.design.admin.DManagementUIDesign;
+import com.lonestarcell.mtn.model.admin.MUserSelfCare;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -27,15 +36,30 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
 	private Button btnHMenuPrev;
 	
+	private Item record;
+	
 	public DMainUI(){
 		init( this );
 	}
+	
+	
+
+	public Item getRecord() {
+		return record;
+	}
+
+
+
+	public void setRecord(Item record) {
+		this.record = record;
+	}
+
+
 
 	@Override
 	public void setHeader() {
 		this.moreDropDown.addStyleName("sn-invisible");
-		lbUsername.setValue((String) UI.getCurrent().getSession()
-				.getAttribute(DLoginUIController.USERNAME));
+		lbUsername.setPropertyDataSource( record.getItemProperty( "username" ));
 		
 	}
 		
@@ -49,6 +73,43 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		swap( new DDashUI( getParentUI() ) );
 		setHMenuState( btnHMenuDash );
 		attachCommandListeners();
+		
+		
+		
+	}
+	
+	private boolean isUserDetailsSet(){
+		
+		String username = UI.getCurrent().getSession()
+		.getAttribute(DLoginUIController.USERNAME).toString();
+		
+		String session = UI.getCurrent().getSession().getAttribute( DLoginUIController.SESSION_VAR ).toString();
+
+		
+		InUserDetails inData = new InUserDetails();
+		inData.setUsername( username );
+		inData.setUserSession( session );
+		
+		OutUserDetails user = new OutUserDetails();
+		user.setUsername( username );
+		Item r = new BeanItem<>( user, OutUserDetails.class );
+		setRecord( r );
+		inData.setRecord( r );
+		
+		BData<InUserDetails> bData = new BData<>();
+		bData.setData( inData );
+		
+		In in = new In();
+		in.setData( bData );
+		
+		if( record != null ) {
+			MUserSelfCare mUserDetails = new MUserSelfCare();
+			Out out = mUserDetails.setUserDetails(in );
+			return out.getStatusCode() == 1;
+		
+		} 
+		
+		return false;
 		
 	}
 
@@ -72,7 +133,6 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	@Override
 	public void init(DMainUI a) {
 		setAncestorUI( a );
-		setContent();
 	}
 
 	@Override
@@ -139,6 +199,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		this.attachBtnHMenuTxn();
 		this.attachBtnHMenuPayment();
 		this.attachBtnHMenuToken();
+		this.attachBtnHMenuInfo();
 		
 		//Drop Down Menu
 		this.attachBtnFx();
@@ -147,6 +208,27 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		this.attachLogout();
 		
 	}
+	
+	private void attachBtnHMenuInfo(){
+		this.btnHMenuInfo.addClickListener(new ClickListener(){
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				log.debug( "Token menu clicked. " );
+				
+				if( setHMenuState( btnHMenuInfo ) )
+					swap( new DTokenInfoUI( getParentUI() ) );
+				
+			}
+			
+		});
+	}
+	
 	
 	private void attachBtnHMenuToken(){
 		this.btnHMenuToken.addClickListener(new ClickListener(){
@@ -292,8 +374,10 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-
-				new DProfileFormUI();
+				
+				new DUserDetailsUI( record );
+				
+					
 
 			}
 
@@ -324,9 +408,33 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	@Override
 	public void enter(ViewChangeEvent event) {
 	
-		if (UI.getCurrent().getSession().getAttribute("username") == null)
+		if (UI.getCurrent().getSession().getAttribute("username") == null) {
+			
+			
+			
+			log.debug( " No username set " );
+			this.resetSessionData();
 			UI.getCurrent().getNavigator().navigateTo("login");
+			
+		} else if( !this.isUserDetailsSet() ){
+			Notification.show( "SET ERROR" , "Invalid user data", Notification.Type.ERROR_MESSAGE );
+			log.debug( " No user data set " );
+			this.resetSessionData();
+			UI.getCurrent().getNavigator().navigateTo("login");
+			
+		} else {
+			setContent();
+		}
 		
+	}
+	
+	private void resetSessionData(){
+		UI.getCurrent().getSession()
+		.setAttribute(DLoginUIController.USERNAME, null);
+		UI.getCurrent().getSession()
+		.setAttribute(DLoginUIController.PROFILE_ID, null);
+		UI.getCurrent().getSession()
+		.setAttribute(DLoginUIController.SESSION_VAR, null);
 	}
 	
 	private boolean setHMenuState( Button btnActive ) {

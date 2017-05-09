@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-panel style-name="sn-grid-panel" size-full> 
+   <vaadin-vertical-layout size-auto _id="cBookingDetails3"> 
+    <vaadin-vertical-layout style-name="sn-dashboard-card-head sn-flight-scheduled sn-grid-title" margin-left margin-right _id="headBookedScheduledFlights2"> 
+     <vaadin-label plain-text _id="lbDataTitle">
+       Users 
+     </vaadin-label> 
+     <vaadin-horizontal-layout spacing> 
+      <vaadin-check-box icon="fonticon://FontAwesome/f0b0" caption="Date" description="Toggle Date filters on/off" _id="chkDateFilter"></vaadin-check-box> 
+      <vaadin-popup-date-field description="From" immediate width="140px" _id="dFStartDate"></vaadin-popup-date-field> 
+      <vaadin-popup-date-field description="To" immediate width="140px" _id="dFLastDate"></vaadin-popup-date-field> 
+      <vaadin-button icon="fonticon://FontAwesome/f0b0" description="Filter" style-name="primary icon-only" plain-text _id="btnFilter"></vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f0e2" description="Reload" style-name="primary icon-only" plain-text _id="btnReload" :right></vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout style-name="sn-c-trxn-table" size-auto _id="vlTrxnTable"></vaadin-vertical-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-panel>  
+ </body>
+</html>

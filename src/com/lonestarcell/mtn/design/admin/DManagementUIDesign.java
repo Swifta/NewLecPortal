@@ -29,7 +29,6 @@ public class DManagementUIDesign extends VerticalLayout {
 	protected VerticalLayout moreDropDown;
 	protected Button btnFxRate;
 	protected Button btnPlaces;
-	protected Button btnRoutes;
 	protected Button btnUserProfile;
 	protected Button btnLogout;
 	protected VerticalLayout logoArea;
@@ -37,6 +36,7 @@ public class DManagementUIDesign extends VerticalLayout {
 	protected Button btnHMenuTxn;
 	protected Button btnHMenuPayment;
 	protected Button btnHMenuToken;
+	protected Button btnHMenuInfo;
 	protected Button btnHMenuUser;
 	protected Button btnHMenuMisc;
 	protected VerticalLayout midContent;

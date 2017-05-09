@@ -32,9 +32,9 @@ public class DLoginUIDesign extends VerticalLayout {
 	protected Label lbFormState;
 	protected Label lbFormStateDesc;
 	protected Label lbTimer;
-	protected Label lbUsername;
+	protected Label lbErrorMsg;
+	protected Label lbNormalMsg;
 	protected TextField fUsername;
-	protected Label lbPassword;
 	protected PasswordField fPassword;
 	protected PasswordField fConfirmPassword;
 	protected HorizontalLayout cControls;

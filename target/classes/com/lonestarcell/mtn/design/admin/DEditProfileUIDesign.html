@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-c-pay sn-c-pay-opt" size-auto> 
+   <vaadin-vertical-layout size-auto _id="cMMRightContent"> 
+    <vaadin-horizontal-layout style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref sn-c-opts-popup-header sn-head-edit-profile" width-full margin _id="mmPanelHead2"> 
+     <vaadin-label style-name="bold" plain-text :expand>
+       User Profile 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel" size-auto _id="mmPanel2" :expand> 
+     <vaadin-horizontal-layout style-name="sn-c-right-panel-v" margin-top> 
+      <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-popup-form" spacing size-auto margin _id="cEditProfileForm"> 
+       <vaadin-label style-name="bold tiny success light" immediate width="350px" _id="lbNormalMsg">
+         Update user profile 
+       </vaadin-label> 
+       <vaadin-label style-name="bold tiny failure" width="350px" plain-text _id="lbErrorMsg">
+         Invalid value. 
+       </vaadin-label> 
+       <vaadin-vertical-layout visible="false" _id="cUsernamePassword"> 
+        <vaadin-horizontal-layout width-full> 
+         <vaadin-check-box caption="Username" description="Toggle username update" _id="chkUsername"></vaadin-check-box> 
+         <vaadin-check-box caption="Password" description="Toggle password update" _id="chkPass"></vaadin-check-box> 
+         <vaadin-check-box caption="Profile" description="Toggle profile update" _id="chkProfile"></vaadin-check-box> 
+        </vaadin-horizontal-layout> 
+        <vaadin-horizontal-layout width-full> 
+         <vaadin-text-field description="Enter new username" caption="New Username" required width="350px" _id="tFNewUsername"></vaadin-text-field> 
+        </vaadin-horizontal-layout> 
+        <vaadin-horizontal-layout width-full> 
+         <vaadin-password-field description="Current Password" caption="Current Password" required width-full _id="tFCurrentPass" :expand></vaadin-password-field> 
+        </vaadin-horizontal-layout> 
+        <vaadin-horizontal-layout width-full> 
+         <vaadin-password-field description="New Password" caption="New Password" required width-full _id="tFNewPass" :expand></vaadin-password-field> 
+        </vaadin-horizontal-layout> 
+        <vaadin-horizontal-layout width-full> 
+         <vaadin-password-field description="Comfirm New Password" caption="Confirm New Password" required width-full _id="tFConfirmNewPass" :expand></vaadin-password-field> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+       <vaadin-horizontal-layout width-full> 
+        <vaadin-combo-box caption="User Profile" description="Change Profile" required item-caption-mode="id" width-full _id="comboProfile" :expand> 
+         <option>Option 1</option> 
+         <option>Option 2</option> 
+         <option>Option 3</option> 
+        </vaadin-combo-box> 
+       </vaadin-horizontal-layout> 
+       <vaadin-horizontal-layout spacing margin-top _id="cControls" :right> 
+        <vaadin-button icon="fonticon://FontAwesome/f00d" description="Cancel" style-name="danger icon-only" plain-text _id="btnCancel">
+          Cancel 
+        </vaadin-button> 
+        <vaadin-button icon="fonticon://FontAwesome/f0c7" description="Save" style-name="icon-only friendly" plain-text _id="btnSave">
+          Save 
+        </vaadin-button> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-panel> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

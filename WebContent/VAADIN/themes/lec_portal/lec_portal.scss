@@ -163,7 +163,7 @@
     }
     
     .sn-in-logo {
-    	background:url("logo_eagle.png");
+    	background:url("logo_lonestar.PNG");
     	
     }
     
@@ -605,9 +605,10 @@
        
        .sn-c-ref-form.sn-c-booking-details {
        		border-left: none;
-       		background-color: #fff;
+       		background-color: #21348b;
        		border-bottom: none;
-       		border-right: 4px solid #b0b4e6;
+       		border-right: 4px solid #fcca09;
+       		color: #fff;
        }
        
         .sn-c-ref-form.sn-c-booking-details.sn-no-border-left {
@@ -642,7 +643,7 @@
        
        
         .sn-cbd-head .v-label {
-       		color: #5168d8;
+       		color: #fff;
        		font-weight: bolder;
        		font-size: 13pt;
        }
@@ -662,9 +663,21 @@
        		text-align: center;
        }
        
+       .v-filterselect-suggestpopup [class$="suggestmenu"] {
+       
+       		color: #9292f5;
+       		border-radius: 0;
+       		background-color: #f3f4f8;
+       }
+       
        .sn-c-form .v-textfield, .sn-c-form .v-filterselect {
        		color: #9292f5;
        		border-radius: 0;
+       		background-color: #f3f4f8;
+       }
+       
+       .sn-c-form .v-filterselect [class*="input"] {
+       		background-color: #f3f4f8;
        }
        
        .sn-c-form .v-icon {
@@ -683,7 +696,7 @@
        
        .sn-c-form {
        
-       		background-color: #fef2f1;
+       		background-color: #fcca09;
        		
        }
        
@@ -720,8 +733,12 @@
        
        
        
-     .sn-panel-head.sn-panel-head-card.sn-panel-head-step-b-ref::before {
+    .sn-panel-head.sn-panel-head-card.sn-panel-head-step-b-ref::before {
     	content: "\f02d";
+    }
+    
+     .sn-panel-head.sn-panel-head-card.sn-panel-head-step-b-ref.sn-head-dollar::before {
+    	content: "\f155";
     }
        
        
@@ -1007,8 +1024,9 @@
     	padding: 0;
     	margin: 0;
     	background-color: #fff;
-    	background: transparent url("img/logo_eagle.png") no-repeat scroll center 30%;
+    	background: transparent url("img/logo_lonestar.PNG") no-repeat scroll center 30%;
     	line-height: 16;
+    	/*color: #e4130a;*/
     	color: #e4130a;
     	
     	
@@ -1028,7 +1046,7 @@
     	border: none;
     	padding: 0;
     	margin: 0;
-    	background: transparent url("img/logo_eagle.png") no-repeat scroll center 30%;
+    	background: transparent url("img/logo_lonestar.PNG") no-repeat scroll center 30%;
     	color: #e4130a;
     	line-height: 14;
     	
@@ -1496,14 +1514,29 @@
        		height: 28px;
        }
        
+      .sn-c-more-behavior {
+      	z-inde: 99;
+      	position: relative;
+      }
+       
       .sn-c-more-behavior .sn-more-drop-down {
-      		visibility: hidden;
+      		display: none;
+      		z-index: 99;
+      		position: absolute;
+      		top: 37px;
+    		left: -115px;
+    		width: 150px;
+      		
+      		
+      		
       }
        
        .sn-c-more-behavior:hover .sn-more-drop-down {
+       		display: block;
+       }
        
-       		visibility: visible;
-       		
+       .sn-lb-username {
+       		line-height: 2;
        }
        
        .sn-c-more-behavior:hover .sn-more-btnx {
@@ -1522,12 +1555,13 @@
        
        .sn-c-popup-form {
        		margin-right: 32px;
+       		margin-left: 32px;
        }
        
        
       .sn-try-pseudo.sn-try-fx::before {
   
-		content: "UGX";
+		content: "LRD";
 		
 	   }
 	   
@@ -1679,9 +1713,9 @@
     	border: none;
     	padding: 0;
     	margin: 0;
-    	background-color: #fff;
+    	background-color: #fcca09;
     	linex-height: 16;
-    	colorx: #e4130a;
+    	color: #fff;
     	font-size: 11pt;
     	font-weight: 100;
     	
@@ -1711,12 +1745,14 @@
     
     
     .sn-button-link:hover {
-    	color: #3B3BBA;
+    	/*color: #3B3BBA;*/
+    	color: #fff;
     }
     
     .sn-button-link-active {
    		background-color: rgba(186, 186, 186, 0.1);
-   		color: #3B3BBA;
+   		color: #fff;
+   		border-bottom: 1px solid #fff;
     }
     
     .sn-hor-menu-small {
@@ -1765,6 +1801,187 @@
   		color: #2c9720;
   	
   	}
+  	
+  	
+  	
+  	/*** Pagination styles ****/
+  	.sn-pagination .v-button, .sn-pagination .v-icon {
+  	
+  		color: #156ab3;
+  		text-decoration: none;
+  	}
+  	
+  	.sn-pagination .v-button.sn-cur-page {
+  	
+  		color:#4d98e6;
+  		text-decoration: underline;
+  		border: 1px solid #d4d4d4;
+  		border-radius: 2px;
+  		background-color: #fff;
+  	}
+  	
+  	
+  	/**** Date filter styles ****/
+  	.sn-date-filter {
+  		margin-top: 4px;
+  	}
+  	
+  	.sn-no-border-right.v-grid-cell.frozen {
+  		border: none;
+  		box-shadow: none;
+  	}
+  	
+  	.sn-no-border-right.v-grid-cell {
+  	
+  		border: none;
+  	}
+  	
+  	.v-grid-footer td {
+  		background-color: transparent;
+  		border: none;
+  	}
+  	
+  	.sn-records-total {
+  		color: #00f;
+  	}
+  	
+  	.sn-revenue-total {
+  		color: #08cf49;
+  	}
+  	
+  	.sn-revenue-total b {
+  		color: #1E6B15;
+  	}
+  	
+  	.v-grid-row.sn-date-filter-row .v-grid-cell.frozen {
+  	
+  		border:none;
+  	}
+  	
+  	.sn-grid-title .v-label {
+  	
+  		padding: 10px;
+  	}
+  	
+  	.sn-grid-panel.v-panel {
+  	
+  		background-color: #fafafa;
+  	}
+  	
+  	/** Actions cell styles **/
+  	
+  	.v-grid-cell.sn-cell-actions {
+  		padding: 1px;
+  		text-align: center;
+  		font-weight: 500;
+  	}
+  	
+  	.v-grid-cell.sn-cell-actions  .v-popupview {
+  		color: #000080;
+  		font-weight: 400;
+  		border: none;
+  		
+  	}
+  	
+  	.v-grid-cell.sn-cell-actions .v-popupview {
+  		color: #000080;
+  	}
+  	
+  	td.v-grid-cell:last-child {
+  	
+  		border: none;
+  		padding: 1px;
+  		border: 1px solid #d4d4d4;
+  		border-top: none;
+  		background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+  		
+  		
+  	}
+  	
+  	td.v-grid-cell:last-child .v-popupview {
+  		border: none;
+  		color: #000080;
+  		background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+  		font-weight: 500;
+  	}
+  	
+  	.sn-login.sn-top-header-bar {
+  		background-color: #fcca09;
+  	}
+  	
+  	.sn-c-ref-form.sn-c-form.sn-login.sn-form-yellow-border {
+  		border: 8px solid #fcca09;
+  		background-color: #fcca09;
+  	}
+  	
+  	.sn-text-blue-login .v-label {
+  		color: #21348b;
+  	}
+  	
+  	
+  	
+  	/****** FX US **********/
+  	
+  	.sn-c-form.sn-c-fx-details {
+  	
+  		background-color: #fff;
+  		border-left: 1px solid rgba(0,0,0, 0.05); 
+  	}
+  	
+  	.sn-fx-details-head .v-label {
+  		border-bottom: 1px solid rgba(0,0,0, 0.05); 
+  	}
+  	
+  	/****** User Details Edit ****/
+  	
+  	.sn-panel-head.sn-panel-head-card.sn-head-edit::before {
+    	content: "\f044";
+    	right: 10px;
+    	font-size: 40px;
+    }
+    
+  
+    
+    .sn-panel-head.sn-panel-head-card.sn-user-details::before {
+    	content: "\f0f0";
+    }
+    
+    .sn-panel-head.sn-panel-head-card.sn-head-edit-profile::before {
+    	content: "\f0f0";
+    }
+    
+    
+    
+    /***** Generate password *****/
+    .sn-cog-generate .v-icon{
+    	color: #00f;
+    }
+    
+    .sn-cog-generate:hover .v-icon{
+    	color: #000;
+    }
+    
+    
+    /***** Some of left menu styles ****/
+    
+    .sn-left-menu-active {
+    	background-colorx: #fff;
+    	border-radius: 0;
+    	border-bottom: 1px solid #fff;
+    	color: #fff;
+    }
+    
+    .sn-left-menu-active .v-icon, .sn-left-menu-active .v-button-caption {
+    	color: #fff;
+    }
+    
+    /**** Some of password reset styles ******/
+    
+    .sn-blink {
+	    animation-duration: 2s;
+	    animation-iteration-count: infinite;
+	    animation-name: heartbeat;
+	}
      
      
 		   

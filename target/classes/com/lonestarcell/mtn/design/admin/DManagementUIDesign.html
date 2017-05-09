@@ -8,32 +8,33 @@
   <vaadin-vertical-layout style-name="sn-default-home" size-full> 
    <vaadin-vertical-layout style-name="sn-eagle-header-c" _id="cHeader"> 
     <vaadin-vertical-layout style-name="sn-eagle-blue" height="175px"> 
-     <vaadin-horizontal-layout style-name="sn-eagle-white" width-full height="54px" :bottom :center> 
+     <vaadin-horizontal-layout style-name="sn-eagle-white sn-top-header-bar sn-login" width-full height="54px" :bottom :center> 
       <vaadin-vertical-layout style-name="sn-user-identity sn-ref" width-auto height-full _id="userIdentity" :middle :right> 
-       <vaadin-vertical-layout style-name="sn-username-dropdown-c sn-ref sn-c-more-behavior" size-auto> 
-        <vaadin-horizontal-layout spacing margin-left _id="usernameMore" :bottom :right> 
-         <vaadin-label size-auto plain-text _id="lbUsername" :middle :center>
-           adminadminadminadminadminadmin 
-         </vaadin-label> 
-         <vaadin-button icon="fonticon://FontAwesome/f142" style-name="borderless sn-more-btnx" plain-text _id="btnUserOps"></vaadin-button> 
+       <vaadin-vertical-layout style-name="sn-username-dropdown-c sn-ref" size-auto> 
+        <vaadin-horizontal-layout spacing _id="usernameMore"> 
+         <vaadin-horizontal-layout> 
+          <vaadin-label style-name="sn-lb-username" size-auto plain-text _id="lbUsername">
+            adminadminadminadminadminadmin 
+          </vaadin-label> 
+         </vaadin-horizontal-layout> 
+         <vaadin-horizontal-layout style-name="sn-c-more-behavior"> 
+          <vaadin-button icon="fonticon://FontAwesome/f142" style-name="borderless sn-more-btnx" plain-text _id="btnUserOps"></vaadin-button> 
+          <vaadin-vertical-layout style-name="sn-more-drop-down" _id="moreDropDown"> 
+           <vaadin-button icon="fonticon://FontAwesome/f155" description="View/Add Foreign Exchange Rate" style-name="borderless icon-align-right" width-full plain-text _id="btnFxRate" :right>
+             Fx. Rate 
+           </vaadin-button> 
+           <vaadin-button icon="fonticon://FontAwesome/f085" description="Platform settings" style-name="borderless icon-align-right" width-full plain-text _id="btnPlaces" :right>
+             Settings 
+           </vaadin-button> 
+           <vaadin-button icon="fonticon://FontAwesome/f0f0" description="View/Modify your profile" style-name="borderless icon-align-right" width-full plain-text _id="btnUserProfile" :right>
+             User Profile 
+           </vaadin-button> 
+           <vaadin-button icon="fonticon://FontAwesome/f061" description="Logout" style-name="borderless icon-align-right" width-full plain-text _id="btnLogout" :right>
+             Logout 
+           </vaadin-button> 
+          </vaadin-vertical-layout> 
+         </vaadin-horizontal-layout> 
         </vaadin-horizontal-layout> 
-        <vaadin-vertical-layout style-name="sn-more-drop-down" _id="moreDropDown"> 
-         <vaadin-button icon="fonticon://FontAwesome/f085" description="Foreign Exchange Rate" style-name="borderless icon-align-right" width-full plain-text _id="btnFxRate">
-           Fx. Rate 
-         </vaadin-button> 
-         <vaadin-button icon="fonticon://FontAwesome/f085" description="View/add places" style-name="borderless icon-align-right" width-full plain-text _id="btnPlaces">
-           Places 
-         </vaadin-button> 
-         <vaadin-button icon="fonticon://FontAwesome/f085" description="View/add flight Routes" style-name="borderless icon-align-right" width-full plain-text _id="btnRoutes">
-           Routes 
-         </vaadin-button> 
-         <vaadin-button icon="fonticon://FontAwesome/f085" description="User Profile" style-name="borderless icon-align-right" width-full plain-text _id="btnUserProfile">
-           User Profile 
-         </vaadin-button> 
-         <vaadin-button icon="fonticon://FontAwesome/f061" description="Logout" style-name="borderless icon-align-right" width-full plain-text _id="btnLogout">
-           Logout 
-         </vaadin-button> 
-        </vaadin-vertical-layout> 
        </vaadin-vertical-layout> 
       </vaadin-vertical-layout> 
      </vaadin-horizontal-layout> 
@@ -42,7 +43,7 @@
      <vaadin-horizontal-layout spacing> 
       <vaadin-vertical-layout style-name="sn-logo-c" size-auto> 
        <vaadin-button style-name="icon-align-top sn-img-button-link sn-sys-name-small" width="228px" height="168px" plain-text :expand>
-         Booking &amp; Payment Reference 
+         MTN LEC Token &amp; Payment 
        </vaadin-button> 
       </vaadin-vertical-layout> 
       <vaadin-horizontal-layout style-name="sn-page-location-c" spacing :bottom> 
@@ -53,10 +54,13 @@
          Transaction 
        </vaadin-button> 
        <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuPayment">
-         Payment 
+         Payment &amp; SMS 
        </vaadin-button> 
        <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuToken">
-         Token 
+         ITRON 
+       </vaadin-button> 
+       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuInfo">
+         INFO &amp; Others 
        </vaadin-button> 
        <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuUser">
          User 

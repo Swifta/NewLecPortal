@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lonestarcell.mtn.design.admin.DTxnUIDesign;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 
 public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI,DTxnUI>, DUIControllable {
@@ -23,7 +25,46 @@ public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI
 
 	@Override
 	public void attachCommandListeners() {
-		//TODO
+		this.attachBtnArchive();
+		this.attachBtnToday();
+	}
+	
+	private void attachBtnToday(){
+		
+		this.btnDay.addClickListener( new ClickListener() {
+
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				new DTxnStateUI( getParentUI() );
+				btnDay.addStyleName( "sn-left-menu-active" );
+				btnArchive.removeStyleName( "sn-left-menu-active" );
+				
+			}
+			
+		} );
+	}
+	
+	
+	private void attachBtnArchive(){
+		this.btnArchive.addClickListener( new ClickListener() {
+
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				new DTxnArchiveUI( getParentUI() );
+				btnArchive.addStyleName( "sn-left-menu-active" );
+				btnDay.removeStyleName( "sn-left-menu-active" );
+				
+			}
+			
+		} );
 	}
 	
 	

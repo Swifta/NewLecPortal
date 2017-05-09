@@ -26,11 +26,7 @@ import com.vaadin.ui.declarative.Design;
 public class DTxnUIDesign extends HorizontalLayout {
 	protected Panel leftBar;
 	protected Button btnDay;
-	protected Button btnUsers;
-	protected Button btnNewReserv;
-	protected Button btnTodaysBooking;
-	protected Button btnPaymentReports;
-	protected Button btnBookingReports;
+	protected Button btnArchive;
 	protected VerticalLayout cForms;
 	protected VerticalLayout cBookingDetails3;
 	protected HorizontalLayout cBDHead3;

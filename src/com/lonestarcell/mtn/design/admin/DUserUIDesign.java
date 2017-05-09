@@ -25,13 +25,8 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class DUserUIDesign extends HorizontalLayout {
 	protected Panel leftBar;
-	protected Button btnDashboard;
-	protected Button btnNewUser;
 	protected Button btnUsers;
-	protected Button btnNewReserv;
-	protected Button btnTodaysBooking;
-	protected Button btnPaymentReports;
-	protected Button btnBookingReports;
+	protected Button btnNewUser;
 	protected VerticalLayout cForms;
 	protected VerticalLayout cBookingDetails3;
 	protected HorizontalLayout cBDHead3;

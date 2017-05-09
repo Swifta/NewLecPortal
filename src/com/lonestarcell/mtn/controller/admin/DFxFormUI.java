@@ -1,9 +1,18 @@
 package com.lonestarcell.mtn.controller.admin;
 
-import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.Fxdetails;
-import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.Newfxdetails;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.lonestarcell.mtn.bean.BData;
+import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.bean.InTxnDetails;
+import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutTxnDetails;
+import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.design.admin.DFxFormUIDesign;
 import com.lonestarcell.mtn.model.admin.MFx;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
@@ -16,6 +25,9 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 
 	private Window processingPopup;
 	private boolean isTryAgain = false;
+	private OutTxnDetails data;
+	private MFx mFx;
+	private Logger log = LogManager.getLogger( DFxFormUI.class.getName() );
 
 	public DFxFormUI() {
 		init(null);
@@ -23,7 +35,8 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 
 	@Override
 	public void init(DManUIController duic) {
-
+		this.data = new OutTxnDetails();
+		mFx = new MFx( getCurrentUserId(), getCurrentUserSession() );
 		attachCommandListeners();
 		setContent();
 		showPopup();
@@ -148,13 +161,13 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 			@Override
 			public void buttonClick(ClickEvent event) {
 
-				String val = tFUGX.getValue();
+				String val = tFNewFx.getValue();
 				Double d = 0D;
 
 				if (val == null || val.trim().isEmpty()) {
-					lbErrorMsg.setValue("UGX value is required.");
+					lbErrorMsg.setValue("LRD value is required.");
 					lbErrorMsg.removeStyleName("sn-display-none");
-					lbNormalMsg.addStyleName("sn-display-none");
+					//lbNormalMsg.addStyleName("sn-display-none");
 					return;
 				}
 
@@ -168,53 +181,53 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 
 					lbErrorMsg.setValue("Invalid amount.");
 					lbErrorMsg.removeStyleName("sn-display-none");
-					lbNormalMsg.addStyleName("sn-display-none");
+					//lbNormalMsg.addStyleName("sn-display-none");
 
 					return;
 				}
 
 				try {
 
-					tFUGX.setEnabled(false);
+					tFNewFx.setEnabled(false);
 					btnSave.setEnabled(false);
+					
+					
+					In in = new In();
+					BData<InTxnDetails> inBData = new BData<>();
+					InTxnDetails inTxn = new InTxnDetails();
+					inBData.setData( inTxn );
+					
+					in.setData( inBData );
 
-					Newfxdetails details;
+					Out out = mFx.setNewFx(in, data );
 
-					details = MFx.updateFxDetails(d.toString());
-
-					tFUGX.setEnabled(true);
+					tFNewFx.setEnabled(true);
 					btnSave.setEnabled(true);
 
-					if (details == null
-							|| details.getResponseCode().equals("100")) {
-						lbErrorMsg.setValue(details.getResponseMsg());
+					if ( out.getStatusCode() == 100) {
+						lbErrorMsg.setValue( out.getMsg() );
 						lbErrorMsg.removeStyleName("sn-display-none");
-						lbNormalMsg.addStyleName("sn-display-none");
+						//lbNormalMsg.addStyleName("sn-display-none");
 						return;
 					}
 
-					lbRate.setValue(details.getValue());
-					lbSetBy.setValue(details.getAddedBy());
-					lbTimestamp
-							.setValue(details.getDate().getTime().toString());
-
-					lbNormalMsg.setValue(details.getResponseMsg());
-					lbNormalMsg.removeStyleName("sn-display-none");
+					lbNormalMsg.setValue( out.getMsg() );
+					//lbNormalMsg.removeStyleName("sn-display-none");
 					lbErrorMsg.addStyleName("sn-display-none");
 
-					cNewFxForm.setVisible(false);
-					btnClose.setVisible(true);
-					btnNewFx.setVisible(true);
+					//cNewFxForm.setVisible(false);
+					// btnClose.setVisible(true);
+					// btnNewFx.setVisible(true);
 
 					return;
 
 				} catch (Exception e) {
 
-					tFUGX.setEnabled(true);
+					tFNewFx.setEnabled(true);
 					btnSave.setEnabled(true);
 					lbErrorMsg.setValue("Oops... error occured.");
 					lbErrorMsg.removeStyleName("sn-display-none");
-					lbNormalMsg.addStyleName("sn-display-none");
+					//lbNormalMsg.addStyleName("sn-display-none");
 					e.printStackTrace();
 				}
 
@@ -263,8 +276,8 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 
 				lbErrorMsg.addStyleName("sn-display-none");
 				lbNormalMsg.removeStyleName("sn-display-none");
-				lbNormalMsg.setValue("Enter new Rate below [ USD 1 = UGX ? ]");
-				tFUGX.setValue("");
+				lbNormalMsg.setValue("Enter new Rate below [ USD 1 = LRD ? ]");
+				tFNewFx.setValue("");
 
 			}
 
@@ -295,22 +308,28 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 	}
 
 	private void setContent() {
+		this.setPropertyDataSource();
 		try {
-			Fxdetails details = MFx.getFxDetails();
+			
+			In in = new In();
+			BData<InTxnDetails> inBData = new BData<>();
+			InTxnDetails inTxn = new InTxnDetails();
+			
+			
+			inBData.setData( inTxn );
+			in.setData( inBData );
+			
+			Out out = mFx.setFxDetails(in, data );
 
-			if (details == null || details.getResponseCode().equals("100")) {
+			if ( out.getStatusCode() == 100 ) {
 				// TODO
 				// UI in error state.
 				// @Live
-				processingPopup.close();
-				Notification.show("Error occured! Please contact support team",
+				Notification.show( out.getMsg(),
 						Notification.Type.ERROR_MESSAGE);
 				return;
 			}
 
-			this.lbRate.setValue(details.getValue());
-			this.lbSetBy.setValue(details.getAddedBy());
-			this.lbTimestamp.setValue(details.getDate().getTime().toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -318,6 +337,62 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 					"Error occured while loading data. Please try again!",
 					Notification.Type.ERROR_MESSAGE);
 		}
+	}
+	
+	
+	private void setPropertyDataSource(){
+		
+		
+		
+		Property<String> ds = new ObjectProperty<String>( "-", String.class );
+		
+		// FX
+		
+		data.setFxId( ds );
+		this.lbRateId.setPropertyDataSource( ds );
+		
+		ds = new ObjectProperty<String>( "0", String.class );
+		data.setFxValue( ds );
+		this.lbRate.setPropertyDataSource( ds );
+		
+		ds = new ObjectProperty<String>( "-", String.class );
+		data.setFxCreator(ds );
+		this.lbSetBy.setPropertyDataSource( ds );
+		
+		ds = new ObjectProperty<String>( "-", String.class );
+		data.setFxTimestamp( ds );
+		this.lbTimestamp.setPropertyDataSource( ds );
+		
+		
+		
+		// New Fx
+		ds = new ObjectProperty<String>( "0", String.class );
+		data.setNewFxValue( ds );
+		this.tFNewFx.setPropertyDataSource( ds );
+		
+		ds = new ObjectProperty<String>( UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.USERNAME).toString(), String.class );
+		data.setNewFxCreator(ds );
+		
+		log.debug( "All ds set successfully." );
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	private long getCurrentUserId(){
+		return ( long ) UI.getCurrent().getSession().getAttribute( DLoginUIController.USER_ID );
+	}
+	
+	private String getCurrentUserSession(){
+		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.SESSION_VAR );
 	}
 
 }

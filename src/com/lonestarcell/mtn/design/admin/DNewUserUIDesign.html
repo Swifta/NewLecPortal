@@ -9,57 +9,32 @@
    <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto _id="cBookingDetails3" :center> 
     <vaadin-horizontal-layout style-name="sn-cbd-head sn-ref" margin _id="cBDHead3"> 
      <vaadin-label style-name="bold" width="442px" plain-text _id="lbFormHeader">
-       Enter New User Details 
+       New User 
      </vaadin-label> 
     </vaadin-horizontal-layout> 
    </vaadin-vertical-layout> 
    <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-ref" size-auto margin _id="cMobileNumber3" :center> 
-    <vaadin-label visible="false" style-name="bold tiny failure" plain-text>
-      Invalid MTN phone number. 
+    <vaadin-label style-name="bold tiny success light" immediate _id="lbNormalMsg">
+      Enter details 
     </vaadin-label> 
-    <vaadin-label size-auto plain-text>
-      Username 
+    <vaadin-label style-name="bold tiny failure" height="33px" plain-text _id="lbErrorMsg">
+      Invalid value 
     </vaadin-label> 
-    <vaadin-text-field width="442px" _id="tFUN"></vaadin-text-field> 
-    <vaadin-label size-auto plain-text>
-      First Name 
-    </vaadin-label> 
-    <vaadin-text-field width="442px" _id="tFFN"></vaadin-text-field> 
-    <vaadin-label size-auto plain-text>
-      Last Name 
-    </vaadin-label> 
-    <vaadin-text-field width="442px" _id="tFLN"></vaadin-text-field> 
-    <vaadin-label size-auto plain-text>
-      Surname 
-    </vaadin-label> 
-    <vaadin-text-field width="442px" _id="tFSN"></vaadin-text-field> 
-    <vaadin-label size-auto plain-text>
-      Email Address 
-    </vaadin-label> 
-    <vaadin-text-field width="442px" _id="tFEmail"></vaadin-text-field> 
-    <vaadin-horizontal-layout spacing> 
-     <vaadin-vertical-layout width="359px"> 
-      <vaadin-label size-auto plain-text>
-        User Profile 
-      </vaadin-label> 
-      <vaadin-combo-box item-caption-mode="id" width="348px" _id="comboProfile"> 
-       <option>Option 1</option> 
-       <option>Option 2</option> 
-       <option>Option 3</option> 
-      </vaadin-combo-box> 
-     </vaadin-vertical-layout> 
-     <vaadin-vertical-layout size-auto> 
-      <vaadin-label size-auto plain-text>
-        Enabled 
-      </vaadin-label> 
-      <vaadin-check-box _id="chkStatus"></vaadin-check-box> 
-     </vaadin-vertical-layout> 
-    </vaadin-horizontal-layout> 
+    <vaadin-text-field caption="Username" required width-full _id="tFNewUsername"></vaadin-text-field> 
+    <vaadin-text-field description="Enter First Name" caption="First Name" required null-representation=" " null-setting-allowed width="442px" _id="tFNewFirstName"></vaadin-text-field> 
+    <vaadin-text-field description="Enter Last Name" caption="Last Name" required null-representation=" " null-setting-allowed width="442px" _id="tFNewLastName"></vaadin-text-field> 
+    <vaadin-text-field description="Enter Surname [ optional ]" caption="Surname" null-representation=" " null-setting-allowed width="442px" _id="tFNewSurname"></vaadin-text-field> 
+    <vaadin-text-field caption="Email" required width-full _id="tFNewEmail"></vaadin-text-field> 
+    <vaadin-combo-box caption="Profile" description="Select Profile" required item-caption-mode="id" width-full height="37px" _id="comboProfile"> 
+     <option>Option 1</option> 
+     <option>Option 2</option> 
+     <option>Option 3</option> 
+    </vaadin-combo-box> 
     <vaadin-horizontal-layout spacing margin-top _id="cControls3" :right> 
-     <vaadin-button style-name="danger" plain-text _id="btnCancel">
+     <vaadin-button icon="fonticon://FontAwesome/f00d" description="Cancel" style-name="danger icon-only" plain-text _id="btnCancel">
        Cancel 
      </vaadin-button> 
-     <vaadin-button style-name="primary" plain-text _id="btnSave">
+     <vaadin-button icon="fonticon://FontAwesome/f0c7" description="Save" style-name="friendly icon-only" plain-text _id="btnSave">
        Save 
      </vaadin-button> 
     </vaadin-horizontal-layout> 

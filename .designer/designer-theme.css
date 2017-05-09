@@ -13098,7 +13098,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-in-logo {
-	background: url("logo_eagle.png");
+	background: url("logo_lonestar.PNG");
 }
 
 .lec_portal .sn-left-menu-c .v-button {
@@ -13465,9 +13465,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .sn-c-ref-form.sn-c-booking-details {
 	border-left: none;
-	background-color: #fff;
+	background-color: #21348b;
 	border-bottom: none;
-	border-right: 4px solid #b0b4e6;
+	border-right: 4px solid #fcca09;
+	color: #fff;
 }
 
 .lec_portal .sn-c-ref-form.sn-c-booking-details.sn-no-border-left {
@@ -13497,7 +13498,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-cbd-head .v-label {
-	color: #5168d8;
+	color: #fff;
 	font-weight: bolder;
 	font-size: 13pt;
 }
@@ -13517,9 +13518,20 @@ div.v-layout.v-horizontal.v-widget {
 	text-align: center;
 }
 
+.lec_portal .v-filterselect-suggestpopup [class$="suggestmenu"] {
+	color: #9292f5;
+	border-radius: 0;
+	background-color: #f3f4f8;
+}
+
 .lec_portal .sn-c-form .v-textfield, .lec_portal .sn-c-form .v-filterselect {
 	color: #9292f5;
 	border-radius: 0;
+	background-color: #f3f4f8;
+}
+
+.lec_portal .sn-c-form .v-filterselect [class*="input"] {
+	background-color: #f3f4f8;
 }
 
 .lec_portal .sn-c-form .v-icon {
@@ -13537,7 +13549,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-c-form {
-	background-color: #fef2f1;
+	background-color: #fcca09;
 }
 
 .lec_portal .sn-c-mm-op {
@@ -13571,6 +13583,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .sn-panel-head.sn-panel-head-card.sn-panel-head-step-b-ref::before {
 	content: "\f02d";
+}
+
+.lec_portal .sn-panel-head.sn-panel-head-card.sn-panel-head-step-b-ref.sn-head-dollar::before {
+	content: "\f155";
 }
 
 .lec_portal .sn-c-pay-help {
@@ -13657,7 +13673,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 	margin: 0;
 	background-color: #fff;
-	background: transparent url("img/logo_eagle.png") no-repeat scroll center 30%;
+	background: transparent url("img/logo_lonestar.PNG") no-repeat scroll center 30%;
 	line-height: 16;
 	color: #e4130a;
 }
@@ -13674,7 +13690,7 @@ div.v-layout.v-horizontal.v-widget {
 	border: none;
 	padding: 0;
 	margin: 0;
-	background: transparent url("img/logo_eagle.png") no-repeat scroll center 30%;
+	background: transparent url("img/logo_lonestar.PNG") no-repeat scroll center 30%;
 	color: #e4130a;
 	line-height: 14;
 }
@@ -14041,12 +14057,26 @@ div.v-layout.v-horizontal.v-widget {
 	height: 28px;
 }
 
+.lec_portal .sn-c-more-behavior {
+	z-inde: 99;
+	position: relative;
+}
+
 .lec_portal .sn-c-more-behavior .sn-more-drop-down {
-	visibility: hidden;
+	display: none;
+	z-index: 99;
+	position: absolute;
+	top: 37px;
+	left: -115px;
+	width: 150px;
 }
 
 .lec_portal .sn-c-more-behavior:hover .sn-more-drop-down {
-	visibility: visible;
+	display: block;
+}
+
+.lec_portal .sn-lb-username {
+	line-height: 2;
 }
 
 .lec_portal .sn-c-more-behavior:hover .sn-more-btnx {
@@ -14062,10 +14092,11 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .sn-c-popup-form {
 	margin-right: 32px;
+	margin-left: 32px;
 }
 
 .lec_portal .sn-try-pseudo.sn-try-fx::before {
-	content: "UGX";
+	content: "LRD";
 }
 
 .lec_portal .sn-btn-login-c {
@@ -14200,9 +14231,9 @@ div.v-layout.v-horizontal.v-widget {
 	border: none;
 	padding: 0;
 	margin: 0;
-	background-color: #fff;
+	background-color: #fcca09;
 	linex-height: 16;
-	colorx: #e4130a;
+	color: #fff;
 	font-size: 11pt;
 	font-weight: 100;
 	padding: 2px 14px;
@@ -14226,12 +14257,13 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-button-link:hover {
-	color: #3B3BBA;
+	color: #fff;
 }
 
 .lec_portal .sn-button-link-active {
 	background-color: rgba(186, 186, 186, 0.1);
-	color: #3B3BBA;
+	color: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 .lec_portal .sn-hor-menu-small {
@@ -14272,4 +14304,151 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .sn-details-action .v-icon {
 	color: #2c9720;
+}
+
+.lec_portal .sn-pagination .v-button, .lec_portal .sn-pagination .v-icon {
+	color: #156ab3;
+	text-decoration: none;
+}
+
+.lec_portal .sn-pagination .v-button.sn-cur-page {
+	color: #4d98e6;
+	text-decoration: underline;
+	border: 1px solid #d4d4d4;
+	border-radius: 2px;
+	background-color: #fff;
+}
+
+.lec_portal .sn-date-filter {
+	margin-top: 4px;
+}
+
+.lec_portal .sn-no-border-right.v-grid-cell.frozen {
+	border: none;
+	box-shadow: none;
+}
+
+.lec_portal .sn-no-border-right.v-grid-cell {
+	border: none;
+}
+
+.lec_portal .v-grid-footer td {
+	background-color: transparent;
+	border: none;
+}
+
+.lec_portal .sn-records-total {
+	color: #00f;
+}
+
+.lec_portal .sn-revenue-total {
+	color: #08cf49;
+}
+
+.lec_portal .sn-revenue-total b {
+	color: #1E6B15;
+}
+
+.lec_portal .v-grid-row.sn-date-filter-row .v-grid-cell.frozen {
+	border: none;
+}
+
+.lec_portal .sn-grid-title .v-label {
+	padding: 10px;
+}
+
+.lec_portal .sn-grid-panel.v-panel {
+	background-color: #fafafa;
+}
+
+.lec_portal .v-grid-cell.sn-cell-actions {
+	padding: 1px;
+	text-align: center;
+	font-weight: 500;
+}
+
+.lec_portal .v-grid-cell.sn-cell-actions .v-popupview {
+	color: #000080;
+	font-weight: 400;
+	border: none;
+}
+
+.lec_portal .v-grid-cell.sn-cell-actions .v-popupview {
+	color: #000080;
+}
+
+.lec_portal td.v-grid-cell:last-child {
+	border: none;
+	padding: 1px;
+	border: 1px solid #d4d4d4;
+	border-top: none;
+	background-image: linear, to bottom, #fafafa 2%, #efefef 98%;
+}
+
+.lec_portal td.v-grid-cell:last-child .v-popupview {
+	border: none;
+	color: #000080;
+	background-image: linear, to bottom, #fafafa 2%, #efefef 98%;
+	font-weight: 500;
+}
+
+.lec_portal .sn-login.sn-top-header-bar {
+	background-color: #fcca09;
+}
+
+.lec_portal .sn-c-ref-form.sn-c-form.sn-login.sn-form-yellow-border {
+	border: 8px solid #fcca09;
+	background-color: #fcca09;
+}
+
+.lec_portal .sn-text-blue-login .v-label {
+	color: #21348b;
+}
+
+.lec_portal .sn-c-form.sn-c-fx-details {
+	background-color: #fff;
+	border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.lec_portal .sn-fx-details-head .v-label {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.lec_portal .sn-panel-head.sn-panel-head-card.sn-head-edit::before {
+	content: "\f044";
+	right: 10px;
+	font-size: 40px;
+}
+
+.lec_portal .sn-panel-head.sn-panel-head-card.sn-user-details::before {
+	content: "\f0f0";
+}
+
+.lec_portal .sn-panel-head.sn-panel-head-card.sn-head-edit-profile::before {
+	content: "\f0f0";
+}
+
+.lec_portal .sn-cog-generate .v-icon {
+	color: #00f;
+}
+
+.lec_portal .sn-cog-generate:hover .v-icon {
+	color: #000;
+}
+
+.lec_portal .sn-left-menu-active {
+	background-colorx: #fff;
+	border-radius: 0;
+	border-bottom: 1px solid #fff;
+	color: #fff;
+}
+
+.lec_portal .sn-left-menu-active .v-icon, .lec_portal .sn-left-menu-active .v-button-caption {
+	color: #fff;
+}
+
+.lec_portal .sn-blink {
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-name: heartbeat;
 }

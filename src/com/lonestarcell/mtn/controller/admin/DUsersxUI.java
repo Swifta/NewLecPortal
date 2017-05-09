@@ -17,7 +17,7 @@ import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.LogoutResponsedetails;
 import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.Paymenttransaction;
 import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.Users;
 import com.lonestarcell.mtn.design.admin.DTableCtrlsUIDesign;
-import com.lonestarcell.mtn.design.admin.DUsersUIDesign;
+import com.lonestarcell.mtn.design.admin.DUserStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserMan;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -58,7 +58,7 @@ public class DUsersxUI extends DManUI {
 		init(duic);
 	}
 
-	private class DReportsUIController extends DUsersUIDesign implements
+	private class DReportsUIController extends DUserStateUIDesign implements
 			DUIControllable {
 
 		private static final long serialVersionUID = 1L;
@@ -71,19 +71,16 @@ public class DUsersxUI extends DManUI {
 		@Override
 		public void attachCommandListeners() {
 			System.out.println("Controls attached.");
-			attachChkDateFilters();
-			attachBtnFilter();
-			attachBtnReload();
+			// attachChkDateFilters();
+			// attachBtnFilter();
+			// attachBtnReload();
 
 		}
 
-		private void attachBtnReload() {
+		/* private void attachBtnReload() {
 
 			this.btnReload.addClickListener(new ClickListener() {
 
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
 
 				@SuppressWarnings("unchecked")
@@ -98,9 +95,9 @@ public class DUsersxUI extends DManUI {
 				}
 
 			});
-		}
+		} */
 
-		private void attachBtnFilter() {
+		/* private void attachBtnFilter() {
 			this.btnFilter.addClickListener(new ClickListener() {
 
 				private static final long serialVersionUID = 1L;
@@ -117,16 +114,14 @@ public class DUsersxUI extends DManUI {
 				}
 
 			});
-		}
+		} */
 
-		private void attachChkDateFilters() {
+		/*private void attachChkDateFilters() {
 
 			this.chkDateFilter
 					.addValueChangeListener(new ValueChangeListener() {
 
-						/**
-				 * 
-				 */
+					
 						private static final long serialVersionUID = 1L;
 
 						@SuppressWarnings("unchecked")
@@ -155,18 +150,19 @@ public class DUsersxUI extends DManUI {
 						}
 
 					});
-		}
+		} */
 
 		private void setContent() {
 
 			// DEFAULT UI STATE
 
-			dFStartDate.addStyleName("sn-invisible");
+			/* dFStartDate.addStyleName("sn-invisible");
 			dFLastDate.addStyleName("sn-invisible");
 			btnFilter.addStyleName("sn-invisible");
 			chkDateFilter.setValue(false);
 
 			this.btnReload.setIcon(FontAwesome.REFRESH);
+			*/
 
 			try {
 
@@ -614,10 +610,10 @@ public class DUsersxUI extends DManUI {
 
 		Actions() {
 
-			PopupView v = new PopupView("...", moreDropDown);
+			PopupView v = new PopupView("...", this);
 			v.addStyleName("sn-popup-view");
-			this.cPopView.addComponent(v);
-			v.addPopupVisibilityListener(new PopupVisibilityListener() {
+			//this.cPopView.addComponent(v);
+			/*v.addPopupVisibilityListener(new PopupVisibilityListener() {
 
 				private static final long serialVersionUID = 1L;
 
@@ -629,7 +625,7 @@ public class DUsersxUI extends DManUI {
 						moreDropDown.setVisible(false);
 				}
 
-			});
+			});*/
 
 		}
 
