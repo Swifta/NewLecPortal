@@ -28,9 +28,12 @@ public class PortalUI extends UI {
 		if ( nav == null )
 			nav = new Navigator(this, this);
 
-		DUI dui = new DUI();
-		dui.init(dui);
-		nav.addView("", dui);
+		// DUI dui = new DUI();
+		// dui.init(dui);
+		// nav.addView("", dui);
+		
+		DMainUI defaultUI = new DMainUI();
+		nav.addView("", defaultUI );
 		nav.addView("login", DLoginUIController.class);
 		//nav.addView("management", DManUIController.class);
 		nav.addView("management", DMainUI.class);

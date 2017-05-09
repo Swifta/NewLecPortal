@@ -211,7 +211,8 @@ public class MTNMomoClient {
 			
 			try {
 				
-				MTNLECPaymentServiceStub stub = new MTNLECPaymentServiceStub( "http://127.0.0.1:9767/services/MTNLECPaymentService/");
+				// Disable port TODO 
+				MTNLECPaymentServiceStub stub = new MTNLECPaymentServiceStub( "http://127.0.0.1:97666667/services/MTNLECPaymentService/");
 				
 				ReceivePaymentConfirmation comfirm = new MTNLECPaymentServiceStub.ReceivePaymentConfirmation();
 				comfirm.setAccountRef( in.getAcctRef() );

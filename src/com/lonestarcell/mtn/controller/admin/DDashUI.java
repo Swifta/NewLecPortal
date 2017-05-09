@@ -56,7 +56,7 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 	
 	private void setVMenu( ){
 		
-		DateFormat sdf = new SimpleDateFormat( "MM, dd yyyy" );
+		DateFormat sdf = new SimpleDateFormat( "MMM dd, yyyy" );
 		Calendar cal = Calendar.getInstance();
 		
 		String tDate = sdf.format( cal.getTime() );

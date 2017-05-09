@@ -19,9 +19,9 @@ public class JDBCPoolManager {
 	private void initJDBCPool() {
 
 		PoolProperties p = new PoolProperties();
-		p.setUrl("jdbc:mysql://localhost:3306/afrinnewdb");
-		p.setUsername("root");
-		p.setPassword("admin");
+		p.setUrl("jdbc:mysql://localhost:3306/afrinnewdb_test");
+		p.setUsername("swifta");
+		p.setPassword("swift@123");
 		p.setDriverClassName("com.mysql.jdbc.Driver");
 
 		dataSource = new DataSource(p);

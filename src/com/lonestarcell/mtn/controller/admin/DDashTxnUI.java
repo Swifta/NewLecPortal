@@ -198,6 +198,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 		Out out = mTxn.setDashMeta(in, this.getRecord() );
 		if( out.getStatusCode() != 1 ) {
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
+			return;
 		}
 
 		
@@ -210,24 +211,24 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 		
 	
 		NumberFormat nf = NumberFormat.getNumberInstance( Locale.US );
-		this.getData().setsTotalInfoFail( nf.format( this.getData().getTotalInfoFail() ).replace( "$", "") );
-		this.getData().setsTotalInfoSuccess( nf.format( this.getData().getTotalInfoSuccess() ).replace( "$", "") );
+		this.getData().setsTotalInfoFail( nf.format( (long) this.getData().getTotalInfoFail() ).replace( "$", "") );
+		this.getData().setsTotalInfoSuccess( nf.format( (long) this.getData().getTotalInfoSuccess() ).replace( "$", "") );
 		
-		this.getData().setsTotalTokenFail( nf.format( this.getData().getTotalTokenFail() ).replace( "$", "") );
-		this.getData().setsTotalTokenSuccess( nf.format( this.getData().getTotalTokenSuccess() ).replace( "$", ""));
+		this.getData().setsTotalTokenFail( nf.format( (long) this.getData().getTotalTokenFail() ).replace( "$", "") );
+		this.getData().setsTotalTokenSuccess( nf.format( (long)this.getData().getTotalTokenSuccess() ).replace( "$", ""));
 
-		this.getData().setsTotalSMSFail( nf.format( this.getData().getTotalSMSFail() ).replace( "$", "") );
-		this.getData().setsTotalSMSSuccess( nf.format( this.getData().getTotalSMSSuccess() ).replace( "$", "") );
+		this.getData().setsTotalSMSFail( nf.format( ( long ) this.getData().getTotalSMSFail() ).replace( "$", "") );
+		this.getData().setsTotalSMSSuccess( nf.format( (long) this.getData().getTotalSMSSuccess() ).replace( "$", "") );
 
-		this.getData().setsTotalTxnFail( nf.format( this.getData().getTotalTxnFail() ).replace( "$", "") );
-		this.getData().setsTotalTxnSuccess( nf.format( this.getData().getTotalTxnSuccess() ).replace( "$", "") );
+		this.getData().setsTotalTxnFail( nf.format( ( long ) this.getData().getTotalTxnFail() ).replace( "$", "") );
+		this.getData().setsTotalTxnSuccess( nf.format( ( long )this.getData().getTotalTxnSuccess() ).replace( "$", "") );
 
 		// Totals
 		
-		this.getData().setsTotalTxn( nf.format( this.getData().getTotalTxn() ).replace( "$", "") );
-		this.getData().setsTotalToken( nf.format( this.getData().getTotalToken() ).replace( "$", "") );
-		this.getData().setsTotalSMS( nf.format( this.getData().getTotalSMS() ).replace( "$", "") );
-		this.getData().setsTotalInfo( nf.format( this.getData().getTotalInfo() ).replace( "$", "") );
+		this.getData().setsTotalTxn( nf.format( ( long )this.getData().getTotalTxn() ).replace( "$", "") );
+		this.getData().setsTotalToken( nf.format( ( long ) this.getData().getTotalToken() ).replace( "$", "") );
+		this.getData().setsTotalSMS( nf.format( ( long ) this.getData().getTotalSMS() ).replace( "$", "") );
+		this.getData().setsTotalInfo( nf.format( ( long ) this.getData().getTotalInfo() ).replace( "$", "") );
 		
 		
 		this.btnInfoFail.setCaption( this.getData().getsTotalInfoFail() );
