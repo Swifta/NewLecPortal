@@ -22,6 +22,7 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
@@ -33,7 +34,7 @@ public class MTxnTest {
 	
 	@BeforeClass
 	public static void init(){
-		m = new MTxn( 1L, "" );
+		m = new MTxn( 1L, "c4gk867h5v8k491mgtvlsjctrq" );
 		Assert.assertNotNull( "Model is null", m );
 	}
 
@@ -77,7 +78,7 @@ public class MTxnTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void getTxnTodayTest(){
 			
 		
@@ -223,10 +224,6 @@ public class MTxnTest {
 	@Test
 	@Ignore
 	public void setTxnMetaTest(){
-			
-		
-		
-
 		
 		In in = new In();
 		BData<InTxn> inBData = new BData<>();
@@ -261,9 +258,64 @@ public class MTxnTest {
 		Assert.assertNotNull( data );
 		log.debug( "Total Records: "+data.getTotalRecord().getValue() );
 		log.debug( "Total Revenue: "+data.getTotalRevenue().getValue() );
-		//Assert.assertNotNull( out.getData() );
-		//Assert.assertNotNull( out.getData().getData() );
-		//Assert.assertTrue( out.getStatusCode() == 1 );
+	
+		
+		
+	}
+	
+	@Test
+	// @Ignore
+	public void setDashMetaTest(){
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		
+		OutTxnMeta data = new OutTxnMeta();
+		
+		Item record = new BeanItem<>( data );
+		
+		
+		
+		Out out = m.setDashMeta(in, record );
+		
+		Assert.assertNotNull( out );
+		
+		log.debug( "Dash  Info Failed: "+data.getTotalInfoFail() );
+		log.debug( "Dash  Info Success: "+data.getTotalInfoSuccess() );
+		
+		log.debug( "Dash  SMS Failed: "+data.getTotalSMSFail() );
+		log.debug( "Dash  SMS Success: "+data.getTotalSMSSuccess() );
+		
+		log.debug( "Dash  Token Failed: "+data.getTotalTokenFail() );
+		log.debug( "Dash  Token Success: "+data.getTotalTokenSuccess() );
+		
+		log.debug( "Dash  Txt Failed: "+data.getTotalTxnFail() );
+		log.debug( "Dash  Txn Success: "+data.getTotalTxnSuccess() );
+		
+		
+		log.debug( "Dash  Meta msg: "+out.getMsg() );
+		log.debug( "Dash Meta status: "+out.getStatusCode() );
+	
 		
 		
 	}

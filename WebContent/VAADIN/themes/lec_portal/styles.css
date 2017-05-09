@@ -14431,3 +14431,76 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .sn-left-menu-active .v-icon, .lec_portal .sn-left-menu-active .v-button-caption {
 	color: #fff;
 }
+
+.lec_portal .sn-blink {
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-name: heartbeat;
+}
+
+.lec_portal .sn-c-percentage {
+	position: relative;
+}
+
+.lec_portal .sn-percentage.v-label {
+	text-align: right;
+	padding-right: 5px;
+	padding-top: 0px;
+}
+
+.lec_portal .sn-percentage-sign.v-label {
+	font-size: 15pt;
+	line-height: 2;
+	color: #f00;
+	width: 20px;
+	padding: 0;
+	position: absolute;
+	top: -6px;
+	right: -14px;
+}
+
+.lec_portal .sn-c-percentage .sn-percentage-sign.sn-green.v-label {
+	color: #0f0;
+}
+
+.lec_portal .sn-c-percentage .sn-percentage-sign.sn-orange.v-label {
+	color: #FFD700;
+}
+
+.lec_portal .sn-c-percentage .sn-percentage-sign.sn-grey.v-label {
+	color: #fafafa;
+}
+
+.lec_portal .sn-form-summary {
+	background-color: #00f;
+}
+
+.lec_portal .sn-dash-card-footer {
+	background-colorx: #00f;
+	padding: 10px 20px;
+}
+
+.lec_portal .sn-dash-card-footer .v-button {
+	text-decoration: none;
+}
+
+.lec_portal .sn-dash-card-footer .v-button:hover {
+	text-decoration: none;
+}
+
+.lec_portal .sn-green .v-icon {
+	color: #2C9720;
+}
+
+.lec_portal .sn-red .v-icon {
+	color: #e4130a;
+}
+
+.lec_portal .sn-grey .v-icon {
+	color: #ddd;
+}
+
+.lec_portal .sn-ref.sn-c-dash-details {
+	padding-left: 6px;
+	padding-right: 6px;
+}

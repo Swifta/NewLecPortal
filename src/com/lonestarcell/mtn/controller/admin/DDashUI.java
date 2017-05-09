@@ -1,12 +1,16 @@
 package com.lonestarcell.mtn.controller.admin;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.lonestarcell.mtn.design.admin.DDashboardUIDesign;
+import com.lonestarcell.mtn.design.admin.DDashUIDesign;
 import com.vaadin.ui.Component;
 
-public class DDashUI extends DDashboardUIDesign implements DUserUIInitializable<DMainUI,DDashUI>, DUIControllable {
+public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMainUI,DDashUI>, DUIControllable {
 
 	/**
 	 * 
@@ -46,6 +50,18 @@ public class DDashUI extends DDashboardUIDesign implements DUserUIInitializable<
 		setFooter();
 		swap( new DDashTxnUI( getParentUI() ) ); 
 		attachCommandListeners();
+		this.setVMenu();
+		
+	}
+	
+	private void setVMenu( ){
+		
+		DateFormat sdf = new SimpleDateFormat( "MM, dd yyyy" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		this.btnDash.setCaption( "Health [ "+tDate+ " ]");
 		
 	}
 

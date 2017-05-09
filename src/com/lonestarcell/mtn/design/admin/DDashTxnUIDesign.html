@@ -5,99 +5,143 @@
   <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
  </head> 
  <body> 
-  <vaadin-horizontal-layout height-full _id="cForms"> 
-   <vaadin-vertical-layout style-name="sn-c-ads sn-ref" spacing size-auto _id="cAds"> 
-    <vaadin-horizontal-layout style-name="sn-inner-cards-c"> 
-     <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref" width="250px" height="250px" _id="cMobileAd7"> 
-      <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM18"> 
-       <vaadin-vertical-layout spacing size-auto margin-top :center> 
-        <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
-         <vaadin-label style-name="sn-lb-card-no" size-auto plain-text _id="lbCapturedBookings" :middle :center>
+  <vaadin-vertical-layout style-name="sn-c-ads sn-ref sn-c-dash-details" spacing size-auto _id="cAds"> 
+   <vaadin-horizontal-layout style-name="sn-inner-cards-c"> 
+    <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref" size-auto _id="cMobileAd71"> 
+     <vaadin-horizontal-layout style-name="sn-sel-mm-top" width="250px" _id="cMM181" :middle :center> 
+      <vaadin-vertical-layout spacing size-auto margin-top :center> 
+       <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
+        <vaadin-vertical-layout style-name="sn-c-percentage" size-auto :middle :center> 
+         <vaadin-label style-name="sn-percentage-sign" width="20px" _id="lbTxnPer" :right>
+           % 
+         </vaadin-label> 
+         <vaadin-label style-name="sn-lb-card-no sn-percentage" size-auto _id="lbTxn">
+           80 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+       <vaadin-label style-name="large bold" size-auto plain-text _id="lbInfoDesc1">
+         Transaction 
+       </vaadin-label> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-dash-card-footer" margin-top margin-bottom :center> 
+      <vaadin-button icon="fonticon://FontAwesome/f00c" style-name="link tiny sn-green" plain-text _id="btnTxnSuccess">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f00d" style-name="link tiny sn-red" plain-text _id="btnTxnFail">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f196" style-name="link tiny sn-grey" plain-text _id="btnTxnTotal">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f021" description="Refresh" style-name="link tiny sn-green icon-only" plain-text>
+        Refresh 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref <vaadin-vertical-layout primary-style-name=&quot;v-verticallayout&quot; style-name=&quot;sn-ad-card sn-left-ad-card sn-ref sn-last" size-auto _id="cMobileAd7"> 
+     <vaadin-horizontal-layout style-name="sn-sel-mm-top" width="250px" _id="cMM18" :middle :center> 
+      <vaadin-vertical-layout spacing size-auto margin-top :center> 
+       <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
+        <vaadin-vertical-layout style-name="sn-c-percentage" size-auto :middle :center> 
+         <vaadin-label style-name="sn-percentage-sign" width="20px" _id="lbSMSPer" :right>
+           % 
+         </vaadin-label> 
+         <vaadin-label style-name="sn-lb-card-no sn-percentage" size-auto _id="lbSMS">
+           60 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+       <vaadin-label style-name="large bold" size-auto plain-text _id="lbInfoDesc" :center>
+         SMS 
+       </vaadin-label> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-dash-card-footer" margin-top margin-bottom :center> 
+      <vaadin-button icon="fonticon://FontAwesome/f00c" style-name="link tiny sn-green" plain-text _id="btnSMSSuccess">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f00d" style-name="link tiny sn-red" plain-text _id="btnSMSFail">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f196" style-name="link tiny sn-grey" plain-text _id="btnSMSTotal">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f021" description="Refresh" style-name="link tiny sn-green icon-only" plain-text>
+        Refresh 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout style-name="sn-inner-cards-c"> 
+    <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref" size-auto _id="cMobileAd711"> 
+     <vaadin-horizontal-layout style-name="sn-sel-mm-top" width="250px" _id="cMM1811" :middle :center> 
+      <vaadin-vertical-layout spacing size-auto margin-top :center> 
+       <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
+        <vaadin-vertical-layout style-name="sn-c-percentage" size-auto :middle :center> 
+         <vaadin-label style-name="sn-percentage-sign" width="20px" _id="lbTokenPer" :right>
+           % 
+         </vaadin-label> 
+         <vaadin-label style-name="sn-lb-card-no sn-percentage" size-auto _id="lbToken">
+           40 
+         </vaadin-label> 
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+       <vaadin-label style-name="large bold" size-auto plain-text _id="lbInfoDesc11" :center>
+         Token 
+       </vaadin-label> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-dash-card-footer" margin-top margin-bottom :center> 
+      <vaadin-button icon="fonticon://FontAwesome/f00c" style-name="link tiny sn-green" plain-text _id="btnTokenSuccess">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f00d" style-name="link tiny sn-red" plain-text _id="btnTokenFail">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f196" style-name="link tiny sn-grey" plain-text _id="btnTokenTotal">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f021" description="Refresh" style-name="link tiny sn-green icon-only" plain-text>
+        Refresh 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+    <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref <vaadin-vertical-layout primary-style-name=&quot;v-verticallayout&quot; style-name=&quot;sn-ad-card sn-left-ad-card sn-ref sn-last" size-auto _id="cMobileAd72"> 
+     <vaadin-horizontal-layout style-name="sn-sel-mm-top" width="250px" _id="cMM182" :middle :center> 
+      <vaadin-vertical-layout spacing size-auto margin-top :center> 
+       <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
+        <vaadin-vertical-layout style-name="sn-c-percentage" size-auto :middle :center> 
+         <vaadin-label style-name="sn-percentage-sign" width="20px" _id="lbInfoPer" :right>
+           % 
+         </vaadin-label> 
+         <vaadin-label style-name="sn-lb-card-no sn-percentage" size-auto _id="lbInfo">
            0 
          </vaadin-label> 
-        </vaadin-horizontal-layout> 
-        <vaadin-label style-name="large bold" size-auto plain-text _id="lbInfoDesc">
-          Transactions 
-        </vaadin-label> 
-       </vaadin-vertical-layout> 
-      </vaadin-horizontal-layout> 
-     </vaadin-vertical-layout> 
-     <vaadin-vertical-layout style-name="sn-ad-card sn-ref" width="250px" height="250px" _id="cCardAd6"> 
-      <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM19"> 
-       <vaadin-vertical-layout spacing size-auto margin-top :center> 
-        <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-bank-card sn-ad-nobg" width="120px" height="120px" :center> 
-         <vaadin-label style-name="sn-lb-card-no" size-auto plain-text _id="lbSuccessTrxns" :middle :center>
-           0 
-         </vaadin-label> 
-        </vaadin-horizontal-layout> 
-        <vaadin-label style-name="large bold" size-auto plain-text>
-          Successful Payments 
-        </vaadin-label> 
-       </vaadin-vertical-layout> 
-      </vaadin-horizontal-layout> 
-      <vaadin-vertical-layout style-name="sn-c-mm-slogan" margin-left margin-right margin-top _id="cMMSlogan18"></vaadin-vertical-layout> 
-     </vaadin-vertical-layout> 
-     <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref <vaadin-vertical-layout primary-style-name=&quot;v-verticallayout&quot; style-name=&quot;sn-ad-card sn-left-ad-card sn-ref sn-last" width="250px" height="250px" _id="cLastCard6"> 
-      <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM20"> 
-       <vaadin-vertical-layout spacing size-auto margin-top :center> 
-        <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
-         <vaadin-label style-name="sn-lb-card-no" size-auto plain-text _id="lbFailedTrxns" :middle :center>
-           0 
-         </vaadin-label> 
-        </vaadin-horizontal-layout> 
-        <vaadin-label style-name="large bold" size-auto plain-text>
-          Failed Payments 
-        </vaadin-label> 
-       </vaadin-vertical-layout> 
-      </vaadin-horizontal-layout> 
-     </vaadin-vertical-layout> 
-    </vaadin-horizontal-layout> 
-    <vaadin-horizontal-layout style-name="sn-inner-cards-c"> 
-     <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref" width="250px" height="250px" _id="cMobileAd8"> 
-      <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM21"> 
-       <vaadin-vertical-layout spacing size-auto margin-top :center> 
-        <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mm sn-ad-nobg" width="120px" height="120px" :center> 
-         <vaadin-label style-name="sn-lb-card-no" size-auto plain-text _id="lbProcessingTrxns" :middle :center>
-           0 
-         </vaadin-label> 
-        </vaadin-horizontal-layout> 
-        <vaadin-label style-name="large bold" size-auto plain-text>
-          Still Processing 
-        </vaadin-label> 
-       </vaadin-vertical-layout> 
-      </vaadin-horizontal-layout> 
-     </vaadin-vertical-layout> 
-     <vaadin-vertical-layout style-name="sn-ad-card sn-ref" width="250px" height="250px" _id="cCardAd7"> 
-      <vaadin-horizontal-layout style-name="sn-sel-mm-top" width-full _id="cMM22"> 
-       <vaadin-vertical-layout spacing size-auto margin-top :center> 
-        <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-bank-card sn-ad-nobg" width="120px" height="120px" :center> 
-         <vaadin-label style-name="sn-lb-card-no" size-auto plain-text _id="lbTotalTrxns" :middle :center>
-           0 
-         </vaadin-label> 
-        </vaadin-horizontal-layout> 
-        <vaadin-label style-name="large bold" size-auto plain-text>
-          Successful SMS 
-        </vaadin-label> 
-       </vaadin-vertical-layout> 
-      </vaadin-horizontal-layout> 
-      <vaadin-vertical-layout style-name="sn-c-mm-slogan" margin-left margin-right margin-top _id="cMMSlogan19"></vaadin-vertical-layout> 
-     </vaadin-vertical-layout> 
-     <vaadin-vertical-layout style-name="sn-ad-card sn-left-ad-card sn-ref <vaadin-vertical-layout primary-style-name=&quot;v-verticallayout&quot; style-name=&quot;sn-ad-card sn-left-ad-card sn-ref sn-last" width="250px" height="250px" _id="cLastCard7"> 
-      <vaadin-horizontal-layout style-name="sn-sel-mm-top-backup" width-full _id="cMM23"> 
-       <vaadin-vertical-layout spacing size-auto margin-top :center> 
-        <vaadin-horizontal-layout style-name="sn-sel-op-logo sn-ad-icon sn-ad-mmx" width="120px" height="120px" :center> 
-         <vaadin-label style-name="sn-lb-card-no" size-auto plain-text _id="lbSuccessTrxns1" :middle :center>
-           0 
-         </vaadin-label> 
-        </vaadin-horizontal-layout> 
-        <vaadin-label style-name="large bold" size-auto plain-text>
-          Failed SMS 
-        </vaadin-label> 
-       </vaadin-vertical-layout> 
-      </vaadin-horizontal-layout> 
-     </vaadin-vertical-layout> 
-    </vaadin-horizontal-layout> 
-   </vaadin-vertical-layout> 
-  </vaadin-horizontal-layout>  
+        </vaadin-vertical-layout> 
+       </vaadin-horizontal-layout> 
+       <vaadin-label style-name="large bold" size-auto plain-text _id="lbInfoDesc2" :center>
+         INFO &amp; Others 
+       </vaadin-label> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-dash-card-footer" margin-top margin-bottom :center> 
+      <vaadin-button icon="fonticon://FontAwesome/f00c" style-name="link tiny sn-green" plain-text _id="btnInfoSuccess">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f00d" style-name="link tiny sn-red" plain-text _id="btnInfoFail">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f196" style-name="link tiny sn-grey" plain-text _id="btnInfoTotal">
+        1,001 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f021" description="Refresh" style-name="link tiny sn-green icon-only" plain-text>
+        Refresh 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-horizontal-layout> 
+  </vaadin-vertical-layout>  
  </body>
 </html>

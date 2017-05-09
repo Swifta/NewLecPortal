@@ -1982,6 +1982,75 @@
 	    animation-iteration-count: infinite;
 	    animation-name: heartbeat;
 	}
+	
+	.sn-c-percentage {
+		position: relative;
+	}
+	
+	.sn-percentage.v-label{
+		text-align: right;
+		padding-right: 5px;
+		padding-top: 0px;
+	}
+	
+	.sn-percentage-sign.v-label {
+		font-size: 15pt;
+		line-height: 2;
+		color: #f00;
+		width: 20px;
+		padding: 0;
+		position: absolute;
+		top: -6px;
+   		right: -14px;
+	}
+	
+	.sn-c-percentage .sn-percentage-sign.sn-green.v-label {
+		color: #0f0;
+	}
+	
+	.sn-c-percentage .sn-percentage-sign.sn-orange.v-label {
+		color: #FFD700;
+	}
+	
+	.sn-c-percentage .sn-percentage-sign.sn-grey.v-label {
+		color: #fafafa;
+	}
+	
+	.sn-form-summary {
+		background-color: #00f;
+	}
+	
+	.sn-dash-card-footer {
+		background-colorx: #00f;
+		padding: 10px 20px;
+		
+	}
+	
+	.sn-dash-card-footer .v-button {
+		text-decoration: none;
+	}
+	
+	.sn-dash-card-footer .v-button:hover {
+		text-decoration: none;
+	}
+	
+	.sn-green .v-icon {
+		color: #2C9720;
+	}
+	
+	
+	.sn-red .v-icon {
+		color: #e4130a;
+	}
+
+	.sn-grey .v-icon {
+		color: #ddd;
+	}
+	
+	.sn-ref.sn-c-dash-details {
+		padding-left: 6px;
+		padding-right: 6px;
+	}
      
      
 		   

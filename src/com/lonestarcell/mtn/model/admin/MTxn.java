@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -981,8 +982,192 @@ public class MTxn extends Model {
 			}
 			
 			outTxn.getTotalRevenue().setValue( rs.getString( "total_revenue" ) );
+			
+			
+			
 			out.setStatusCode( 1 );
 			out.setMsg( "Txn meta computed successfully." );
+			
+			
+			
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			out.setMsg( "Could not complete operation. " );
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return out;
+	}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	public Out setDashMeta( In in, Item record ) {
+		
+		Out out = this.checkAuthorization( );
+		if( out.getStatusCode() != 1 ){
+			out.setStatusCode( 100 );
+			return out;
+		}
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		
+	
+		String q = "select COUNT( t.reference_no ) as total_txn_success FROM transactions as t WHERE ( t.status_code_id != '2100' OR  t.status_code_id != '1100' OR  t.status_code_id != '3100'  OR  t.status_code_id != '100'  ) AND t.last_update > ? and t.last_update < ?";
+				  
+		
+		try {
+			
+			 BData< ? > bInData = in.getData();
+			 inTxn = (InTxn) bInData.getData();
+			
+			conn = dataSource.getConnection();
+			conn.setReadOnly(true);
+			
+			String timeCorrection = " 23:13:59";
+			 
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate()+timeCorrection ) ;
+			ps.setString(2, inTxn.gettDate()+timeCorrection );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				// outTxn.setTotalTxnSuccess( rs.getLong( "total_txn_success" ) );
+				record.getItemProperty( "totalTxnSuccess" ).setValue( rs.getLong( "total_txn_success" ) );
+			}
+			
+			ps.close();
+			rs.close();
+			
+			q = "select COUNT( t.reference_no ) as total_txn_fail FROM transactions as t WHERE t.last_update > ? and t.last_update < ? and ( t.status_code_id = '04' OR t.status_code_id = '01')";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				//outTxn.setTotalTxnFail( rs.getLong( "total_txn_fail" ) );
+				record.getItemProperty( "totalTxnFail" ).setValue( rs.getLong( "total_txn_fail" ) );
+			}
+			
+			ps.close();
+			rs.close();
+			
+			
+			// TOKEN
+			
+			q = "select COUNT( v.reference_no ) as total_token_success FROM vend_req as v WHERE v.last_update > ? and v.last_update < ? and ( v.status = 'COMPLETE' OR v.status = 'REVERSED')";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				// outTxn.setTotalTokenSuccess( rs.getLong( "total_token_success" ) );
+				record.getItemProperty( "totalTokenSuccess" ).setValue( rs.getLong( "total_token_success" ) );
+			}
+			ps.close();
+			rs.close();
+			
+			q = "select COUNT( v.reference_no ) as total_token_fail FROM vend_req as v WHERE v.last_update > ? and v.last_update < ? and ( v.status = 'FAILED' )";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				// outTxn.setTotalTokenFail( rs.getLong( "total_token_fail" ) );
+				record.getItemProperty( "totalTokenFail" ).setValue( rs.getLong( "total_token_fail" ) );
+			}
+			
+			
+			ps.close();
+			rs.close();
+			
+			
+			
+			// INFO & REVERSAL
+			q = "select COUNT( h.reference_no ) as total_info_success FROM transaction_history as h WHERE h.last_update > ? and h.last_update < ? and ( h.status = 'COMPLETE')";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				// outTxn.setTotalInfoSuccess( rs.getLong( "total_info_success" ) );
+				record.getItemProperty( "totalInfoSuccess" ).setValue(  rs.getLong( "total_info_success" ) );
+			}
+			ps.close();
+			rs.close();
+			
+			
+			q = "select COUNT( h.reference_no ) as total_info_fail FROM transaction_history as h WHERE h.last_update > ? and h.last_update < ? and ( h.status = 'FAILED' )";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				//outTxn.setTotalInfoFail( rs.getLong( "total_info_fail" ) );
+				record.getItemProperty( "totalInfoFail" ).setValue( rs.getLong( "total_info_fail" ) );
+			}
+			
+			ps.close();
+			rs.close();
+			
+			
+			// SMS 
+			q = "select COUNT( m.id ) as total_sms_success FROM msg_notification as m WHERE m.datecreated > ? and m.datecreated < ? and ( m.status = 1 )";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				//outTxn.setTotalSMSSuccess( rs.getLong( "total_sms_success" ) );
+				record.getItemProperty( "totalSMSSuccess" ).setValue( rs.getLong( "total_sms_success" ) );
+			}
+			
+			ps.close();
+			rs.close();
+			
+			
+			q = "select COUNT( m.id ) as total_sms_fail FROM msg_notification as m WHERE m.datecreated > ? and m.datecreated < ? and ( m.status = 100 )";
+			ps = conn.prepareStatement( q );
+			ps.setString( 1, inTxn.getfDate() ) ;
+			ps.setString(2, inTxn.gettDate() );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( rs.next() ) {
+				record.getItemProperty( "totalSMSFail" ).setValue( rs.getLong( "total_sms_fail" ) );
+			}
+			
+			out.setStatusCode( 1 );
+			out.setMsg( "Dash meta computed successfully." );
 			
 			
 			
