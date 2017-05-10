@@ -37,7 +37,7 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 
 	public DUserSetCredsUI( Item record) {
 		this.setRecord( record );
-		init(null);
+		init();
 	}
 	
 	
@@ -252,8 +252,7 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 		this.record = record;
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+	public void init() {
 	
 		this.setProcessingPopup( new Window("User Details") );
 		attachCommandListeners();
@@ -284,6 +283,8 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 		
 		this.tFNewUsername.setReadOnly( true );
 		this.tFNewPassword.setReadOnly( true );
+		
+		log.debug( "Field data sources have been initialized successfully." );
 		
 	
 

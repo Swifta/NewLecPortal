@@ -39,7 +39,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 
 	public DUserDetailsUI( Item record) {
 		this.setRecord( record );
-		init(null);
+		init();
 	}
 	
 	
@@ -297,8 +297,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		this.record = record;
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+	private void init() {
 		this.setProcessingPopup( new Window("User Details") );
 		attachCommandListeners();
 		setPropertyDataSource();
@@ -401,7 +400,19 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			// this.btnUserChangeProfile.setVisible( false );
 			this.btnUserChangeCreds.setVisible( true );
 			
+			if( record.getItemProperty( "userStatus" ).getValue().toString().equals( "2" ) ){
+				record.getItemProperty( "userStatus" ).setValue( "Blocked" );
+			}else if ( record.getItemProperty( "userStatus" ).getValue().toString().equals( "1" ) ){
+				record.getItemProperty( "userStatus" ).setValue( "Active" );
+			} else if(  record.getItemProperty( "userStatus" ).getValue().toString().equals( "0" ) ) {
+				record.getItemProperty( "userStatus" ).setValue( "Registered" );
+			} else {
+				record.getItemProperty( "userStatus" ).setValue( "Unknown" );
+			}
+			
 		}
+		
+		
 		
 		
 		

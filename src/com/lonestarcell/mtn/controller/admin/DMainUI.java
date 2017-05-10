@@ -222,7 +222,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				log.debug( "Token menu clicked. " );
 				
 				if( setHMenuState( btnHMenuInfo ) )
-					swap( new DTokenInfoUI( getParentUI() ) );
+					swap( new DInfoUI( getParentUI() ) );
 				
 			}
 			
@@ -399,11 +399,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		});
 	}
 
-	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void enter(ViewChangeEvent event) {

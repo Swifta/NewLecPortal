@@ -45,7 +45,7 @@ public class DUserEditProfileUI extends DEditProfileUIDesign implements
 
 	public DUserEditProfileUI( Item record) {
 		this.setRecord( record );
-		init(null);
+		init();
 	}
 	
 	
@@ -556,8 +556,8 @@ public class DUserEditProfileUI extends DEditProfileUIDesign implements
 		this.record = record;
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+
+	private void init() {
 		this.initChk();
 		this.initComboProfile();
 		this.setProcessingPopup( new Window("User Details") );

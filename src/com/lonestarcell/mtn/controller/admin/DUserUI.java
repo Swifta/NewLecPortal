@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lonestarcell.mtn.design.admin.DUserUIDesign;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
@@ -15,6 +16,7 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	 */
 	
 	private DMainUI ancestor;
+	private Button btnActive;
 	private Component rightContent;
 	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
 	
@@ -46,13 +48,13 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	private void attachBtnNewUser(){
 		this.btnNewUser.addClickListener( new ClickListener(){
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				
+				if( isHMenuActiveBtn( btnNewUser ) )
+					return;
 				
 				new DNewUserUI( getParentUI() );
 				btnNewUser.addStyleName( "sn-left-menu-active" );
@@ -65,16 +67,16 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	
 	
 	private void attachBtnUsers(){
+		btnActive = btnUsers;
 		this.btnUsers.addClickListener( new ClickListener(){
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
+				if( isHMenuActiveBtn( btnUsers ) )
+					return;
 				new DUserStateUI( getParentUI() );
 				btnUsers.addStyleName( "sn-left-menu-active" );
 				btnNewUser.removeStyleName( "sn-left-menu-active" );
@@ -83,12 +85,17 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 			
 		});
 	}
+	
+	
+	private boolean isHMenuActiveBtn( Button btn ){
+		if( btnActive.equals( btn ) ){
+			return true;
+		}
+		btnActive = btn;
+		return false;
+}
 
-	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	public void setHeader() {

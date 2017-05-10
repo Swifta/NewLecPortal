@@ -17,7 +17,6 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.design.admin.DDashTxnUIDesign;
 import com.lonestarcell.mtn.model.admin.MTxn;
-import com.lonestarcell.mtn.model.admin.MUser;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
@@ -87,11 +86,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 		
 	}
 
-	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void setHeader() {

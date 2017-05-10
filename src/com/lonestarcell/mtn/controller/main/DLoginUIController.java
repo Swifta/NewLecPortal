@@ -3,6 +3,8 @@ package com.lonestarcell.mtn.controller.main;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import javax.swing.text.Keymap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +23,7 @@ import com.lonestarcell.mtn.model.main.MLogin;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -387,6 +390,7 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 	
 	private void attachBtnLogin(){
 		
+		btnLogin.setClickShortcut(KeyCode.ENTER );
 		this.btnLogin.addClickListener( new ClickListener() {
 
 			private static final long serialVersionUID = 1L;
@@ -413,7 +417,7 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 	
 	
 	private void attachBtnReset(){
-		
+		btnReset.setClickShortcut(KeyCode.ENTER );
 		this.btnReset.addClickListener( new ClickListener() {
 
 			private static final long serialVersionUID = 1L;

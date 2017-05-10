@@ -30,11 +30,11 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 	private Logger log = LogManager.getLogger( DFxFormUI.class.getName() );
 
 	public DFxFormUI() {
-		init(null);
+		init();
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+	
+	public void init() {
 		this.data = new OutTxnDetails();
 		mFx = new MFx( getCurrentUserId(), getCurrentUserSession() );
 		attachCommandListeners();

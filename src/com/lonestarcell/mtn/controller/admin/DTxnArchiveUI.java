@@ -1,6 +1,5 @@
 package com.lonestarcell.mtn.controller.admin;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -8,16 +7,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.Todayflightdata;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
@@ -25,6 +20,7 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
+import com.lonestarcell.mtn.controller.util.TxnPaginationUIController;
 import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MTxn;
@@ -54,7 +50,6 @@ import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.TextField;
@@ -82,12 +77,6 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 
 	@Override
 	public void attachCommandListeners() {
-		
-	}
-
-	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -256,7 +245,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 			
 			// Header config
 			HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
-			PaginationUIController pageC = new PaginationUIController();
+			TxnPaginationUIController pageC = new TxnPaginationUIController( beanItemContainer, mTxn, inTxn );
 			
 			dateFilterCellH.setComponent( new AllRowsActionsUI( grid, in, true, pageC ) );
 			
@@ -269,7 +258,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 			dateFilterCellF.setComponent( new AllRowsActionsUI( grid, in, false, pageC ) );
 			
 			//Init pagination controller after both header and footer have been set.
-			pageC.init(null);
+			pageC.init();
 
 			
 			footer.setStyleName( "sn-date-filter-row" );
@@ -383,7 +372,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 		GeneratedPropertyContainer gpc = (GeneratedPropertyContainer) grid
 				.getContainerDataSource();
 
-		BeanItemContainer<Todayflightdata> container = (BeanItemContainer<Todayflightdata>) gpc
+		BeanItemContainer<OutTxn> container = (BeanItemContainer<OutTxn>) gpc
 				.getWrappedContainer();
 		
 		Column col = grid.getColumn(itemId);
@@ -396,7 +385,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 	
 	
 	
-	private void addFilterField(BeanItemContainer<Todayflightdata> container,
+	private void addFilterField(BeanItemContainer<OutTxn> container,
 			HeaderRow filterHeader, String itemId) {
 
 		TextField tF = new TextField();
@@ -415,7 +404,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 	
 	
 	private TextChangeListener getTextChangeListner(
-			final BeanItemContainer<Todayflightdata> container,
+			final BeanItemContainer<OutTxn> container,
 			final String itemId) {
 		return new TextChangeListener() {
 
@@ -446,11 +435,10 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 		private MultiRowActionsUI( Grid grid ){
 			
 			this.grid = grid;
-			init( null );
+			init( );
 		}
 		
-		@Override
-		public void init(DManUIController duic) {
+		private void init() {
 			setContent();
 			this.attachCommandListeners();
 		}
@@ -659,11 +647,6 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 			});
 		}
 
-		@Override
-		public void init(DManUIController duic) {
-			// TODO Auto-generated method stub
-			
-		}
 		
 	}
 	
@@ -675,15 +658,15 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 		private In in;
 		private OutTxnMeta outTxnMeta;
 		private boolean allowDateFilters;
-		private PaginationUIController pageC;
+		private TxnPaginationUIController pageC;
 		
-		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, PaginationUIController pageC ){
+		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, TxnPaginationUIController pageC ){
 			this.grid = grid;
 			this.in = in;
 			
 			this.allowDateFilters = allowDateFilters;
 			this.pageC = pageC;
-			init( null );
+			init( );
 			
 		}
 
@@ -803,9 +786,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 			outTxnMeta.getTotalRecord().setValue( nf.format( records ));
 		}
 
-		@Override
-		public void init(DManUIController duic) {
-			
+		private void init() {
 			if( !this.allowDateFilters )
 				this.cLeftDateFilter.setVisible(false);
 			this.setContent();
@@ -921,501 +902,6 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 			container.addContainerFilter(fBtn);
 
 		}
-		
-	}
-	
-	public class PaginationUIController implements DUIControllable, Serializable{
-		
-		private static final long serialVersionUID = 1L;
-
-		private Map< String, Button > mapPageBtns;
-			
-		private Button btnNextH;
-		private Button btnNextF;
-		
-		private Button btnPrevH;
-		private Button btnPrevF;
-		
-		private Button btnAfterPrevH;
-		private Button btnAfterPrevF;
-		
-		private Button btnBeforeNextH;
-		private Button btnBeforeNextF;
-		
-		private int currentPage = 1;
-		private int pages = 0;
-		private Label lbTotalRecords;
-		
-		private In in;
-		private OutTxnMeta outTxnMeta;
-		
-		PaginationUIController(){
-			mapPageBtns = new HashMap<>(8);
-		}
-		
-		public Map<String, Button> getListPageBtns(){
-			return mapPageBtns;
-		}
-		
-		
-
-		public Label getLbTotalRecords() {
-			return lbTotalRecords;
-		}
-
-		public void setLbTotalRecords(Label lbTotalRecords) {
-			this.lbTotalRecords = lbTotalRecords;
-		}
-		
-		
-
-		public In getIn() {
-			return in;
-		}
-
-		public void setIn(In in) {
-			this.in = in;
-		}
-
-		public OutTxnMeta getOutTxnMeta() {
-			return outTxnMeta;
-		}
-
-		public void setOutTxnMeta(OutTxnMeta outTxnMeta) {
-			this.outTxnMeta = outTxnMeta;
-		}
-
-		@Override
-		public void attachCommandListeners() {
-			
-			this.attachOPTotalRecords();
-			this.attachBtnNext();
-			this.attachBtnPrev();
-			this.attachBtnBeforeNext();
-			this.attachBtnAfterPrev();
-			
-			
-		}
-		
-		private void attachBtnNext(){
-			
-			btnNextH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnNextH has been clicked" );
-					next( );
-					
-				}
-				
-			});
-			
-			
-			btnNextF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					next( );
-					
-				}
-				
-			});
-		}
-		
-		private void attachBtnBeforeNext(){
-			
-			btnBeforeNextH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnBeforeNextH has been clicked" );
-					beforeNext( );
-					
-				}
-				
-			});
-			
-			
-			btnBeforeNextF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					beforeNext( );
-					
-				}
-				
-			});
-		}
-		
-		private void attachBtnPrev(){
-			
-			this.btnPrevH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnPrevH has been clicked" );
-					prev( );
-					
-				}
-				
-			});
-			
-			
-			this.btnPrevF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					prev( );
-					
-				}
-				
-			});
-		}
-		
-
-		
-		private void attachBtnAfterPrev(){
-			
-			btnAfterPrevH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnAfterPrevH has been clicked" );
-					afterPrev( );
-					
-				}
-				
-			});
-			
-			
-			btnAfterPrevF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-				
-				
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					log.debug( "btnAfterPrevF has been clicked" );
-					afterPrev( );
-					
-				}
-				
-			});
-		}
-		
-		private void next( ){
-			
-			currentPage++;
-			navigation( );
-			
-		}
-		
-		private void prev( ){
-			
-			currentPage--;
-			navigation( );
-			
-		}
-		
-		private void beforeNext( ){
-			
-			   int beforeNextPage = Integer.valueOf( btnBeforeNextH.getData().toString() );
-			   
-			   log.debug( "Before Next Page: "+beforeNextPage+" Current Page: "+currentPage );
-			
-			   if( currentPage < beforeNextPage ){
-				   
-					currentPage++;
-					btnBeforeNextH.addStyleName( "sn-cur-page" );
-					btnBeforeNextF.addStyleName( "sn-cur-page" );
-					
-					btnBeforeNextH.setDescription( currentPage+"/"+pages );
-					btnBeforeNextF.setDescription( currentPage+"/"+pages );
-					
-					btnAfterPrevH.removeStyleName( "sn-cur-page" );
-					btnAfterPrevF.removeStyleName( "sn-cur-page" );
-					
-					log.debug( "Current page changed by Before next button" );
-					
-					this.setNewPage( currentPage );
-					
-					
-				} else {
-					log.debug( "Current page NOT changed by Before next button" );
-				}
-				
-				
-		}		
-		
-		private void afterPrev( ){
-		   
-		   int afterPrevPage = Integer.valueOf( btnAfterPrevH.getData().toString() );
-		   log.debug( "After prev Page: "+afterPrevPage+" Current Page: "+currentPage );
-		   
-		   
-		   if( currentPage > afterPrevPage ){
-			   
-				currentPage--;
-				btnAfterPrevH.addStyleName( "sn-cur-page" );
-				btnAfterPrevF.addStyleName( "sn-cur-page" );
-				
-				btnAfterPrevH.setDescription( currentPage+"/"+pages );
-				btnAfterPrevF.setDescription( currentPage+"/"+pages );
-				
-				
-				btnBeforeNextH.removeStyleName( "sn-cur-page" );
-				btnBeforeNextF.removeStyleName( "sn-cur-page" );
-				
-				log.debug( "Current page changed by After prev button" );
-				
-				this.setNewPage( currentPage );
-				
-				
-			} else {
-				log.debug( "Current page NOT changed by After prev button" );
-			}
-			
-			
-		}		
-		
-		
-
-		@Override
-		public void init(DManUIController duic) {
-			
-			this.attachCommandListeners();
-			
-		}
-		
-		
-		private int getTotalPages( Long total ){
-			
-			int pages = 0;
-			Float pageLength = 15F;
-			pages = (int)Math.ceil( total/pageLength );
-			
-			return pages;
-			
-		}
-		
-		private void attachOPTotalRecords(){
-			
-			Long total = Long.valueOf( outTxnMeta.getTotalRecord().getValue().replaceAll(",", "") );
-			this.initBtns( total );
-			
-			this.lbTotalRecords.addValueChangeListener( new ValueChangeListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					
-						Long total = Long.valueOf( event.getProperty().getValue().toString().replaceAll(",", "") );
-						initBtns( total );
-						
-					
-				}
-				
-			});
-		}
-		
-		private void initBtns( Long total ){
-			
-			btnNextH = mapPageBtns.get( "nextH" );
-			btnNextF = mapPageBtns.get( "nextF" );
-			
-			btnPrevH = mapPageBtns.get( "prevH" );
-			btnPrevF = mapPageBtns.get( "prevF" );
-			
-			btnAfterPrevH = mapPageBtns.get( "afterPrevH" );
-			btnAfterPrevF = mapPageBtns.get( "afterPrevF" );
-			
-			btnAfterPrevH.setCaption( currentPage+"" );
-			btnAfterPrevF.setCaption( currentPage+"" );
-			
-			btnAfterPrevH.setData( currentPage );
-			btnAfterPrevF.setData( currentPage );
-			
-			btnBeforeNextH = mapPageBtns.get( "beforeNextH" );
-			btnBeforeNextF = mapPageBtns.get( "beforeNextF" );
-			
-			btnBeforeNextH.setCaption( ( currentPage + 1)+"" );
-			btnBeforeNextF.setCaption( ( currentPage + 1)+"" );
-			
-			btnBeforeNextH.setData( ( currentPage + 1) );
-			btnBeforeNextF.setData( ( currentPage + 1) );
-			
-			
-			pages = getTotalPages( total );
-			if( pages <= 1 ){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				btnAfterPrevH.setVisible( false );
-				btnAfterPrevF.setVisible( false );
-				btnBeforeNextH.setVisible( false );
-				btnBeforeNextF.setVisible( false );
-				
-			} else if( pages == 2){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				
-				btnAfterPrevH.setVisible( true );
-				btnAfterPrevF.setVisible( true );
-				btnBeforeNextH.setVisible( true );
-				btnBeforeNextF.setVisible( true );
-				
-			} else if( pages >=  3){
-				
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				
-				btnNextH.setVisible( true );
-				btnNextF.setVisible( true );
-				
-				btnAfterPrevH.setVisible( true );
-				btnAfterPrevF.setVisible( true );
-				btnBeforeNextH.setVisible( true );
-				btnBeforeNextF.setVisible( true );
-				
-				pages = getTotalPages( total );
-				this.navigation();
-				
-				
-			} 
-			
-		}
-		
-		private void setNewPage( int page ){
-			
-			
-			
-			
-			beanItemContainer.removeAllItems();
-			inTxn.setPage( page );
-			
-			//TODO validate response
-			
-			mTxn.setTxnToday(in, beanItemContainer );
-			
-			//mTxn.setTxnMeta(in, outTxnMeta );
-			
-			format();
-			
-		}
-		
-		private void format(){
-			
-			double revenue = Double.valueOf( outTxnMeta.getTotalRevenue().getValue().replaceAll(",", "") );
-			NumberFormat nf = NumberFormat.getCurrencyInstance();
-			
-			log.debug( "Formated revenue: "+nf.format( revenue ) );
-			outTxnMeta.getTotalRevenue().setValue( nf.format( revenue ).replace( "$", "") );
-			
-			long records = Long.valueOf( outTxnMeta.getTotalRecord().getValue().toString().replaceAll(",", "") );
-			nf = NumberFormat.getNumberInstance( Locale.US );
-			outTxnMeta.getTotalRecord().setValue( nf.format( records ));
-		}
-
-		
-		private void navigation(){
-			
-			
-			if( pages <= 1 ){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				btnAfterPrevH.setVisible( false );
-				btnAfterPrevF.setVisible( false );
-				btnBeforeNextH.setVisible( false );
-				btnBeforeNextF.setVisible( false );
-				
-			} else if( pages == 2){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				
-				btnAfterPrevH.setVisible( true );
-				btnAfterPrevF.setVisible( true );
-				btnBeforeNextH.setVisible( true );
-				btnBeforeNextF.setVisible( true );
-				
-			} else if( pages >=  3){
-				
-				if( currentPage > 1 ){
-					
-					btnPrevH.setVisible( true );
-					btnPrevF.setVisible( true );
-				} else {
-					btnPrevH.setVisible( false );
-					btnPrevF.setVisible( false );
-				}
-				
-				log.debug( "Current page: "+currentPage+" Total pages: "+pages );
-				
-				if( ( currentPage + 1 ) < pages ){
-					
-					btnNextH.setVisible( true );
-					btnNextF.setVisible( true );
-				} else {
-					btnNextH.setVisible( false );
-					btnNextF.setVisible( false );
-				}
-				
-				
-				btnAfterPrevH.setCaption( currentPage+"" );
-				btnAfterPrevF.setCaption( currentPage+"" );
-				
-				btnAfterPrevH.setDescription( currentPage+"/"+pages );
-				btnAfterPrevF.setDescription( currentPage+"/"+pages );
-				
-				
-				btnAfterPrevH.setData( currentPage );
-				btnAfterPrevF.setData( currentPage );
-				
-				btnAfterPrevH.addStyleName( "sn-cur-page" );
-				btnAfterPrevF.addStyleName( "sn-cur-page" );
-				
-				btnBeforeNextH.setCaption( ( currentPage + 1 )+"" );
-				btnBeforeNextF.setCaption( ( currentPage + 1 )+"" );
-				
-				btnBeforeNextH.setData( ( currentPage + 1 ) );
-				btnBeforeNextF.setData( ( currentPage + 1 ) );
-				
-				btnBeforeNextH.removeStyleName( "sn-cur-page" );
-				btnBeforeNextF.removeStyleName( "sn-cur-page" );
-				
-				this.setNewPage( currentPage );
-				
-			} 
-			
-		}
-		
-		
 		
 	}
 	

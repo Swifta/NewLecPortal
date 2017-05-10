@@ -7,14 +7,11 @@ public interface DUIInitializable {
 
 	void setContent();
 
-	void swap(DManUIController duic, Component cuid);
+	void swap(Component cuid);
 
-	void init(DManUIController duic);
+	void init();
 
 	void setFooter();
 
-	DManUIController getDUI();
-
-	void setDUI(DManUIController duic);
-
+	
 }

@@ -365,13 +365,6 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 	}
 	
 	
-	
-
-	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void setHeader() {

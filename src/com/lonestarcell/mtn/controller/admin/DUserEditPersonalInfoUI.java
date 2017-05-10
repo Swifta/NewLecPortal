@@ -38,7 +38,7 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 
 	public DUserEditPersonalInfoUI( Item record) {
 		this.setRecord( record );
-		init(null);
+		init();
 	}
 	
 	
@@ -280,8 +280,7 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 		this.record = record;
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+	private void init( ) {
 		this.setProcessingPopup( new Window("User Details") );
 		this.setmUserDetails( new MUserSelfCare() );
 		attachCommandListeners();

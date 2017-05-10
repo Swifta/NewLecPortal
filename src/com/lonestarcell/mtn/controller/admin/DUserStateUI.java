@@ -1,6 +1,5 @@
 package com.lonestarcell.mtn.controller.admin;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -8,16 +7,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.eagleairug.onlinepayment.ws.ds.HyperswiftStub.Todayflightdata;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
@@ -28,6 +23,7 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
+import com.lonestarcell.mtn.controller.util.UserPaginationUIController;
 import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
 import com.lonestarcell.mtn.design.admin.DUserStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MUser;
@@ -59,7 +55,6 @@ import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.TextField;
@@ -90,11 +85,6 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		
 	}
 
-	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void setHeader() {
@@ -238,7 +228,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 						@Override
 						public Component getValue(Item item, Object itemId,
 								Object propertyId) {
-							PopupView v = new PopupView("...", new RowActionsUI( mTxn, grid, itemId ) );
+							PopupView v = new PopupView("...", new RowActionsUI( mTxn, grid, item ) );
 							v.setWidth( "100%" );
 							v.setHeight( "100%" );
 							return v;
@@ -270,7 +260,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			
 			// Header config
 			HeaderCell dateFilterCellH = header.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "dateAdded", "actions"  );
-			PaginationUIController pageC = new PaginationUIController();
+			UserPaginationUIController pageC = new UserPaginationUIController( beanItemContainer, mTxn, inTxn );
 			
 			dateFilterCellH.setComponent( new AllRowsActionsUI( grid, in, true, pageC ) );
 			
@@ -283,7 +273,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			dateFilterCellF.setComponent( new AllRowsActionsUI( grid, in, false, pageC ) );
 			
 			//Init pagination controller after both header and footer have been set.
-			pageC.init(null);
+			pageC.init();
 
 			
 			footer.setStyleName( "sn-date-filter-row" );
@@ -376,7 +366,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		GeneratedPropertyContainer gpc = (GeneratedPropertyContainer) grid
 				.getContainerDataSource();
 
-		BeanItemContainer<Todayflightdata> container = (BeanItemContainer<Todayflightdata>) gpc
+		BeanItemContainer<OutUser> container = (BeanItemContainer<OutUser>) gpc
 				.getWrappedContainer();
 		
 		Column col = grid.getColumn(itemId);
@@ -389,7 +379,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 	
 	
 	
-	private void addFilterField(BeanItemContainer<Todayflightdata> container,
+	private void addFilterField(BeanItemContainer<OutUser> container,
 			HeaderRow filterHeader, String itemId) {
 
 		TextField tF = new TextField();
@@ -408,7 +398,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 	
 	
 	private TextChangeListener getTextChangeListner(
-			final BeanItemContainer<Todayflightdata> container,
+			final BeanItemContainer<OutUser> container,
 			final String itemId) {
 		return new TextChangeListener() {
 
@@ -434,21 +424,11 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		
 		private static final long serialVersionUID = 1L;
 		private Button btnDetails;
-		private Button btnRefresh;
-		private Button btnEnable;
-		private Button btnDisable;
-		private Button btnExpireSession;
-		private Button btnExpirePass;
-		
-		private Item record;
-		
-		private Collection< Item > records;
 		private Item recordDetails;
 		
-		public RowActionsUI( MUser mTxn, Grid grid, Object itemId ){
-			super( mTxn, grid );
-			setRecord( grid.getContainerDataSource().getItem( itemId ) );
-			init();
+		RowActionsUI( MUser mTxn, Grid grid, Item record ){
+			super( mTxn, grid, record );
+			init( );
 		}
 		
 		public Item getRecordDetails() {
@@ -462,27 +442,15 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			this.recordDetails = record;
 			
 		}
-		
-		
 
-		
-		
-
-
-		public Collection<Item> getRecords() {
-			return records;
-		}
-
-		public void setRecords(Collection<Item> records) {
-			this.records = records;
-		}
-
-		private void init(){
-			setContent();
+		@Override
+		protected void init( ){
+			setContent(  );
 			attachCommandListeners();
 		}
 		
-		protected void setContent(){
+		@Override
+		protected void setContent( ){
 			
 			this.addStyleName( "sn-more-drop-down" );
 			this.setSizeUndefined();
@@ -527,51 +495,31 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			
 			
 			this.addComponent( btnDetails );
-			
+
 			if( getCurrentUserId() != (long) record.getItemProperty( "userId" ).getValue() ){
-				if( record.getItemProperty( "userStatus" ).getValue().toString().equals( "2" ) ){
+				if( record.getItemProperty( "userStatus" ).getValue().toString().equals( "BLOCKED" ) ){
 					this.addComponent( btnEnable );
-				}else if ( record.getItemProperty( "userStatus" ).getValue().toString().equals( "1" ) ){
-					
+				}else if ( record.getItemProperty( "userStatus" ).getValue().toString().equals( "ACTIVE" ) ){
 					this.addComponent( btnDisable );
-					
 				}
 				
 				String changePass = record.getItemProperty( "changePass" ).getValue().toString();
-				if( changePass.equals( "0" ) ){
+				if( changePass.equals( "0" ) && !record.getItemProperty( "userStatus" ).getValue().toString().equals( "REGISTERED" ) ){
 					this.addComponent( btnExpirePass );
 				}
 				
-				
 				if( record.getItemProperty( "userSession" ).getValue() == null 
 						||  record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty()){
-					} else {
-						this.addComponent( btnExpireSession );
-					}
+				} else {
+					this.addComponent( btnExpireSession );
+				}
 				
 			} 
 			
 			this.addComponent( btnRefresh );
 			
-			
-			
-			
-			
 		}
-
-		public Item getRecord() {
-			return record;
-		}
-
-		public void setRecord(Item record) {
-			this.record = record;
-			List< Item > r = new ArrayList<>(1);
-			r.add( record );
-			setRecords( r );
-	
-			
-		}
-
+		
 		@Override
 		public void attachCommandListeners() {
 			
@@ -590,7 +538,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 
 				@Override
 				public void buttonClick(ClickEvent event) {
-					expireSessionMultiHandler( records );
+					expireSessionMultiHandler( );
 					
 				}
 				
@@ -605,7 +553,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 				@Override
 				public void buttonClick(ClickEvent event) {
 					
-					expirePassMultiHandler( records );
+					expirePassMultiHandler( );
 				}
 				
 			});
@@ -618,7 +566,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 				@Override
 				public void buttonClick(ClickEvent event) {
 					
-					activateMultiHandler( records );
+					activateMultiHandler(  );
 				}
 				
 			});
@@ -632,7 +580,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 				@Override
 				public void buttonClick(ClickEvent event) {
 					
-					blockMultiHandler( records );
+					blockMultiHandler( );
 					
 				}
 				
@@ -647,7 +595,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 				@Override
 				public void buttonClick(ClickEvent event) {
 					
-					Out out = refreshMultiUserRecord( records );
+					Out out = refreshMultiUserRecord( );
 					
 					if( out.getStatusCode() == 1 )
 						Notification.show(
@@ -699,11 +647,6 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			});
 		}
 
-		@Override
-		public void init(DManUIController duic) {
-			// TODO Auto-generated method stub
-			
-		}
 		
 		private boolean isUserDetailsSet(){
 			
@@ -756,15 +699,15 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		private In in;
 		private OutTxnMeta outTxnMeta;
 		private boolean allowDateFilters;
-		private PaginationUIController pageC;
+		private UserPaginationUIController pageC;
 		
-		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, PaginationUIController pageC ){
+		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, UserPaginationUIController pageC ){
 			this.grid = grid;
 			this.in = in;
 			
 			this.allowDateFilters = allowDateFilters;
 			this.pageC = pageC;
-			init( null );
+			init( );
 			
 		}
 
@@ -884,8 +827,8 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			outTxnMeta.getTotalRecord().setValue( nf.format( records ));
 		}
 
-		@Override
-		public void init(DManUIController duic) {
+	
+		private void init() {
 			
 			if( !this.allowDateFilters )
 				this.cLeftDateFilter.setVisible(false);
@@ -1006,500 +949,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		
 	}
 	
-	public class PaginationUIController implements DUIControllable, Serializable{
-		
-		private static final long serialVersionUID = 1L;
 
-		private Map< String, Button > mapPageBtns;
-			
-		private Button btnNextH;
-		private Button btnNextF;
-		
-		private Button btnPrevH;
-		private Button btnPrevF;
-		
-		private Button btnAfterPrevH;
-		private Button btnAfterPrevF;
-		
-		private Button btnBeforeNextH;
-		private Button btnBeforeNextF;
-		
-		private int currentPage = 1;
-		private int pages = 0;
-		private Label lbTotalRecords;
-		
-		private In in;
-		private OutTxnMeta outTxnMeta;
-		
-		PaginationUIController(){
-			mapPageBtns = new HashMap<>(8);
-		}
-		
-		public Map<String, Button> getListPageBtns(){
-			return mapPageBtns;
-		}
-		
-		
-
-		public Label getLbTotalRecords() {
-			return lbTotalRecords;
-		}
-
-		public void setLbTotalRecords(Label lbTotalRecords) {
-			this.lbTotalRecords = lbTotalRecords;
-		}
-		
-		
-
-		public In getIn() {
-			return in;
-		}
-
-		public void setIn(In in) {
-			this.in = in;
-		}
-
-		public OutTxnMeta getOutTxnMeta() {
-			return outTxnMeta;
-		}
-
-		public void setOutTxnMeta(OutTxnMeta outTxnMeta) {
-			this.outTxnMeta = outTxnMeta;
-		}
-
-		@Override
-		public void attachCommandListeners() {
-			
-			this.attachOPTotalRecords();
-			this.attachBtnNext();
-			this.attachBtnPrev();
-			this.attachBtnBeforeNext();
-			this.attachBtnAfterPrev();
-			
-			
-		}
-		
-		private void attachBtnNext(){
-			
-			btnNextH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnNextH has been clicked" );
-					next( );
-					
-				}
-				
-			});
-			
-			
-			btnNextF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					next( );
-					
-				}
-				
-			});
-		}
-		
-		private void attachBtnBeforeNext(){
-			
-			btnBeforeNextH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnBeforeNextH has been clicked" );
-					beforeNext( );
-					
-				}
-				
-			});
-			
-			
-			btnBeforeNextF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					beforeNext( );
-					
-				}
-				
-			});
-		}
-		
-		private void attachBtnPrev(){
-			
-			this.btnPrevH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnPrevH has been clicked" );
-					prev( );
-					
-				}
-				
-			});
-			
-			
-			this.btnPrevF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					prev( );
-					
-				}
-				
-			});
-		}
-		
-
-		
-		private void attachBtnAfterPrev(){
-			
-			btnAfterPrevH.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					log.debug( "btnAfterPrevH has been clicked" );
-					afterPrev( );
-					
-				}
-				
-			});
-			
-			
-			btnAfterPrevF.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-				
-				
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					log.debug( "btnAfterPrevF has been clicked" );
-					afterPrev( );
-					
-				}
-				
-			});
-		}
-		
-		private void next( ){
-			
-			currentPage++;
-			navigation( );
-			
-		}
-		
-		private void prev( ){
-			
-			currentPage--;
-			navigation( );
-			
-		}
-		
-		private void beforeNext( ){
-			
-			   int beforeNextPage = Integer.valueOf( btnBeforeNextH.getData().toString() );
-			   
-			   log.debug( "Before Next Page: "+beforeNextPage+" Current Page: "+currentPage );
-			
-			   if( currentPage < beforeNextPage && currentPage < pages ){
-				   
-					currentPage++;
-					btnBeforeNextH.addStyleName( "sn-cur-page" );
-					btnBeforeNextF.addStyleName( "sn-cur-page" );
-					
-					btnBeforeNextH.setDescription( currentPage+"/"+pages );
-					btnBeforeNextF.setDescription( currentPage+"/"+pages );
-					
-					btnAfterPrevH.removeStyleName( "sn-cur-page" );
-					btnAfterPrevF.removeStyleName( "sn-cur-page" );
-					
-					log.debug( "Current page changed by Before next button" );
-					
-					this.setNewPage( currentPage );
-					
-					
-				} else {
-					log.debug( "Current page NOT changed by Before next button" );
-				}
-				
-				
-		}		
-		
-		private void afterPrev( ){
-		   
-		   int afterPrevPage = Integer.valueOf( btnAfterPrevH.getData().toString() );
-		   log.debug( "After prev Page: "+afterPrevPage+" Current Page: "+currentPage );
-		   
-		   
-		   if( currentPage > afterPrevPage ){
-			   
-				currentPage--;
-				btnAfterPrevH.addStyleName( "sn-cur-page" );
-				btnAfterPrevF.addStyleName( "sn-cur-page" );
-				
-				btnAfterPrevH.setDescription( currentPage+"/"+pages );
-				btnAfterPrevF.setDescription( currentPage+"/"+pages );
-				
-				
-				btnBeforeNextH.removeStyleName( "sn-cur-page" );
-				btnBeforeNextF.removeStyleName( "sn-cur-page" );
-				
-				log.debug( "Current page changed by After prev button" );
-				
-				this.setNewPage( currentPage );
-				
-				
-			} else {
-				log.debug( "Current page NOT changed by After prev button" );
-			}
-			
-			
-		}		
-		
-		
-
-		@Override
-		public void init(DManUIController duic) {
-			
-			this.attachCommandListeners();
-			
-		}
-		
-		
-		private int getTotalPages( Long total ){
-			
-			int pages = 0;
-			Float pageLength = 5F;
-			pages = (int)Math.ceil( total/pageLength );
-			
-			return pages;
-			
-		}
-		
-		private void attachOPTotalRecords(){
-			
-			Long total = Long.valueOf( outTxnMeta.getTotalRecord().getValue().replaceAll(",", "") );
-			this.initBtns( total );
-			
-			this.lbTotalRecords.addValueChangeListener( new ValueChangeListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					
-						Long total = Long.valueOf( event.getProperty().getValue().toString().replaceAll(",", "") );
-						initBtns( total );
-						
-					
-				}
-				
-			});
-		}
-		
-		private void initBtns( Long total ){
-			
-			btnNextH = mapPageBtns.get( "nextH" );
-			btnNextF = mapPageBtns.get( "nextF" );
-			
-			btnPrevH = mapPageBtns.get( "prevH" );
-			btnPrevF = mapPageBtns.get( "prevF" );
-			
-			btnAfterPrevH = mapPageBtns.get( "afterPrevH" );
-			btnAfterPrevF = mapPageBtns.get( "afterPrevF" );
-			
-			btnAfterPrevH.setCaption( currentPage+"" );
-			btnAfterPrevF.setCaption( currentPage+"" );
-			
-			btnAfterPrevH.setData( currentPage );
-			btnAfterPrevF.setData( currentPage );
-			
-			btnBeforeNextH = mapPageBtns.get( "beforeNextH" );
-			btnBeforeNextF = mapPageBtns.get( "beforeNextF" );
-			
-			btnBeforeNextH.setCaption( ( currentPage + 1)+"" );
-			btnBeforeNextF.setCaption( ( currentPage + 1)+"" );
-			
-			btnBeforeNextH.setData( ( currentPage + 1) );
-			btnBeforeNextF.setData( ( currentPage + 1) );
-			
-			
-			pages = getTotalPages( total );
-			if( pages <= 1 ){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				btnAfterPrevH.setVisible( false );
-				btnAfterPrevF.setVisible( false );
-				btnBeforeNextH.setVisible( false );
-				btnBeforeNextF.setVisible( false );
-				
-			} else if( pages == 2){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				
-				btnAfterPrevH.setVisible( true );
-				btnAfterPrevF.setVisible( true );
-				btnBeforeNextH.setVisible( true );
-				btnBeforeNextF.setVisible( true );
-				
-			} else if( pages >=  3){
-				
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				
-				btnNextH.setVisible( true );
-				btnNextF.setVisible( true );
-				
-				btnAfterPrevH.setVisible( true );
-				btnAfterPrevF.setVisible( true );
-				btnBeforeNextH.setVisible( true );
-				btnBeforeNextF.setVisible( true );
-				
-				pages = getTotalPages( total );
-				this.navigation();
-				
-				
-			} 
-			
-		}
-		
-		private void setNewPage( int page ){
-			
-			
-			
-			
-			beanItemContainer.removeAllItems();
-			inTxn.setPage( page );
-			
-			//TODO validate response
-			
-			mTxn.setUsers(in, beanItemContainer );
-			
-			//mTxn.setTxnMeta(in, outTxnMeta );
-			
-			format();
-			
-		}
-		
-		private void format(){
-			
-			double revenue = Double.valueOf( outTxnMeta.getTotalRevenue().getValue().replaceAll(",", "") );
-			NumberFormat nf = NumberFormat.getCurrencyInstance();
-			
-			log.debug( "Formated revenue: "+nf.format( revenue ) );
-			outTxnMeta.getTotalRevenue().setValue( nf.format( revenue ).replace( "$", "") );
-			
-			long records = Long.valueOf( outTxnMeta.getTotalRecord().getValue().toString().replaceAll(",", "") );
-			nf = NumberFormat.getNumberInstance( Locale.US );
-			outTxnMeta.getTotalRecord().setValue( nf.format( records ));
-		}
-
-		
-		private void navigation(){
-			
-			
-			if( pages <= 1 ){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				btnAfterPrevH.setVisible( false );
-				btnAfterPrevF.setVisible( false );
-				btnBeforeNextH.setVisible( false );
-				btnBeforeNextF.setVisible( false );
-				
-			} else if( pages == 2){
-				
-				btnNextH.setVisible( false );
-				btnNextF.setVisible( false );
-				
-				btnPrevH.setVisible( false );
-				btnPrevF.setVisible( false );
-				
-				btnAfterPrevH.setVisible( true );
-				btnAfterPrevF.setVisible( true );
-				btnBeforeNextH.setVisible( true );
-				btnBeforeNextF.setVisible( true );
-				
-			} else if( pages >=  3){
-				
-				if( currentPage > 1 ){
-					
-					btnPrevH.setVisible( true );
-					btnPrevF.setVisible( true );
-				} else {
-					btnPrevH.setVisible( false );
-					btnPrevF.setVisible( false );
-				}
-				
-				log.debug( "Current page: "+currentPage+" Total pages: "+pages );
-				
-				if( ( currentPage + 1 ) < pages ){
-					
-					btnNextH.setVisible( true );
-					btnNextF.setVisible( true );
-				} else {
-					btnNextH.setVisible( false );
-					btnNextF.setVisible( false );
-				}
-				
-				
-				btnAfterPrevH.setCaption( currentPage+"" );
-				btnAfterPrevF.setCaption( currentPage+"" );
-				
-				btnAfterPrevH.setDescription( currentPage+"/"+pages );
-				btnAfterPrevF.setDescription( currentPage+"/"+pages );
-				
-				
-				btnAfterPrevH.setData( currentPage );
-				btnAfterPrevF.setData( currentPage );
-				
-				btnAfterPrevH.addStyleName( "sn-cur-page" );
-				btnAfterPrevF.addStyleName( "sn-cur-page" );
-				
-				btnBeforeNextH.setCaption( ( currentPage + 1 )+"" );
-				btnBeforeNextF.setCaption( ( currentPage + 1 )+"" );
-				
-				btnBeforeNextH.setData( ( currentPage + 1 ) );
-				btnBeforeNextF.setData( ( currentPage + 1 ) );
-				
-				btnBeforeNextH.removeStyleName( "sn-cur-page" );
-				btnBeforeNextF.removeStyleName( "sn-cur-page" );
-				
-				this.setNewPage( currentPage );
-				
-			} 
-			
-		}
-		
-		
-		
-	}
 	
 	private void setAuth( InUserDetails inData ){
 		
@@ -1523,6 +973,8 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		private static final long serialVersionUID = 1L;
 		protected MUser mTxn;
 		protected Grid grid;
+		protected Item record;
+		protected Collection< Item > records;
 		
 		protected Button btnExport;
 		protected Button btnRefresh;
@@ -1531,15 +983,42 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		protected Button btnExpireSession;
 		protected Button btnExpirePass;
 		
+		
 		MultiRowActionsUI( MUser mTxn, Grid grid ){
-			this.mTxn = mTxn;
-			this.grid = grid;
-			init( null );
+			this( mTxn, grid, null );
+			init( );
 		}
 		
+		MultiRowActionsUI( MUser mTxn, Grid grid, Item record ){
+			this.mTxn = mTxn;
+			this.grid = grid;
+			this.setRecord( record );
+		}
+		
+
 		protected Out expirePassMultiUserRecord ( Collection< Item > records ){
 			return mTxn.expirePassMultiUserRecord( records );
 			
+		}
+		
+		protected Item getRecord() {
+			return record;
+		}
+
+		protected void setRecord(Item record) {
+			this.record = record;
+			List< Item > r = new ArrayList<>(1);
+			r.add( record );
+			setRecords( r );
+		}
+		
+		
+		protected Collection<Item> getRecords() {
+			return records;
+		}
+
+		protected void setRecords(Collection<Item> records) {
+			this.records = records;
 		}
 		
 		
@@ -1620,8 +1099,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			
 		}
 
-		@Override
-		public void init(DManUIController duic) {
+		protected void init() {
 			this.setContent();
 			this.attachCommandListeners();
 			
@@ -1636,7 +1114,6 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 				@Override
 				public void buttonClick(ClickEvent event) {
 					
-					
 					Collection<?> itemIds = grid.getSelectedRows();
 					
 					
@@ -1648,15 +1125,14 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 					}
 					
 					Iterator< ? > itr = itemIds.iterator();
-					Collection<Item> records = new ArrayList<>( itemIds.size() );
-					
-					
+					List< Item > selectedRecords = new ArrayList<>( itemIds.size() );
 					while( itr.hasNext() ){
 						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );	
+						selectedRecords.add( grid.getContainerDataSource().getItem( itemId ) );	
 					}
 					
-					expireSessionMultiHandler( records );
+					setRecords( selectedRecords );
+					expireSessionMultiHandler( );
 					
 					
 				}
@@ -1685,16 +1161,16 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 					}
 					
 					Iterator< ? > itr = itemIds.iterator();
-					Collection<Item> records = new ArrayList<>( itemIds.size() );
+					Collection<Item> selectedRecords = new ArrayList<>( itemIds.size() );
 					
 					
 					while( itr.hasNext() ){
 						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );	
+						selectedRecords.add( grid.getContainerDataSource().getItem( itemId ) );	
 					}
 					
-					
-					expirePassMultiHandler( records );
+					setRecords( selectedRecords );
+					expirePassMultiHandler( );
 					
 				}
 				
@@ -1721,16 +1197,14 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 					}
 					
 					Iterator< ? > itr = itemIds.iterator();
-					Collection<Item> records = new ArrayList<>( itemIds.size() );
-					
-					
+					List< Item > selectedRecords = new ArrayList<>( itemIds.size() );
 					while( itr.hasNext() ){
 						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );	
+						selectedRecords.add( grid.getContainerDataSource().getItem( itemId ) );	
 					}
 					
-					
-					activateMultiHandler( records );
+					setRecords( selectedRecords );
+					activateMultiHandler( );
 					
 				}
 				
@@ -1757,16 +1231,14 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 					}
 					
 					Iterator< ? > itr = itemIds.iterator();
-					Collection<Item> records = new ArrayList<>( itemIds.size() );
-					
-					
+					List< Item > selectedRecords = new ArrayList<>( itemIds.size() );
 					while( itr.hasNext() ){
 						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );	
+						selectedRecords.add( grid.getContainerDataSource().getItem( itemId ) );	
 					}
 					
-					
-					blockMultiHandler( records );
+					setRecords( selectedRecords );
+					blockMultiHandler(  );
 					
 					
 					
@@ -1795,33 +1267,30 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 						return;
 					}
 					
-					
 					Iterator< ? > itr = itemIds.iterator();
 					
 					
 					
-					Collection<Item> records = new ArrayList<>();
+					Collection<Item> selectedRecords = new ArrayList<>();
 					
 					while( itr.hasNext() ){
 						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );		
+						selectedRecords.add( grid.getContainerDataSource().getItem( itemId ) );		
 					}
 					
-					Out out = refreshMultiUserRecord( records );
+					setRecords( selectedRecords );
+					Out out = refreshMultiUserRecord( );
 					
 					
 					if( out.getStatusCode() == 1 )
 						Notification.show(
 								out.getMsg(),
 								Notification.Type.HUMANIZED_MESSAGE );
-					else if( out.getStatusCode() == 2 )
+					else
 						Notification.show(
 								out.getMsg(),
 								Notification.Type.WARNING_MESSAGE );
-					else
-						Notification.show(
-								"Refresh operation failed.",
-								Notification.Type.ERROR_MESSAGE );
+					
 					
 				}
 				
@@ -1829,7 +1298,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		}
 		
 		
-		protected void expireSessionMultiHandler( Collection< Item > records){
+		protected void expireSessionMultiHandler(){
 			
 			Out out = expireSessionMultiUserRecord( records );
 			
@@ -1837,7 +1306,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			if( out.getStatusCode() == 1 ){
 				Notification.show( out.getMsg(),
 						Notification.Type.HUMANIZED_MESSAGE );
-				refreshMultiUserRecord( records );
+				refreshMultiUserRecord( );
 				
 			} else {
 				Notification.show( "Expiring some selected user(s) session(s) failed. Please try again / Contact support.",
@@ -1847,7 +1316,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 
 		}
 		
-	protected void expirePassMultiHandler( Collection< Item > records){
+	protected void expirePassMultiHandler(){
 			
 			Out out = expirePassMultiUserRecord( records );
 			
@@ -1855,7 +1324,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			if( out.getStatusCode() == 1 ){
 				Notification.show( out.getMsg(),
 						Notification.Type.HUMANIZED_MESSAGE );
-				refreshMultiUserRecord( records );
+				refreshMultiUserRecord( );
 				
 			} else {
 				Notification.show( "Expiring some selected user password(s) failed. Please try again / Contact support.",
@@ -1865,7 +1334,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 
 		}
 	
-	protected void activateMultiHandler( Collection< Item > records){
+	protected void activateMultiHandler(){
 		
 		Out out = activateMultiUserRecord( records );
 		
@@ -1873,7 +1342,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		if( out.getStatusCode() == 1 ){
 			Notification.show( out.getMsg(),
 					Notification.Type.HUMANIZED_MESSAGE );
-			refreshMultiUserRecord( records );
+			refreshMultiUserRecord( );
 			
 		} else {
 			Notification.show( "Activating some selected user(s) session(s) failed. Please try again / Contact support.",
@@ -1883,7 +1352,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 
 	}
 	
-	protected void blockMultiHandler( Collection< Item > records){
+	protected void blockMultiHandler( ){
 		
 		Out out = blockMultiUserRecord( records );
 		
@@ -1891,7 +1360,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		if( out.getStatusCode() == 1 ){
 			Notification.show( out.getMsg(),
 					Notification.Type.HUMANIZED_MESSAGE );
-			refreshMultiUserRecord( records );
+			refreshMultiUserRecord(  );
 			
 		} else {
 			Notification.show( "Blocking some selected user(s) session(s) failed. Please try again / Contact support.",
@@ -1902,7 +1371,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 	}
 		
 		
-		protected Out refreshMultiUserRecord( Collection<Item> records ){
+		protected Out refreshMultiUserRecord( ){
 			return mTxn.refreshMultiUserRecord( records );
 		}
 		

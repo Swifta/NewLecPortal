@@ -33,12 +33,6 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 	
 
 	@Override
-	public void init(DManUIController duic) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setHeader() {
 		// TODO Auto-generated method stub
 		

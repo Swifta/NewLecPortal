@@ -73,7 +73,6 @@ String startYear = "2017";
 		setContent();
 		setFooter();
 		attachCommandListeners();
-		new DHomeUI(duic);
 
 	}
 

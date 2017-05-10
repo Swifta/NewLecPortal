@@ -125,7 +125,19 @@ public class MUser extends Model {
 				outTxn.setUserId( rs.getLong( "user_id" ) );
 				outTxn.setUsername( rs.getString( "username" ) );
 				outTxn.setUserSession( rs.getString( "user_session" ) );
-				outTxn.setUserStatus( rs.getString( "status" ) );
+				
+				String userStatus = rs.getString( "status" );
+				String userStatusDesc = null;
+				if( userStatus.equals( "0" ) ){
+					userStatusDesc = "REGISTERED";
+				} else if( userStatus.equals( "1" ) ){
+					userStatusDesc = "ACTIVE";
+				}else if( userStatus.equals( "2" ) ){
+					userStatusDesc = "BLOCKED";
+				} else {
+					userStatusDesc = "N/A";
+				}
+				outTxn.setUserStatus( userStatusDesc );
 				
 				outTxn.setChangePass( rs.getString( "change_password" ) );
 				outTxn.setDateAdded( rs.getString( "date_added" ) );
@@ -236,7 +248,21 @@ public class MUser extends Model {
 						record.getItemProperty( "userId" ).setValue( rs.getLong( "user_id" ) );
 						record.getItemProperty( "username" ).setValue( rs.getString( "username" ) );
 						record.getItemProperty( "userSession" ).setValue( rs.getString( "user_session" ) );
-						record.getItemProperty( "userStatus" ).setValue( rs.getString( "status" ) );
+						
+						String userStatus = rs.getString( "status" );
+						String userStatusDesc = null;
+						if( userStatus.equals( "0" ) ){
+							userStatusDesc = "REGISTERED";
+						} else if( userStatus.equals( "1" ) ){
+							userStatusDesc = "ACTIVE";
+						}else if( userStatus.equals( "2" ) ){
+							userStatusDesc = "BLOCKED";
+						} else {
+							userStatusDesc = "N/A";
+						}
+						outTxn.setUserStatus( userStatusDesc );
+						// record.getItemProperty( "userStatus" ).setValue( rs.getString( "status" ) );
+						
 						record.getItemProperty( "changePass" ).setValue( rs.getString( "change_password" ) );
 						record.getItemProperty( "dateAdded" ).setValue( rs.getString( "date_added" ) );
 						record.getItemProperty( "lastLogin" ).setValue( rs.getString( "last_login" ) );

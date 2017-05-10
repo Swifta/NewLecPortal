@@ -38,7 +38,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 
 	public DUserSelfCareUI( Item record) {
 		this.setRecord( record );
-		init(null);
+		init();
 	}
 	
 	
@@ -377,8 +377,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 		this.record = record;
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+	private void init() {
 		this.setProcessingPopup( new Window("User Details") );
 		attachCommandListeners();
 		setPropertyDataSource();

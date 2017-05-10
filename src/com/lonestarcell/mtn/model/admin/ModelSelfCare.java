@@ -11,8 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 
 import com.lonestarcell.mtn.bean.BData;
-import com.lonestarcell.mtn.bean.In;
-import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.model.util.JDBCPoolManager;
 

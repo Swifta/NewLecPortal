@@ -22,6 +22,8 @@ public class JDBCPoolManager {
 		p.setUrl("jdbc:mysql://localhost:3306/afrinnewdb_test");
 		p.setUsername("swifta");
 		p.setPassword("swift@123");
+		//p.setUsername("test");
+		// p.setPassword("adm!n");
 		p.setDriverClassName("com.mysql.jdbc.Driver");
 
 		dataSource = new DataSource(p);

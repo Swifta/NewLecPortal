@@ -36,7 +36,7 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 
 	public DTxnDetailsUI( Item record) {
 		this.setRecord( record );
-		init(null);
+		init();
 	}
 
 	@Override
@@ -144,8 +144,7 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 		});
 	}
 
-	@Override
-	public void init(DManUIController duic) {
+	private void init() {
 		data = new OutTxnDetails();
 		attachCommandListeners();
 		setPropertyDataSource();
