@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,7 +47,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -151,7 +153,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -283,7 +285,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -401,6 +403,216 @@ public class MTxn extends Model {
 		return out;
 	}
 	
+	
+	
+	public Out searchTxnToday( In in, BeanItemContainer<OutTxn> container ) {
+		
+		Out out = this.checkAuthorization( );
+		if( out.getStatusCode() != 1 ){
+			out.setStatusCode( 100 );
+			return out;
+		}
+		
+		out = new Out();
+		
+		Connection conn = null; out = new Out();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			// TODO Check if user session is valid before operation.
+			// TODO Check if user profile is authorized
+			// TODO This should be implemented in one place, the mother class
+			 conn = dataSource.getConnection();
+			 conn.setReadOnly(true);
+			 
+			 BData< ? > bInData = in.getData();
+			 inTxn = (InTxn) bInData.getData();
+			 
+			 Map<String, Integer > searchFieldMap = new HashMap<>();
+			 
+		 
+			String q = "SELECT DATE_FORMAT( t.last_update, '%Y-%m-%j %T' ) AS date, t.person_id AS meter_no,";
+			   q += " t.amount, t.fundamo_id AS mmo_id, t.payer_id AS msisdn, status_code_id AS pay_status,";
+			   q += " t.reference_no AS swifta_id, fx.lsd_value AS rate";   
+			   q += " FROM transactions AS t LEFT JOIN exchange_rate AS fx on fx.id = t.rate_id";
+			   q += " WHERE";
+			   
+			   if( inTxn.getSearchSID() != null ) {
+				   q += " t.reference_no LIKE ? AND";
+				   searchFieldMap.put( "sID", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchMoID() != null ) {
+				   q += " t.fundamo_id LIKE ? AND";
+				   searchFieldMap.put( "moID", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchMSISDN() != null ) {
+				   q += " t.payer_id LIKE ? AND";
+				   searchFieldMap.put( "msisdn",searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchMeterNo() != null ) {
+				   q += " t.person_id LIKE ? AND";
+				   searchFieldMap.put( "meterNo", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchStatusDesc() != null ) {
+				   
+				   log.debug( "Status: "+inTxn.getSearchStatusDesc() );
+				   
+				   if(  "FAILED".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   q += " ( t.status_code_id LIKE '%403%' ";
+					   q += " OR  t.status_code_id LIKE '%100%' ";  
+					   q += " OR  t.status_code_id LIKE '%2100%' ";  
+					   q += " OR  t.status_code_id LIKE '%1100%' ";  
+					   q += " OR  t.status_code_id LIKE '%3100%' ";  
+					   q += " )";
+					   q += " AND";
+					   
+				   } else if( "COMPLETE".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   log.debug( "Status: "+inTxn.getSearchStatusDesc() );
+					   q += " ( t.status_code_id LIKE '%04%' ";
+					   q += " OR  t.status_code_id LIKE '%01%' ";  
+					   q += " )";
+					   q += " AND";
+				   } else if(  "PENDING SDP".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   q += " ( t.status_code_id LIKE '%03%' ";
+					   q += " OR  t.status_code_id LIKE '%102%' ";  
+					   q += " )";
+					   q += " AND";
+				   } else if(  "PENDINGs".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   q += " ( t.status_code_id LIKE '%0%' ";
+					   q += " OR  t.status_code_id LIKE '%02%' ";  
+					   q += " )";
+					   q += " AND";
+				   }
+				   
+			   }
+			   
+			 q += " t.last_update > ? AND t.last_update < ? ORDER BY t.last_update DESC LIMIT ?, ?";
+			 
+			 int page = inTxn.getPage();
+			 int pageLength = 15;
+			 int pageMin = 0;
+			 if( page > 1) {
+				 pageMin =  ( page - 1 )*pageLength + 1;
+			 }
+			 
+			 
+			 // TODO Delete Test Data
+			 String timeCorrection = " 23:13:59";
+			 // inTxn.setfDate( "2017-01-01" );
+			 // inTxn.settDate( "2017-01-14" );
+			 
+			conn.setReadOnly( true );
+			ps = conn.prepareStatement( q );
+			if( inTxn.getSearchSID() != null ){
+				ps.setString( searchFieldMap.get( "sID" ), "%"+inTxn.getSearchSID()+"%" );
+			}
+			
+			if( inTxn.getSearchMoID() != null ){
+				ps.setString(  searchFieldMap.get( "moID" ), "%"+inTxn.getSearchMoID()+"%" );
+			}
+			
+			if( inTxn.getSearchMeterNo() != null ){
+				ps.setString(  searchFieldMap.get( "meterNo" ), "%"+inTxn.getSearchMeterNo()+"%" );
+			}
+			
+			if( inTxn.getSearchMSISDN() != null ){
+				ps.setString(  searchFieldMap.get( "msisdn" ), "%"+inTxn.getSearchMSISDN()+"%" );
+			}
+			
+			int paramIndexOffset = searchFieldMap.size();
+			ps.setString( paramIndexOffset + 1, inTxn.getfDate()+timeCorrection );
+			ps.setString( paramIndexOffset + 2, inTxn.gettDate()+timeCorrection );
+			ps.setInt( paramIndexOffset + 3, pageMin );
+			ps.setInt(paramIndexOffset + 4, pageLength );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( !rs.next() ) {
+				log.debug( "No result" );
+				out.setMsg( "No search result found." );
+				
+				container.addBean( outTxn );
+				
+				BData<BeanItemContainer<OutTxn>> bOutData = new BData<>();
+				bOutData.setData( container );
+				
+				out.setData( bOutData );
+				return out;
+			}
+			
+			
+			
+
+			do {
+				
+				outTxn = new OutTxn();
+		
+				
+				outTxn.setSwiftaId( rs.getLong( "swifta_id" )+"" );
+				outTxn.setMmoId( rs.getString( "mmo_id" ) );
+				outTxn.setMsisdn( rs.getString( "msisdn" ) );
+				outTxn.setMeterNo( rs.getString( "meter_no" ) );
+				outTxn.setAmount( rs.getDouble( "amount" ) );
+				//outTxn.setReqCurrency( rs.getString( "req_currency" ) );
+				//outTxn.setToken( rs.getString( "token" ) );
+				
+				outTxn.setPayStatus( rs.getString( "pay_status" ) );
+				outTxn.setRate( rs.getDouble( "rate" ) );
+				outTxn.setDate( rs.getString( "date" ) );
+				
+				String payStatus = rs.getString( "pay_status" );
+				String statusDesc = "FAILED";
+				if( payStatus.equals( "04" ) 
+						||  payStatus.equals( "01" ) ) {
+					statusDesc = "COMPLETE";
+					
+				} else if( payStatus.equals( "03" ) 
+						|| payStatus.equals( "102" ) ) {
+					statusDesc = "PENDING SDP";
+				} else if(payStatus.equals( "0" ) 
+						|| payStatus.equals( "02" )){
+					statusDesc = "PENDING";
+					
+				}
+				
+				outTxn.setStatusDesc( statusDesc );
+				
+				container.addBean( outTxn );
+				
+			
+			} while( rs.next() );
+	
+			out.setStatusCode( 1 );
+			out.setMsg( "Data fetch successful." );
+				
+				
+			
+			
+			
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			out.setMsg( "Could not complete operation. " );
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return out;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	public Out refreshTxnRecord( Item record ) {
@@ -411,7 +623,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -480,7 +692,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -605,7 +817,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -714,7 +926,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -820,7 +1032,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -929,7 +1141,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -1004,6 +1216,255 @@ public class MTxn extends Model {
 	}
 	
 	
+	public Out searchTxnMeta( In in, OutTxnMeta outTxn ) {
+		
+		Out out = this.checkAuthorization( );
+		if( out.getStatusCode() != 1 ){
+			out.setStatusCode( 100 );
+			return out;
+		}
+		
+		Connection conn = null; out = new Out();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+				  
+		
+		try {
+			
+			 BData< ? > bInData = in.getData();
+			 inTxn = (InTxn) bInData.getData();
+			
+			 
+			 Map<String, Integer > searchFieldMap = new HashMap<>();
+			 
+		 
+			String q = "SELECT  COUNT( t.reference_no ) AS total_records FROM transactions as t";
+			     q += " WHERE";
+			   
+			   if( inTxn.getSearchSID() != null ) {
+				   q += " t.reference_no LIKE ? AND";
+				   searchFieldMap.put( "sID", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchMoID() != null ) {
+				   q += " t.fundamo_id LIKE ? AND";
+				   searchFieldMap.put( "moID", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchMSISDN() != null ) {
+				   q += " t.payer_id LIKE ? AND";
+				   searchFieldMap.put( "msisdn",searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchMeterNo() != null ) {
+				   q += " t.person_id LIKE ? AND";
+				   searchFieldMap.put( "meterNo", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchStatusDesc() != null ) {
+				   
+				   log.debug( "Status: "+inTxn.getSearchStatusDesc() );
+				   
+				   if(  "FAILED".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   q += " ( t.status_code_id LIKE '%403%' ";
+					   q += " OR  t.status_code_id LIKE '%100%' ";  
+					   q += " OR  t.status_code_id LIKE '%2100%' ";  
+					   q += " OR  t.status_code_id LIKE '%1100%' ";  
+					   q += " OR  t.status_code_id LIKE '%3100%' ";  
+					   q += " )";
+					   q += " AND";
+					   
+				   } else if( "COMPLETE".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   log.debug( "Status: "+inTxn.getSearchStatusDesc() );
+					   q += " ( t.status_code_id LIKE '%04%' ";
+					   q += " OR  t.status_code_id LIKE '%01%' ";  
+					   q += " )";
+					   q += " AND";
+				   } else if(  "PENDING SDP".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   q += " ( t.status_code_id LIKE '%03%' ";
+					   q += " OR  t.status_code_id LIKE '%102%' ";  
+					   q += " )";
+					   q += " AND";
+				   } else if(  "PENDINGs".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+					   
+					   q += " ( t.status_code_id LIKE '%0%' ";
+					   q += " OR  t.status_code_id LIKE '%02%' ";  
+					   q += " )";
+					   q += " AND";
+				   }
+				   
+			   }
+			   
+			 q += " t.last_update > ? AND t.last_update < ? ORDER BY t.last_update DESC";
+			 
+			String timeCorrection = " 23:13:59";
+			conn = dataSource.getConnection();
+			conn.setReadOnly( true );
+			ps = conn.prepareStatement( q );
+			if( inTxn.getSearchSID() != null ){
+				ps.setString( searchFieldMap.get( "sID" ), "%"+inTxn.getSearchSID()+"%" );
+			}
+			
+			if( inTxn.getSearchMoID() != null ){
+				ps.setString(  searchFieldMap.get( "moID" ), "%"+inTxn.getSearchMoID()+"%" );
+			}
+			
+			if( inTxn.getSearchMeterNo() != null ){
+				ps.setString(  searchFieldMap.get( "meterNo" ), "%"+inTxn.getSearchMeterNo()+"%" );
+			}
+			
+			if( inTxn.getSearchMSISDN() != null ){
+				ps.setString(  searchFieldMap.get( "msisdn" ), "%"+inTxn.getSearchMSISDN()+"%" );
+			}
+			
+			int paramIndexOffset = searchFieldMap.size();
+			ps.setString( paramIndexOffset + 1, inTxn.getfDate()+timeCorrection );
+			ps.setString( paramIndexOffset + 2, inTxn.gettDate()+timeCorrection );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( !rs.next() ) {
+				log.debug( "No result" );
+				out.setMsg( "No search result found." );
+				outTxn.getTotalRecord().setValue( "0" );
+				return out;
+			}
+			
+			outTxn.getTotalRecord().setValue( rs.getLong( "total_records" )+"" );
+			
+			ps.close();
+			rs.close();
+			
+			q = "select SUM( t.amount ) as total_revenue FROM transactions as t WHERE t.last_update > ? and t.last_update < ? and ( t.status_code_id = '04' OR t.status_code_id = '01')";
+			
+			q = "SELECT SUM( t.amount ) AS total_revenue FROM transactions as t";
+		    q += " WHERE";
+		   
+		    String qVariable = "";
+		    searchFieldMap = new HashMap<>();
+		    
+		   if( inTxn.getSearchSID() != null ) {
+			   qVariable += " t.reference_no LIKE ? AND";
+			   searchFieldMap.put( "sID", searchFieldMap.size()+1 );
+		   }
+		   
+		   if( inTxn.getSearchMoID() != null ) {
+			   qVariable += " t.fundamo_id LIKE ? AND";
+			   searchFieldMap.put( "moID", searchFieldMap.size()+1 );
+		   }
+		   
+		   if( inTxn.getSearchMSISDN() != null ) {
+			   qVariable += " t.payer_id LIKE ? AND";
+			   searchFieldMap.put( "msisdn",searchFieldMap.size()+1 );
+		   }
+		   
+		   if( inTxn.getSearchMeterNo() != null ) {
+			   qVariable += " t.person_id LIKE ? AND";
+			   searchFieldMap.put( "meterNo", searchFieldMap.size()+1 );
+		   }
+		   
+		   
+		   if( inTxn.getSearchStatusDesc() != null ) {
+			   
+			   log.debug( "Status: "+inTxn.getSearchStatusDesc() );
+			   
+			   if(  "FAILED".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+				   
+				   qVariable += " ( t.status_code_id LIKE '%403%' ";
+				   qVariable += " OR  t.status_code_id LIKE '%100%' ";  
+				   qVariable += " OR  t.status_code_id LIKE '%2100%' ";  
+				   qVariable += " OR  t.status_code_id LIKE '%1100%' ";  
+				   qVariable += " OR  t.status_code_id LIKE '%3100%' ";  
+				   qVariable += " )";
+				   qVariable += " AND";
+				   
+			   } else if( "COMPLETE".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+				   
+				   log.debug( "Status: "+inTxn.getSearchStatusDesc() );
+				   qVariable += " ( t.status_code_id LIKE '%04%' ";
+				   qVariable += " OR  t.status_code_id LIKE '%01%' ";  
+				   qVariable += " )";
+				   qVariable += " AND";
+			   } else if(  "PENDING SDP".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+				   
+				   qVariable += " ( t.status_code_id LIKE '%03%' ";
+				   qVariable += " OR  t.status_code_id LIKE '%102%' ";  
+				   qVariable += " )";
+				   qVariable += " AND";
+			   } else if(  "PENDINGs".contains( inTxn.getSearchStatusDesc().toUpperCase() ) ){
+				   
+				   qVariable += " ( t.status_code_id LIKE '%0%' ";
+				   qVariable += " OR  t.status_code_id LIKE '%02%' ";  
+				   qVariable += " )";
+				   qVariable += " AND";
+			   }
+			   
+		   }
+		   
+		
+		   
+		q += qVariable;
+		q += " t.last_update > ? AND t.last_update < ? AND ( t.status_code_id = '04' OR t.status_code_id = '01') ORDER BY t.last_update DESC";
+		
+		ps = conn.prepareStatement( q );
+		if( inTxn.getSearchSID() != null ){
+			ps.setString( searchFieldMap.get( "sID" ), "%"+inTxn.getSearchSID()+"%" );
+		}
+		
+		if( inTxn.getSearchMoID() != null ){
+			ps.setString(  searchFieldMap.get( "moID" ), "%"+inTxn.getSearchMoID()+"%" );
+		}
+		
+		if( inTxn.getSearchMeterNo() != null ){
+			ps.setString(  searchFieldMap.get( "meterNo" ), "%"+inTxn.getSearchMeterNo()+"%" );
+		}
+		
+		if( inTxn.getSearchMSISDN() != null ){
+			ps.setString(  searchFieldMap.get( "msisdn" ), "%"+inTxn.getSearchMSISDN()+"%" );
+		}
+		
+		paramIndexOffset = searchFieldMap.size();
+		ps.setString( paramIndexOffset + 1, inTxn.getfDate()+timeCorrection );
+		ps.setString( paramIndexOffset + 2, inTxn.gettDate()+timeCorrection );
+		
+		log.debug( "Query: "+ps.toString() );
+		
+		rs = ps.executeQuery();
+		if( !rs.next() ) {
+			log.debug( "No result" );
+			out.setMsg( "No search result found." );
+			outTxn.getTotalRevenue().setValue( "0" );
+			return out;
+		}
+		
+		log.debug( "Next is not null." );
+		if( rs.getString( "total_revenue" ) == null ){
+			outTxn.getTotalRevenue().setValue( "0" );
+		}else {
+			outTxn.getTotalRevenue().setValue( rs.getString( "total_revenue" ) );
+		}
+		
+		out.setStatusCode( 1 );
+		out.setMsg( "Txn meta computed successfully." );
+		
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			out.setMsg( "Could not complete operation. " );
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return out;
+	}
+	
+	
 	
 	
 	@SuppressWarnings("unchecked")
@@ -1015,7 +1476,7 @@ public class MTxn extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		

@@ -13149,7 +13149,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-dashboard-card-head {
-	background: #000080;
+	background: #2b2b2b;
 	color: #fff;
 	font-weight: 400;
 	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.05);
@@ -13166,13 +13166,13 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-dashboard-card-head.sn-flight-scheduled {
-	background-color: #000080;
+	background-color: #2b2b2b;
 	border: 1px solid #000080;
 	width: 100%;
 }
 
 .lec_portal .sn-c-details-scheduled-flights.sn-flight-scheduled {
-	background-color: #000080;
+	background-color: #2b2b2b;
 	border: 1px solid #000080;
 }
 
@@ -13205,7 +13205,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-eagle-blue {
-	background-color: #21348b;
+	background-color: #2b2b2b;
 }
 
 .lec_portal .sn-eagle-white {
@@ -13227,7 +13227,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-footer-c {
-	background-color: #e7140a;
+	background-color: #fcca09;
 }
 
 .lec_portal .sn-eagle-panel-no-border {
@@ -13258,7 +13258,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-c-pay-opt .sn-panel-head {
-	background-color: #5168d8;
+	background-color: #fcca09;
 	padding-top: 20px;
 	padding-bottom: 20px;
 	position: relative;
@@ -13450,7 +13450,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .sn-c-ref-form.sn-c-booking-details {
 	border-left: none;
-	background-color: #21348b;
+	background-color: #2b2b2b;
 	border-bottom: none;
 	border-right: 4px solid #fcca09;
 	color: #fff;
@@ -13591,7 +13591,7 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .sn-footer-c {
 	padding-left: 9%;
 	padding-right: 9%;
-	color: #fff;
+	color: #2b2b2b;
 	font-size: 11px;
 	font-weight: bold;
 }
@@ -13623,7 +13623,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-sel-op-logo.sn-ad-icon {
-	background-color: #21348b;
+	background-color: #2b2b2b;
 }
 
 .lec_portal .sn-c-mm-slogan .sn-ad-desc {
@@ -13869,7 +13869,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .sn-eagle-panel-no-border.sn-login {
 	border: none;
-	background-color: #21348b;
+	background-color: #2b2b2b;
 	margin-top: -2px;
 }
 
@@ -13960,12 +13960,12 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal ::-moz-selection {
-	background-color: #21348b;
+	background-color: #2b2b2b;
 	color: #fff;
 }
 
 .lec_portal ::selection {
-	background-color: #21348b;
+	background-color: #2b2b2b;
 	color: #fff;
 }
 
@@ -14127,7 +14127,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .v-loading-indicator {
-	background-color: #e7140a;
+	background-color: #fcca09;
 }
 
 .lec_portal .sn-popup-view {
@@ -14387,7 +14387,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-text-blue-login .v-label {
-	color: #21348b;
+	color: #2b2b2b;
 }
 
 .lec_portal .sn-c-form.sn-c-fx-details {
@@ -14503,4 +14503,32 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .sn-ref.sn-c-dash-details {
 	padding-left: 6px;
 	padding-right: 6px;
+}
+
+.lec_portal .v-grid-row-selected > .v-grid-cell {
+	background-color: #2b2b2b;
+	background-image: -webkit-linear-gradient(top, #2b2b2b 2%, #2e2e2e 98%);
+	background-image: linear, top, #2b2b2b 2%, #2e2e2e 98%;
+	color: #fcca09;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05);
+	border-color: #2b2b2b;
+}
+
+.lec_portal .v-grid-row-selected > td.v-grid-cell:last-child .v-popupview {
+	color: #fcca09;
+}
+
+.lec_portal .v-button.v-button-primary {
+	color: #fcca09;
+	border-radius: 0;
+	border: none;
+	background-color: #2b2b2b;
+	background-image: -webkit-linear-gradient(top, #2b2b2b 2%, #2e2e2e 98%);
+	background-image: linear, to bottom, #2b2b2b 2%, #2e2e2e 98%;
+	background-image: linear, to bottom, #2b2b2b 2%, #2e2e2e 98%;
+	box-shadow: none;
+}
+
+.lec_portal .v-button.v-button-primary .v-icon {
+	color: #fcca09;
 }

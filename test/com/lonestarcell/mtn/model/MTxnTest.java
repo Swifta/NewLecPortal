@@ -34,7 +34,7 @@ public class MTxnTest {
 	
 	@BeforeClass
 	public static void init(){
-		m = new MTxn( 1L, "c4gk867h5v8k491mgtvlsjctrq" );
+		m = new MTxn( 1L, "9qshoakkbcs9u5ssbnh6uij7c8" );
 		Assert.assertNotNull( "Model is null", m );
 	}
 
@@ -79,7 +79,7 @@ public class MTxnTest {
 	
 	@Test
 	@Ignore
-	public void getTxnTodayTest(){
+	public void setTxnTodayTest(){
 			
 		
 		In in = new In();
@@ -263,8 +263,55 @@ public class MTxnTest {
 		
 	}
 	
+	
+	
 	@Test
 	// @Ignore
+	public void searchTxnMetaTest(){
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setSearchStatusDesc( "FAIL" );
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -100 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		
+		OutTxnMeta data = new OutTxnMeta();
+		setPropertyDataSource( data );
+		
+		
+		m.searchTxnMeta(in, data);
+		
+		
+		Assert.assertNotNull( data );
+		log.debug( "Total Records: "+data.getTotalRecord().getValue() );
+		log.debug( "Total Revenue: "+data.getTotalRevenue().getValue() );
+	
+		
+		
+	}
+	
+	
+	
+	@Test
+	@Ignore
 	public void setDashMetaTest(){
 		
 		In in = new In();
@@ -318,6 +365,48 @@ public class MTxnTest {
 	
 		
 		
+	}
+	
+	@Test
+	@Ignore
+	public void setTxnTodaySearchTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		inTxn.setSearchMoID( "19528186" );
+		inTxn.setSearchSID( "81423" );
+		inTxn.setSearchMeterNo( "01451503682" );
+		inTxn.setSearchMSISDN( "231888210000" );
+		inTxn.setSearchStatusDesc( "FAILED" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		Out out = m.searchTxnToday(in, new BeanItemContainer<>(OutTxn.class) );
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
 	}
 	
 

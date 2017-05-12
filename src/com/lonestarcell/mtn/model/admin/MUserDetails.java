@@ -44,7 +44,7 @@ public class MUserDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -144,7 +144,7 @@ public class MUserDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -244,7 +244,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -315,7 +315,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -403,7 +403,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -489,7 +489,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -573,7 +573,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -657,7 +657,7 @@ public class MUserDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -745,7 +745,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -824,7 +824,7 @@ public class MUserDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -892,7 +892,7 @@ public class MUserDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -1007,7 +1007,7 @@ public class MUserDetails extends Model {
 		}
 		
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -1104,7 +1104,7 @@ public class MUserDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -1178,10 +1178,10 @@ public class MUserDetails extends Model {
 	
 	private Long getUserId ( In in ) {
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		out = new Out();
+		
 
 		String q = "SELECT u.user_id FROM users AS u";
 		q += " WHERE u.username = ?";

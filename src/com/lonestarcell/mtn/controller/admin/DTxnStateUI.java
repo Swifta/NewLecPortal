@@ -1,15 +1,12 @@
 package com.lonestarcell.mtn.controller.admin;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,33 +15,21 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
-import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.util.TxnPaginationUIController;
-import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUITxn;
+import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyValueGenerator;
-import com.vaadin.data.util.filter.Between;
-import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderCell;
@@ -52,7 +37,6 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -63,9 +47,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	private static final long serialVersionUID = 1L;
 	
 	private DTxnUI ancestor;
-	private Logger log = LogManager.getLogger();
-	private List<TextField> tFSearchFields = new ArrayList<>(3);
-	private BeanItemContainer<OutTxn> beanItemContainer;
+	private Logger log = LogManager.getLogger( DTxnStateUI.class.getName() );
+	
 	
 	private MTxn mTxn;
 	private InTxn inTxn;
@@ -90,11 +73,10 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	public void setContent() {
 		setHeader();
 		setFooter();
-		setBeanItemContainer( new BeanItemContainer<OutTxn>(OutTxn.class) );
 		
 		swap(this);
 		attachCommandListeners();
-		this.vlTrxnTable.addComponent( loadGridData( beanItemContainer ) );
+		this.vlTrxnTable.addComponent( loadGridData( new BeanItemContainer<>( OutTxn.class ) ) );
 		this.vlTrxnTable.setHeightUndefined();
 		this.vlTrxnTable.setWidth( "1150px");
 		
@@ -102,13 +84,6 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	
 	
 
-	public BeanItemContainer<OutTxn> getBeanItemContainer() {
-		return beanItemContainer;
-	}
-
-	public void setBeanItemContainer(BeanItemContainer<OutTxn> beanItemContainer) {
-		this.beanItemContainer = beanItemContainer;
-	}
 
 	@Override
 	public void swap(Component cuid) {
@@ -139,6 +114,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 		setContent();
 		
 	}
+	
+	
 
 	@Override
 	public void setFooter() {
@@ -247,11 +224,13 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			FooterRow footer = grid.prependFooterRow();
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
 			
+			
 			// Header config
 			HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
-			TxnPaginationUIController pageC = new TxnPaginationUIController( beanItemContainer, mTxn, inTxn );
+			PaginationUIController pageC = new PaginationUIController( );
 			
-			dateFilterCellH.setComponent( new AllRowsActionsUI( grid, in, true, pageC ) );
+			AllRowsActionsUITxn allRowsActionsUIH = new AllRowsActionsUITxn( mTxn, grid, in, true, pageC );
+			dateFilterCellH.setComponent( allRowsActionsUIH );
 			
 			header.setStyleName( "sn-date-filter-row" );
 			dateFilterCellH.setStyleName( "sn-no-border-right sn-no-border-left" );
@@ -259,7 +238,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			// Footer config
 			FooterCell dateFilterCellF = footer.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
 		
-			dateFilterCellF.setComponent( new AllRowsActionsUI( grid, in, false, pageC ) );
+			dateFilterCellF.setComponent( new AllRowsActionsUITxn( mTxn, grid, in, false, pageC ) );
 			
 			//Init pagination controller after both header and footer have been set.
 			pageC.init( );
@@ -300,13 +279,13 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 
 			// Add search field
 			
-			prepareGridHeader(grid, "mmoId", "MoID", true );
-			prepareGridHeader(grid, "msisdn", "MSISDN", true );
-			prepareGridHeader(grid, "swiftaId", "SWIFTA ID", true );
-			prepareGridHeader(grid, "meterNo", "Meter No.", true );
-			prepareGridHeader(grid, "statusDesc", "Status Desc", true );
-			prepareGridHeader(grid, "date", "Timestamp", false );
-			prepareGridHeader(grid, "actions", "...", false );
+			allRowsActionsUIH.prepareGridHeader( grid, "mmoId", "MoID", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "msisdn", "MSISDN", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "swiftaId", "SWIFTA ID", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "meterNo", "Meter No.", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "statusDesc", "Status Desc", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "date", "Timestamp", false );
+			allRowsActionsUIH.prepareGridHeader( grid, "actions", "...", false );
 			
 			
 			// Set column widths
@@ -362,72 +341,9 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 		return new Grid();
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void prepareGridHeader(Grid grid, String itemId, String columnName,
-			boolean isSetFilter) {
-
-		if (grid == null)
-			throw new NullPointerException("Grid cannot be null");
-		if (itemId == null)
-			throw new NullPointerException("Item id is required.");
-		if (columnName == null)
-			columnName = itemId;
-
-		GeneratedPropertyContainer gpc = (GeneratedPropertyContainer) grid
-				.getContainerDataSource();
-
-		BeanItemContainer<OutTxn> container = (BeanItemContainer<OutTxn>) gpc
-				.getWrappedContainer();
-		
-		Column col = grid.getColumn(itemId);
-		col.setHeaderCaption(columnName);
-
-		if (isSetFilter)
-			addFilterField(container, grid.getHeaderRow(2), itemId);
-
-	}
 	
 	
 	
-	private void addFilterField(BeanItemContainer<OutTxn> container,
-			HeaderRow filterHeader, String itemId) {
-
-		TextField tF = new TextField();
-		tF.setStyleName("sn-tf-filter");
-		tF.setDescription("Search");
-		tF.setInputPrompt("Search...");
-		tF.setWidth("100%");
-		HeaderCell cFilter = filterHeader.getCell(itemId);
-		cFilter.setComponent(tF);
-		tF.addTextChangeListener(getTextChangeListner(container, itemId));
-		
-		tFSearchFields.add( tF );
-		
-
-	}
-	
-	
-	private TextChangeListener getTextChangeListner(
-			final BeanItemContainer<OutTxn> container,
-			final String itemId) {
-		return new TextChangeListener() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void textChange(TextChangeEvent event) {
-
-				String val = event.getText();
-				container.removeContainerFilters(itemId);
-				if (val != null && !val.isEmpty()) {
-					container.addContainerFilter(new SimpleStringFilter(itemId,
-							val, true, false));
-				}
-
-			}
-
-		};
-	}
 	
 	private class MultiRowActionsUI extends VerticalLayout implements DUIControllable {
 		
@@ -655,265 +571,20 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 		
 	}
 	
-	private class AllRowsActionsUI extends DDateFilterUIDesign implements DUIControllable {
 	
-		private static final long serialVersionUID = 1L;
-		
-		private Grid grid;
-		private In in;
-		private OutTxnMeta outTxnMeta;
-		private boolean allowDateFilters;
-		private TxnPaginationUIController pageC;
-		
-		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, TxnPaginationUIController pageC ){
-			this.grid = grid;
-			this.in = in;
-			
-			this.allowDateFilters = allowDateFilters;
-			this.pageC = pageC;
-			init( );
-			
-		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-		@Override
-		public void attachCommandListeners() {
-			this.attachBtnFilter();
-			this.attachBtnRefresh();
-			this.attachBtnClearFilters();
-			
-			this.attachDFStartDate();
-			this.attachDFLastDate();
-			
-		}
-		
-		private void attachDFStartDate(){
-			this.dFStartDate.addValueChangeListener( new ValueChangeListener(){
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					dFStartDate.setComponentError(null);
-					dFLastDate.setComponentError(null);
-					
-				}
-				
-			});
-		}
-		
-		private void attachDFLastDate(){
-			this.dFLastDate.addValueChangeListener( new ValueChangeListener(){
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					dFStartDate.setComponentError(null);
-					dFLastDate.setComponentError(null);
-					
-				}
-				
-			});
-		}
-		
-		private void attachBtnClearFilters(){
-			this.btnClearFilters.addClickListener( new ClickListener(){
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					clearAllFilters();
-					
-				}});
-		}
-		
-		private void attachBtnFilter() {
-			this.btnFilter.addClickListener(new ClickListener() {
-
-				private static final long serialVersionUID = 1L;
-
-				@SuppressWarnings("unchecked")
-				@Override
-				public void buttonClick(ClickEvent event) {
-					doFilterByDate(
-							((BeanItemContainer<OutTxn>) ((GeneratedPropertyContainer)  grid.getContainerDataSource())
-									.getWrappedContainer()), dFStartDate,
-							dFLastDate);
-
-				}
-
-			});
-		}
-		
-		private void attachBtnRefresh() {
-
-			this.btnRefresh.addClickListener(new ClickListener() {
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					clearAllFilters();
-					refreshGridData();
-					
-
-				}
-
-			});
-		}
-		
-		
-		private void refreshGridData(){
-			
-			
-			beanItemContainer.removeAllItems();
-			
-			//TODO validate response
-			Out out = mTxn.setTxnToday(in, beanItemContainer );
-			mTxn.setTxnMeta(in, outTxnMeta );
-			
-			if( out.getStatusCode() != 1 )
-				Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
-			
-			format();
-			
-			
-		}
-		
-		private void format(){
-			
-			double revenue = Double.valueOf( outTxnMeta.getTotalRevenue().getValue().replaceAll(",", "") );
-			NumberFormat nf = NumberFormat.getCurrencyInstance();
-			
-			log.debug( "Formated revenue: "+nf.format( revenue ) );
-			outTxnMeta.getTotalRevenue().setValue( nf.format( revenue ).replace( "$", "") );
-			
-			long records = Long.valueOf( outTxnMeta.getTotalRecord().getValue().toString().replaceAll(",", "") );
-			nf = NumberFormat.getNumberInstance( Locale.US );
-			outTxnMeta.getTotalRecord().setValue( nf.format( records ));
-		}
-
-		private void init() {
-			if( !this.allowDateFilters )
-				this.cLeftDateFilter.setVisible(false);
-			this.setContent();
-			this.attachCommandListeners();
-			
-		}
-		
-		private void setContent(){
-			
-			
-			this.cDateFilters.setVisible( false );
-			if( this.allowDateFilters ) {
-				
-				// Txn meta
-				
-				outTxnMeta = new OutTxnMeta();
-				ObjectProperty<String> ds = new ObjectProperty<>( "0.00", String.class );
-				outTxnMeta.setTotalRevenue( ds );
-				this.lbTotalRevenue.setPropertyDataSource( ds );
-			
-				Property<String > dsTotalRecords = new ObjectProperty<>( "0", String.class );
-				outTxnMeta.setTotalRecord( dsTotalRecords );
-				this.lbTotalRecords.setPropertyDataSource( dsTotalRecords );
-				
-				Out out = mTxn.setTxnMeta( in, outTxnMeta );
-				if( out.getStatusCode() != 1 )
-					Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
-				
-				// Paginations for header
-				
-				pageC.setLbTotalRecords( this.lbTotalRecords );
-				pageC.getListPageBtns().put( "nextH", this.btnPageNext );
-				pageC.getListPageBtns().put( "prevH", this.btnPagePrev );
-				pageC.getListPageBtns().put( "afterPrevH", this.btnPageAfterPrev );
-				pageC.getListPageBtns().put( "beforeNextH", this.btnPageBeforeNext );
-				
-				pageC.setOutTxnMeta( outTxnMeta );
-				pageC.setIn( in );
-				
-				format();
-			
-			} else {
-				
-				// Paginations for footer
-				pageC.getListPageBtns().put( "nextF", this.btnPageNext );
-				pageC.getListPageBtns().put( "prevF", this.btnPagePrev );
-				pageC.getListPageBtns().put( "afterPrevF", this.btnPageAfterPrev );
-				pageC.getListPageBtns().put( "beforeNextF", this.btnPageBeforeNext );
-				
-			}
-			
-			
-		}
-		
-		@SuppressWarnings("unchecked")
-		private void clearAllFilters(){
-			((BeanItemContainer<OutTxn>) ((GeneratedPropertyContainer) grid.getContainerDataSource())
-					.getWrappedContainer()).removeAllContainerFilters();
-			this.dFStartDate.clear();
-			this.dFLastDate.clear();
-			
-			this.dFStartDate.setComponentError( null );
-			this.dFLastDate.setComponentError( null );
-			
-			Iterator<TextField> itr = tFSearchFields.iterator();
-			while( itr.hasNext() ) {
-				itr.next().clear();
-
-			}
-		}
-		
-		private void doFilterByDate(
-				BeanItemContainer<OutTxn> container, DateField dFStart,
-				DateField dFLast) {
-
-			Date fDate = dFStart.getValue();
-			Date tDate = dFLast.getValue();
-
-			dFStart.setComponentError(null);
-			dFLast.setComponentError(null);
-
-			if (fDate == null) {
-				dFStart.setComponentError(new UserError(
-						"Please Select \"From\" date"));
-				return;
-			}
-
-			if (tDate == null) {
-				dFLast.setComponentError(new UserError("Please Select \"To\" date"));
-				return;
-			}
-
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(tDate);
-			//cal.add(Calendar.DAY_OF_MONTH, 1);
-
-			tDate = cal.getTime();
-
-			if (fDate.compareTo(tDate) > 0) {
-
-				dFLast.setComponentError(new UserError(
-						"Invalid dates! \"From\" date should be earlier than \"To\" date"));
-				return;
-			}
-
-			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String strSDate = sdf.format(fDate);
-			log.debug( "Date: " + strSDate );
-
-			String strTDate = sdf.format(tDate);
-
-			container.removeContainerFilters("date");
-
-			Between fBtn = new Between("date", strSDate, strTDate);
-			container.addContainerFilter(fBtn);
-
-		}
-		
-	}
 	
 	private long getCurrentUserId(){
 		return ( long ) UI.getCurrent().getSession().getAttribute( DLoginUIController.USER_ID );

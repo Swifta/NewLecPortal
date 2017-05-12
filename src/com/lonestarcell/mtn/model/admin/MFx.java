@@ -35,7 +35,7 @@ public class MFx extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -93,8 +93,7 @@ public class MFx extends Model {
 			return out;
 		}
 		
-		out = new Out();
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		

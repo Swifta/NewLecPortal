@@ -25,7 +25,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.PropertysetItem;
 
 public class MUserTest {
 
@@ -274,6 +273,9 @@ public class MUserTest {
 		
 		
 	}
+	
+	
+	
 	
 
 }

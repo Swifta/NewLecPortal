@@ -39,7 +39,7 @@ public class MTxnDetails extends Model {
 			return out;
 		}
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -134,7 +134,7 @@ public class MTxnDetails extends Model {
 	
 	private OutTxnDetails getVerifDetails( InTxnDetails inTxn, OutTxnDetails outTxn ) {
 		
-		Connection conn = null;
+		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		

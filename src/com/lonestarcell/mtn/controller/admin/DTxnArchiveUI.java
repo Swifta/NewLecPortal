@@ -20,7 +20,7 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.util.TxnPaginationUIController;
+import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MTxn;
@@ -69,10 +69,17 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 	
 	private MTxn mTxn;
 	private InTxn inTxn;
+	private OutTxnMeta outTxnMeta;
 	
 	
 	DTxnArchiveUI( DTxnUI a){
 		init( a );
+	}
+	
+	private void setOutTxnMeta(){
+		outTxnMeta = new OutTxnMeta();
+		outTxnMeta.setTotalRevenue( new ObjectProperty<String>( "0", String.class ) );
+		outTxnMeta.setTotalRecord( new ObjectProperty<String>( "0", String.class ) );
 	}
 
 	@Override
@@ -134,6 +141,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 	public void init(DTxnUI a) {
 		mTxn = new MTxn(  getCurrentUserId(), getCurrentUserSession() );
 		inTxn = new InTxn();
+		setOutTxnMeta();
 		setAncestorUI( a );
 		setContent();
 		
@@ -245,7 +253,7 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 			
 			// Header config
 			HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
-			TxnPaginationUIController pageC = new TxnPaginationUIController( beanItemContainer, mTxn, inTxn );
+			PaginationUIController pageC = new PaginationUIController(  );
 			
 			dateFilterCellH.setComponent( new AllRowsActionsUI( grid, in, true, pageC ) );
 			
@@ -658,9 +666,9 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 		private In in;
 		private OutTxnMeta outTxnMeta;
 		private boolean allowDateFilters;
-		private TxnPaginationUIController pageC;
+		private PaginationUIController pageC;
 		
-		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, TxnPaginationUIController pageC ){
+		private AllRowsActionsUI( Grid grid, In in, boolean allowDateFilters, PaginationUIController pageC ){
 			this.grid = grid;
 			this.in = in;
 			
@@ -820,9 +828,6 @@ public class DTxnArchiveUI extends DTxnStateUIDesign implements DUserUIInitializ
 				pageC.getListPageBtns().put( "prevH", this.btnPagePrev );
 				pageC.getListPageBtns().put( "afterPrevH", this.btnPageAfterPrev );
 				pageC.getListPageBtns().put( "beforeNextH", this.btnPageBeforeNext );
-				
-				pageC.setOutTxnMeta( outTxnMeta );
-				pageC.setIn( in );
 				
 				format();
 			
