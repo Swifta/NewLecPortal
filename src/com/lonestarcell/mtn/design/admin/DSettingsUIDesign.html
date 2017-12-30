@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;lec_portal&quot;}">
+  <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout style-name="sn-c-pay sn-c-pay-opt" width-auto height-full> 
+   <vaadin-horizontal-layout style-name="sn-panel-head sn-panel-head-card sn-panel-head-step-b-ref sn-c-opts-popup-header sn-settings" width-full margin _id="detailsHead"> 
+    <vaadin-label style-name="bold" plain-text>
+      Settings 
+    </vaadin-label> 
+   </vaadin-horizontal-layout> 
+   <vaadin-panel style-name="sn-mm-panel sn-mm-right-c-panel" width="580px" height-full _id="detailsPanel" :expand> 
+    <vaadin-vertical-layout size-auto> 
+     <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" width="555px" margin-left margin-right margin-top _id="cBDHead21"> 
+      <vaadin-label style-name="bold sn-label-underline" plain-text :expand>
+        Mediator, Core Service, Report Time Correction 
+      </vaadin-label> 
+      <vaadin-horizontal-layout margin-left :right> 
+       <vaadin-button icon="fonticon://FontAwesome/f00d" description="Close window" style-name="icon-only icon-align-top link sn-details-close" width="40px" plain-text _id="btnWindowClose" :right>
+         Close window 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-c-right-panel-v" margin-top> 
+      <vaadin-vertical-layout description="Mediator Configuration" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card sn-barred" spacing size-auto _id="cBookingDetails2"> 
+       <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead3"> 
+        <vaadin-label width="329px" height="27px" plain-text>
+          Mediator 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-form-layout spacing="false" size-auto margin-left margin-right margin-top="false" margin-bottom="false"> 
+        <vaadin-label caption="EPR" description="Mediator End Point Configuration" style-name="small" plain-text _id="lbMediator">
+          http://127.0.0.1:8280/services/lecproxyxxxx 
+        </vaadin-label> 
+        <vaadin-text-field description="Enter New EPR" caption="New EPR" required width="400px" value="http://127.0.0.1:8280/services/lecproxyxxxx" _id="tFMediator"></vaadin-text-field> 
+       </vaadin-form-layout> 
+       <vaadin-horizontal-layout spacing margin-left> 
+        <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
+        <vaadin-horizontal-layout> 
+         <vaadin-button icon="fonticon://FontAwesome/f044" description="Edit" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnMediatorEdit">
+           Edit 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f0c7" description="Save" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnMediatorSave">
+           Save 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f00d" description="Cancel" style-name="sn-details-action icon-only icon-align-top link sn-details-close" plain-text _id="btnMediatorCancel">
+           Cancel 
+         </vaadin-button> 
+        </vaadin-horizontal-layout> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-c-right-panel-v"> 
+      <vaadin-vertical-layout description="Core Service Configuration" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card" spacing size-auto _id="cBookingDetails111"> 
+       <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead111"> 
+        <vaadin-label width="329px" plain-text>
+          Core Service 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-form-layout spacing="false" size-auto margin-left margin-right margin-top="false" margin-bottom="false"> 
+        <vaadin-label caption="EPR" description="Core Service End Point Reference" style-name="small" width="400px" plain-text _id="lbCore">
+          http://127.0.0.1:97666667/services/MTNLECPaymentService/ 
+        </vaadin-label> 
+        <vaadin-text-field description="Enter New EPR" caption="New EPR" required width="400px" value="http://127.0.0.1:97666667/services/MTNLECPaymentService/" _id="tFCore"></vaadin-text-field> 
+       </vaadin-form-layout> 
+       <vaadin-horizontal-layout spacing margin-left> 
+        <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
+        <vaadin-horizontal-layout> 
+         <vaadin-button icon="fonticon://FontAwesome/f044" description="Edit" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnCoreEdit"></vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f0c7" description="Save" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnCoreSave">
+           Save 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f00d" description="Cancel" style-name="sn-details-action icon-only icon-align-top link sn-details-close" plain-text _id="btnCoreCancel">
+           Cancel 
+         </vaadin-button> 
+        </vaadin-horizontal-layout> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout style-name="sn-c-right-panel-v"> 
+      <vaadin-vertical-layout description="Report Time Correction Configuration" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card" spacing size-auto _id="cBookingDetails1111"> 
+       <vaadin-horizontal-layout style-name="sn-cbd-head sn-text-blue-login" margin-left margin-right _id="cBDHead1111"> 
+        <vaadin-label width="329px" plain-text>
+          Report Time Correction 
+        </vaadin-label> 
+       </vaadin-horizontal-layout> 
+       <vaadin-form-layout spacing="false" size-auto margin-left margin-right margin-top="false" margin-bottom="false"> 
+        <vaadin-label caption="Time" description="Time Correction" style-name="small" width="400px" plain-text _id="lbTime">
+          23:43:50 
+        </vaadin-label> 
+        <vaadin-inline-date-field caption="New Time" resolution="second" required style-name="time-only" _id="dFTime"></vaadin-inline-date-field> 
+       </vaadin-form-layout> 
+       <vaadin-horizontal-layout spacing margin-left> 
+        <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
+        <vaadin-horizontal-layout> 
+         <vaadin-button icon="fonticon://FontAwesome/f044" description="Edit" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnTimeEdit">
+           Edit 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f0c7" description="Save" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnTimeSave">
+           Save 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f00d" description="Cancel" style-name="sn-details-action icon-only icon-align-top link sn-details-close" plain-text _id="btnTimeCancel">
+           Cancel 
+         </vaadin-button> 
+        </vaadin-horizontal-layout> 
+       </vaadin-horizontal-layout> 
+      </vaadin-vertical-layout> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-panel> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>
