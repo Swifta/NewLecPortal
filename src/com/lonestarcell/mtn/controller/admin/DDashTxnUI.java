@@ -19,6 +19,8 @@ import com.lonestarcell.mtn.design.admin.DDashTxnUIDesign;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
@@ -82,8 +84,63 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 
 	@Override
 	public void attachCommandListeners() {
-		// TODO Auto-generated method stub
+		this.attachBtnRefresh();
 		
+	}
+	
+	private void attachBtnRefresh(){
+		
+		this.btnRefreshTxn.addClickListener( new ClickListener(){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+			
+				loadDataHandler();
+				
+			}
+			
+		});
+		
+		this.btnRefreshSMS.addClickListener( new ClickListener(){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+			
+				loadDataHandler();
+				
+			}
+			
+		});
+		
+		this.btnRefreshToken.addClickListener( new ClickListener(){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+			
+				loadDataHandler();
+				
+			}
+			
+		});
+		
+		this.btnRefreshInfo.addClickListener( new ClickListener(){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+			
+				loadDataHandler();
+				
+			}
+			
+		});
 	}
 
 	
@@ -98,7 +155,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 	public void setContent() {
 		this.setData( new OutTxnMeta() );
 		this.setRecord( new BeanItem<>( this.getData() ) );
-		this.setmTxn( new MTxn( getCurrentUserId(), getCurrentUserSession() ) );
+		this.setmTxn( new MTxn( getCurrentUserId(), getCurrentUserSession(), getCurrentTimeCorrection() ) );
 		setHeader();
 		setFooter();
 		swap(this);
@@ -166,6 +223,11 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 	
 	private void setDashData(){
 		
+		this.loadDataHandler();
+		
+	}
+	
+	private Out loadData(){
 		In in = new In();
 		BData<InTxn> inBData = new BData<>();
 		InTxn inTxn = new InTxn();
@@ -180,7 +242,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 		
 		
 		
-		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		cal.add(Calendar.DAY_OF_MONTH, -1 );
 		String fDate =  sdf.format( cal.getTime() );
 		log.debug( "From: "+fDate );
 		
@@ -190,14 +252,20 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 		in.setData( inBData );
 		
 		
-		Out out = mTxn.setDashMeta(in, this.getRecord() );
+		return  mTxn.setDashMeta(in, this.getRecord() );
+	}
+	
+	private void loadDataHandler(){
+		
+		Out out = this.loadData();
 		if( out.getStatusCode() != 1 ) {
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
 			return;
+		} else {
+			format();
+			Notification.show( "Data loaded successfully.", Notification.Type.HUMANIZED_MESSAGE );
 		}
 
-		
-		format();
 		
 		
 	}
@@ -295,6 +363,10 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 	
 	private String getCurrentUserSession(){
 		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.SESSION_VAR );
+	}
+	
+	private String getCurrentTimeCorrection(){
+		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.TIME_CORRECTION );
 	}
 	
 	

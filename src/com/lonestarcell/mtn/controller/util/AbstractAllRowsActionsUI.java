@@ -47,7 +47,8 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	protected M model;
 	protected Grid grid;
 	private boolean allowDateFilters;
-	private PaginationUIController pageC;
+	private boolean isHeader;
+	protected PaginationUIController pageC;
 	protected BeanItemContainer<O> container;
 	protected InTxn inTxn;
 	protected OutTxnMeta outTxnMeta;
@@ -55,10 +56,12 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	
 	private Logger log = LogManager.getLogger( AbstractAllRowsActionsUI.class.getName() );
 	
-	public AbstractAllRowsActionsUI( In in, boolean allowDateFilters, PaginationUIController pageC ){
+	public AbstractAllRowsActionsUI( In in, boolean allowDateFilters, boolean isHeader, PaginationUIController pageC ){
 		this.in = in;
 		this.allowDateFilters = allowDateFilters;
+		this.isHeader = isHeader;
 		this.pageC = pageC;
+		
 		
 	}
 	
@@ -88,17 +91,31 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 		this.attachBtnBeforeNext();
 		this.attachBtnAfterPrev();
 		
+		// Data Export
+		this.attachBtnExportOps();
+		this.initDataExportUI();
+		
 	}
 	
 	
-	protected abstract void setNewPage( int page );
+	protected  void setNewPage( int page ){
+		log.debug( "All rows deselected" );
+		grid.deselectAll();
+	}
 	
 	protected void format(){
+		
+		if( outTxnMeta.getTotalRevenue().getValue() == null )
+			outTxnMeta.getTotalRevenue().setValue( "0" );
+		
 		double revenue = Double.valueOf( outTxnMeta.getTotalRevenue().getValue().replaceAll(",", "") );
 		NumberFormat nf = NumberFormat.getCurrencyInstance();
 		
 		log.debug( "Formated revenue: "+nf.format( revenue ) );
 		outTxnMeta.getTotalRevenue().setValue( nf.format( revenue ).replace( "$", "") );
+		
+		if( outTxnMeta.getTotalRecord().getValue() == null )
+			outTxnMeta.getTotalRecord().setValue( "0" );
 		
 		long records = Long.valueOf( outTxnMeta.getTotalRecord().getValue().toString().replaceAll(",", "") );
 		nf = NumberFormat.getNumberInstance( Locale.US );
@@ -234,6 +251,11 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 		});
 	}
 	
+	
+	protected abstract void attachBtnExportOps();
+	
+	protected abstract void initDataExportUI();
+	
 	private void attachBtnRefresh() {
 
 		this.btnRefresh.addClickListener(new ClickListener() {
@@ -253,9 +275,8 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	
 
 	protected void init() {
-		if( !this.allowDateFilters )
-			this.cLeftDateFilter.setVisible(false);
 		
+		this.cLeftDateFilter.setVisible( this.isHeader );
 		this.setBeanItemContainer();
 		this.setInTxn( in );
 		this.setOutTxnMeta();
@@ -265,11 +286,14 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	}
 	
 	
-	private void setContent(){
+	protected void setContent(){
 		
 		
-		this.cDateFilters.setVisible( false );
-		if( this.allowDateFilters ) {
+		this.cDateFilters.setVisible( this.allowDateFilters );
+		
+		
+		if( this.isHeader ) {
+			
 			
 			// Txn meta
 			
@@ -452,12 +476,15 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	protected abstract ShortcutListener getSearchShortcutListener( TextField tF, String itemId, BeanItemContainer<O> container );
 	
 	
-	protected abstract T getTextChangeListner( BeanItemContainer<O> container, String itemId, TextField tF );
+	protected abstract T getTextChangeListner( BeanItemContainer<O> container,String itemId, TextField tF );
 	
 
 	protected void setModel(M m) {
 		 this.model = m;
 		
 	}
+	
+	
+	
 	
 }

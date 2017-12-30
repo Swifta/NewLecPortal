@@ -261,7 +261,7 @@ public class MUserTest {
 		setPropertyDataSource( data );
 		
 		
-		m.setTxnMeta(in, data);
+		m.searchUserMeta(in, data);
 		
 		
 		Assert.assertNotNull( data );

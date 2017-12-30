@@ -2,7 +2,7 @@ package com.lonestarcell.mtn.bean;
 
 public class InTxn {
 	
-	private String searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
+	private String searchReqCur, searchToken, searchItronId, searchTokenStatus, searchTxnType, searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
 	private int page;
 
 	public String getUsername() {
@@ -89,6 +89,40 @@ public class InTxn {
 	public void setSearchUsername(String searchUsername) {
 		this.searchUsername = searchUsername;
 	}
+	public String getSearchItronId() {
+		return searchItronId;
+	}
+	public void setSearchItronId(String searchItronId) {
+		this.searchItronId = searchItronId;
+	}
+	public String getSearchTokenStatus() {
+		return searchTokenStatus;
+	}
+	public void setSearchTokenStatus(String searchTokenStatus) {
+		this.searchTokenStatus = searchTokenStatus;
+	}
+	public String getSearchTxnType() {
+		return searchTxnType;
+	}
+	public void setSearchTxnType(String searchTxnType) {
+		this.searchTxnType = searchTxnType;
+	}
+	public String getSearchReqCur() {
+		return searchReqCur;
+	}
+	public void setSearchReqCur(String searchReqCur) {
+		this.searchReqCur = searchReqCur;
+	}
+	public String getSearchToken() {
+		return searchToken;
+	}
+	public void setSearchToken(String searchToken) {
+		this.searchToken = searchToken;
+	}
+	
+	
+	
+	
 
 	
 	

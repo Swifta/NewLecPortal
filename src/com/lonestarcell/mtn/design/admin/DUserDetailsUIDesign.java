@@ -25,6 +25,7 @@ public class DUserDetailsUIDesign extends VerticalLayout {
 	protected HorizontalLayout detailsHead;
 	protected Panel detailsPanel;
 	protected HorizontalLayout cBDHead21;
+	protected Button btnUserDetailsClose;
 	protected VerticalLayout cBookingDetails2;
 	protected HorizontalLayout cBDHead3;
 	protected Label lbUserProfile;

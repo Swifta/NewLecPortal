@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,11 +12,18 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.MTxn;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -26,10 +35,11 @@ public class AllRowsActionsUITxn extends AbstractAllRowsActionsUI<MTxn, OutTxn, 
 	private static final long serialVersionUID = 1L;
 	
 	private Logger log = LogManager.getLogger( AllRowsActionsUITxn.class.getName() );
-
-	public AllRowsActionsUITxn( MTxn mTxn, Grid grid, In in, boolean allowDateFilters,
+	
+	
+	public AllRowsActionsUITxn( MTxn mTxn, Grid grid, In in, boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
-		super(in, allowDateFilters, pageC);
+		super(in, allowDateFilters,isHeader, pageC);
 		this.setModel( mTxn );
 		this.setGrid( grid );
 		this.init();
@@ -47,7 +57,8 @@ public class AllRowsActionsUITxn extends AbstractAllRowsActionsUI<MTxn, OutTxn, 
 		outTxnMeta.setTotalRevenue( new ObjectProperty<String>( "0", String.class ) );
 		outTxnMeta.setTotalRecord( new ObjectProperty<String>( "0", String.class ) );
 		
-		Out out = model.setTxnMeta( in, outTxnMeta );
+		
+		Out out = model.searchTxnMeta( in, outTxnMeta );
 		if( out.getStatusCode() != 1 )
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
 		
@@ -55,6 +66,8 @@ public class AllRowsActionsUITxn extends AbstractAllRowsActionsUI<MTxn, OutTxn, 
 
 	@Override
 	protected void setNewPage(int page) {
+		super.setNewPage( page );
+		
 		container.removeAllItems();
 		inTxn.setPage( page );
 		model.searchTxnToday(in, container );
@@ -115,29 +128,8 @@ public class AllRowsActionsUITxn extends AbstractAllRowsActionsUI<MTxn, OutTxn, 
 			@Override
 			public void handleAction(Object sender, Object target) {
 				log.debug( "Enter search shortcut clicked." );
-				String val = tF.getValue();
-				if( val == null )
-					return;
-				val = val.trim();
-				if( val.isEmpty() )
-					return;
-				
-				
-				if( (inTxn.getSearchSID() == null )
-						&& ( inTxn.getSearchMoID() == null )
-						&& ( inTxn.getSearchMeterNo() == null )
-						&& ( inTxn.getSearchMSISDN() == null )
-						&& ( inTxn.getSearchStatusDesc() == null ) ){
-					
-					log.debug( "No search required." );
-					
-					return;
-					
-				} 
-				
 				
 				container.removeAllItems();
-				
 				log.debug( "Proceeding with search." );
 				
 				In in = new In();
@@ -164,6 +156,20 @@ public class AllRowsActionsUITxn extends AbstractAllRowsActionsUI<MTxn, OutTxn, 
 		};
 
 	}
+	
+	
+	@Override
+	protected void initDataExportUI(){
+		
+		/*PopupView popupView = new PopupView( "Export", new DataExportUITxn( container ) );
+		// popupView.setIcon( FontAwesome.SHARE_SQUARE_O );
+		popupView.addStyleName( "sn-data-export-popup borderless link icon-align-left" );
+		popupView.setDescription( "Export data" );
+		cDataExport.addComponent( popupView );
+		this.btnExport.setVisible( false ); */
+		
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -183,6 +189,57 @@ public class AllRowsActionsUITxn extends AbstractAllRowsActionsUI<MTxn, OutTxn, 
 	protected TextChangeListenerTxn<OutTxn> getTextChangeListner(
 			BeanItemContainer<OutTxn> container, String itemId, TextField tF) {
 			return new TextChangeListenerTxn<OutTxn>( container, inTxn, itemId, tF );
+	}
+
+	@Override
+	protected void attachBtnExportOps() {
+			
+			this.btnExportOps.addClickListener( new ClickListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					
+					new DataExportUITxn( model, in, new ArrayList<Item>(), moreDropDown );
+
+					
+				}
+				
+			});
+			
+			
+			this.btnExportOps.addBlurListener( new BlurListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void blur(BlurEvent event) {
+					
+					// btnExportOps.removeStyleName( "sn-btn-export-ops-active" );
+					moreDropDown.removeStyleName( "sn-data-export-active" );
+					log.debug( " Export menu blurred." );
+					
+				}
+				
+			});
+			
+			this.btnExportOps.addFocusListener( new FocusListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void focus(FocusEvent event) {
+					
+					// btnExportOps.removeStyleName( "sn-btn-export-ops-active" );
+					/// moreDropDown.addStyleName( "sn-data-export-active" );
+					log.debug( " Export menu focus." );
+					
+				}
+				
+			});
+		
+		
 	}
 
 }

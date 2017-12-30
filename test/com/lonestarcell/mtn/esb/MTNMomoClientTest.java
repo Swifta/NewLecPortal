@@ -35,8 +35,11 @@ public class MTNMomoClientTest {
 			inMo.setMsisdn( "231888210000" );
 			inMo.setAmount( ( amount*100 )+"" );
 			inMo.setCurrency( "LRD" );
+			
+			// End Point Reference  [ Provide ]
+			String epr = "";
 	
-			boolean status = momo.setSendAXIOMAxis2Request( inMo );
+			boolean status = momo.setSendAXIOMAxis2Request( inMo, epr );
 			
 			Assert.assertTrue( status );
 			

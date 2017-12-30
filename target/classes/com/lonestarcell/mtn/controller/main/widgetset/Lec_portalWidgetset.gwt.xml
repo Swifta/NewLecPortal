@@ -25,4 +25,6 @@
 
 
     <inherits name="de.datenhahn.vaadin.componentrenderer.ComponentRendererWidgetSet" />
+
+    <inherits name="org.vaadin.addons.WidgetSet" />
 </module>

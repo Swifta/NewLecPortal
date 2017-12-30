@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,26 +12,31 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.MTxn;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn, TextChangeListenerTxn<OutTxn> >{
+public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn, TextChangeListenerToken<OutTxn> >{
 
 	private static final long serialVersionUID = 1L;
 	
 	private Logger log = LogManager.getLogger( AllRowsActionsUIToken.class.getName() );
 
-	public AllRowsActionsUIToken( MTxn mTxn, Grid grid, In in, boolean allowDateFilters,
+	public AllRowsActionsUIToken( MTxn mTxn, Grid grid, In in, boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
-		super(in, allowDateFilters, pageC);
+		super(in, allowDateFilters, isHeader, pageC);
 		this.setModel( mTxn );
 		this.setGrid( grid );
 		this.init();
@@ -49,15 +56,16 @@ public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn
 		
 		Out out = model.setTxnMeta( in, outTxnMeta );
 		if( out.getStatusCode() != 1 )
-			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
+			Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
 		
 	}
 
 	@Override
 	protected void setNewPage(int page) {
+		super.setNewPage( page );
 		container.removeAllItems();
 		inTxn.setPage( page );
-		model.setTxnToday(in, container );
+		model.searchTokenToday(in, container );
 		format();
 		
 	}
@@ -67,8 +75,8 @@ public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn
 	
 		container.removeAllItems();
 		//TODO validate response
-		Out out = model.setTxnToday(in, container );
-		model.setTxnMeta(in, outTxnMeta );
+		Out out = model.searchTokenToday(in, container );
+		model.searchTokenMeta(in, outTxnMeta );
 		
 		if( out.getStatusCode() != 1 ) {
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
@@ -90,7 +98,7 @@ public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn
 		HeaderCell cFilter = filterHeader.getCell(itemId);
 		cFilter.setComponent(tF);
 		
-		TextChangeListenerTxn<OutTxn> tChangeListener = getTextChangeListner( container, itemId, tF );
+		TextChangeListenerToken<OutTxn> tChangeListener = getTextChangeListner( container, itemId, tF );
 		tF.addTextChangeListener( tChangeListener );
 		tFSearchFields.add( tF );
 		
@@ -115,26 +123,6 @@ public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn
 			@Override
 			public void handleAction(Object sender, Object target) {
 				log.debug( "Enter search shortcut clicked." );
-				String val = tF.getValue();
-				if( val == null )
-					return;
-				val = val.trim();
-				if( val.isEmpty() )
-					return;
-				
-				
-				if( (inTxn.getSearchSID() == null )
-						&& ( inTxn.getSearchMoID() == null )
-						&& ( inTxn.getSearchMeterNo() == null )
-						&& ( inTxn.getSearchMSISDN() == null )
-						&& ( inTxn.getSearchStatusDesc() == null ) ){
-					
-					log.debug( "No search required." );
-					
-					return;
-					
-				} 
-				
 				
 				container.removeAllItems();
 				
@@ -149,9 +137,9 @@ public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn
 				
 				
 				
-				Out out = model.setTxnToday(in, container );
+				Out out = model.searchTokenToday(in, container );
 				
-				model.setTxnMeta( in, outTxnMeta );
+				model.searchTokenMeta( in, outTxnMeta );
 				
 				if( out.getStatusCode() != 1 ){
 					Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
@@ -180,9 +168,52 @@ public class AllRowsActionsUIToken extends AbstractAllRowsActionsUI<MTxn, OutTxn
 	}
 
 	@Override
-	protected TextChangeListenerTxn<OutTxn> getTextChangeListner(
+	protected TextChangeListenerToken<OutTxn> getTextChangeListner(
 			BeanItemContainer<OutTxn> container, String itemId, TextField tF) {
-			return new TextChangeListenerTxn<OutTxn>( container, inTxn, itemId, tF );
+			return new TextChangeListenerToken<OutTxn>( container, inTxn, itemId, tF );
+	}
+
+	@Override
+	protected void initDataExportUI() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void attachBtnExportOps() {
+			
+			this.btnExportOps.addClickListener( new ClickListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					
+					new DataExportUIToken( model, in, new ArrayList<Item>(), moreDropDown );
+
+					
+				}
+				
+			});
+			
+			
+			this.btnExportOps.addBlurListener( new BlurListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void blur(BlurEvent event) {
+					
+					// btnExportOps.removeStyleName( "sn-btn-export-ops-active" );
+					moreDropDown.removeStyleName( "sn-data-export-active" );
+					log.debug( " Export menu blurred." );
+					
+				}
+				
+			});
+			
+			
+		
 	}
 
 }

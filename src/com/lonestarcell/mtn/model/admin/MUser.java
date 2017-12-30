@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,7 @@ import com.vaadin.data.util.BeanItemContainer;
 
 public class MUser extends Model {
 
+	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(MUser.class.getName());
 	
 	private OutUser outTxn;
@@ -36,6 +39,9 @@ public class MUser extends Model {
 
 
 	}
+	
+	
+	
 	
 	
 	
@@ -76,7 +82,7 @@ public class MUser extends Model {
 			 inTxn = (InTxn) bInData.getData();
 			 
 			 int page = inTxn.getPage();
-			 int pageLength = 5;
+			 int pageLength = 15;
 			 int pageMin = 0;
 			 if( page > 1) {
 				 pageMin =  ( page - 1 )*pageLength + 1;
@@ -109,6 +115,200 @@ public class MUser extends Model {
 				bOutData.setData( container );
 				
 				out.setData( bOutData );
+				return out;
+			}
+			
+			
+			
+
+			do {
+				
+				outTxn = new OutUser();
+				
+				
+		
+				
+				outTxn.setUserId( rs.getLong( "user_id" ) );
+				outTxn.setUsername( rs.getString( "username" ) );
+				outTxn.setUserSession( rs.getString( "user_session" ) );
+				
+				String userStatus = rs.getString( "status" );
+				String userStatusDesc = null;
+				if( userStatus.equals( "0" ) ){
+					userStatusDesc = "REGISTERED";
+				} else if( userStatus.equals( "1" ) ){
+					userStatusDesc = "ACTIVE";
+				}else if( userStatus.equals( "2" ) ){
+					userStatusDesc = "BLOCKED";
+				} else {
+					userStatusDesc = "N/A";
+				}
+				outTxn.setUserStatus( userStatusDesc );
+				
+				outTxn.setChangePass( rs.getString( "change_password" ) );
+				outTxn.setDateAdded( rs.getString( "date_added" ) );
+				outTxn.setLastLogin( rs.getString( "last_login" ) );
+				outTxn.setOrg( rs.getString( "org" ) );
+				outTxn.setProfile( rs.getString( "profile_name" ) );
+				outTxn.setProfileId( rs.getInt( "profile_id" ) );
+				
+				outTxn.setEmail( rs.getString( "email" )  );
+				
+				
+				container.addBean( outTxn );
+				
+			
+			} while( rs.next() );
+	
+			out.setStatusCode( 1 );
+			out.setMsg( "Data fetch successful." );
+				
+				
+			
+			
+			
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			out.setMsg( "Could not complete operation. " );
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return out;
+	}
+	
+	
+	public Out searchUsers( In in, BeanItemContainer<OutUser> container ) {
+		
+		Out out = this.checkAuthorization( );
+		if( out.getStatusCode() != 1 ){
+			out.setStatusCode( 100 );
+			return out;
+		}
+		
+		Connection conn = null; out = new Out();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		
+
+		
+		
+		try {
+			
+			
+			
+			
+			
+			 conn = dataSource.getConnection();
+			 conn.setReadOnly(true);
+			 
+			 BData< ? > bInData = in.getData();
+			 inTxn = (InTxn) bInData.getData();
+			 
+			 Map<String, Integer > searchFieldMap = new HashMap<>();
+			 String qVariable = "";
+			 
+			String q = "SELECT DATE_FORMAT( u.date_added, '%Y-%m-%e %T') AS date_added, DATE_FORMAT( u.last_login, '%Y-%m-%e %T') AS last_login, o.name AS org, u.username, u.email, u.status, u.profile_id, p.profile_name, u.change_password, u.user_session, user_id FROM users as u";
+			q += " JOIN organization AS o ON o.id = u.organization_id";
+			q += " JOIN profile AS p ON p.profile_id = u.profile_id";
+			q += " WHERE ";
+			
+			   if( inTxn.getSearchUsername() != null ) {
+				   qVariable += " u.username LIKE ? AND";
+				   searchFieldMap.put( "username", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchEmail() != null ) {
+				   qVariable += " u.email LIKE ? AND";
+				   searchFieldMap.put( "email", searchFieldMap.size()+1 );
+			   }
+			   
+			   
+			   if( inTxn.getSearchOrg() != null ) {
+				   qVariable += " o.name LIKE ? AND";
+				   searchFieldMap.put( "org", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchProfile() != null ) {
+				   qVariable += " p.profile_name ? AND";
+				   searchFieldMap.put( "profile", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchUserStatus() != null ) { 
+				   if(  "REGISTERED".contains( inTxn.getSearchUserStatus().toUpperCase() ) ){
+					   
+					   qVariable += " ( u.status = 0 ";
+					   qVariable += " )";
+					   qVariable += " AND";
+					   
+				   } else if( "ACTIVE".contains( inTxn.getSearchUserStatus().toUpperCase() ) ){
+					   
+					   qVariable += " ( u.status = 1 ";
+					   qVariable += " )";
+					   qVariable += " AND";
+					   
+				   } else if( "BLOCKED".contains( inTxn.getSearchUserStatus().toUpperCase() ) ){
+					   
+					   qVariable += " ( u.status = 2 ";
+					   qVariable += " )";
+					   qVariable += " AND";
+					   
+				   } else {
+					   
+					   // Dummy status for no match
+					   qVariable += " ( u.status = '404' ) ";
+					   qVariable += " AND";
+				   }
+				   
+			   }
+			   
+			 q += qVariable;
+			
+			q += " u.user_id != ?";
+			q += " ORDER BY u.date_added, u.last_login DESC";
+			q += " LIMIT ?, ?;";
+			 
+			 int page = inTxn.getPage();
+			 int pageLength = 15;
+			 int pageMin = 0;
+			 if( page > 1) {
+				 pageMin =  ( page - 1 )*pageLength + 1;
+			 }
+			 
+			 
+			conn.setReadOnly( true );
+			ps = conn.prepareStatement( q );
+			if( inTxn.getSearchUsername() != null ){
+				ps.setString( searchFieldMap.get( "username" ), "%"+inTxn.getSearchUsername()+"%" );
+			}
+			
+			if( inTxn.getSearchEmail() != null ){
+				ps.setString(  searchFieldMap.get( "email" ), "%"+inTxn.getSearchEmail()+"%" );
+			}
+			
+			if( inTxn.getSearchProfile() != null ){
+				ps.setString(  searchFieldMap.get( "profile" ), "%"+inTxn.getSearchProfile()+"%" );
+			}
+			
+			if( inTxn.getSearchOrg() != null ){
+				ps.setString(  searchFieldMap.get( "org" ), "%"+inTxn.getSearchOrg()+"%" );
+			}
+			
+			int paramIndexOffset = searchFieldMap.size();
+			ps.setLong( paramIndexOffset + 1, super.userAuthId );
+			ps.setInt( paramIndexOffset + 2, pageMin );
+			ps.setInt( paramIndexOffset + 3, pageLength );
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( !rs.next() ) {
+				log.debug( "No result" );
+				out.setMsg( "No records found." );
 				return out;
 			}
 			
@@ -260,8 +460,8 @@ public class MUser extends Model {
 						} else {
 							userStatusDesc = "N/A";
 						}
-						outTxn.setUserStatus( userStatusDesc );
-						// record.getItemProperty( "userStatus" ).setValue( rs.getString( "status" ) );
+						//outTxn.setUserStatus( userStatusDesc );
+						record.getItemProperty( "userStatus" ).setValue( userStatusDesc );
 						
 						record.getItemProperty( "changePass" ).setValue( rs.getString( "change_password" ) );
 						record.getItemProperty( "dateAdded" ).setValue( rs.getString( "date_added" ) );
@@ -281,7 +481,7 @@ public class MUser extends Model {
 			
 			} while( rs.next() );
 			
-			log.debug( "Max after operation: " );
+			log.debug( "Max after operation: "+max );
 			
 			if( max == 0 ) {
 				out.setStatusCode( 1 );
@@ -573,7 +773,7 @@ public class MUser extends Model {
 	}
 
 
-	public Out setTxnMeta( In in, OutTxnMeta outTxn ) {
+	public Out searchUserMeta( In in, OutTxnMeta outTxn ) {
 		
 		
 		Out out = this.checkAuthorization(  );
@@ -586,21 +786,91 @@ public class MUser extends Model {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
-		
-	
-		String q = "select COUNT( u.user_id ) as total_records FROM users AS u WHERE u.user_id != ?";
-				  
-		
 		try {
 			
 			 BData< ? > bInData = in.getData();
 			 inTxn = (InTxn) bInData.getData();
+			 Map<String, Integer > searchFieldMap = new HashMap<>();
+			 String qVariable = "";
+			 
+			String q = "SELECT COUNT( u.user_id ) AS total_records FROM users AS u ";
+			   q += " JOIN organization AS o ON o.id = u.organization_id";
+			   q += " JOIN profile AS p ON p.profile_id = u.profile_id";
+			   q += " WHERE";
+			   
+			   if( inTxn.getSearchUsername() != null ) {
+				   qVariable += " u.username LIKE ? AND";
+				   searchFieldMap.put( "username", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchEmail() != null ) {
+				   qVariable += " u.email LIKE ? AND";
+				   searchFieldMap.put( "email", searchFieldMap.size()+1 );
+			   }
+			   
+			   
+			   if( inTxn.getSearchOrg() != null ) {
+				   qVariable += " o.name LIKE ? AND";
+				   searchFieldMap.put( "org", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchProfile() != null ) {
+				   qVariable += " p.profile_name ? AND";
+				   searchFieldMap.put( "profile", searchFieldMap.size()+1 );
+			   }
+			   
+			   if( inTxn.getSearchUserStatus() != null ) { 
+				   if(  "REGISTERED".contains( inTxn.getSearchUserStatus().toUpperCase() ) ){
+					   
+					   qVariable += " ( u.status = 0 ";
+					   qVariable += " )";
+					   qVariable += " AND";
+					   
+				   } else if( "ACTIVE".contains( inTxn.getSearchUserStatus().toUpperCase() ) ){
+					   
+					   qVariable += " ( u.status = 1 ";
+					   qVariable += " )";
+					   qVariable += " AND";
+					   
+				   } else if( "BLOCKED".contains( inTxn.getSearchUserStatus().toUpperCase() ) ){
+					   
+					   qVariable += " ( u.status = 2 ";
+					   qVariable += " )";
+					   qVariable += " AND";
+					   
+				   } else {
+					   
+					   // Dummy status for no match
+					   qVariable += " ( u.status = '404' ) ";
+					   qVariable += " AND";
+				   }
+				   
+			   }
+			   
+			 q += qVariable; 
+			 q += " u.user_id != ?";
 			
 			conn = dataSource.getConnection();
 			conn.setReadOnly(true);
 			ps = conn.prepareStatement( q );
-			ps.setLong( 1, super.userAuthId );
+			if( inTxn.getSearchUsername() != null ){
+				ps.setString( searchFieldMap.get( "username" ), "%"+inTxn.getSearchUsername()+"%" );
+			}
 			
+			if( inTxn.getSearchEmail() != null ){
+				ps.setString(  searchFieldMap.get( "email" ), "%"+inTxn.getSearchEmail()+"%" );
+			}
+			
+			if( inTxn.getSearchProfile() != null ){
+				ps.setString(  searchFieldMap.get( "profile" ), "%"+inTxn.getSearchProfile()+"%" );
+			}
+			
+			if( inTxn.getSearchOrg() != null ){
+				ps.setString(  searchFieldMap.get( "org" ), "%"+inTxn.getSearchOrg()+"%" );
+			}
+			
+			int paramIndexOffset = searchFieldMap.size();
+			ps.setLong( paramIndexOffset + 1, super.userAuthId );
 			
 			log.debug( "Query: "+ps.toString() );
 			
@@ -619,6 +889,101 @@ public class MUser extends Model {
 
 		} catch (Exception e) {
 			log.error(e.getMessage());
+			out.setMsg( "Could not complete operation. " );
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return out;
+	}
+	
+	
+	@Override
+	protected Out checkAuthorization() {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		out = new Out();
+		
+		
+		
+		String q = "SELECT o.organization_status AS org_status, u.user_id, u.status, u.profile_id, u.user_session, u.change_password FROM users AS u";
+		q += " JOIN organization AS o ON o.id = u.organization_id";
+		q += " WHERE u.user_id = ?";
+		q += " LIMIT 1;";
+		
+		
+		try {
+			
+			 conn = dataSource.getConnection();
+			 conn.setReadOnly(true);
+			 
+			ps = conn.prepareStatement( q );
+			ps.setLong( 1, userAuthId );
+			
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			
+			
+			if( !rs.next() ) {
+				log.debug( "No authorization data" );
+				out.setMsg( "No authorization data" );
+				return out;
+			}
+			
+			if( rs.getString( "user_session" ) == null || !rs.getString( "user_session" ).equals( userAuthSession ) ){
+			//if( rs.getString( "user_session" ) == null || !rs.getString( "user_session" ).equals( userSession ) ){
+
+				log.debug( "Login session expired" );
+				// log.debug( "Admin username: "+username+" Session: "+userSession );
+				out.setMsg( "Not authorized [ Authorization session expired. ]" );
+				out.setStatusCode( 403 );
+				return out;
+			}
+		
+			
+			if( rs.getShort( "status" ) != 1 ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ invalid account state ]" );
+				return out;
+			}
+			
+			if( rs.getShort( "change_password" ) == 1 ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ Pending account password reset ]" );
+				return out;
+				
+			}
+					
+			
+			if( rs.getShort( "org_status" ) != 1 ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ Invalid organization state ]" );
+				return out;
+			}
+			
+			if( rs.getShort( "profile_id" ) != 1  ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
+				return out;
+			}
+			
+			BData<Long> bOutData = new BData<>();
+			bOutData.setData(  rs.getLong( "user_id" ) );
+			out.setData( bOutData );
+			
+			
+			out.setStatusCode( 1 );
+			out.setMsg( "Account authorized for operation." );
+
+		} catch (Exception e) {
+			log.error( e.getMessage() );
 			out.setMsg( "Could not complete operation. " );
 			e.printStackTrace();
 			

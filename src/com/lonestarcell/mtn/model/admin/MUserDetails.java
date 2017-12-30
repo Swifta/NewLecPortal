@@ -16,6 +16,7 @@ import com.vaadin.data.Item;
 
 public class MUserDetails extends Model {
 
+	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(MUserDetails.class.getName());
 	
 	private InUserDetails inUser;

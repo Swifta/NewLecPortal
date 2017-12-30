@@ -58,7 +58,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 
 	@Override
 	public void setHeader() {
-		this.moreDropDown.addStyleName("sn-invisible");
+		this.moreDropDown.addStyleName("sn-invisible sn-main-ops");
 		lbUsername.setPropertyDataSource( record.getItemProperty( "username" ));
 		
 	}
@@ -67,6 +67,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 
 	@Override
 	public void setContent() {
+		
 		
 		setHeader();
 		setFooter();
@@ -206,6 +207,11 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		this.attachBtnProfile();
 		this.attachBtnUserOps();
 		this.attachLogout();
+		this.attachBtnSettings();
+		
+		
+		// Disable Misc. for now
+		
 		
 	}
 	
@@ -271,6 +277,12 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	}
 	
 	private void attachBtnHMenuUser(){
+		
+		if( this.getCurrentUserProfileId() != 1 ){
+			btnHMenuUser.setVisible( false );
+			btnHMenuUser.setEnabled( false );
+		}
+		
 		this.btnHMenuUser.addClickListener(new ClickListener(){
 
 			/**
@@ -384,6 +396,29 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		});
 	}
 	
+	private void attachBtnSettings() {
+		
+		if( this.getCurrentUserProfileId() != 1 ){
+			this.btnSettings.setVisible( false );
+			this.btnSettings.setEnabled( false );
+		}
+		
+		this.btnSettings.addClickListener(new ClickListener() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				new DSettingsUI();
+				
+					
+
+			}
+
+		});
+	}
+	
 	private void attachLogout() {
 		this.btnLogout.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -7731164586803534336L;
@@ -446,6 +481,11 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		
 		return true;
 		
+	}
+	
+	
+	private int getCurrentUserProfileId(){
+		return ( int ) UI.getCurrent().getSession().getAttribute( DLoginUIController.PROFILE_ID );
 	}
 	
 

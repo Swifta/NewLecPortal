@@ -345,7 +345,7 @@ public class DUserEditCredsUI extends DEditCredsUIDesign implements
 
 		UI.getCurrent().getSession().setAttribute( DLoginUIController.USERNAME, inData.getUsername() );
 		UI.getCurrent().getSession().setAttribute( DLoginUIController.SESSION_VAR,  inData.getUserSession() );
-		UI.getCurrent().getSession().setAttribute( DLoginUIController.PROFILE_ID, record.getItemProperty( "profileId" ).getValue() );
+		// UI.getCurrent().getSession().setAttribute( DLoginUIController.PROFILE_ID, record.getItemProperty( "profileId" ).getValue() );
 		
 		if( chkProfile.getValue() ){
 			initComboProfile();
@@ -630,7 +630,7 @@ public class DUserEditCredsUI extends DEditCredsUIDesign implements
 	private void showPopup() {
 		processingPopup.setContent(this);
 		processingPopup.center();
-		processingPopup.setClosable(false);
+		processingPopup.setClosable( true );
 		processingPopup.setEnabled(true);
 		processingPopup.setModal(true);
 		processingPopup.setDraggable(false);

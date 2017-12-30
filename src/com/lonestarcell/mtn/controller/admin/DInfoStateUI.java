@@ -2,10 +2,7 @@ package com.lonestarcell.mtn.controller.admin;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,17 +13,15 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUIInfo;
+import com.lonestarcell.mtn.controller.util.MultiRowActionsUIInfo;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
+import com.lonestarcell.mtn.controller.util.RowActionsUIInfo;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterCell;
@@ -37,8 +32,6 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
 public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializable<DInfoUI, DInfoStateUI>, DUIControllable {
@@ -50,11 +43,18 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 	private BeanItemContainer<OutTxn> beanItemContainer;
 	
 	private MTxn mTxn;
-	private InTxn inTxn;
+	protected InTxn inTxn;
 	
 	
 	DInfoStateUI( DInfoUI a){
+		this();
+		this.setInDate(inTxn, 1 );
 		init( a );
+	}
+	
+	DInfoStateUI(){
+		mTxn = new MTxn(  getCurrentUserId(), getCurrentUserSession(), getCurrentTimeCorrection() );
+		inTxn = new InTxn();
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 
 	@Override
 	public void setHeader() {
-		this.lbDataTitle.setValue("Today");
+		this.lbDataTitle.setValue("ITRON Customer Info & Vend Retry Records Today");
 	}
 
 	@Override
@@ -115,9 +115,6 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 
 	@Override
 	public void init(DInfoUI a) {
-		mTxn = new MTxn(  getCurrentUserId(), getCurrentUserSession()  );
-		
-		inTxn = new InTxn();
 		setAncestorUI( a );
 		setContent();
 		
@@ -125,7 +122,6 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 
 	@Override
 	public void setFooter() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -147,7 +143,6 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 
 	@Override
 	public void setParentUI(DInfoStateUI p) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -161,30 +156,19 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 			In in = new In();
 			
 			BData<InTxn> inBData = new BData<>();
-			
-			DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
-			Calendar cal = Calendar.getInstance();
-			
-			String tDate = sdf.format( cal.getTime() );
-			log.debug( "To: "+tDate );
-			
-			inTxn.settDate(  tDate );
 			inTxn.setPage( 1 );
-			
-			
-			cal.add(Calendar.DAY_OF_MONTH, -200 );
-			String fDate =  sdf.format( cal.getTime() );
-			log.debug( "From: "+fDate );
-			
-			inTxn.setfDate( fDate );
-			
-			
 			inBData.setData( inTxn );
 			in.setData( inBData );
 			
-			//TODO validate response
 			
-			mTxn.setInfoRetryToday(in, beanItemContainer );
+			Out out = mTxn.searchInfoRetryToday(in, beanItemContainer );
+			if( out.getStatusCode() != 1 ) {
+				Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
+			} else {
+				Notification.show(
+						out.getMsg(),
+						Notification.Type.HUMANIZED_MESSAGE );
+			}
 
 			Grid grid = new Grid();
 			
@@ -202,7 +186,7 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 						@Override
 						public Component getValue(Item item, Object itemId,
 								Object propertyId) {
-							PopupView v = new PopupView("...", new RowActionsUI( item ) );
+							PopupView v = new PopupView("...", new RowActionsUIInfo( mTxn, item ) );
 							v.setWidth( "100%" );
 							v.setHeight( "100%" );
 							return v;
@@ -234,7 +218,7 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 			HeaderCell dateFilterCellH = header.join( "swiftaId", "itronId", "meterNo", "amount", "tokenStatus", "txnType", "reqCount", "date", "actions");
 			PaginationUIController pageC = new PaginationUIController( );
 			
-			AllRowsActionsUIInfo allRowsActionsUIInfo = new AllRowsActionsUIInfo( mTxn, grid, in, true, pageC );
+			AllRowsActionsUIInfo allRowsActionsUIInfo = getHeaderController( mTxn, grid, in, pageC );
 			dateFilterCellH.setComponent( allRowsActionsUIInfo );
 			
 			header.setStyleName( "sn-date-filter-row" );
@@ -243,7 +227,7 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 			// Footer config
 			FooterCell dateFilterCellF = footer.join( "swiftaId", "itronId", "meterNo", "amount", "tokenStatus", "txnType", "reqCount", "date", "actions");
 		
-			dateFilterCellF.setComponent( new AllRowsActionsUIInfo( mTxn, grid, in, false, pageC ) );
+			dateFilterCellF.setComponent( getFooterController( mTxn, grid, in, pageC ) );
 			
 			//Init pagination controller after both header and footer have been set.
 			pageC.init();
@@ -252,7 +236,10 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 			footer.setStyleName( "sn-date-filter-row" );
 			dateFilterCellF.setStyleName( "sn-no-border-right sn-no-border-left" );
 			
-			PopupView v = new PopupView("...", new MultiRowActionsUI( grid ) );
+			PopupView v = new PopupView("...", null );
+			
+			MultiRowActionsUIInfo content = new MultiRowActionsUIInfo( mTxn, in, grid, v );
+			v.setContent( content );
 				
 			HeaderCell cellBulkActions = headerTextFilter.getCell( "actions" );
 			v.setWidth( "100%" );
@@ -310,11 +297,6 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 			grid.setHeight( "500px" );
 			grid.setWidth( "100%" );
 			
-			
-			Notification.show(
-					"Data loaded successfully.",
-					Notification.Type.HUMANIZED_MESSAGE );
-			
 			return grid;
 
 		} catch (Exception e) {
@@ -331,233 +313,15 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 		return new Grid();
 	}
 	
-	private class MultiRowActionsUI extends VerticalLayout implements DUIControllable {
-		
-		private static final long serialVersionUID = 1L;
-		private Button btnExport;
-		private Button btnRefresh;
-		private Grid grid;
 
-		private MultiRowActionsUI( Grid grid ){
-			
-			this.grid = grid;
-			init( );
-		}
-		
-		private void init() {
-			setContent();
-			this.attachCommandListeners();
-		}
-		
-		private void setContent(){
-			
-			this.addStyleName( "sn-more-drop-down" );
-			this.setSizeUndefined();
-			this.setMargin( true );
-			this.setSpacing( true );
-			
-			btnExport = new Button( );
-			btnRefresh = new Button( );
-			
-			btnExport.setDescription( "Export selected records" );
-			btnRefresh.setDescription( "Refresh selected records" );
-			
-			btnExport.addStyleName( "borderless icon-align-top" );
-			btnRefresh.addStyleName( "borderless icon-align-top" );
-			
-			btnExport.setIcon( FontAwesome.SHARE_SQUARE_O );
-			btnRefresh.setIcon( FontAwesome.REFRESH );
-			
-			this.addComponent( btnExport );
-			this.addComponent( btnRefresh );
-			
-			
-			
-		}
-
-		@Override
-		public void attachCommandListeners() {
-			
-			this.attachBtnRefresh();
-			
-		}
-		
-		private void attachBtnRefresh(){
-			this.btnRefresh.addClickListener( new ClickListener(){
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					Collection<?> itemIds = grid.getSelectedRows();
-					
-					if( itemIds == null || itemIds.size() == 0 ) {
-						Notification.show(
-								"Please select at least on record to refresh.",
-								Notification.Type.WARNING_MESSAGE );
-						return;
-					}
-					
-					
-					Iterator< ? > itr = itemIds.iterator();
-					
-					
-					
-					Collection<Item> records = new ArrayList<>();
-					
-					while( itr.hasNext() ){
-						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );		
-					}
-					
-					Out out = mTxn.refreshMultiTxnRecord( records );
-					
-					
-					if( out.getStatusCode() == 1 )
-						Notification.show(
-								"All selected records have been refreshed.",
-								Notification.Type.HUMANIZED_MESSAGE );
-					else if( out.getStatusCode() == 2 )
-						Notification.show(
-								"Refresh operation failed on some records.",
-								Notification.Type.WARNING_MESSAGE );
-					else
-						Notification.show(
-								"Refresh operation failed.",
-								Notification.Type.ERROR_MESSAGE );
-					
-				}
-				
-			});
-		}
-
-		
+	
+	
+	protected AllRowsActionsUIInfo getHeaderController( MTxn mTxn, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUIInfo( mTxn, grid, in, false, true, pageC );
 	}
 	
-	
-	public class RowActionsUI extends VerticalLayout implements DUIControllable{
-		
-		private static final long serialVersionUID = 1L;
-		private Button btnDetails;
-		private Button btnRefresh;
-		private Item record;
-		
-		public RowActionsUI( Item record ){
-			setRecord( record );
-			init();
-		}
-		
-		private void init(){
-			setContent();
-			attachCommandListeners();
-		}
-		
-		private void setContent(){
-			
-			this.addStyleName( "sn-more-drop-down" );
-			this.setSizeUndefined();
-			this.setMargin( true );
-			this.setSpacing( true );
-			
-			btnDetails = new Button( );
-			btnRefresh = new Button( );
-			
-			btnDetails.setDescription( "More details" );
-			btnRefresh.setDescription( "Refresh record" );
-			
-			btnDetails.addStyleName( "borderless icon-align-top" );
-			btnRefresh.addStyleName( "borderless icon-align-top" );
-			
-			btnDetails.setIcon( FontAwesome.ALIGN_RIGHT );
-			btnRefresh.setIcon( FontAwesome.REFRESH );
-			
-			this.addComponent( btnDetails );
-			this.addComponent( btnRefresh );
-			
-			
-		}
-
-		public Item getRecord() {
-			return record;
-		}
-
-		public void setRecord(Item record) {
-			this.record = record;
-			
-		}
-
-		@Override
-		public void attachCommandListeners() {
-			this.attachBtnDetails();
-			this.attachBtnRefresh();
-			
-		}
-		
-		private void attachBtnRefresh(){
-			this.btnRefresh.addClickListener( new ClickListener(){
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					refresh();
-					
-				}
-				
-			});
-		}
-		
-		
-		private void refresh(){
-			
-			log.debug( "Refresh record button clicked." );
-			if( record == null )
-				Notification.show(
-						"No record set for operaton.",
-						Notification.Type.ERROR_MESSAGE);
-			
-			
-			
-			Collection<Item> records = new ArrayList<>();
-			records.add( record );
-			Out out = mTxn.refreshMultiTxnRecord( records );
-			log.debug( "Row refresh status: "+out.getStatusCode() );
-			if( out.getStatusCode() == 1 )
-				Notification.show(
-						"Record refreshed successfully." );
-			else
-				Notification.show(
-						"Failed to refresh this record. Please try again.",
-						Notification.Type.WARNING_MESSAGE );
-			
-		}
-		
-		
-
-
-		
-		
-		private void attachBtnDetails(){
-			this.btnDetails.addClickListener( new ClickListener(){
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					
-					if( record == null )
-						Notification.show(
-								"No record set for operaton.",
-								Notification.Type.ERROR_MESSAGE);
-					
-					new DTxnDetailsUI( record );
-				}
-				
-			});
-		}
-
+	protected AllRowsActionsUIInfo getFooterController( MTxn mTxn, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUIInfo( mTxn, grid, in, false, false, pageC );
 	}
 	
 	private long getCurrentUserId(){
@@ -566,6 +330,31 @@ public class DInfoStateUI extends DTxnStateUIDesign implements DUserUIInitializa
 	
 	private String getCurrentUserSession(){
 		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.SESSION_VAR );
+	}
+	
+	private String getCurrentTimeCorrection(){
+		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.TIME_CORRECTION );
+	}
+	
+	
+	protected void setInDate( InTxn inTxn, int dayOffSet ){
+		
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		
+		cal.add(Calendar.DAY_OF_MONTH, -1*(dayOffSet) );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		
 	}
 	
 	

@@ -82,7 +82,7 @@ public class DInfoUI extends DTxnUIDesign implements DUserUIInitializable<DMainU
 				
 				if( isHMenuActiveBtn( btnArchive ) ) 
 					return;
-				new DInfoArchiveUI( getParentUI() );
+				new DInfoStateArchiveUI( getParentUI() );
 				btnArchive.addStyleName( "sn-left-menu-active" );
 				btnDay.removeStyleName( "sn-left-menu-active" );
 				

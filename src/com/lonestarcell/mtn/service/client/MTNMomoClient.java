@@ -36,7 +36,7 @@ import com.lonestarcell.mtn.model.sms.MTNLECPaymentServiceStub.TransactionRespon
 public class MTNMomoClient {
 
 	private Logger log = LogManager.getLogger( MTNMomoClient.class.getName() );
-	public boolean setSendAXIOMAxis2Request( InMo in)
+	public boolean setSendAXIOMAxis2Request( InMo in, String epr )
 			throws AxisFault {
 
 		SOAPFactory sFac = OMAbstractFactory.getSOAP11Factory();
@@ -202,17 +202,17 @@ public class MTNMomoClient {
 		sHeader.addChild(omRSH);
 		sBody.addChild(omProcessRequest);
 
-		return sendAXIOMRequest(soapEnv, "");
+		return sendAXIOMRequest(soapEnv, epr );
 	}
 	
 
-	public boolean sendSMS( InMo in ){
+	public boolean sendSMS( InMo in, String epr ){
 			
 			
 			try {
 				
 				// Disable port TODO 
-				MTNLECPaymentServiceStub stub = new MTNLECPaymentServiceStub( "http://127.0.0.1:97666667/services/MTNLECPaymentService/");
+				MTNLECPaymentServiceStub stub = new MTNLECPaymentServiceStub( epr );
 				
 				ReceivePaymentConfirmation comfirm = new MTNLECPaymentServiceStub.ReceivePaymentConfirmation();
 				comfirm.setAccountRef( in.getAcctRef() );
@@ -257,7 +257,7 @@ public class MTNMomoClient {
 		try {
 
 			//target = "http://127.0.0.1:8280/services/lecpaymentservice";
-			target = "http://127.0.0.1:8280/services/lecproxy";
+			//target = "http://127.0.0.1:8280/services/lecproxyxxxx";
 
 			EndpointReference targetEPR = new EndpointReference(target);
 			Options opts = new Options();

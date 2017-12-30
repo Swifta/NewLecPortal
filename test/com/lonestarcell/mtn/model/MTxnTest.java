@@ -34,7 +34,7 @@ public class MTxnTest {
 	
 	@BeforeClass
 	public static void init(){
-		m = new MTxn( 1L, "9qshoakkbcs9u5ssbnh6uij7c8" );
+		m = new MTxn( 1L, "e1v5br7g3397if4jn128sljqk2", "23:13:59" );
 		Assert.assertNotNull( "Model is null", m );
 	}
 
@@ -168,6 +168,121 @@ public class MTxnTest {
 		Assert.assertTrue( out.getStatusCode() == 1 );
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
+	@Ignore
+	public void refreshMultiPaymentRecordTest(){
+			
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125565", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125563", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125342", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+				
+		Out out = m.refreshMultiPaymentRecord( list );
+		
+		log.debug( "Payment Refresh msg: "+out.getMsg() );
+		
+		Assert.assertNotNull( out );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
+	@Ignore
+	public void refreshMultiTokenRecordTest(){
+			
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "6891673", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12053527", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12052912", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+				
+		Out out = m.refreshMultiTokenRecord( list );
+		
+		log.debug( "Token Refresh msg: "+out.getMsg() );
+		
+		Assert.assertNotNull( out );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
+	// @Ignore
+	public void refreshMultiInfoRecordTest(){
+			
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "6891673", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12053527", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12052912", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+				
+		Out out = m.refreshMultiInfoRecord( list );
+		
+		log.debug( "Info Refresh msg: "+out.getMsg() );
+		
+		Assert.assertNotNull( out );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
 	@Test
 	@Ignore
 	public void getTokenTodayTest(){
@@ -266,7 +381,7 @@ public class MTxnTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void searchTxnMetaTest(){
 		
 		In in = new In();
@@ -369,7 +484,7 @@ public class MTxnTest {
 	
 	@Test
 	@Ignore
-	public void setTxnTodaySearchTest(){
+	public void searchTxnTodayTest(){
 			
 		
 		In in = new In();
@@ -408,6 +523,581 @@ public class MTxnTest {
 		log.debug( "Txn search msg: "+out.getMsg() );
 		Assert.assertTrue( out.getStatusCode() == 1 );
 	}
+	
+	
+	@Test
+	@Ignore
+	public void searchTokenTodayTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		// inTxn.setSearchSID( "125565" );
+		// inTxn.setSearchItronId( "12053870" );
+		// inTxn.setSearchMeterNo( "90099887766" );
+		inTxn.setSearchTokenStatus( "P" );
+		//inTxn.setSearchTxnType( "VENDREQ" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		Out out = m.searchTokenToday(in, new BeanItemContainer<>(OutTxn.class) );
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	@Test
+	@Ignore
+	public void searchInfoRetryTodayTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		// inTxn.setSearchSID( "125565" );
+		// inTxn.setSearchItronId( "12053870" );
+		// inTxn.setSearchMeterNo( "90099887766" );
+		inTxn.setSearchTokenStatus( "P" );
+		//inTxn.setSearchTxnType( "VENDREQ" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		Out out = m.searchInfoRetryToday(in, new BeanItemContainer<>(OutTxn.class) );
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	@Test
+	@Ignore
+	public void searchPaymentTodayTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		
+		inTxn.setSearchMoID( "19528255" );
+	    inTxn.setSearchSID( "81426" );
+		inTxn.setSearchMeterNo( "01451503682" );
+		inTxn.setSearchMSISDN( "231888210000" );
+		inTxn.setSearchStatusDesc( "COMPLETE" );
+		inTxn.setSearchReqCur( "LRD" );
+		inTxn.setSearchToken( "451" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		Out out = m.searchPaymentToday(in, new BeanItemContainer<>(OutTxn.class) );
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	
+	
+	
+	@Test
+	@Ignore
+	public void searchPaymentMetaTest(){
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setSearchStatusDesc( "COM" );
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -100 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		
+		OutTxnMeta data = new OutTxnMeta();
+		
+		setPropertyDataSource( data );
+		Out out = m.searchPaymentMeta(in, data);
+		
+		Assert.assertNotNull( out );
+		Assert.assertNotNull( data );
+		log.debug( "Total Records: "+data.getTotalRecord().getValue() );
+		log.debug( "Total Revenue: "+data.getTotalRevenue().getValue() );
+	
+		
+		
+	}
+	
+	
+	@Test
+	@Ignore
+	public void searchTokenMetaTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		// inTxn.setSearchSID( "125565" );
+		// inTxn.setSearchItronId( "12053870" );
+		// inTxn.setSearchMeterNo( "90099887766" );
+		// inTxn.setSearchTokenStatus( "COMPLE" );
+		inTxn.setSearchTxnType( "VENDREQ" );
+		
+		cal.add(Calendar.DAY_OF_MONTH, -100 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		
+		OutTxnMeta data = new OutTxnMeta();
+		
+		setPropertyDataSource( data );
+		Out out = m.searchTokenMeta(in, data);
+		
+		Assert.assertNotNull( out );
+		Assert.assertNotNull( data );
+		log.debug( "Total Records: "+data.getTotalRecord().getValue() );
+		log.debug( "Total Revenue: "+data.getTotalRevenue().getValue() );
+		
+		
+		
+		
+	}
+	
+	
+	@Test
+	@Ignore
+	public void searchInfoRetryMetaTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		// inTxn.setSearchSID( "125565" );
+		// inTxn.setSearchItronId( "12053870" );
+		// inTxn.setSearchMeterNo( "90099887766" );
+		// inTxn.setSearchTokenStatus( "COMPLE" );
+		inTxn.setSearchTxnType( "EQ" );
+		
+		cal.add(Calendar.DAY_OF_MONTH, -100 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		
+		OutTxnMeta data = new OutTxnMeta();
+		
+		setPropertyDataSource( data );
+		Out out = m.searchInfoRetryMeta(in, data);
+		
+		Assert.assertNotNull( out );
+		Assert.assertNotNull( data );
+		log.debug( "Total Records: "+data.getTotalRecord().getValue() );
+		log.debug( "Total Revenue: "+data.getTotalRevenue().getValue() );
+		
+		
+		
+		
+	}
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	@Ignore
+	public void setExportDataMultiTxnTodayTest(){
+			
+		
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125565", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125563", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "81423", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		//inTxn.setSearchMoID( "19528186" );
+		// inTxn.setSearchSID( "81423" );
+		// inTxn.setSearchMeterNo( "01451503682" );
+		// inTxn.setSearchMSISDN( "231888210000" );
+		// inTxn.setSearchStatusDesc( "FAILED" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		///Out out = m.setExportDataMultiTxnToday(in, new BeanItemContainer<>(OutTxn.class), new ArrayList<Item>() );
+		Out out = m.setExportDataMultiTxnToday(in, new BeanItemContainer<>(OutTxn.class), list );
+		
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	@Ignore
+	public void setExportDataMultiInfoTodayTest(){
+			
+		
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "6891673", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12053527", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12052912", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		//inTxn.setSearchMoID( "19528186" );
+		// inTxn.setSearchSID( "81423" );
+		// inTxn.setSearchMeterNo( "01451503682" );
+		// inTxn.setSearchMSISDN( "231888210000" );
+		inTxn.setSearchStatusDesc( "FAILED" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		//Out out = m.setExportDataMultiInfoToday(in, new BeanItemContainer<>(OutTxn.class), new ArrayList<Item>() );
+		Out out = m.setExportDataMultiInfoToday(in, new BeanItemContainer<>(OutTxn.class), list );
+		
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	@Ignore
+	public void setExportDataMultiTokenTodayTest(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		inTxn.setSearchSID( "125565" );
+		
+		// inTxn.setSearchItronId( "12053870" );
+		// inTxn.setSearchMeterNo( "90099887766" );
+		//inTxn.setSearchTokenStatus( "P" );
+		//inTxn.setSearchTxnType( "VENDREQ" );
+		
+		
+
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "6891673", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12053527", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "itronId", new ObjectProperty( "12052912", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "tokenStatus", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "reqCount", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		// Out out = m.setExportDataMultiTokenToday(in, new BeanItemContainer<>(OutTxn.class), new ArrayList<Item>() );
+		Out out = m.setExportDataMultiTokenToday(in, new BeanItemContainer<>(OutTxn.class), list  );
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	@Ignore
+	public void setExportDataMultiPaymentTodayTest(){
+		
+		
+		
+		List<Item> list = new ArrayList<>();
+		
+		Item item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125565", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "125563", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		item = new PropertysetItem();
+		item.addItemProperty( "swiftaId", new ObjectProperty( "81423", String.class ));
+		item.addItemProperty( "date", new ObjectProperty( "", String.class ));
+		item.addItemProperty( "statusDesc", new ObjectProperty( "", String.class ));
+		
+		list.add( item );
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		
+		inTxn.setSearchMoID( "19" );
+	    inTxn.setSearchSID( "6" );
+		inTxn.setSearchMeterNo( "0" );
+		inTxn.setSearchMSISDN( "2" );
+		inTxn.setSearchStatusDesc( "COMPLETE" );
+		inTxn.setSearchReqCur( "L" );
+		inTxn.setSearchToken( "4" );
+		
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+		
+		// Out out = m.setExportDataMultiPaymentToday(in, new BeanItemContainer<>(OutTxn.class), new ArrayList<Item>() );
+
+		Out out = m.setExportDataMultiPaymentToday(in, new BeanItemContainer<>(OutTxn.class), list );
+		
+		Assert.assertNotNull( out );
+		log.debug( "Txn search status: "+out.getStatusCode() );
+		log.debug( "Txn search msg: "+out.getMsg() );
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	
+	
+	
+	
+	
 	
 
 }

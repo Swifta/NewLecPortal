@@ -80,6 +80,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		this.attachBtnUserSetCreds();
 		this.attachBtnUserChangeProfile();
 		this.attachBtnUserRefresh();
+		this.attachBtnUserDetailsClose();
 	}
 	
 	
@@ -211,6 +212,19 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		});
 	}
 	
+	private void attachBtnUserDetailsClose(){
+		btnUserDetailsClose.addClickListener( new ClickListener() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				processingPopup.close();
+				
+			}
+			
+		} );
+	}
+	
 	
 	private boolean refreshRecord(){
 		
@@ -338,7 +352,6 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		// TODO Test after
 		this.btnUserBlock.setVisible( false );
 		this.btnUserActivate.setVisible( false );
-		this.btnUserSetCreds.setVisible( false );
 		this.btnUserEditPersonalInfo.setVisible( false );
 		this.btnUserExpirePassword.setVisible( false );
 		this.btnUserExpireSession.setVisible( false );
@@ -369,10 +382,6 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 				record.getItemProperty( "userStatus" ).setValue( "Unknown" );
 			}
 			
-			if ( getCurrentUserProfileId() == 1 ) {
-				this.btnUserSetCreds.setVisible( true );
-			}
-			
 			if( record.getItemProperty( "userSession" ).getValue() == null || record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty() ){
 				 btnUserExpireSession.setVisible( false );
 			} else {
@@ -386,6 +395,14 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			} else {
 				btnUserExpirePassword.setVisible( true );
 			}
+			
+			
+
+			log.debug( " Logged in profile id: "+getCurrentUserProfileId() );
+			if ( getCurrentUserProfileId() == 1 ) {
+				this.btnUserSetCreds.setVisible( true );
+			}
+			
 			
 			
 		} else {
@@ -552,7 +569,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	private void showPopup() {
 		processingPopup.setContent(this);
 		processingPopup.center();
-		processingPopup.setClosable(false);
+		processingPopup.setClosable( true );
 		processingPopup.setEnabled(true);
 		processingPopup.setModal(true);
 		processingPopup.setDraggable(false);

@@ -38,7 +38,7 @@ public class MLogin extends Model {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
-		String q = "SELECT user_id, password, pass_salt, status, change_password,  profile_id  from users WHERE username = ? LIMIT 1";
+		String q = "SELECT u.user_id, u.password, u.pass_salt, u.status, u.change_password,  u.profile_id  from users AS u WHERE u.username = ? LIMIT 1";
 		
 		try {
 			 conn = dataSource.getConnection();
@@ -78,6 +78,7 @@ public class MLogin extends Model {
 				outLogin.setUserId(  rs.getLong( "user_id" ) );
 				outLogin.setStatus(  rs.getInt( "status" )+"" );
 				outLogin.setChangePassword( rs.getInt( "change_password" )+"");
+				outLogin.setTimeCorrection( getTimeCorrection() );
 				
 				
 				
@@ -154,6 +155,49 @@ public class MLogin extends Model {
 			connCleanUp( conn, ps, rs );
 		}
 		return false;
+	}
+	
+
+	private String getTimeCorrection( ) {
+		
+		
+		Connection conn = null; out = new Out();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		out = new Out();
+		String q = "SELECT s.setting_id, s.setting_m_epr, s.setting_core_epr, s.setting_time_correction FROM setting AS s";
+		try {
+			
+			 conn = dataSource.getConnection();
+			 conn.setReadOnly(true);
+			 
+			
+			ps = conn.prepareStatement( q );
+			
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			if( !rs.next() ) {
+				log.debug( "No result" );
+				
+				return null;
+			}
+				
+			return rs.getString( "setting_time_correction" );
+	
+			
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return null;
 	}
 
 }

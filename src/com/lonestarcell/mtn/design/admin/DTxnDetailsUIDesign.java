@@ -24,7 +24,8 @@ public class DTxnDetailsUIDesign extends VerticalLayout {
 	protected VerticalLayout cMMRightContent;
 	protected HorizontalLayout detailsHead;
 	protected Panel detailsPanel;
-	protected HorizontalLayout cBDHead21;
+	protected HorizontalLayout cBDHead211;
+	protected Button btnTxnDetailsClose;
 	protected VerticalLayout cBookingDetails2;
 	protected HorizontalLayout cBDHead3;
 	protected Label lbReqSID;

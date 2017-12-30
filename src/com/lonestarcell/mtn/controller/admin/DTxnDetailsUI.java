@@ -45,6 +45,7 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 		attachBtnTxnRefresh();
 		attachBtnTokenRetry();
 		attachBtnSendSMS();
+		attachBtnUserDetailsClose();
 	}
 	
 	
@@ -55,6 +56,20 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 
 	public void setRecord(Item record) {
 		this.record = record;
+	}
+	
+	
+	private void attachBtnUserDetailsClose(){
+		btnTxnDetailsClose.addClickListener( new ClickListener() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				processingPopup.close();
+				
+			}
+			
+		} );
 	}
 
 	private void attachBtnTxnRefresh() {
@@ -80,16 +95,16 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				MMo m = new MMo(  getCurrentUserId(), getCurrentUserSession()  );
-				double amount = 4230;
+				//double amount = 4230;
 				
 				In in = new In();
 				BData<InMo> inBData = new BData<>();
 				InMo inMo = new InMo();
-				inMo.setMmoId( "19876379" );
-				inMo.setAcctRef( "90099887766" );
-				inMo.setMsisdn( "231888210000" );
-				inMo.setAmount( ( amount*100 )+"" );
-				inMo.setCurrency( "LRD" );
+				inMo.setMmoId( (String) record.getItemProperty(  "mmoId" ).getValue() );
+				//inMo.setAcctRef( "90099887766" );
+				//inMo.setMsisdn( "231888210000" );
+				// inMo.setAmount( ( amount*100 )+"" );
+				//inMo.setCurrency( "LRD" );
 				
 				inBData.setData( inMo );
 				in.setData( inBData );
@@ -99,7 +114,7 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 					setUIData();
 				} else {
 					Notification.show("Oops... error sending SMS. Please try again later.",
-							Notification.Type.ERROR_MESSAGE);
+							Notification.Type.WARNING_MESSAGE);
 				}
 			}
 			
@@ -108,6 +123,8 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 
 	private void attachBtnTokenRetry() {
 		
+		log.debug( "Token retry attached." );
+		
 		this.btnTokenRetry.addClickListener( new ClickListener(){
 			private static final long serialVersionUID = 1L;
 
@@ -115,26 +132,34 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				MMo m = new MMo(  getCurrentUserId(), getCurrentUserSession()   );
-				double amount = 4230;
+				// double amount = 4230;
 				
 				In in = new In();
 				BData<InMo> inBData = new BData<>();
 				InMo inMo = new InMo();
-				inMo.setMmoId( "19876379" );
-				inMo.setAcctRef( "90099887766" );
-				inMo.setMsisdn( "231888210000" );
-				inMo.setAmount( ( amount*100 )+"" );
-				inMo.setCurrency( "LRD" );
+				// inMo.setMmoId( "19876379" );
+				inMo.setMmoId( (String) record.getItemProperty(  "mmoId" ).getValue() );
+				// inMo.setAcctRef( "90099887766" );
+				// inMo.setMsisdn( "231888210000" );
+				// inMo.setAmount( ( amount*100 )+"" );
+				//inMo.setCurrency( "LRD" );
 				
 				inBData.setData( inMo );
 				in.setData( inBData );
+				
+				log.debug( "Before calling token retry." );
+				
 				Out out = m.tokenRetry( in );
 				
 				if( out.getStatusCode() == 1 ) {
+					log.debug( "After calling token retry." );
 					setUIData();
+					Notification.show( out.getMsg() ,
+							Notification.Type.HUMANIZED_MESSAGE );
 				} else {
-					Notification.show("Oops... error sending SMS. Please try again later.",
-							Notification.Type.ERROR_MESSAGE);
+					Notification.show( out.getMsg(),
+							Notification.Type.WARNING_MESSAGE );
+					log.error( "After calling token retry with error.." );
 				}
 				
 				
@@ -240,7 +265,7 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 				&& !data.getPayStatus().getValue().equals( "FAILED" ) ){
 			
 			String status = data.getTokenStatus().getValue();
-			if( status != null && status.equals( "FAILED" ) ){
+			if( status != null && ( status.equals( "COMPLETE" ) || status.equals( "REVERSED" ) )   ){
 				this.btnTokenRetry.setEnabled( false );
 			}else{
 				this.btnTokenRetry.setEnabled( true );
@@ -480,6 +505,9 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 			if( out.getStatusCode() != 1 ) {
 				Notification.show("Oops... error updating data. Please  try again.",
 						Notification.Type.ERROR_MESSAGE);
+			} else {
+				Notification.show( "Details re(loaded) successfully.",
+						Notification.Type.HUMANIZED_MESSAGE);
 			}
 			
 		
@@ -497,7 +525,7 @@ public class DTxnDetailsUI extends DTxnDetailsUIDesign implements
 		processingPopup = new Window("Transaction Details");
 		processingPopup.setContent(this);
 		processingPopup.center();
-		processingPopup.setClosable(false);
+		processingPopup.setClosable( true );
 		processingPopup.setEnabled(true);
 		processingPopup.setModal(true);
 		processingPopup.setDraggable(false);

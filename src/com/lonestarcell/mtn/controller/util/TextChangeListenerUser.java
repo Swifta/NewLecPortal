@@ -41,7 +41,9 @@ public class TextChangeListenerUser<O> implements TextChangeListener{
 			inTxn.setSearchUsername( val );
 		}else if( itemId.equals( "profile" ) ) {
 			inTxn.setSearchProfile( val );
-		}else if( itemId.equals( "msisdn" ) ) {
+		}else if( itemId.equals( "org" ) ) {
+			inTxn.setSearchOrg( val );
+		}else if( itemId.equals( "userStatus" ) ) {
 			inTxn.setSearchUserStatus( val );
 		}
 		

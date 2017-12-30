@@ -15,6 +15,7 @@ import com.lonestarcell.mtn.bean.OutTxnDetails;
 
 public class MTxnDetails extends Model {
 
+	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(MTxnDetails.class.getName());
 	
 	private InTxnDetails inTxn;

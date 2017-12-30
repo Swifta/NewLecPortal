@@ -48,7 +48,7 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 		processingPopup = new Window("Exchange Rate Details");
 		processingPopup.setContent(this);
 		processingPopup.center();
-		processingPopup.setClosable(false);
+		processingPopup.setClosable( true );
 		processingPopup.setEnabled(true);
 		processingPopup.setModal(true);
 		processingPopup.setDraggable(false);
@@ -258,6 +258,11 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 	}
 
 	private void attachBtnNewFx() {
+		
+		if( this.getCurrentUserProfileId() != 1 && this.getCurrentUserProfileId() != 2  ){
+			btnNewFx.setVisible( false );
+			btnNewFx.setEnabled( false );
+		}
 
 		this.btnNewFx.addClickListener(new ClickListener() {
 
@@ -393,6 +398,10 @@ public class DFxFormUI extends DFxFormUIDesign implements DUIControllable {
 	
 	private String getCurrentUserSession(){
 		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.SESSION_VAR );
+	}
+	
+	private int getCurrentUserProfileId(){
+		return ( int ) UI.getCurrent().getSession().getAttribute( DLoginUIController.PROFILE_ID );
 	}
 
 }

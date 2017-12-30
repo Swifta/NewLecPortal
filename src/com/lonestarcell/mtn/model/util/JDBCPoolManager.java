@@ -20,14 +20,31 @@ public class JDBCPoolManager {
 
 		PoolProperties p = new PoolProperties();
 		p.setUrl("jdbc:mysql://localhost:3306/afrinnewdb_test");
-		// p.setUsername("swifta");
-		// p.setPassword("swift@123");
+		
+		// Remote test db
+		p.setUsername("swifta");
+		p.setPassword("swift@123");
+		
+		// Local test db
 		p.setUsername("test");
 		p.setPassword("adm!n");
+		
+		//p.setRemoveAbandoned( true );
+		//p.setTestOnBorrow( true );
+		//p.setValidationQuery( "SELECT 1" );
+		//p.setValidationInterval( 3600000 );
+		
+		
+		// Testing JDBC reconnection.
+		p.setMinEvictableIdleTimeMillis( 5000 );
+		p.setTimeBetweenEvictionRunsMillis( 5000 );
+		p.setMinIdle( 0 );
+		
 		p.setDriverClassName("com.mysql.jdbc.Driver");
 
 		dataSource = new DataSource(p);
 		dataSource.setPoolProperties(p);
+		//dataSource.
 
 	}
 

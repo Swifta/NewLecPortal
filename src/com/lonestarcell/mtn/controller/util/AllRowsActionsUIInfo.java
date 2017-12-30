@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,26 +12,31 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.MTxn;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn, TextChangeListenerTxn<OutTxn> >{
+public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn, TextChangeListenerInfo<OutTxn> >{
 
 	private static final long serialVersionUID = 1L;
 	
 	private Logger log = LogManager.getLogger( AllRowsActionsUIInfo.class.getName() );
 
-	public AllRowsActionsUIInfo( MTxn mTxn, Grid grid, In in, boolean allowDateFilters,
+	public AllRowsActionsUIInfo( MTxn mTxn, Grid grid, In in, boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
-		super(in, allowDateFilters, pageC);
+		super(in, allowDateFilters, isHeader, pageC);
 		this.setModel( mTxn );
 		this.setGrid( grid );
 		this.init();
@@ -47,7 +54,7 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 		outTxnMeta.setTotalRevenue( new ObjectProperty<String>( "0", String.class ) );
 		outTxnMeta.setTotalRecord( new ObjectProperty<String>( "0", String.class ) );
 		
-		Out out = model.setTxnMeta( in, outTxnMeta );
+		Out out = model.searchInfoRetryMeta( in, outTxnMeta );
 		if( out.getStatusCode() != 1 )
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
 		
@@ -55,10 +62,12 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 
 	@Override
 	protected void setNewPage(int page) {
+		super.setNewPage(page);
 		container.removeAllItems();
 		inTxn.setPage( page );
 		// TODO validate input
-		model.setInfoRetryToday(in, container );
+		model.searchInfoRetryToday(in, container );
+		
 		format();
 		
 	}
@@ -68,8 +77,8 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 	
 		container.removeAllItems();
 		//TODO validate response
-		Out out = model.setInfoRetryToday(in, container );
-		model.setTxnMeta(in, outTxnMeta );
+		Out out = model.searchInfoRetryToday(in, container );
+		model.searchInfoRetryMeta(in, outTxnMeta );
 		
 		if( out.getStatusCode() != 1 ) {
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
@@ -91,7 +100,7 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 		HeaderCell cFilter = filterHeader.getCell(itemId);
 		cFilter.setComponent(tF);
 		
-		TextChangeListenerTxn<OutTxn> tChangeListener = getTextChangeListner( container, itemId, tF );
+		TextChangeListenerInfo<OutTxn> tChangeListener = getTextChangeListner( container, itemId, tF );
 		tF.addTextChangeListener( tChangeListener );
 		tFSearchFields.add( tF );
 		
@@ -116,27 +125,6 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 			@Override
 			public void handleAction(Object sender, Object target) {
 				log.debug( "Enter search shortcut clicked." );
-				String val = tF.getValue();
-				if( val == null )
-					return;
-				val = val.trim();
-				if( val.isEmpty() )
-					return;
-				
-				
-				if( (inTxn.getSearchSID() == null )
-						&& ( inTxn.getSearchMoID() == null )
-						&& ( inTxn.getSearchMeterNo() == null )
-						&& ( inTxn.getSearchMSISDN() == null )
-						&& ( inTxn.getSearchStatusDesc() == null ) ){
-					
-					log.debug( "No search required." );
-					
-					return;
-					
-				} 
-				
-				
 				container.removeAllItems();
 				
 				log.debug( "Proceeding with search." );
@@ -150,9 +138,9 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 				
 				
 				
-				Out out = model.setInfoRetryToday(in, container );
+				Out out = model.searchInfoRetryToday(in, container );
 				
-				model.setTxnMeta( in, outTxnMeta );
+				model.searchInfoRetryMeta( in, outTxnMeta );
 				
 				if( out.getStatusCode() != 1 ){
 					Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
@@ -181,9 +169,52 @@ public class AllRowsActionsUIInfo extends AbstractAllRowsActionsUI<MTxn, OutTxn,
 	}
 
 	@Override
-	protected TextChangeListenerTxn<OutTxn> getTextChangeListner(
+	protected TextChangeListenerInfo<OutTxn> getTextChangeListner(
 			BeanItemContainer<OutTxn> container, String itemId, TextField tF) {
-			return new TextChangeListenerTxn<OutTxn>( container, inTxn, itemId, tF );
+			return new TextChangeListenerInfo<OutTxn>( container, inTxn, itemId, tF );
+	}
+
+	@Override
+	protected void initDataExportUI() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void attachBtnExportOps() {
+			
+			this.btnExportOps.addClickListener( new ClickListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					
+					new DataExportUIInfo( model, in, new ArrayList<Item>(), moreDropDown );
+
+					
+				}
+				
+			});
+			
+			
+			this.btnExportOps.addBlurListener( new BlurListener(){
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void blur(BlurEvent event) {
+					
+					// btnExportOps.removeStyleName( "sn-btn-export-ops-active" );
+					moreDropDown.removeStyleName( "sn-data-export-active" );
+					log.debug( " Export menu blurred." );
+					
+				}
+				
+			});
+			
+			
+		
 	}
 
 }

@@ -11,20 +11,25 @@ import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InMo;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutConfig;
 import com.lonestarcell.mtn.bean.OutMo;
 import com.lonestarcell.mtn.service.client.MTNMomoClient;
 import com.lonestarcell.mtn.util.Money;
 
 public class MMo extends Model{
 
+	private static final long serialVersionUID = 1L;
+
 	private Logger log = LogManager.getLogger(MMo.class.getName());
 	
 	private MTNMomoClient momo;
+	private OutConfig outConfig;
 	
 	public MMo( Long d, String s) {
 		super( d, s );
 		
 		momo = new MTNMomoClient();
+		
 		
 		log.debug( " MTN MOMO Client initialized successfully." );
 
@@ -101,8 +106,10 @@ public class MMo extends Model{
 			inMo.setMsisdn( rs.getString( "msisdn" ) );
 			
 			OutMo outMo = new OutMo();
+			
+			outConfig = this.getConfig();
 			 
-			 boolean status = momo.setSendAXIOMAxis2Request( inMo );
+			 boolean status = momo.setSendAXIOMAxis2Request( inMo, outConfig.getMediatorEPR() );
 			 
 			 
 			if( status ) {
@@ -196,14 +203,16 @@ public class MMo extends Model{
 			}
 			
 			inMo.setAcctRef( rs.getString( "meter_no" ) );
+			
+			// All amounts multiply by 100.
 			if( rs.getLong( "rate_id" ) == 0 ) {
 				
-				inMo.setAmount( Money.format( rs.getDouble( "amount" ) ) );
+				inMo.setAmount( Money.format( rs.getDouble( "amount" )*100 ) );
 				inMo.setCurrency( "USD" );
 				
 			} else {
 				
-				inMo.setAmount( Money.format( rs.getDouble( "amount" )*rs.getFloat( "rate" ) ) );
+				inMo.setAmount( Money.format( rs.getDouble( "amount" )*rs.getFloat( "rate" )*100 ) );
 				inMo.setCurrency( "LRD" );
 			}
 	
@@ -226,8 +235,9 @@ public class MMo extends Model{
 			ps.executeUpdate() ;
 			
 			log.debug( "ReQ. Cur: "+inMo.getCurrency() );
-			 
-			 boolean status = momo.sendSMS( inMo );
+			
+			 OutConfig config = this.getConfig();
+			 boolean status = momo.sendSMS( inMo, config.getCoreEPR() );
 			 log.debug( "SMS Req. status: "+status );
 			 
 			if( status ) {
@@ -257,6 +267,102 @@ public class MMo extends Model{
 		
 		return out;
 	}
+	
+	
+	@Override
+	protected Out checkAuthorization() {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		out = new Out();
+		
+		
+		
+		String q = "SELECT o.organization_status AS org_status, u.user_id, u.status, u.profile_id, u.user_session, u.change_password FROM users AS u";
+		q += " JOIN organization AS o ON o.id = u.organization_id";
+		q += " WHERE u.user_id = ?";
+		q += " LIMIT 1;";
+		
+		
+		try {
+			
+			 conn = dataSource.getConnection();
+			 conn.setReadOnly(true);
+			 
+			ps = conn.prepareStatement( q );
+			ps.setLong( 1, userAuthId );
+			
+			
+			log.debug( "Query: "+ps.toString() );
+			
+			rs = ps.executeQuery();
+			
+			
+			if( !rs.next() ) {
+				log.debug( "No authorization data" );
+				out.setMsg( "No authorization data" );
+				return out;
+			}
+			
+			if( rs.getString( "user_session" ) == null || !rs.getString( "user_session" ).equals( userAuthSession ) ){
+			//if( rs.getString( "user_session" ) == null || !rs.getString( "user_session" ).equals( userSession ) ){
+
+				log.debug( "Login session expired" );
+				// log.debug( "Admin username: "+username+" Session: "+userSession );
+				out.setMsg( "Not authorized [ Authorization session expired. ]" );
+				out.setStatusCode( 403 );
+				return out;
+			}
+		
+			
+			if( rs.getShort( "status" ) != 1 ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ invalid account state ]" );
+				return out;
+			}
+			
+			if( rs.getShort( "change_password" ) == 1 ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ Pending account password reset ]" );
+				return out;
+				
+			}
+					
+			
+			if( rs.getShort( "org_status" ) != 1 ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ Invalid organization state ]" );
+				return out;
+			}
+			
+			if( rs.getShort( "profile_id" ) != 3 && rs.getShort( "profile_id" ) != 1  ){
+				log.debug( "Not authorized" );
+				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
+				return out;
+			}
+			
+			BData<Long> bOutData = new BData<>();
+			bOutData.setData(  rs.getLong( "user_id" ) );
+			out.setData( bOutData );
+			
+			
+			out.setStatusCode( 1 );
+			out.setMsg( "Account authorized for operation." );
+
+		} catch (Exception e) {
+			log.error( e.getMessage() );
+			out.setMsg( "Could not complete operation. " );
+			e.printStackTrace();
+			
+		} finally {
+			connCleanUp( conn, ps, rs );
+		}
+		
+		return out;
+	}
+	
 		
 	
 }

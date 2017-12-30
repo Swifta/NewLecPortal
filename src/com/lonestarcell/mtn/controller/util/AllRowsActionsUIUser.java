@@ -26,9 +26,9 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	
 	private Logger log = LogManager.getLogger( AllRowsActionsUITxn.class.getName() );
 
-	public AllRowsActionsUIUser( MUser model, Grid grid, In in, boolean allowDateFilters,
+	public AllRowsActionsUIUser( MUser model, Grid grid, In in, boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
-		super(in, allowDateFilters, pageC);
+		super(in, allowDateFilters, isHeader, pageC);
 		this.setModel( model );
 		this.setGrid( grid );
 		this.init();
@@ -38,6 +38,16 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	protected void setModel( MUser model ){
 		this.model = model;
 	}
+	
+	@Override
+	protected void setContent(){
+		
+		//Disable data export for users.
+		this.btnExport.setVisible( false );
+		this.btnExportOps.setVisible( false );
+		super.setContent();
+		this.lbTotalRevenue.setVisible( false );
+	}
 
 	@Override
 	protected void setOutTxnMeta() {
@@ -46,7 +56,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 		outTxnMeta.setTotalRevenue( new ObjectProperty<String>( "0", String.class ) );
 		outTxnMeta.setTotalRecord( new ObjectProperty<String>( "0", String.class ) );
 		
-		Out out = model.setTxnMeta( in, outTxnMeta );
+		Out out = model.searchUserMeta( in, outTxnMeta );
 		if( out.getStatusCode() != 1 )
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
 		
@@ -54,9 +64,10 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 
 	@Override
 	protected void setNewPage(int page) {
+		super.setNewPage( page );
 		container.removeAllItems();
 		inTxn.setPage( page );
-		model.setUsers(in, container );
+		model.searchUsers(in, container );
 		format();
 		
 	}
@@ -65,8 +76,8 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	protected void refreshGridData() {
 	
 		container.removeAllItems();
-		Out out = model.setUsers(in, container );
-		model.setTxnMeta(in, outTxnMeta );
+		Out out = model.searchUsers(in, container );
+		model.searchUserMeta(in, outTxnMeta );
 		
 		if( out.getStatusCode() != 1 ) {
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
@@ -113,27 +124,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 			@Override
 			public void handleAction(Object sender, Object target) {
 				log.debug( "Enter search shortcut clicked." );
-				String val = tF.getValue();
-				if( val == null )
-					return;
-				val = val.trim();
-				if( val.isEmpty() )
-					return;
-				
-				
-				if( (inTxn.getSearchEmail() == null )
-						&& ( inTxn.getSearchUsername() == null )
-						&& ( inTxn.getSearchProfile() == null )
-						&& ( inTxn.getSearchUserStatus() == null )
-						 ){
-					
-					log.debug( "No search required." );
-					
-					return;
-					
-				} 
-				
-				
+			
 				container.removeAllItems();
 				
 				log.debug( "Proceeding with search." );
@@ -147,9 +138,9 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 				
 				
 				
-				Out out = model.setUsers(in, container );
+				Out out = model.searchUsers( in, container );
 				
-				model.setTxnMeta( in, outTxnMeta );
+				model.searchUserMeta( in, outTxnMeta );
 				
 				if( out.getStatusCode() != 1 ){
 					Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
@@ -181,6 +172,18 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	protected TextChangeListenerUser<OutUser> getTextChangeListner(
 			BeanItemContainer<OutUser> container, String itemId, TextField tF) {
 		return new TextChangeListenerUser<OutUser>( container, inTxn, itemId, tF );
+	}
+
+	@Override
+	protected void initDataExportUI() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void attachBtnExportOps() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

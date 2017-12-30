@@ -7,6 +7,7 @@ public class InSettings {
 	private String username;
 	private String userSession;
 	private BeanItemContainer< OutProfile > profileContainer;
+	private OutConfig config;
 	public String getUsername() {
 		return username;
 	}
@@ -25,6 +26,14 @@ public class InSettings {
 	public void setProfileContainer(BeanItemContainer<OutProfile> profileContainer) {
 		this.profileContainer = profileContainer;
 	}
+	public OutConfig getConfig() {
+		return config;
+	}
+	public void setConfig( OutConfig config) {
+		this.config = config;
+	}
+	
+	
 	
 	
 	

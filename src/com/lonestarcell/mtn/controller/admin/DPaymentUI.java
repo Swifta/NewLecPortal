@@ -71,7 +71,7 @@ public class DPaymentUI extends DTxnUIDesign implements DUserUIInitializable<DMa
 				
 				if( isHMenuActiveBtn( btnArchive ) ) 
 					return;
-				new DPaymentArchiveUI( getParentUI() );
+				new DPaymentStateArchiveUI( getParentUI() );
 				btnArchive.addStyleName( "sn-left-menu-active" );
 				btnDay.removeStyleName( "sn-left-menu-active" );
 				

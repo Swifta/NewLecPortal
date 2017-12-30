@@ -23,7 +23,7 @@
            <vaadin-button icon="fonticon://FontAwesome/f155" description="View/Add Foreign Exchange Rate" style-name="borderless icon-align-right" width-full plain-text _id="btnFxRate" :right>
              Fx. Rate 
            </vaadin-button> 
-           <vaadin-button icon="fonticon://FontAwesome/f085" description="Platform settings" style-name="borderless icon-align-right" width-full plain-text _id="btnPlaces" :right>
+           <vaadin-button icon="fonticon://FontAwesome/f085" description="Platform settings" style-name="borderless icon-align-right" width-full plain-text _id="btnSettings" :right>
              Settings 
            </vaadin-button> 
            <vaadin-button icon="fonticon://FontAwesome/f0f0" description="View/Modify your profile" style-name="borderless icon-align-right" width-full plain-text _id="btnUserProfile" :right>
@@ -42,30 +42,30 @@
     <vaadin-vertical-layout style-name="sn-logo-area sn-side-page-margin sn-ref" size-auto _id="logoArea"> 
      <vaadin-horizontal-layout spacing> 
       <vaadin-vertical-layout style-name="sn-logo-c" size-auto> 
-       <vaadin-button style-name="icon-align-top sn-img-button-link sn-sys-name-small" width="228px" height="168px" plain-text :expand>
+       <vaadin-button description="MTN LEC &amp; Token Payment Reference System" style-name="icon-align-top sn-img-button-link sn-sys-name-small" width="228px" height="168px" plain-text :expand>
          MTN LEC Token &amp; Payment 
        </vaadin-button> 
       </vaadin-vertical-layout> 
       <vaadin-horizontal-layout style-name="sn-page-location-c" spacing :bottom> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuDash">
+       <vaadin-button description="Overral System Statistics" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuDash">
          Dashboard 
        </vaadin-button> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuTxn">
+       <vaadin-button description="Transaction records" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuTxn">
          Transaction 
        </vaadin-button> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuPayment">
+       <vaadin-button description="Payment &amp; SMS records" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuPayment">
          Payment &amp; SMS 
        </vaadin-button> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuToken">
-         ITRON 
+       <vaadin-button description="ITRON Vend Request Records" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuToken">
+         ITRON VEND 
        </vaadin-button> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuInfo">
+       <vaadin-button description="ITRON Customer Info Requests &amp; Vend Retry" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuInfo">
          INFO &amp; Others 
        </vaadin-button> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuUser">
+       <vaadin-button description="Users" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuUser">
          User 
        </vaadin-button> 
-       <vaadin-button style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuMisc">
+       <vaadin-button visible="false" description="Miscellaneous" style-name="sn-button-link sn-hor-menu-small" plain-text _id="btnHMenuMisc">
          Misc. 
        </vaadin-button> 
       </vaadin-horizontal-layout> 

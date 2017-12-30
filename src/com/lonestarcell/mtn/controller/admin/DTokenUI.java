@@ -71,7 +71,7 @@ public class DTokenUI extends DTxnUIDesign implements DUserUIInitializable<DMain
 				
 				if( isHMenuActiveBtn( btnArchive ) ) 
 					return;
-				new DTokenArchiveUI( getParentUI() );
+				new DTokenStateArchiveUI( getParentUI() );
 				btnArchive.addStyleName( "sn-left-menu-active" );
 				btnDay.removeStyleName( "sn-left-menu-active" );
 				

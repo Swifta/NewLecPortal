@@ -16,7 +16,19 @@
 			Should be deployed to the server -->
 		<conf name="nodeploy" />
 	</configurations>
+	
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
+		
+		<dependency 
+   org="org.vaadin.addons" 
+   name="exporter" 
+   rev="0.0.6" />
+   
+   <dependency 
+   org="org.vaadin.addons" 
+   name="vaadin-excel-exporter" 
+   rev="1.0.6" />
+   
 		<!-- The core server part of Vaadin -->
 		<dependency org="com.vaadin" name="vaadin-server" rev="&vaadin.version;" />
 

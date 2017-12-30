@@ -1,5 +1,6 @@
 package com.lonestarcell.mtn.model.admin;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
@@ -12,16 +13,24 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.bean.InSettings;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutConfig;
 import com.lonestarcell.mtn.model.util.JDBCPoolManager;
 
-public class Model {
+public class Model  implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	protected static DataSource dataSource;
 	protected Long userAuthId;
-	protected String userAuthSession;
+	protected String userAuthSession, timeCorrection;
 	public Out out;
 	private Logger log = LogManager.getLogger();
+	
+	public Model(){
+		
+	}
 	
 	static {
 		try {
@@ -115,7 +124,7 @@ public class Model {
 	}
 	
 	
-	public Out checkAuthorization( ) {
+	protected Out checkAuthorization( ) {
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -458,6 +467,26 @@ public class Model {
 		}
 		
 		return out;
+	}
+	
+	protected OutConfig getConfig(){
+		
+		MSettings m = new MSettings( this.userAuthId, this.userAuthSession );
+		InSettings inData = new InSettings();
+		
+		inData.setConfig( new OutConfig() );
+		
+		BData< InSettings > bData = new BData<>();
+		bData.setData( inData );
+		
+		In in = new In();
+		in.setData( bData );
+		
+		Out out = m.setConfig(in );
+		if( out.getStatusCode() == 1 )
+			return inData.getConfig();
+		return null;
+		
 	}
 
 }

@@ -47,7 +47,7 @@ public class TextChangeListenerTxn<O> implements TextChangeListener{
 			inTxn.setSearchStatusDesc( val );
 		}
 		
-		container.removeContainerFilters(itemId);
+		container.removeContainerFilters( itemId );
 		if (val != null && !val.isEmpty()) {
 			container.addContainerFilter(new SimpleStringFilter(itemId,
 					val, true, false));

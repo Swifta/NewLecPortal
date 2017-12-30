@@ -302,7 +302,7 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 	private void showPopup() {
 		processingPopup.setContent(this);
 		processingPopup.center();
-		processingPopup.setClosable(false);
+		processingPopup.setClosable( true );
 		processingPopup.setEnabled(true);
 		processingPopup.setModal(true);
 		processingPopup.setDraggable(false);

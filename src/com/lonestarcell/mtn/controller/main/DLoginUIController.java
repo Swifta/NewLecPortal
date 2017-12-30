@@ -3,8 +3,6 @@ package com.lonestarcell.mtn.controller.main;
 import java.util.Calendar;
 import java.util.Iterator;
 
-import javax.swing.text.Keymap;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +40,7 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 	public static final String USERNAME = "username";
 	public static final String USER_ID = "userId";
 	public static final String PROFILE_ID = "profileId";
+	public static final String TIME_CORRECTION = "timeCorrection";
 	
 	
 	private Logger log = LogManager.getLogger( DLoginUIController.class.getClass().getName() );
@@ -190,6 +189,11 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 		.getSession()
 		.setAttribute(DLoginUIController.USER_ID,
 				outData.getUserId() );
+		
+		UI.getCurrent()
+		.getSession()
+		.setAttribute(DLoginUIController.TIME_CORRECTION,
+				outData.getTimeCorrection() );
 		
 		
 		UI.getCurrent().getNavigator().navigateTo( "management" );
@@ -501,7 +505,7 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 		Object sessionVar = UI.getCurrent().getSession()
 				.getAttribute(DLoginUIController.SESSION_VAR);
 		Object profileId = UI.getCurrent().getSession()
-				.getAttribute(DLoginUIController.PROFILE_ID);
+				.getAttribute(DLoginUIController.PROFILE_ID );
 		if (username != null && sessionVar != null && profileId != null)
 			UI.getCurrent().getNavigator().navigateTo("management");
 
@@ -642,8 +646,9 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 		Calendar cal = Calendar.getInstance();
 		String currentYear = cal.get( Calendar.YEAR )+"";
 		
+		// Cool set as property.
 		
-		this.lbClient.setValue( "&nbspMTN Liberia,&nbsp" );
+		this.lbClient.setValue( "&nbspMTN Benin,&nbsp" );
 		this.lbCRYearStart.setValue( startYear );
 		this.lbCRYearCurrent.setValue( currentYear );
 		

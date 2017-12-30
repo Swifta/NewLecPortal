@@ -4,12 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InSettings;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutConfig;
 import com.lonestarcell.mtn.bean.OutProfile;
 import com.lonestarcell.mtn.model.admin.MSettings;
 import com.vaadin.data.util.BeanItemContainer;
@@ -21,18 +23,15 @@ public class MSettingsTest {
 	
 	@BeforeClass
 	public static void init(){
-		m = new MSettings( 1L, "" );
+		m = new MSettings( 1L, "qlsp3kc60bdd0jif085s2dilf9" );
 	}
 
 	
 	@Test
-	// @Ignore
-	public void setUserDetailsTest(){
+	@Ignore
+	public void setProfileTest(){
 			
 		InSettings inData = new InSettings();
-		inData.setUsername( "admin" );
-		inData.setUserSession( "ir6c9d1b4b5gb47u6asfnp244s" );
-		
 		
 		inData.setProfileContainer( new BeanItemContainer<>( OutProfile.class) );
 		
@@ -46,6 +45,56 @@ public class MSettingsTest {
 		Assert.assertNotNull( out );
 		log.debug( "Set profiles msg: "+out.getMsg() );
 		log.debug( "Set profiles status: "+out.getStatusCode() );
+		
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	@Test
+	@Ignore
+	public void setConfigTest(){
+			
+		InSettings inData = new InSettings();
+		
+		inData.setConfig( new OutConfig() );
+		
+		BData< InSettings > bData = new BData<>();
+		bData.setData( inData );
+		
+		In in = new In();
+		in.setData( bData );
+		
+		Out out = m.setConfig(in );
+		Assert.assertNotNull( out );
+		log.debug( "Set config msg: "+out.getMsg() );
+		log.debug( "Set config status: "+out.getStatusCode() );
+		
+		Assert.assertTrue( out.getStatusCode() == 1 );
+	}
+	
+	@Test
+	// @Ignore
+	public void updateConfigTest(){
+			
+		InSettings inData = new InSettings();
+		
+		OutConfig data = new OutConfig();
+		data.setCoreEPR( "http://127.0.0.1:976667/services/MTNLECPaymentService/" );
+		data.setMediatorEPR( "http://127.0.0.1:8280/services/lecproxyx" );
+		data.setTimeCorrection( "23:13:59" );
+		data.setId( 1 );
+		
+		inData.setConfig( data );
+		
+		BData< InSettings > bData = new BData<>();
+		bData.setData( inData );
+		
+		In in = new In();
+		in.setData( bData );
+		
+		Out out = m.updateConfig(in );
+		Assert.assertNotNull( out );
+		log.debug( "Set config msg: "+out.getMsg() );
+		log.debug( "Set config status: "+out.getStatusCode() );
 		
 		Assert.assertTrue( out.getStatusCode() == 1 );
 	}

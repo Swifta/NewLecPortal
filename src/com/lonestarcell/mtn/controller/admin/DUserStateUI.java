@@ -76,6 +76,9 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 
 	@Override
 	public void setContent() {
+		
+		
+		 
 		setHeader();
 		setFooter();
 		setBeanItemContainer( new BeanItemContainer<>( OutUser.class ) );
@@ -245,8 +248,8 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			HeaderCell dateFilterCellH = header.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "dateAdded", "actions"  );
 			PaginationUIController pageC = new PaginationUIController( );
 			
-			AllRowsActionsUIUser allRowsActionsUIUse = new AllRowsActionsUIUser( mTxn, grid, in, true, pageC );
-			dateFilterCellH.setComponent( new AllRowsActionsUIUser( mTxn, grid, in, true, pageC ) );
+			AllRowsActionsUIUser allRowsActionsUIUse = new AllRowsActionsUIUser( mTxn, grid, in, true, true, pageC );
+			dateFilterCellH.setComponent( allRowsActionsUIUse );
 			
 			header.setStyleName( "sn-date-filter-row" );
 			dateFilterCellH.setStyleName( "sn-no-border-right sn-no-border-left" );
@@ -254,7 +257,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			// Footer config
 			FooterCell dateFilterCellF = footer.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "dateAdded", "actions"  );
 		
-			dateFilterCellF.setComponent( new AllRowsActionsUIUser( mTxn, grid, in, false, pageC ) );
+			dateFilterCellF.setComponent( new AllRowsActionsUIUser( mTxn, grid, in, false, false, pageC ) );
 			
 			//Init pagination controller after both header and footer have been set.
 			pageC.init();
@@ -414,28 +417,13 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			
 			
 			this.addComponent( btnDetails );
-
-			if( getCurrentUserId() != (long) record.getItemProperty( "userId" ).getValue() ){
-				if( record.getItemProperty( "userStatus" ).getValue().toString().equals( "BLOCKED" ) ){
-					this.addComponent( btnEnable );
-				}else if ( record.getItemProperty( "userStatus" ).getValue().toString().equals( "ACTIVE" ) ){
-					this.addComponent( btnDisable );
-				}
-				
-				String changePass = record.getItemProperty( "changePass" ).getValue().toString();
-				if( changePass.equals( "0" ) && !record.getItemProperty( "userStatus" ).getValue().toString().equals( "REGISTERED" ) ){
-					this.addComponent( btnExpirePass );
-				}
-				
-				if( record.getItemProperty( "userSession" ).getValue() == null 
-						||  record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty()){
-				} else {
-					this.addComponent( btnExpireSession );
-				}
-				
-			} 
-			
+			this.addComponent( btnDisable );
+			this.addComponent( btnExpirePass );
+			this.addComponent( btnExpireSession );
+			this.addComponent( btnEnable );
 			this.addComponent( btnRefresh );
+			
+			format();
 			
 		}
 		
@@ -529,6 +517,8 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 								"Refresh operation failed.",
 								Notification.Type.ERROR_MESSAGE );
 					
+					format();
+					
 				}
 				
 			});
@@ -564,6 +554,40 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 				}
 				
 			});
+		}
+		
+		private void format(){
+			
+			
+			
+			log.debug( "format called." );
+			
+			btnEnable.setVisible( false );
+			btnDisable.setVisible( false );
+			btnExpirePass.setVisible( false );
+			btnExpireSession.setVisible( false );
+
+			if( getCurrentUserId() != (long) record.getItemProperty( "userId" ).getValue() ){
+				if( record.getItemProperty( "userStatus" ).getValue().toString().equals( "BLOCKED" ) ){
+					btnEnable.setVisible( true );
+				}else if ( record.getItemProperty( "userStatus" ).getValue().toString().equals( "ACTIVE" ) ){
+					btnDisable.setVisible( true );
+				}
+				
+				String changePass = record.getItemProperty( "changePass" ).getValue().toString();
+				if( changePass.equals( "0" ) && !record.getItemProperty( "userStatus" ).getValue().toString().equals( "REGISTERED" ) ){
+					btnExpirePass.setVisible( true );
+				}
+				
+				if( record.getItemProperty( "userSession" ).getValue() == null 
+						||  record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty()){
+				} else {
+					btnExpireSession.setVisible( true );
+				}
+				
+			} 
+			
+			
 		}
 
 		
@@ -717,7 +741,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			btnExport.setIcon( FontAwesome.SHARE_SQUARE_O );
 			btnRefresh.setIcon( FontAwesome.REFRESH );
 			
-			this.addComponent( btnExport );
+			// this.addComponent( btnExport );
 			this.addComponent( btnRefresh );
 			
 			btnEnable = new Button( );
@@ -758,6 +782,9 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		}
 
 		protected void init() {
+			
+			// Disable data export for users.
+			
 			this.setContent();
 			this.attachCommandListeners();
 			
@@ -1029,9 +1056,9 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 	}
 		
 		
-		protected Out refreshMultiUserRecord( ){
-			return mTxn.refreshMultiUserRecord( records );
-		}
+	protected Out refreshMultiUserRecord( ){
+		return mTxn.refreshMultiUserRecord( records );
+	}
 		
 		
 	}

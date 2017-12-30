@@ -28,6 +28,7 @@ public class DDashTxnUIDesign extends VerticalLayout {
 	protected Button btnTxnSuccess;
 	protected Button btnTxnFail;
 	protected Button btnTxnTotal;
+	protected Button btnRefreshTxn;
 	protected VerticalLayout cMobileAd7;
 	protected HorizontalLayout cMM18;
 	protected Label lbSMSPer;
@@ -36,6 +37,7 @@ public class DDashTxnUIDesign extends VerticalLayout {
 	protected Button btnSMSSuccess;
 	protected Button btnSMSFail;
 	protected Button btnSMSTotal;
+	protected Button btnRefreshSMS;
 	protected VerticalLayout cMobileAd711;
 	protected HorizontalLayout cMM1811;
 	protected Label lbTokenPer;
@@ -44,6 +46,7 @@ public class DDashTxnUIDesign extends VerticalLayout {
 	protected Button btnTokenSuccess;
 	protected Button btnTokenFail;
 	protected Button btnTokenTotal;
+	protected Button btnRefreshToken;
 	protected VerticalLayout cMobileAd72;
 	protected HorizontalLayout cMM182;
 	protected Label lbInfoPer;
@@ -52,6 +55,7 @@ public class DDashTxnUIDesign extends VerticalLayout {
 	protected Button btnInfoSuccess;
 	protected Button btnInfoFail;
 	protected Button btnInfoTotal;
+	protected Button btnRefreshInfo;
 
 	public DDashTxnUIDesign() {
 		Design.read(this);

@@ -7,8 +7,7 @@ import com.vaadin.data.Item;
 public class OutLogin implements Serializable{
 	
 	private static final long serialVersionUID = -5510898681155125171L;
-	private String sessionVar, username, password;
-	private String status, changePassword;
+	private String timeCorrection, sessionVar, username, password, status, changePassword;
 	private int profileId;
 	private Long userId;
 	
@@ -61,6 +60,12 @@ public class OutLogin implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getTimeCorrection() {
+		return timeCorrection;
+	}
+	public void setTimeCorrection(String timeCorrection) {
+		this.timeCorrection = timeCorrection;
 	}
 	
 	

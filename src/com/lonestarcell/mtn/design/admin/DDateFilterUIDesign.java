@@ -7,6 +7,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 
 /** 
@@ -28,7 +29,12 @@ public class DDateFilterUIDesign extends HorizontalLayout {
 	protected Button btnFilter;
 	protected Button btnRefresh;
 	protected Button btnClearFilters;
+	protected HorizontalLayout cDataExport;
 	protected Button btnExport;
+	protected Button btnExportOps;
+	protected VerticalLayout moreDropDown;
+	protected Button btnExportOps1;
+	protected Button btnExportOps11;
 	protected Label lbTotalRecords;
 	protected FormLayout cRevenue;
 	protected Label lbTotalRevenue;
