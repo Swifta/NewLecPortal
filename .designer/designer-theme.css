@@ -13098,7 +13098,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .lec_portal .sn-in-logo {
-	background: url("logo_lonestar.PNG");
+	background: url("logo.PNG");
 }
 
 .lec_portal .sn-left-menu-c .v-button {
@@ -13148,6 +13148,9 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .sn-more-drop-down .v-button {
 	text-align: right;
 	padding: 0px 5px;
+}
+
+.lec_portal .sn-main-ops .v-button {
 	margin-right: 10px;
 }
 
@@ -13674,7 +13677,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 	margin: 0;
 	background-color: #fff;
-	background: transparent url("img/logo_lonestar.PNG") no-repeat scroll center 30%;
+	background: transparent url("img/logo.PNG") no-repeat scroll center 30%;
 	line-height: 16;
 	color: #e4130a;
 }
@@ -13691,7 +13694,7 @@ div.v-layout.v-horizontal.v-widget {
 	border: none;
 	padding: 0;
 	margin: 0;
-	background: transparent url("img/logo_lonestar.PNG") no-repeat scroll center 30%;
+	background: transparent url("img/logo.PNG") no-repeat scroll center 30%;
 	color: #e4130a;
 	line-height: 14;
 }

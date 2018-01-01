@@ -27,6 +27,7 @@ public class DUserUIDesign extends HorizontalLayout {
 	protected Panel leftBar;
 	protected Button btnUsers;
 	protected Button btnNewUser;
+	protected Button btnUserRolePerm;
 	protected VerticalLayout cForms;
 	protected VerticalLayout cBookingDetails3;
 	protected HorizontalLayout cBDHead3;
