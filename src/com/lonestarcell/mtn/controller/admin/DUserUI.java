@@ -43,6 +43,7 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	public void attachCommandListeners() {
 		this.attachBtnNewUser();
 		this.attachBtnUsers();
+		this.attachBtnRolePerm();
 	}
 	
 	private void attachBtnNewUser(){
@@ -57,8 +58,8 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 					return;
 				
 				new DNewUserUI( getParentUI() );
-				btnNewUser.addStyleName( "sn-left-menu-active" );
-				btnUsers.removeStyleName( "sn-left-menu-active" );
+				// btnNewUser.addStyleName( "sn-left-menu-active" );
+				// btnUsers.removeStyleName( "sn-left-menu-active" );
 				
 			}
 			
@@ -78,8 +79,29 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 				if( isHMenuActiveBtn( btnUsers ) )
 					return;
 				new DUserStateUI( getParentUI() );
-				btnUsers.addStyleName( "sn-left-menu-active" );
-				btnNewUser.removeStyleName( "sn-left-menu-active" );
+				// btnUsers.addStyleName( "sn-left-menu-active" );
+				// btnNewUser.removeStyleName( "sn-left-menu-active" );
+				
+			}
+			
+		});
+	}
+	
+	
+	private void attachBtnRolePerm(){
+		// btnActive = btnUserRolePerm;
+		this.btnUserRolePerm.addClickListener( new ClickListener(){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				if( isHMenuActiveBtn( btnUserRolePerm ) )
+					return;
+				new DUserRolePermUI( getParentUI() );
+				//btnUsers.addStyleName( "sn-left-menu-active" );
+				//btnNewUser.removeStyleName( "sn-left-menu-active" );
 				
 			}
 			
@@ -91,7 +113,12 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 		if( btnActive.equals( btn ) ){
 			return true;
 		}
+		
+		
+		btnActive.removeStyleName( "sn-left-menu-active" );
+		btn.addStyleName( "sn-left-menu-active" );
 		btnActive = btn;
+		
 		return false;
 }
 

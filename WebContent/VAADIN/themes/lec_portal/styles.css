@@ -14665,3 +14665,7 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .v-Notification-system {
 	display: none;
 }
+
+.lec_portal .sn-c-form .sn-c-accordion-ctrls .v-icon {
+	color: #444;
+}

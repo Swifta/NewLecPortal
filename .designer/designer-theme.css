@@ -14628,3 +14628,17 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .v-Notification-system {
 	display: none;
 }
+
+.lec_portal .sn-c-form .sn-c-accordion-ctrls .v-button .v-icon {
+	color: #444;
+}
+
+.lec_portal .sn-c-form .sn-c-accordion-ctrls .v-button-wrap {
+	color: #444;
+}
+
+.lec_portal .sn-panel-head.sn-panel-head-card.sn-head-add::before {
+	content: "\f0fe";
+	right: 10px;
+	font-size: 40px;
+}
