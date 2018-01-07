@@ -27,4 +27,7 @@ public class SpringTest {
 		Assert.assertNotNull( "Person is null.", person );
 		log.debug( person.greet(), person );
 	}
+	
+	
+	
 }

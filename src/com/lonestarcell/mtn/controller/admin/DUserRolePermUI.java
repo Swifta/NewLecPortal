@@ -1,9 +1,11 @@
 package com.lonestarcell.mtn.controller.admin;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -11,44 +13,78 @@ import com.lonestarcell.mtn.bean.InSettings;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutProfile;
-import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.util.EmailValidatorCustom;
-import com.lonestarcell.mtn.controller.util.RequiredTFValidator;
-import com.lonestarcell.mtn.controller.util.TFValidator;
-import com.lonestarcell.mtn.controller.util.UsernameTFValidator;
-import com.lonestarcell.mtn.design.admin.DNewUserUIDesign;
+import com.lonestarcell.mtn.design.admin.DUserRolePermDesign;
 import com.lonestarcell.mtn.model.admin.MSettings;
-import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.model.admin.MUtil;
-import com.lonestarcell.mtn.design.admin.DRoleUIDesign;
+import com.lonestarcell.mtn.spring.entity.ProfilePermissionMap;
+import com.lonestarcell.mtn.spring.repo.ProfilePermissionMapRepo;
 import com.vaadin.data.Item;
-import com.vaadin.data.Validator;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 
-public class DUserRolePermUI extends DRoleUIDesign implements DUserUIInitializable<DUserUI, DUserRolePermUI>, DUIControllable {
+@SpringComponent
+@UIScope
+public class DUserRolePermUI extends DUserRolePermDesign implements DUIControllable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private DUserUI ancestor;
 	private Item record;
-	private Logger log = LogManager.getLogger( DUserSetCredsUI.class.getName() );
+	private Logger log = LogManager.getLogger( DUserRolePermUI.class.getName() );
 	
-	DUserRolePermUI( DUserUI a){
-		init( a );
+	@Autowired
+	private ProfilePermissionMapRepo profilePermMapRepo;
+	
+	DUserRolePermUI( ){
 	}
 	
 	
-
+	public void init( short profileId ){
+		setRecord( record );
+		attachCommandListeners();
+		loadPermissions( profileId );
+	}
+	
+	
+	
+	/*DUserRolePermUI( Item record ){
+		//init( a );
+		setRecord( record );
+		attachCommandListeners();
+	}*/
+	
+	
+	public void loadPermissions( short profileId ){
+		
+		this.tPerm.removeAllItems();
+		List< ProfilePermissionMap > lsProfilePermMap = profilePermMapRepo.findByProfileProfileId( profileId );
+		int size = lsProfilePermMap.size();
+		log.debug( "Profile Permission map Count: "+size, profilePermMapRepo );
+		Iterator< ProfilePermissionMap > itrProfilePermMap = lsProfilePermMap.iterator();
+		
+		if( size == 0 ){
+			
+			Object item = tPerm.addItem( "No permission" );
+			tPerm.setChildrenAllowed( item, false );
+			return;
+		}
+		
+		while( itrProfilePermMap.hasNext() ){
+			
+			ProfilePermissionMap profilePermMap = itrProfilePermMap.next();
+			String perm = profilePermMap.getPermission().getName();
+			String profile = profilePermMap.getProfile().getProfileName();
+			log.debug( profile+" - "+perm, profilePermMap );
+			
+			Object item = tPerm.addItem( perm );
+			tPerm.setChildrenAllowed( item, false );
+		}
+		
+	}
 	public Item getRecord() {
 		return record;
 	}
@@ -63,41 +99,22 @@ public class DUserRolePermUI extends DRoleUIDesign implements DUserUIInitializab
 
 	@Override
 	public void attachCommandListeners() {
-		// this.attachBtnSave();
-		
-	}
-	
-	
-	private void initComboProfile(){
-		
-		BeanItemContainer<OutProfile> profiles = getProfiles();
-		
-		/*
-		 * comboProfile.setNullSelectionAllowed( false );
-			comboProfile.setContainerDataSource( profiles );
-			comboProfile.setItemCaptionMode( ItemCaptionMode.PROPERTY );
-			comboProfile.setItemCaptionPropertyId( "profileName" );
-		*/
-		setDefaultProfile( profiles, 4 );
-		
+	  //this.attachBtnSave();
+	  //this.attachBtnAddRole();
 		
 		
 	}
 	
 	
-	private void setDefaultProfile( BeanItemContainer<OutProfile> profiles, int profileId ){
-		
-		Iterator< OutProfile > itr = profiles.getItemIds().iterator();
-		while( itr.hasNext() ){
-			
-			OutProfile profile = itr.next();
-			
-			if( profile.getProfileId() == profileId ) {
-				// comboProfile.setValue( profile );
-				break;
-			}
-		}
-	}
+	
+	/*private void attachBtnAddRole(){
+		this.btnAddNewRole.addClickListener(  e->{ 
+			// processingPopup.close();
+			new DUserNewRoleUI( record );
+		} );
+	}*/
+	
+	
 	
 	
 	private BeanItemContainer< OutProfile > getProfiles(){
@@ -378,78 +395,7 @@ public class DUserRolePermUI extends DRoleUIDesign implements DUserUIInitializab
 	
 	
 
-	@Override
-	public void setHeader() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void setContent() {
-		
-		OutUserDetails outUserDetails = new OutUserDetails();
-		outUserDetails.setEmail( "" );
-		Item item = new BeanItem<>( outUserDetails, OutUserDetails.class );
-		
-		this.setRecord( item );
-		// this.setPropertyDataSource();
-		log.debug( "Content called." );
-		setHeader();
-		setFooter();
-		swap(this);
-		attachCommandListeners();
-	}
-
-	@Override
-	public void swap(Component cuid) {
-		
-		cuid.setHeight("100%");
-		ancestor.getAncestorUI().getcMainContent().setHeight( "100%" );
-		ancestor.setHeight( "100%" );
-		log.debug( "Users height: "+cuid.getHeight() );
-		ancestor.swap( cuid );
-		
-	}
-
-	@Override
-	public void init(DUserUI a) {
-		// Scale left footer by new user form container height.
-		a.getRightContent().setHeightUndefined();
-		setAncestorUI( a );
-		this.initComboProfile();
-		setContent();
-		
-		
-	}
-
-	@Override
-	public void setFooter() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public DUserUI getAncestorUI() {
-		return ancestor;
-	}
-
-	@Override
-	public void setAncestorUI(DUserUI a) {
-		this.ancestor = a;
-		
-	}
-
-	@Override
-	public DUserRolePermUI getParentUI() {
-		return this;
-	}
-
-	@Override
-	public void setParentUI(DUserRolePermUI p) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 
 	

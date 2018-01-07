@@ -7,9 +7,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.context.ContextLoaderListener;
 
 import com.lonestarcell.mtn.controller.admin.DMainUI;
+import com.lonestarcell.mtn.spring.config.Config;
+import com.lonestarcell.mtn.spring.config.DataAccessConfig;
+import com.lonestarcell.mtn.spring.config.JpaConfig;
+import com.lonestarcell.mtn.spring.repo.ProfileRepo;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -29,6 +34,7 @@ public class PortalUI extends UI {
 	
 	@Configuration
 	@EnableVaadin
+	@ContextConfiguration( classes = { Config.class, DataAccessConfig.class, JpaConfig.class } )
 	public static class VaadinSpringConfig {
 
 	}
@@ -36,6 +42,12 @@ public class PortalUI extends UI {
 	private static Logger log = LogManager.getLogger( PortalUI.class );
 	@Autowired
 	private Person person;
+	
+	@Autowired
+	private DMainUI defaultUI;
+	
+	@Autowired
+	private ProfileRepo profileRepo;
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = PortalUI.class, widgetset = "com.lonestarcell.mtn.controller.main.widgetset.Lec_portalWidgetset")
@@ -55,6 +67,21 @@ public class PortalUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
+		
+		if( profileRepo != null ){
+			log.debug( "Profile repo is wired.", this );
+		} else {
+			log.debug( "Profile repo is null.", this );
+		}
+		
+		if( defaultUI != null ){
+			log.debug( "Main UI component is wired.", this );
+		} else {
+			log.debug( "Main UI component is null.", this );
+		}
+		
+		
+		
 		Navigator nav = UI.getCurrent().getNavigator();
 		if ( nav == null )
 			nav = new Navigator(this, this);
@@ -63,11 +90,11 @@ public class PortalUI extends UI {
 		// dui.init(dui);
 		// nav.addView("", dui);
 		
-		DMainUI defaultUI = new DMainUI();
+		// DMainUI defaultUI = new DMainUI();
 		nav.addView("", defaultUI );
 		nav.addView("login", DLoginUIController.class);
 		//nav.addView("management", DManUIController.class);
-		nav.addView("management", DMainUI.class);
+		nav.addView("management", defaultUI );
 		
 		log.debug( person.greet(), this );
 		

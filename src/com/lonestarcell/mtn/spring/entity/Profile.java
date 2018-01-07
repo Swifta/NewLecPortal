@@ -1,7 +1,9 @@
 package com.lonestarcell.mtn.spring.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -34,6 +36,17 @@ public class Profile implements Serializable {
 
 	public Profile() {
 	}
+	
+	
+
+	public Profile(String profileName, String profileDesc ) {
+		super();
+		this.profileName = profileName;
+		this.profileDesc = profileDesc;
+		
+	}
+
+
 
 	public short getProfileId() {
 		return this.profileId;

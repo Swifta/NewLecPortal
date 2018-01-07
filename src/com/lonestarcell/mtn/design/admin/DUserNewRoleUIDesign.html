@@ -23,8 +23,13 @@
        </vaadin-label> 
        <vaadin-vertical-layout _id="cUsernamePassword"> 
         <vaadin-horizontal-layout width-full> 
-         <vaadin-text-field description="Enter new role name" caption="New Role Name" width="99.63%" _id="tFNewRoleName"></vaadin-text-field> 
+         <vaadin-text-field description="Enter new role name" caption="Role Name" width="350px" _id="tFNewRoleName"></vaadin-text-field> 
         </vaadin-horizontal-layout> 
+        <vaadin-vertical-layout _id="cUsernamePassword1"> 
+         <vaadin-horizontal-layout width-full> 
+          <vaadin-text-area description="Enter description of role" caption="Description [ optional ]" width-full height="61px" _id="tARoleDesc" :expand></vaadin-text-area> 
+         </vaadin-horizontal-layout> 
+        </vaadin-vertical-layout> 
        </vaadin-vertical-layout> 
        <vaadin-horizontal-layout spacing margin-top _id="cControls" :right> 
         <vaadin-button icon="fonticon://FontAwesome/f00d" description="Cancel" style-name="danger icon-only" plain-text _id="btnCancel">

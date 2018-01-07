@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -11,12 +12,17 @@ import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
+import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.design.admin.DManagementUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserSelfCare;
+import com.lonestarcell.mtn.spring.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,6 +31,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+@SpringComponent
+@UIScope
 public class DMainUI extends DManagementUIDesign implements View,
 DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 
@@ -37,6 +45,12 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	private Button btnHMenuPrev;
 	
 	private Item record;
+	
+	@Autowired
+	private ProfileRepo person;
+	
+	@Autowired
+	private DUserUI dUserUI;
 	
 	public DMainUI(){
 		init( this );
@@ -294,8 +308,11 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 			public void buttonClick(ClickEvent event) {
 				log.debug( "User menu clicked. " );
 				
-				if( setHMenuState( btnHMenuUser ) )
-					swap( new DUserUI( getParentUI() ) );
+				if( setHMenuState( btnHMenuUser ) ){
+					//swap( new DUserUI( getParentUI() ) );
+					dUserUI.init( getParentUI() );
+					swap( dUserUI );
+				}
 				
 			}
 			

@@ -2,13 +2,18 @@ package com.lonestarcell.mtn.controller.admin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.lonestarcell.mtn.design.admin.DUserUIDesign;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 
+@SpringComponent
+@UIScope
 public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMainUI,DUserUI>, DUIControllable {
 
 	/**
@@ -20,8 +25,15 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	private Component rightContent;
 	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
 	
-	DUserUI(DMainUI a){
-		init( a );
+	@Autowired
+	private DUserRoleUI dUserRoleUI;
+	
+	public DUserUI(){
+		
+	}
+	
+	public DUserUI(DMainUI a){
+		// init( a );
 		
 	}
 	
@@ -99,9 +111,8 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 				
 				if( isHMenuActiveBtn( btnUserRolePerm ) )
 					return;
-				new DUserRolePermUI( getParentUI() );
-				//btnUsers.addStyleName( "sn-left-menu-active" );
-				//btnNewUser.removeStyleName( "sn-left-menu-active" );
+				dUserRoleUI.init( getParentUI() );;
+				
 				
 			}
 			
