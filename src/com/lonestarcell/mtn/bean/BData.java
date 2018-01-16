@@ -7,7 +7,7 @@ public class BData <T> {
 		return data;
 	}
 
-	public void setData(T data) {
+	public void setData(T data) { 
 		this.data = data;
 	}
 	

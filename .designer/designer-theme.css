@@ -1568,6 +1568,26 @@ div.v-layout.v-horizontal.v-widget {
 	}
 }
 
+.lec_portal .v-grid-cell > .cr-component-cell {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
+}
+
+.lec_portal .v-grid-editor-cells .cr-editor-field {
+	padding-left: 18px;
+	padding-right: 18px;
+	height: 100%;
+	width: 100%;
+}
+
+.lec_portal .v-grid-editor-cells .cr-editor-field .v-checkbox {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
 .lec_portal.v-app, .lec_portal.v-app-loading {
 	font: 300 16px/1.55 "Open Sans", sans-serif;
 	color: #464646;

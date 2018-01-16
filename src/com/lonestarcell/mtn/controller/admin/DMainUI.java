@@ -139,13 +139,14 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	@Override
 	public void setFooter() {
 		
+		/*
 		String startYear = "2017";
 		
 		Calendar cal = Calendar.getInstance();
 		String currentYear = cal.get( Calendar.YEAR )+"";
 		
 		
-		this.lbClient.setValue( "&nbspMTN Liberia,&nbsp" );
+		this.lbClient.setValue( "&nbspMTN Benin,&nbsp" ); 
 		this.lbCRYearStart.setValue( startYear );
 		this.lbCRYearCurrent.setValue( currentYear );
 		
@@ -154,7 +155,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 			this.lbCRYearCurrent.setVisible(false);
 			this.lbYearSeparator.setVisible(false);
 			
-		}
+		} */
 		
 	}
 

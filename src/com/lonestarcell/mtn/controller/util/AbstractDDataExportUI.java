@@ -72,7 +72,7 @@ public abstract class AbstractDDataExportUI<M, O, I> implements DUIInitializable
 	public void setContent() {
 		
 		if( container == null ){
-			Notification.show( "Container is null.", Notification.Type.ERROR_MESSAGE );
+			Notification.show( "Data error.", Notification.Type.ERROR_MESSAGE );
 			return;
 		}
 		

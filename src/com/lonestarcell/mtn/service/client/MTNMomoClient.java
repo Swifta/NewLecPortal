@@ -70,9 +70,11 @@ public class MTNMomoClient {
 		omRSH.addChild(omBundleID);
 		omRSH.addChild(omServiceId);
 		omRSH.addChild(omTimeStamp);
+		
+		
 
 		OMElement omProcessRequest = sFac.createOMElement(new QName(
-				XMLConstants.NULL_NS_URI, "processRequest", "b2b"));
+				XMLConstants.DEFAULT_NS_PREFIX, "processRequest", "b2b"));
 		OMNamespace omnM = sFac.createOMNamespace(
 				"http://b2b.mobilemoney.mtn.zm_v1.0/", "b2b");
 		omProcessRequest.setNamespace(omnM);

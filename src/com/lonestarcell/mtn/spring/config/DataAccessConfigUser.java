@@ -11,6 +11,7 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-public class DataAccessConfig {
+public class DataAccessConfigUser {
 	
 	/*
 		@Value( "${portal.db.url}" )
@@ -43,6 +44,7 @@ public class DataAccessConfig {
 	private static Logger log = LogManager.getLogger();
 
 	@Bean
+	@Primary
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource ds, JpaVendorAdapter adapter) {
 
 		LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
@@ -55,17 +57,18 @@ public class DataAccessConfig {
 	}
 
 	@Bean
+	@Primary
 	public JpaVendorAdapter getJpaVendorAdapter() {
 		HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
 
 		adapter.setDatabase(Database.MYSQL);
-		// adapter.setDatabasePlatform( "MYSQL" );
 		adapter.setShowSql(true);
 		adapter.setGenerateDdl(false);
 		return adapter;
 	}
 
 	@Bean
+	@Primary
 	public PlatformTransactionManager transactionManager( EntityManagerFactory emf ) {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory( emf );
@@ -73,33 +76,24 @@ public class DataAccessConfig {
 	}
 
 	@Bean
+	@Primary
 	public PersistenceAnnotationBeanPostProcessor getPersistenceAnnotationPostProcessor() {
 		return new PersistenceAnnotationBeanPostProcessor();
 	}
 
 	@Bean
+	@Primary
 	public BeanPostProcessor getPersistenceExceptionTranslator() {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 
 	@Bean
+	@Primary
 	public DataSource getDS() {
 
 		PoolProperties p = new PoolProperties();
 		
-		
-		
-		// sacco.db.url=jdbc:mysql://localhost:3306/fin_sys_sacco_dev
-		// sacco.db.username=onooli
-		// sacco.db.password=adm!n@adm1
-		// sacco.db.driver=com.mysql.jdbc.Driver
-
-		/*p.setUrl( dbUrl );
-		p.setUsername( dbUsername );
-		p.setPassword( dbPassword );
-		*/
-		
-		p.setUrl( "jdbc:mysql://localhost:3306/benin_portal_db" );
+	    p.setUrl( "jdbc:mysql://localhost:3306/benin_portal_db" );
 		p.setUsername( "root" );
 		p.setPassword( "adm!n" );
 		p.setDriverClassName( "com.mysql.jdbc.Driver" );
@@ -108,7 +102,7 @@ public class DataAccessConfig {
 		p.setTimeBetweenEvictionRunsMillis(5000);
 		p.setMinIdle(0);
 		
-		log.info( "DB URL: "+p.getUrl() , this);
+		log.info( "user DB URL: "+p.getUrl() , this);
 		DataSource ds = new DataSource(p);
 
 		return ds;
