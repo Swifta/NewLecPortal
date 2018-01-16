@@ -9,7 +9,7 @@ import com.lonestarcell.mtn.spring.entity.Profile;
 
 
 @Repository
-@Transactional( propagation = Propagation.MANDATORY )
+@Transactional( propagation = Propagation.REQUIRES_NEW )
 public interface ProfileRepo extends JpaRepository< Profile, Short >{
 	
 }

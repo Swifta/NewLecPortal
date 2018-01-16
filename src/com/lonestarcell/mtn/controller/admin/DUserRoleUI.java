@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -41,6 +43,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -55,8 +58,8 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;import com.vaadin.ui.VerticalLayout;
 
 
-@SpringComponent
-@UIScope
+@Component
+@Scope( value = ConfigurableBeanFactory.SCOPE_PROTOTYPE )
 public class DUserRoleUI extends DRoleUIDesign implements
 		DUserUIInitializable<DUserUI, DUserRoleUI>, DUIControllable {
 
@@ -69,7 +72,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 	@Autowired
 	private ProfileRepo profileRepo;
 	
-	@Autowired
+	// @Autowired
 	private DUserNewRoleUI dUserNewRoleUI;
 	
 	@Autowired
@@ -86,6 +89,17 @@ public class DUserRoleUI extends DRoleUIDesign implements
 	
 	DUserRoleUI( DUserUI a ) {
 		
+	}
+	
+	
+
+	public DUserNewRoleUI getdUserNewRoleUI() {
+		return dUserNewRoleUI;
+	}
+
+	@Autowired
+	public void setdUserNewRoleUI(DUserNewRoleUI dUserNewRoleUI) {
+		this.dUserNewRoleUI = dUserNewRoleUI;
 	}
 
 	public Item getRecord() { 
@@ -127,9 +141,12 @@ public class DUserRoleUI extends DRoleUIDesign implements
 
 	}
 
-	private void attachBtnAddRole() {
+	//@Autowired
+	// private DUserNewRoleUI dUserNewRoleUI;
+	private void attachBtnAddRole( ) {
 		this.btnAddNewRole.addClickListener(e -> {
 			
+			dUserNewRoleUI = getdUserNewRoleUI();
 			dUserNewRoleUI.setRecord( record );
 			dUserNewRoleUI.init( accoRoles );
 			
@@ -193,7 +210,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 					int profileId = Integer.parseInt( sProfileTabId );
 	
 					cRolePerm.removeAllComponents();
-					dUserRolePermUI.init( ( short ) profileId );
+					dUserRolePermUI.init( ( short ) profileId, accoRoles );
 					cRolePerm.addComponent( dUserRolePermUI );
 					
 					/*log.debug( "Loading..." );

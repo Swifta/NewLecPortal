@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Proxy;
+
+import java.util.Date;
 import java.util.List;
 
 
@@ -13,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Profile.findAll", query="SELECT p FROM Profile p")
+@Proxy(lazy = false)
 public class Profile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -25,9 +29,18 @@ public class Profile implements Serializable {
 
 	@Column(name="profile_name")
 	private String profileName;
+	
+	@Column(name="profile_status")
+	private short profileStatus;
+	
+	@Column(name="profile_create_date")
+	private Date profileCreateDate;
+	
+	@Column(name="profile_last_update")
+	private Date profileLastUpdate;
 
 	//bi-directional many-to-one association to ProfilePermissionMap
-	@OneToMany(mappedBy="profile")
+	@OneToMany(mappedBy="profile", cascade = CascadeType.REMOVE )
 	private List<ProfilePermissionMap> profilePermissionMaps;
 
 	//bi-directional many-to-one association to User
@@ -115,5 +128,43 @@ public class Profile implements Serializable {
 
 		return user;
 	}
+
+
+
+	public short getProfileStatus() {
+		return profileStatus;
+	}
+
+
+
+	public void setProfileStatus(short profileStatus) {
+		this.profileStatus = profileStatus;
+	}
+
+
+
+	public Date getProfileCreateDate() {
+		return profileCreateDate;
+	}
+
+
+
+	public void setProfileCreateDate(Date profileCreateDate) {
+		this.profileCreateDate = profileCreateDate;
+	}
+
+
+
+	public Date getProfileLastUpdate() {
+		return profileLastUpdate;
+	}
+
+
+
+	public void setProfileLastUpdate(Date profileLastUpdate) {
+		this.profileLastUpdate = profileLastUpdate;
+	}
+	
+	
 
 }
