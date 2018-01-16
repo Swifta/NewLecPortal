@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,7 +28,7 @@ public class SpringFundamoTest {
 	@Test
 	public void testSayHello(){
 		Assert.assertNotNull( "Fundamo repo is null.", repo );
-		log.debug( "Total transactions: "+repo.findAll().size(), repo );
+		log.debug( "Total transaction pages of about 50 each: "+repo.findAll( new PageRequest( 0, 50 ) ).getTotalPages(), repo );
 	}
 	
 	

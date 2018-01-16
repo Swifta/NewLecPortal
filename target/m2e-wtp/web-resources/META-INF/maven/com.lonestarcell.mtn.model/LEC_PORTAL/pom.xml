@@ -20,6 +20,11 @@
 			<name>Spring Releases</name>
 			<url>https://repo.spring.io/libs-release</url>
 		</repository>
+		
+		<repository>
+			<id>org.oracle</id>
+			<url>http://www.datanucleus.org/downloads/maven2/</url>
+		</repository>
 
 
 
@@ -125,6 +130,26 @@
 			<artifactId>spring-data-jpa</artifactId>
 			<!-- version>2.0.2.RELEASE</version-->
 			<version>1.10.4.RELEASE</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.vaadin.addons/vaadin-excel-exporter -->
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>vaadin-excel-exporter</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>exporter</artifactId>
+			<version>0.0.7</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.3</version>
 		</dependency>
 
 
