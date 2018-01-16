@@ -15,7 +15,7 @@ import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.design.admin.DManagementUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserSelfCare;
-import com.lonestarcell.mtn.spring.repo.ProfileRepo;
+import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;

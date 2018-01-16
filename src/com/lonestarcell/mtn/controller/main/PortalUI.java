@@ -12,9 +12,9 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import com.lonestarcell.mtn.controller.admin.DMainUI;
 import com.lonestarcell.mtn.spring.config.Config;
-import com.lonestarcell.mtn.spring.config.DataAccessConfig;
+import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
 import com.lonestarcell.mtn.spring.config.JpaConfig;
-import com.lonestarcell.mtn.spring.repo.ProfileRepo;
+import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -34,7 +34,7 @@ public class PortalUI extends UI {
 	
 	@Configuration
 	@EnableVaadin
-	@ContextConfiguration( classes = { Config.class, DataAccessConfig.class, JpaConfig.class } )
+	@ContextConfiguration( classes = { Config.class, DataAccessConfigUser.class, JpaConfig.class } )
 	public static class VaadinSpringConfig {
 
 	}

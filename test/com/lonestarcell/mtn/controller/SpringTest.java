@@ -11,11 +11,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.spring.config.Config;
-import com.lonestarcell.mtn.spring.config.DataAccessConfig;
+import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
 import com.lonestarcell.mtn.spring.config.JpaConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration( classes = { Config.class, DataAccessConfig.class, JpaConfig.class } )
+@ContextConfiguration( classes = { Config.class, DataAccessConfigUser.class, JpaConfig.class } )
 public class SpringTest {
 	
 	private static Logger log = LogManager.getLogger( SpringTest.class );

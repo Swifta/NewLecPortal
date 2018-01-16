@@ -7,7 +7,7 @@
                            http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
     <bean class="com.lonestarcell.mtn.controller.main.PortalUI.VaadinSpringConfig" />
-    <!--  bean class="com.lonestarcell.mtn.spring.repo.ProfileRepo" /-->
+    <!--  bean class="com.lonestarcell.mtn.spring.user.repo.ProfileRepo" /-->
     <context:component-scan base-package="com.lonestarcell.mtn.*" />
-    <!--  context:component-scan base-package="com.lonestarcell.mtn.spring.repo" /-->
+    <!--  context:component-scan base-package="com.lonestarcell.mtn.spring.user.repo" /-->
 </beans>
