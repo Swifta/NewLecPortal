@@ -10,12 +10,13 @@ import java.sql.Timestamp;
  * The persistent class for the USER_ACCOUNT_BKUP database table.
  * 
  */
-//@Entity
-//@Table(name="USER_ACCOUNT_BKUP")
-//@NamedQuery(name="UserAccountBkup.findAll", query="SELECT u FROM UserAccountBkup u")
+@Entity
+@Table(name="USER_ACCOUNT_BKUP")
+@NamedQuery(name="UserAccountBkup.findAll", query="SELECT u FROM UserAccountBkup u")
 public class UserAccountBkup implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
 	@Column(name="ACCOUNT_HOLDER_OID")
 	private BigDecimal accountHolderOid;
 

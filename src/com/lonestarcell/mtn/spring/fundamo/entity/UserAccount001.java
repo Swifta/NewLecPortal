@@ -1,9 +1,14 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -13,14 +18,19 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="USER_ACCOUNT001")
 @NamedQuery(name="UserAccount001.findAll", query="SELECT u FROM UserAccount001 u")
+@Proxy(lazy = false)
 public class UserAccount001 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private long oid;
 
-	@Column(name="ACCOUNT_HOLDER_OID")
-	private BigDecimal accountHolderOid;
+	// @Column(name="ACCOUNT_HOLDER_OID")
+	// private BigDecimal accountHolderOid;
+	
+	@ManyToOne( fetch = FetchType.LAZY )
+	@JoinColumn(name="ACCOUNT_HOLDER_OID")
+	private CorporateAccountHolder001 corporateAccountHolder001;
 
 	@Column(name="ACCOUNT_PROFILE_OID")
 	private BigDecimal accountProfileOid;
@@ -81,6 +91,12 @@ public class UserAccount001 implements Serializable {
 
 	@Column(name="USER_ACCOUNT_NUMBER")
 	private String userAccountNumber;
+	
+	@OneToMany( mappedBy = "userAccount001", fetch = FetchType.LAZY )
+	private List< Entry001 > entries;
+	
+	@OneToOne( mappedBy = "userAccount001", fetch = FetchType.LAZY )
+	private AccountIdentifier001 AccountIdentifier001;
 
 	public UserAccount001() {
 	}
@@ -93,16 +109,38 @@ public class UserAccount001 implements Serializable {
 		this.oid = oid;
 	}
 
+	/*
 	public BigDecimal getAccountHolderOid() {
 		return this.accountHolderOid;
 	}
 
 	public void setAccountHolderOid(BigDecimal accountHolderOid) {
 		this.accountHolderOid = accountHolderOid;
-	}
+	} */
+	
+	
+	
+	
 
 	public BigDecimal getAccountProfileOid() {
 		return this.accountProfileOid;
+	}
+
+	public AccountIdentifier001 getAccountIdentifier001() {
+		return AccountIdentifier001;
+	}
+
+	public void setAccountIdentifier001(AccountIdentifier001 accountIdentifier001) {
+		AccountIdentifier001 = accountIdentifier001;
+	}
+
+	public CorporateAccountHolder001 getCorporateAccountHolder001() {
+		return corporateAccountHolder001;
+	}
+
+	public void setCorporateAccountHolder001(
+			CorporateAccountHolder001 corporateAccountHolder001) {
+		this.corporateAccountHolder001 = corporateAccountHolder001;
 	}
 
 	public void setAccountProfileOid(BigDecimal accountProfileOid) {
@@ -268,5 +306,15 @@ public class UserAccount001 implements Serializable {
 	public void setUserAccountNumber(String userAccountNumber) {
 		this.userAccountNumber = userAccountNumber;
 	}
+
+	public List<Entry001> getEntries() {
+		return entries;
+	}
+
+	public void setEntries(List<Entry001> entries) {
+		this.entries = entries;
+	}
+	
+	
 
 }

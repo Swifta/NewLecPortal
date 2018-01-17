@@ -20,9 +20,12 @@ public class TransactionType001 implements Serializable {
 
 	@Column(name="LAST_UPDATE")
 	private Timestamp lastUpdate;
-
-	private String name;
-
+	
+	@OneToOne(fetch=FetchType.LAZY )
+	@JoinColumn( name="name", referencedColumnName = "code" )
+	private Systemcode systemCode;
+	
+	
 	public TransactionType001() {
 	}
 
@@ -42,12 +45,22 @@ public class TransactionType001 implements Serializable {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public String getName() {
+	/*public String getName() {
 		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}*/
+
+	public Systemcode getSystemCode() {
+		return systemCode;
 	}
+
+	public void setSystemCode(Systemcode systemCode) {
+		this.systemCode = systemCode;
+	}
+	
+	
 
 }

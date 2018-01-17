@@ -2,7 +2,6 @@ package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 
@@ -27,8 +26,14 @@ public class AccountIdentifier001 implements Serializable {
 	@Column(name="TYPE_NAME")
 	private String typeName;
 
-	@Column(name="USER_ACCOUNT_OID")
-	private BigDecimal userAccountOid;
+	// @Column(name="USER_ACCOUNT_OID")
+	// private BigDecimal userAccountOid;
+	
+	@ManyToOne( fetch = FetchType.LAZY)
+	@JoinColumn( name = "USER_ACCOUNT_OID" )
+	private UserAccount001 userAccount001;
+	
+	
 
 	public AccountIdentifier001() {
 	}
@@ -65,6 +70,15 @@ public class AccountIdentifier001 implements Serializable {
 		this.typeName = typeName;
 	}
 
+	public UserAccount001 getUserAccount001() {
+		return userAccount001;
+	}
+
+	public void setUserAccount001(UserAccount001 userAccount001) {
+		this.userAccount001 = userAccount001;
+	}
+
+	/*
 	public BigDecimal getUserAccountOid() {
 		return this.userAccountOid;
 	}
@@ -72,5 +86,8 @@ public class AccountIdentifier001 implements Serializable {
 	public void setUserAccountOid(BigDecimal userAccountOid) {
 		this.userAccountOid = userAccountOid;
 	}
+	*/
+	
+	
 
 }

@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -12,8 +16,10 @@ import java.sql.Timestamp;
  */
 @Entity
 @NamedQuery(name="Transaction001.findAll", query="SELECT t FROM Transaction001 t")
+@Proxy(lazy = false)
 public class Transaction001 implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 
 	@Id
 	private long oid;
@@ -131,8 +137,15 @@ public class Transaction001 implements Serializable {
 
 	@Column(name="SERVICE_OID")
 	private BigDecimal serviceOid;
-
+	
+	
 	private String status;
+
+	
+	/*  @ManyToOne(fetch=FetchType.LAZY )
+		@JoinTable( name = "SYSTEMCODES", joinColumns = @JoinColumn(name = "code", referencedColumnName = "status" ),  inverseJoinColumns = @JoinColumn(name = "code") )
+		private Systemcode systemCode;
+	*/
 
 	@Column(name="TILL_NUMBER")
 	private String tillNumber;
@@ -151,8 +164,12 @@ public class Transaction001 implements Serializable {
 	@Column(name="TRANSACTION_REASON_OID")
 	private BigDecimal transactionReasonOid;
 
-	@Column(name="TRANSACTION_TYPE_OID")
-	private BigDecimal transactionTypeOid;
+	//@Column(name="TRANSACTION_TYPE_OID")
+	//private BigDecimal transactionTypeOid;
+	@JoinColumn( name="TRANSACTION_TYPE_OID" )
+	@ManyToOne( fetch = FetchType.LAZY )
+	private TransactionType001 transactionType001;
+	
 
 	@Column(name="TRANSFER_OID")
 	private BigDecimal transferOid;
@@ -536,20 +553,32 @@ public class Transaction001 implements Serializable {
 		this.transactionReasonOid = transactionReasonOid;
 	}
 
-	public BigDecimal getTransactionTypeOid() {
+	/*public BigDecimal getTransactionTypeOid() {
 		return this.transactionTypeOid;
 	}
 
 	public void setTransactionTypeOid(BigDecimal transactionTypeOid) {
 		this.transactionTypeOid = transactionTypeOid;
-	}
+	} */
+	
+	
+	
 
 	public BigDecimal getTransferOid() {
 		return this.transferOid;
 	}
 
+	public TransactionType001 getTransactionType001() {
+		return transactionType001;
+	}
+
+	public void setTransactionType001(TransactionType001 transactionType001) {
+		this.transactionType001 = transactionType001;
+	}
+
 	public void setTransferOid(BigDecimal transferOid) {
 		this.transferOid = transferOid;
 	}
+
 
 }

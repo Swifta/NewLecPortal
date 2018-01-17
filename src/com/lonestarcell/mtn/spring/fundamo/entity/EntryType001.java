@@ -28,7 +28,11 @@ public class EntryType001 implements Serializable {
 	@Column(name="LIMIT_APPLICABLE")
 	private String limitApplicable;
 
-	private String name;
+	//private String name;
+	
+	@ManyToOne( fetch = FetchType.EAGER )
+	@JoinColumn(name="name", referencedColumnName = "code" )
+	private Systemcode systemcode;
 
 	public EntryType001() {
 	}
@@ -73,12 +77,15 @@ public class EntryType001 implements Serializable {
 		this.limitApplicable = limitApplicable;
 	}
 
-	public String getName() {
-		return this.name;
+	public Systemcode getSystemcode() {
+		return systemcode;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setSystemcode(Systemcode systemcode) {
+		this.systemcode = systemcode;
 	}
+
+
+	
 
 }
