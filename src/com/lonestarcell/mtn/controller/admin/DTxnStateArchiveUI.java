@@ -4,8 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUITxn;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
+import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.ui.Grid;
 
@@ -17,7 +19,7 @@ public class DTxnStateArchiveUI extends DTxnStateUI {
 	
 	
 	DTxnStateArchiveUI( DTxnUI a){
-		super(  );
+		super( a.getSpringAppContext() );
 		this.setInDate(inTxn, 300 );
 		this.init(a);
 		log.debug( "Archive UI loaded successfully." );
@@ -29,13 +31,13 @@ public class DTxnStateArchiveUI extends DTxnStateUI {
 	}
 	
 	@Override
-	protected AllRowsActionsUITxn getHeaderController( MTxn mTxn, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUITxn( mTxn, grid, in, true, true, pageC );
+	protected AllRowsActionsUISub getHeaderController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUISub( mSub, grid, in, true, true, pageC );
 	}
 	
 	@Override
-	protected AllRowsActionsUITxn getFooterController( MTxn mTxn, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUITxn( mTxn, grid, in, false, false, pageC );
+	protected AllRowsActionsUISub getFooterController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUISub( mSub, grid, in, false, false, pageC );
 	}
 
 

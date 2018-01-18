@@ -37,7 +37,7 @@ String startYear = "2017";
 		String currentYear = cal.get( Calendar.YEAR )+"";
 		
 		
-		this.lbClient.setValue( "&nbspMTN Liberia,&nbsp" );
+		this.lbClient.setValue( "&nbspMTN Benin,&nbsp" );
 		this.lbCRYearStart.setValue( startYear );
 		this.lbCRYearCurrent.setValue( currentYear );
 		

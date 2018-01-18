@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -27,6 +28,7 @@ public class Model  implements Serializable {
 	protected String userAuthSession, timeCorrection;
 	public Out out;
 	private Logger log = LogManager.getLogger();
+	protected ApplicationContext springAppContext;
 	
 	public Model(){
 		
@@ -42,6 +44,23 @@ public class Model  implements Serializable {
 	}
 	
 	public Model( Long userAuthId, String userSession ) {
+		this.setUserAuthId( userAuthId );
+		this.setUserAuthSession( userSession );
+		
+		try {
+			if( dataSource == null )
+				throw new IllegalStateException( "Data source is null." );
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		
+		out = new Out();
+		
+
+	}
+	
+	public Model( Long userAuthId, String userSession, ApplicationContext springAppContext ) {
+		this.springAppContext = springAppContext;
 		this.setUserAuthId( userAuthId );
 		this.setUserAuthSession( userSession );
 		

@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.context.ContextLoaderListener;
@@ -46,6 +47,7 @@ public class PortalUI extends UI {
 	@Autowired
 	private DMainUI defaultUI;
 	
+	
 	@Autowired
 	private ProfileRepo profileRepo;
 
@@ -74,11 +76,12 @@ public class PortalUI extends UI {
 			log.debug( "Profile repo is null.", this );
 		}
 		
+		/*
 		if( defaultUI != null ){
 			log.debug( "Main UI component is wired.", this );
 		} else {
 			log.debug( "Main UI component is null.", this );
-		}
+		} */
 		
 		
 		

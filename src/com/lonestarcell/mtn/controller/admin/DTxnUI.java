@@ -2,6 +2,7 @@ package com.lonestarcell.mtn.controller.admin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.design.admin.DTxnUIDesign;
 import com.vaadin.ui.Button;
@@ -15,24 +16,53 @@ public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI
 	 * 
 	 */
 	
+	private static final long serialVersionUID = 1L;
+	
 	private DMainUI ancestor;
 	private Button btnActive;
 	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
 	
+	private ApplicationContext springAppContext;
+	
 	DTxnUI(DMainUI a){
+		this.setSpringAppContext( a.getSpringAppContext() );
 		init( a );
-		
 	}
-	private static final long serialVersionUID = 1L;
+	
+	
+	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
 
 	@Override
 	public void attachCommandListeners() {
+		
+		// Default button 
+		 //btnActive = btnArchive;
+		// btnDay.setVisible( false );
+		
+		// Initial button state
+		// btnArchive.addStyleName( "sn-left-menu-active" );
+		// btnDay.removeStyleName( "sn-left-menu-active" );
+		
+		btnActive = btnDay;
 		this.attachBtnArchive();
 		this.attachBtnToday();
 	}
 	
 	private void attachBtnToday(){
-		btnActive = btnDay;
 		this.btnDay.addClickListener( new ClickListener() {
 
 
@@ -43,7 +73,7 @@ public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI
 				
 				if( isHMenuActiveBtn( btnDay ) ) 
 					return;
-				new DTxnStateUI( getParentUI() );
+				new DTxnStateArchiveUI( getParentUI() );
 				btnDay.addStyleName( "sn-left-menu-active" );
 				btnArchive.removeStyleName( "sn-left-menu-active" );
 				
@@ -91,8 +121,11 @@ public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI
 	public void setContent() {
 		setHeader();
 		setFooter();
-		swap( new DTxnStateUI( getParentUI() ) ); 
+		// swap( new DTxnStateUI( getParentUI() ) ); 
+		swap( new DTxnStateArchiveUI( getParentUI() ) );
 		attachCommandListeners();
+		
+		
 		
 	}
 

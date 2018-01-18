@@ -5,6 +5,7 @@ import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -46,6 +47,8 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	
 	private Item record;
 	
+	private ApplicationContext springAppContext;
+	
 	@Autowired
 	private ProfileRepo person;
 	
@@ -57,6 +60,21 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	}
 	
 	
+	
+	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+	
+	@Autowired
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
+
 
 	public Item getRecord() {
 		return record;
@@ -159,7 +177,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		String currentYear = cal.get( Calendar.YEAR )+"";
 		
 		
-		this.lbClient.setValue( "&nbspMTN Liberia,&nbsp" );
+		this.lbClient.setValue( "&nbspMTN Benin,&nbsp" );
 		this.lbCRYearStart.setValue( startYear );
 		this.lbCRYearCurrent.setValue( currentYear );
 		

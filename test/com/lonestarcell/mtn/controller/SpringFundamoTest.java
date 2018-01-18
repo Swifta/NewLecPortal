@@ -135,7 +135,7 @@ public class SpringFundamoTest {
 		Transaction001 transaction = pg.getContent().get( 0 ).getTransaction001();
 		UserAccount001 userAccount = pg.getContent().get( 0 ).getUserAccount001();
 		CorporateAccountHolder001 corporateAccountHolder001 = userAccount.getCorporateAccountHolder001();
-		AccountIdentifier001 AccountIdentifier001 = userAccount.getAccountIdentifier001()
+		AccountIdentifier001 AccountIdentifier001 = userAccount.getAccountIdentifier001();
 		
 		log.debug( "Entry transaction no: "+transaction.getTransactionNumber(), transaction );
 		log.debug( "Entry userAccount no: "+userAccount.getUserAccountNumber(), userAccount );

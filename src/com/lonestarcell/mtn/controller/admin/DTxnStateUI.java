@@ -6,18 +6,24 @@ import java.util.Calendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutSubscriber;
 import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUITxn;
+import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUITxn;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
+import com.lonestarcell.mtn.controller.util.RowActionsUISub;
 import com.lonestarcell.mtn.controller.util.RowActionsUITxn;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
+import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -33,6 +39,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI;
+
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
 public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializable<DTxnUI,DTxnStateUI>, DUIControllable {
@@ -43,19 +50,35 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	private Logger log = LogManager.getLogger( DTxnStateUI.class.getName() );
 	
 	
-	private MTxn mTxn;
+	private MSub mSub;
 	protected InTxn inTxn;
+	
+	private ApplicationContext springAppContext;
 	
 	
 	DTxnStateUI( DTxnUI a){
-		this();
+		
+		this( a.getSpringAppContext());
 		this.setInDate(inTxn, 1 );
+		this.setSpringAppContext( a.getSpringAppContext() );
+		
 		init( a );
 	}
 	
-	DTxnStateUI(){
-		mTxn = new MTxn(  getCurrentUserId(), getCurrentUserSession(), getCurrentTimeCorrection() );
+	DTxnStateUI( ApplicationContext cxt ){
 		inTxn = new InTxn();
+		mSub = new MSub(  getCurrentUserId(), getCurrentUserSession(), getCurrentTimeCorrection(), cxt );
+
+	}
+	
+	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
 	}
 
 	@Override
@@ -76,7 +99,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 		
 		swap(this);
 		attachCommandListeners();
-		this.vlTrxnTable.addComponent( loadGridData( new BeanItemContainer<>( OutTxn.class ) ) );
+		this.vlTrxnTable.addComponent( loadGridData( new BeanItemContainer<>( OutSubscriber.class ) ) );
 		this.vlTrxnTable.setHeightUndefined();
 		this.vlTrxnTable.setWidth( "1150px");
 		
@@ -146,7 +169,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	
 	
 	
-	protected Grid loadGridData( BeanItemContainer<OutTxn> beanItemContainer ) {
+	protected Grid loadGridData( BeanItemContainer< OutSubscriber > beanItemContainer ) {
 		try {
 
 			
@@ -163,7 +186,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			
 			//TODO validate response
 			
-			Out out = mTxn.searchTxnToday(in, beanItemContainer );
+			Out out = mSub.searchTxnToday(in, beanItemContainer );
 			if( out.getStatusCode() != 1 ) {
 				Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
 			} else {
@@ -188,7 +211,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 						@Override
 						public Component getValue(Item item, Object itemId,
 								Object propertyId) {
-							PopupView v = new PopupView("...", new RowActionsUITxn( mTxn, item ) );
+							PopupView v = new PopupView("...", new RowActionsUISub( mSub, item ) );
 							v.setWidth( "100%" );
 							v.setHeight( "100%" );
 							return v;
@@ -205,7 +228,11 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			grid.setContainerDataSource(gpc);
 			grid.getColumn("actions").setRenderer(new ComponentRenderer());
 			
-			grid.setColumnOrder( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "date", "actions" );
+			//transactionNumber, type, amount, status, payer, payee, timestamp;
+			//// "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp"
+			//grid.setColumnOrder( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "date", "actions" );
+			
+			grid.setColumnOrder( "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions" );
 
 			grid.setFrozenColumnCount(2);
 			
@@ -215,18 +242,20 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			
 			
 			// Header config
-			HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
+			// HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
+			HeaderCell dateFilterCellH = header.join( "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions" );
 			PaginationUIController pageC = new PaginationUIController( );
-			AllRowsActionsUITxn allRowsActionsUIH = getHeaderController(  mTxn, grid, in, pageC  );
+			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(  mSub, grid, in, pageC  );
 			dateFilterCellH.setComponent( allRowsActionsUIH );
 			
 			header.setStyleName( "sn-date-filter-row" );
 			dateFilterCellH.setStyleName( "sn-no-border-right sn-no-border-left" );
 			
 			// Footer config
-			FooterCell dateFilterCellF = footer.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
+			// FooterCell dateFilterCellF = footer.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
 		
-			dateFilterCellF.setComponent( getFooterController(  mTxn, grid, in, pageC  ) );
+			FooterCell dateFilterCellF = footer.join( "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions" );
+			dateFilterCellF.setComponent( getFooterController(  mSub, grid, in, pageC  ) );
 			
 			//Init pagination controller after both header and footer have been set.
 			pageC.init( );
@@ -236,7 +265,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			dateFilterCellF.setStyleName( "sn-no-border-right sn-no-border-left" );
 			
 			PopupView v = new PopupView( "HHHH", null  );
-			v.setContent( new MultiRowActionsUITxn( mTxn, in, grid, v ) );
+			v.setContent( new MultiRowActionsUISub( mSub, in, grid, v ) );
 			v.setHideOnMouseOut( true );
 			v.setVisible( true );
 			
@@ -257,40 +286,44 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			
 			// Hide unnecessary bean fields
 			
-			grid.removeColumn( "sessionVar" );
-			grid.removeColumn( "profileId" );
-			grid.removeColumn( "payStatus" );
-			grid.removeColumn( "tokenStatus" );
-			grid.removeColumn( "itronId" );
-			grid.removeColumn( "reqCurrency" );
+			// grid.removeColumn( "sessionVar" );
+			// grid.removeColumn( "profileId" );
+			// grid.removeColumn( "payStatus" );
+			// grid.removeColumn( "tokenStatus" );
+			// grid.removeColumn( "itronId" );
+			// grid.removeColumn( "reqCurrency" );
 			// grid.removeColumn( "statusDesc" );
-			grid.removeColumn( "token" );
-			grid.removeColumn( "reqCount" );
-			grid.removeColumn( "txnType" );
+			// grid.removeColumn( "token" );
+			// grid.removeColumn( "reqCount" );
+			// grid.removeColumn( "txnType" );
 			
 
 			// Add search field
 			
-			allRowsActionsUIH.prepareGridHeader( grid, "mmoId", "MoID", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "msisdn", "MSISDN", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "swiftaId", "SWIFTA ID", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "meterNo", "Meter No.", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "statusDesc", "Status Desc", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "date", "Timestamp", false );
+			// "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions"
+			
+			allRowsActionsUIH.prepareGridHeader( grid, "transactionNumber", "Transaction Number", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "type", "Type", false );
+			allRowsActionsUIH.prepareGridHeader( grid, "amount", "Amount", false );
+			allRowsActionsUIH.prepareGridHeader( grid, "status", "Status", false );
+			allRowsActionsUIH.prepareGridHeader( grid, "payer", "Payer", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "payee", "Payee", true );
+			allRowsActionsUIH.prepareGridHeader( grid, "timestamp", "Timestamp", false );
 			allRowsActionsUIH.prepareGridHeader( grid, "actions", "...", false );
 			
 			
 			// Set column widths
 			
-			grid.getColumn( "msisdn" ).setWidth( 135 ).setResizable(false);
-			grid.getColumn( "swiftaId" ).setWidth( 125 );
-			grid.getColumn( "mmoId" ).setWidth( 125 );
-			grid.getColumn( "meterNo" ).setWidth( 135 );
+			grid.getColumn( "payer" ).setWidth( 135 ).setResizable(false);
+			grid.getColumn( "payee" ).setWidth( 135 ).setResizable(false);
+			grid.getColumn( "transactionNumber" ).setWidth( 125 );
+			// grid.getColumn( "mmoId" ).setWidth( 125 );
+			// grid.getColumn( "meterNo" ).setWidth( 135 );
 			grid.getColumn( "amount" ).setWidth( 100 );
-			grid.getColumn( "statusDesc" ).setWidth( 125 );
+			// grid.getColumn( "statusDesc" ).setWidth( 125 );
 			
-			//grid.getColumn( "date" ).setWidth( 178 ).setResizable(false);
-			grid.getColumn( "rate" ).setWidth( 70 );
+			grid.getColumn( "timestamp" ).setWidth( 178 ).setResizable(false);
+			// grid.getColumn( "rate" ).setWidth( 70 );
 			
 			
 			grid.addStyleName( "sn-small-grid" );
@@ -318,12 +351,12 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 		return new Grid();
 	}
 	
-	protected AllRowsActionsUITxn getHeaderController( MTxn mTxn, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUITxn( mTxn, grid, in, false, true, pageC );
+	protected AllRowsActionsUISub getHeaderController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUISub( mSub, grid, in, false, true, pageC );
 	}
 	
-	protected AllRowsActionsUITxn getFooterController( MTxn mTxn, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUITxn( mTxn, grid, in, false, false, pageC );
+	protected AllRowsActionsUISub getFooterController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUISub( mSub, grid, in, false, false, pageC );
 	}
 	
 	protected long getCurrentUserId(){
