@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -21,42 +21,19 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutProfile;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.main.Person;
-import com.lonestarcell.mtn.controller.util.EmailValidatorCustom;
-import com.lonestarcell.mtn.controller.util.RequiredTFValidator;
-import com.lonestarcell.mtn.controller.util.TFValidator;
-import com.lonestarcell.mtn.controller.util.UsernameTFValidator;
-import com.lonestarcell.mtn.design.admin.DNewUserUIDesign;
 import com.lonestarcell.mtn.model.admin.MSettings;
-import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.model.admin.MUtil;
 import com.lonestarcell.mtn.spring.user.entity.Profile;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.lonestarcell.mtn.design.admin.DRoleUIDesign;
 import com.vaadin.data.Item;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;import com.vaadin.ui.VerticalLayout;
 
-
-@SpringComponent
-@UIScope
 public class DUserRoleUI extends DRoleUIDesign implements
 		DUserUIInitializable<DUserUI, DUserRoleUI>, DUIControllable {
 
@@ -66,26 +43,35 @@ public class DUserRoleUI extends DRoleUIDesign implements
 	private Item record;
 	private Logger log = LogManager.getLogger(DUserRoleUI.class.getName());
 	
-	@Autowired
+	
+	private ApplicationContext springAppContext;
 	private ProfileRepo profileRepo;
+	private int profileId;
 	
-	@Autowired
-	private DUserNewRoleUI dUserNewRoleUI;
-	
-	@Autowired
-	private DUserRolePermUI dUserRolePermUI;
-	
-	@Autowired
-	private Person person;
 	
 	private Thread t;
-
-	DUserRoleUI(){
-		
-	}
 	
 	DUserRoleUI( DUserUI a ) {
 		
+		this.setSpringAppContext( a.getSpringAppContext() );
+		this.setProfileRepo( this.getSpringAppContext().getBean( ProfileRepo.class) );
+		this.init( a );
+	}
+	
+	public ProfileRepo getProfileRepo() {
+		return profileRepo;
+	}
+
+	public void setProfileRepo(ProfileRepo profileRepo) {
+		this.profileRepo = profileRepo;
+	}
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
 	}
 
 	public Item getRecord() { 
@@ -98,12 +84,6 @@ public class DUserRoleUI extends DRoleUIDesign implements
 
 	@Override
 	public void attachCommandListeners() {
-		
-		if( person != null ){
-			log.debug( "Person bean is wired.", person );
-		} else {
-			log.debug( "Person bean is null.", this );
-		}
 		
 		// this.attachBtnSave();
 		this.attachBtnAddRole();
@@ -124,15 +104,14 @@ public class DUserRoleUI extends DRoleUIDesign implements
 		 * comboProfile.setItemCaptionPropertyId( "profileName" );
 		 */
 		setDefaultProfile(profiles, 4);
+		
+		
 
 	}
 
 	private void attachBtnAddRole() {
 		this.btnAddNewRole.addClickListener(e -> {
-			
-			dUserNewRoleUI.setRecord( record );
-			dUserNewRoleUI.init( accoRoles );
-			
+			new DUserNewRoleUI( getParentUI(), record, accoRoles );
 			});
 	}
 
@@ -190,10 +169,9 @@ public class DUserRoleUI extends DRoleUIDesign implements
 					if( sProfileTabId == null )
 						sProfileTabId = "0";
 					
-					int profileId = Integer.parseInt( sProfileTabId );
-	
+					profileId = Integer.parseInt( sProfileTabId );
+					DUserRolePermUI dUserRolePermUI = new DUserRolePermUI( getParentUI(), ( short ) profileId );
 					cRolePerm.removeAllComponents();
-					dUserRolePermUI.init( ( short ) profileId );
 					cRolePerm.addComponent( dUserRolePermUI );
 					
 					/*log.debug( "Loading..." );
@@ -639,6 +617,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 
 						// DUserRolePermUI rolePerm = new DUserRolePermUI(  null );
 						cRolePerm.removeAllComponents();
+						DUserRolePermUI dUserRolePermUI = new DUserRolePermUI( getParentUI(), ( short ) profileId );
 						cRolePerm.addComponent( dUserRolePermUI );
 						
 						log.debug( "UI updated.", this );

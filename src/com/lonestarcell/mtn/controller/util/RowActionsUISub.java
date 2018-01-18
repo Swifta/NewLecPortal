@@ -57,7 +57,7 @@ public class RowActionsUISub extends VerticalLayout implements DUIControllable{
 		btnRefresh.setIcon( FontAwesome.REFRESH );
 		
 		
-		this.addComponent( btnDetails );
+		// this.addComponent( btnDetails );
 		this.addComponent( btnRefresh );
 		
 		

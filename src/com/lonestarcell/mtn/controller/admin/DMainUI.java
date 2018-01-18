@@ -52,8 +52,6 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	@Autowired
 	private ProfileRepo person;
 	
-	@Autowired
-	private DUserUI dUserUI;
 	
 	public DMainUI(){
 		init( this );
@@ -328,7 +326,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				
 				if( setHMenuState( btnHMenuUser ) ){
 					//swap( new DUserUI( getParentUI() ) );
-					dUserUI.init( getParentUI() );
+					DUserUI dUserUI = new DUserUI( getParentUI() );
 					swap( dUserUI );
 				}
 				

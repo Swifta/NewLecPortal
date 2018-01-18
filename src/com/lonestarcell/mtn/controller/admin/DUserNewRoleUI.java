@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -12,16 +12,12 @@ import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.RequiredTFValidator;
-import com.lonestarcell.mtn.design.admin.DSetCredsUIDesign;
 import com.lonestarcell.mtn.design.admin.DUserNewRoleUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserDetails;
-import com.lonestarcell.mtn.model.admin.MUtil;
 import com.lonestarcell.mtn.spring.user.entity.Profile;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -34,8 +30,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
-@SpringComponent
-@UIScope
 public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 		DUIControllable {
 
@@ -44,23 +38,48 @@ public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 	private Window processingPopup;
 	private Logger log = LogManager.getLogger( DUserNewRoleUI.class.getName() );
 	private Item record;
-	
 	private Accordion accoRoles;
-	
-	@Autowired
+	private ApplicationContext springAppContext;
 	private ProfileRepo profileRepo;
 	
-
-	public DUserNewRoleUI( ) {
-	}
 	
-	public DUserNewRoleUI( Item record ) {
+	public DUserNewRoleUI( DUserRoleUI a, Item record, Accordion accoRoles ) {
 		this.setRecord( record );
-		// init();
-		
+		this.setSpringAppContext( a.getSpringAppContext() );
+		this.setProfileRepo( this.springAppContext.getBean( ProfileRepo.class ));
+		init( accoRoles );
+		log.debug( "New role contructor run." );
 	}
 	
 	
+
+	
+	
+	public ProfileRepo getProfileRepo() {
+		return profileRepo;
+	}
+
+	public void setProfileRepo(ProfileRepo profileRepo) {
+		this.profileRepo = profileRepo;
+	}
+
+
+
+
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
 
 	public Window getProcessingPopup() {
 		return processingPopup;
@@ -298,7 +317,7 @@ public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 		this.record = record;
 	}
 
-	public void init( Accordion accoRoles ) {
+	private void init( Accordion accoRoles ) {
 	
 		this.accoRoles = accoRoles;
 		this.setProcessingPopup( new Window("New Role") );

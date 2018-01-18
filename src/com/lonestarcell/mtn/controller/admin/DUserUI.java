@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.controller.admin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.design.admin.DUserUIDesign;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -12,32 +13,33 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 
-@SpringComponent
-@UIScope
-public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMainUI,DUserUI>, DUIControllable {
+public class DUserUI extends DUserUIDesign implements
+		DUserUIInitializable<DMainUI, DUserUI>, DUIControllable {
 
 	/**
 	 * 
 	 */
-	
+
 	private DMainUI ancestor;
 	private Button btnActive;
 	private Component rightContent;
-	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
-	
-	@Autowired
-	private DUserRoleUI dUserRoleUI;
-	
-	public DUserUI(){
-		
+	private Logger log = LogManager.getLogger(DMainUI.class.getName());
+
+	private ApplicationContext springAppContext;
+
+	public DUserUI(DMainUI a) {
+
+		this.setSpringAppContext(a.getSpringAppContext());
+		init(a);
 	}
-	
-	public DUserUI(DMainUI a){
-		// init( a );
-		
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
 	}
-	
-	
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
 
 	public Component getRightContent() {
 		return rightContent;
@@ -47,8 +49,6 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 		this.rightContent = rightContent;
 	}
 
-
-
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -57,118 +57,111 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 		this.attachBtnUsers();
 		this.attachBtnRolePerm();
 	}
-	
-	private void attachBtnNewUser(){
-		this.btnNewUser.addClickListener( new ClickListener(){
+
+	private void attachBtnNewUser() {
+		this.btnNewUser.addClickListener(new ClickListener() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
-				if( isHMenuActiveBtn( btnNewUser ) )
+
+				if (isHMenuActiveBtn(btnNewUser))
 					return;
-				
-				new DNewUserUI( getParentUI() );
+
+				new DNewUserUI(getParentUI());
 				// btnNewUser.addStyleName( "sn-left-menu-active" );
 				// btnUsers.removeStyleName( "sn-left-menu-active" );
-				
+
 			}
-			
+
 		});
 	}
-	
-	
-	private void attachBtnUsers(){
+
+	private void attachBtnUsers() {
 		btnActive = btnUsers;
-		this.btnUsers.addClickListener( new ClickListener(){
+		this.btnUsers.addClickListener(new ClickListener() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
-				if( isHMenuActiveBtn( btnUsers ) )
+
+				if (isHMenuActiveBtn(btnUsers))
 					return;
-				new DUserStateUI( getParentUI() );
+				new DUserStateUI(getParentUI());
 				// btnUsers.addStyleName( "sn-left-menu-active" );
 				// btnNewUser.removeStyleName( "sn-left-menu-active" );
-				
+
 			}
-			
+
 		});
 	}
-	
-	
-	private void attachBtnRolePerm(){
+
+	private void attachBtnRolePerm() {
 		// btnActive = btnUserRolePerm;
-		this.btnUserRolePerm.addClickListener( new ClickListener(){
+		this.btnUserRolePerm.addClickListener(new ClickListener() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
-				if( isHMenuActiveBtn( btnUserRolePerm ) )
+
+				if (isHMenuActiveBtn(btnUserRolePerm))
 					return;
-				dUserRoleUI.init( getParentUI() );;
-				
-				
+				new DUserRoleUI(getParentUI());
+
 			}
-			
+
 		});
 	}
-	
-	
-	private boolean isHMenuActiveBtn( Button btn ){
-		if( btnActive.equals( btn ) ){
+
+	private boolean isHMenuActiveBtn(Button btn) {
+		if (btnActive.equals(btn)) {
 			return true;
 		}
-		
-		
-		btnActive.removeStyleName( "sn-left-menu-active" );
-		btn.addStyleName( "sn-left-menu-active" );
+
+		btnActive.removeStyleName("sn-left-menu-active");
+		btn.addStyleName("sn-left-menu-active");
 		btnActive = btn;
-		
+
 		return false;
-}
-
-
+	}
 
 	@Override
 	public void setHeader() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setContent() {
 		setHeader();
 		setFooter();
-		swap( new DUserStateUI( getParentUI() ) ); 
+		swap(new DUserStateUI(getParentUI()));
 		attachCommandListeners();
-		
+
 	}
 
 	@Override
 	public void swap(Component cuid) {
-		this.cForms.replaceComponent(cForms.getComponent( 0 ), cuid);
-		log.debug( "UI is swapped." );
-		
+		this.cForms.replaceComponent(cForms.getComponent(0), cuid);
+		log.debug("UI is swapped.");
+
 	}
 
 	@Override
 	public void init(DMainUI a) {
-		setRightContent( this.cForms );
-		setAncestorUI( a );
+		setRightContent(this.cForms);
+		setAncestorUI(a);
 		setContent();
-		
+
 	}
 
 	@Override
 	public void setFooter() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -179,7 +172,7 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	@Override
 	public void setAncestorUI(DMainUI a) {
 		this.ancestor = a;
-		
+
 	}
 
 	@Override
@@ -190,10 +183,7 @@ public class DUserUI extends DUserUIDesign implements DUserUIInitializable<DMain
 	@Override
 	public void setParentUI(DUserUI p) {
 		// TODO Auto-generated method stub
-		
-	}
-	
 
-	
+	}
 
 }

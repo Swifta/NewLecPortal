@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -21,14 +21,9 @@ import com.lonestarcell.mtn.spring.user.entity.ProfilePermissionMap;
 import com.lonestarcell.mtn.spring.user.repo.ProfilePermissionMapRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
-
-@SpringComponent
-@UIScope
 public class DUserRolePermUI extends DUserRolePermDesign implements DUIControllable {
 
 	private static final long serialVersionUID = 1L;
@@ -36,27 +31,44 @@ public class DUserRolePermUI extends DUserRolePermDesign implements DUIControlla
 	private Item record;
 	private Logger log = LogManager.getLogger( DUserRolePermUI.class.getName() );
 	
-	@Autowired
+	private ApplicationContext springAppContext;
 	private ProfilePermissionMapRepo profilePermMapRepo;
 	
-	DUserRolePermUI( ){
+	DUserRolePermUI( DUserRoleUI a, short profileId ){
+		this.setSpringAppContext( a.getSpringAppContext() );
+		this.setProfilePermMapRepo( this.springAppContext.getBean( ProfilePermissionMapRepo.class ) );
+		init( profileId );
 	}
 	
 	
-	public void init( short profileId ){
+	
+	public ProfilePermissionMapRepo getProfilePermMapRepo() {
+		return profilePermMapRepo;
+	}
+
+
+
+	public void setProfilePermMapRepo(ProfilePermissionMapRepo profilePermMapRepo) {
+		this.profilePermMapRepo = profilePermMapRepo;
+	}
+
+
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+	private void init( short profileId ){
 		setRecord( record );
 		attachCommandListeners();
 		loadPermissions( profileId );
 	}
-	
-	
-	
-	/*DUserRolePermUI( Item record ){
-		//init( a );
-		setRecord( record );
-		attachCommandListeners();
-	}*/
-	
 	
 	public void loadPermissions( short profileId ){
 		
@@ -66,22 +78,36 @@ public class DUserRolePermUI extends DUserRolePermDesign implements DUIControlla
 		log.debug( "Profile Permission map Count: "+size, profilePermMapRepo );
 		Iterator< ProfilePermissionMap > itrProfilePermMap = lsProfilePermMap.iterator();
 		
+		
+		String permLabel = "Permission(s)";
+		tPerm.addItem( permLabel );
+		tPerm.setChildrenAllowed( permLabel, true );
+		
+		
 		if( size == 0 ){
 			
-			Object item = tPerm.addItem( "No permission" );
-			tPerm.setChildrenAllowed( item, false );
+			tPerm.addItem( "No permission" );
+			tPerm.setParent( "No permission", permLabel );
+			tPerm.setChildrenAllowed( "No permission", false );
+			
 			return;
 		}
+		
+		
 		
 		while( itrProfilePermMap.hasNext() ){
 			
 			ProfilePermissionMap profilePermMap = itrProfilePermMap.next();
-			String perm = profilePermMap.getPermission().getName();
+			String permName = profilePermMap.getPermission().getName();
 			String profile = profilePermMap.getProfile().getProfileName();
-			log.debug( profile+" - "+perm, profilePermMap );
+			log.debug( profile+" - "+permName, profilePermMap );
 			
-			Object item = tPerm.addItem( perm );
-			tPerm.setChildrenAllowed( item, false );
+			// item = tPermChildren.addItem( perm );
+			// tPermChildren.setChildrenAllowed( item, false );
+			
+			tPerm.addItem( permName );
+			tPerm.setParent( permName, permLabel );
+			tPerm.setChildrenAllowed( permName, false );
 		}
 		
 	}
@@ -102,6 +128,16 @@ public class DUserRolePermUI extends DUserRolePermDesign implements DUIControlla
 	  //this.attachBtnSave();
 	  //this.attachBtnAddRole();
 		
+		this.attachBtnDelete();
+		
+		
+		
+	}
+	
+	private void attachBtnDelete(){
+		this.btnDelete.addClickListener( e->{ deleteRole();});
+	}
+	public void deleteRole(){
 		
 	}
 	

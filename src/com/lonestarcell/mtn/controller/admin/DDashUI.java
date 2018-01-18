@@ -17,7 +17,7 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 	 */
 	
 	private DMainUI ancestor;
-	private Logger log = LogManager.getLogger( DMainUI.class.getName() );
+	private Logger log = LogManager.getLogger( DDashUI.class.getName() );
 	
 	DDashUI(DMainUI a){
 		init( a );
@@ -55,7 +55,7 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 		
 		String tDate = sdf.format( cal.getTime() );
 		log.debug( "To: "+tDate );
-		this.btnDash.setCaption( "Health [ "+tDate+ " ]");
+		this.btnDash.setCaption( "[ "+tDate+ " ]");
 		
 	}
 
