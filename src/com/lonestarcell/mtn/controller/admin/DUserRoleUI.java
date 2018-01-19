@@ -170,7 +170,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 						sProfileTabId = "0";
 					
 					profileId = Integer.parseInt( sProfileTabId );
-					DUserRolePermUI dUserRolePermUI = new DUserRolePermUI( getParentUI(), ( short ) profileId );
+					DUserRolePermUI dUserRolePermUI = new DUserRolePermUI( getParentUI(), accoRoles, ( short ) profileId );
 					cRolePerm.removeAllComponents();
 					cRolePerm.addComponent( dUserRolePermUI );
 					
@@ -617,7 +617,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 
 						// DUserRolePermUI rolePerm = new DUserRolePermUI(  null );
 						cRolePerm.removeAllComponents();
-						DUserRolePermUI dUserRolePermUI = new DUserRolePermUI( getParentUI(), ( short ) profileId );
+						DUserRolePermUI dUserRolePermUI = new DUserRolePermUI( getParentUI(), accoRoles, ( short ) profileId );
 						cRolePerm.addComponent( dUserRolePermUI );
 						
 						log.debug( "UI updated.", this );

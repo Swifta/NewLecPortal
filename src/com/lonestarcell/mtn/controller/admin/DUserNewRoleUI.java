@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -122,7 +123,7 @@ public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 						// Out out = resetUserPassAdmin();
 						if( profile != null ){
 							
-							Notification.show( "Role "+profile.getProfileName()+" added successfully.",
+							Notification.show( "Role "+profile.getProfileName()+" with id "+profile.getProfileId()+" added successfully.",
 									Notification.Type.HUMANIZED_MESSAGE );
 							addRoleToAccordion( profile );
 							processingPopup.close();
@@ -143,6 +144,8 @@ public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 						lbNormalMsg.addStyleName("sn-display-none");
 						lbErrorMsg.setValue( "Error occured. Please try again / Contact support." );
 						
+						e.printStackTrace();
+						
 					}
 				
 				
@@ -151,8 +154,10 @@ public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 		});
 	}
 	
+	@Transactional
 	private void addRoleToAccordion( Profile profile ){
 		
+		profile = profileRepo.findByProfileName( profile.getProfileName() );
 		
 		Tree tL = new Tree();
 		tL.addItem("Loading...");

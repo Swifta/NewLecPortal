@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vaadin.haijian.CSVExporter;
 import org.vaadin.haijian.ExcelExporter;
 
@@ -21,6 +23,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public abstract class AbstractDDataExportUI<M, O, I> implements DUIInitializable {
 
+	private Logger log = LogManager.getLogger();
+	
 	protected BeanItemContainer<O> container;
 	
 	private VerticalLayout cMoreOps;
@@ -74,6 +78,8 @@ public abstract class AbstractDDataExportUI<M, O, I> implements DUIInitializable
 		if( container == null ){
 			Notification.show( "Container is null.", Notification.Type.ERROR_MESSAGE );
 			return;
+		} else {
+			log.debug( "Data container size: "+container.size(), this );
 		}
 		
 		

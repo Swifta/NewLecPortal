@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class OutSubscriber implements Serializable {
 	
 	private static final long serialVersionUID = 7431320759077668024L;
-	private String transactionNumber, type, amount, status, payer, payee, timestamp;
+	private String transactionNumber, type, amount, status, payer, payee, date;
 	public String getTransactionNumber() {
 		return transactionNumber;
 	}
@@ -42,12 +42,14 @@ public class OutSubscriber implements Serializable {
 	public void setPayee(String payee) {
 		this.payee = payee;
 	}
-	public String getTimestamp() {
-		return timestamp;
+	public String getDate() {
+		return date;
 	}
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
+	public void setDate(String date) {
+		this.date = date;
 	}
+	
+	
 	
 
 	

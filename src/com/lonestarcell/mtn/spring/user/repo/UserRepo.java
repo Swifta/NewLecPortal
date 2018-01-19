@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.lonestarcell.mtn.spring.user.entity.User;
 
 @Repository
-@Transactional( propagation = Propagation.MANDATORY )
+@Transactional( propagation = Propagation.REQUIRED )
 public interface UserRepo extends JpaRepository< User, Long >{
 	
 }

@@ -332,12 +332,15 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 		
 		this.dFStartDate.setComponentError( null );
 		this.dFLastDate.setComponentError( null );
-		
+		// TODO Vital part when doing search & filter.
 		inTxn.setSearchMeterNo( null );
 		inTxn.setSearchMoID( null );
 		inTxn.setSearchMSISDN( null );
 		inTxn.setSearchSID( null );
 		inTxn.setSearchStatusDesc( null );
+		
+		inTxn.setfDate( null );
+		inTxn.settDate( null );
 		
 		Iterator<TextField> itr = tFSearchFields.iterator();
 		while( itr.hasNext() ) {
@@ -352,6 +355,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 			BeanItemContainer<O> container, DateField dFStart,
 			DateField dFLast) {
 
+		
 		Date fDate = dFStart.getValue();
 		Date tDate = dFLast.getValue();
 
@@ -360,33 +364,42 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 
 		if (fDate == null) {
 			dFStart.setComponentError(new UserError(
-					"Please Select \"From\" date"));
+					"Please Select From: date"));
 			return;
 		}
 
 		if (tDate == null) {
-			dFLast.setComponentError(new UserError("Please Select \"To\" date"));
+			dFLast.setComponentError(new UserError("Please Select To: date"));
 			return;
 		}
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(tDate);
-		//cal.add(Calendar.DAY_OF_MONTH, 1);
-
+		// Not sure about this.
+		cal.add(Calendar.DAY_OF_MONTH, -1);
 		tDate = cal.getTime();
 
 		if (fDate.compareTo(tDate) > 0) {
 
 			dFLast.setComponentError(new UserError(
-					"Invalid dates! \"From\" date should be earlier than \"To\" date"));
+					"Invalid dates! From: date should be earlier than To: date"));
 			return;
 		}
+		
+		cal.setTime(tDate);
+		// Not sure about this.
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		tDate = cal.getTime();
+		
 
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strSDate = sdf.format(fDate);
 		log.debug( "Date: " + strSDate );
 
 		String strTDate = sdf.format(tDate);
+		
+		inTxn.setfDate( strSDate );
+		inTxn.settDate( strTDate );
 
 		container.removeContainerFilters("date");
 

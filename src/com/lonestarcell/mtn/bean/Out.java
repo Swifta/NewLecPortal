@@ -1,8 +1,11 @@
 package com.lonestarcell.mtn.bean;
 
-public class Out {
+import java.io.Serializable;
+
+public class Out implements Serializable {
 	
-	private String msg = "UNKNOWN ERROR OCCURED";
+	private static final long serialVersionUID = 1L;
+	private String msg = "Default error message.";
 	private int statusCode = 100; 
 	
 	private BData<?> data;

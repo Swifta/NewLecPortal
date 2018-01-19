@@ -9,7 +9,7 @@ import com.lonestarcell.mtn.spring.user.entity.Profile;
 
 
 @Repository
-@Transactional( propagation = Propagation.MANDATORY )
+@Transactional( propagation = Propagation.REQUIRED )
 public interface PermissionRepo extends JpaRepository< Profile, Short >{
 	
 }

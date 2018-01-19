@@ -20,14 +20,14 @@ public class DTxnStateArchiveUI extends DTxnStateUI {
 	
 	DTxnStateArchiveUI( DTxnUI a){
 		super( a.getSpringAppContext() );
-		this.setInDate(inTxn, 300 );
+		this.setInDate( inTxn, 4*365 );
 		this.init(a);
 		log.debug( "Archive UI loaded successfully." );
 	}
 	
 	@Override
 	public void setHeader() {
-		this.lbDataTitle.setValue("Transaction Archive");
+		this.lbDataTitle.setValue("Subscriber Transaction Archive");
 	}
 	
 	@Override

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Proxy;
+
 import java.util.List;
 
 
@@ -13,6 +15,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Profile.findAll", query="SELECT p FROM Profile p")
+@Proxy(lazy = false)
 public class Profile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -25,6 +28,9 @@ public class Profile implements Serializable {
 
 	@Column(name="profile_name")
 	private String profileName;
+	
+	@Column(name="profile_status")
+	private short profileStatus;
 
 	//bi-directional many-to-one association to ProfilePermissionMap
 	@OneToMany(mappedBy="profile")
@@ -108,6 +114,20 @@ public class Profile implements Serializable {
 
 		return user;
 	}
+	
+	
+
+	public short getProfileStatus() {
+		return profileStatus;
+	}
+
+
+
+	public void setProfileStatus(short profileStatus) {
+		this.profileStatus = profileStatus;
+	}
+
+
 
 	public User removeUser(User user) {
 		getUsers().remove(user);

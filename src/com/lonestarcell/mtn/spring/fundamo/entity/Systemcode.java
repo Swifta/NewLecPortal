@@ -1,7 +1,10 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
 
 
 /**
@@ -11,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="SYSTEMCODES")
 @NamedQuery(name="Systemcode.findAll", query="SELECT s FROM Systemcode s")
+@Proxy(lazy = false)
 public class Systemcode implements Serializable {
 	private static final long serialVersionUID = 1L;
 

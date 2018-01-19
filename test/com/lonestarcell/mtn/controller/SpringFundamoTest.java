@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lonestarcell.mtn.controller.main.Person;
+import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.spring.config.Config;
 import com.lonestarcell.mtn.spring.config.DataAccessConfigFundamo;
 import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
@@ -63,10 +67,50 @@ public class SpringFundamoTest {
 			Transaction001 transaction = pg.getContent().get(0);
 			TransactionType001 type = transaction.getTransactionType001();
 			log.debug("Transaction code " + type.getSystemCode().getCode()
-					+ " for transaction " + transaction.getTransactionNumber()
+					+ " for transaction no. " + transaction.getTransactionNumber()
 					+ " and amount = " + transaction.getPayeeAmount()
+					+ " and type = " + transaction.getTransactionType001().getSystemCode().getValue()
+					+ " and payee = " + transaction.getPayeeAmount()
+					+ " and payer = " + transaction.getPayerAccountNumber()
 					+ " and status = " + transaction.getStatus(), transaction);
 		}
+
+	}
+	
+	
+	@Test
+	// @Ignore
+	public void testGetOnePageByDateRange() throws ParseException {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Page<Transaction001> pg = repo.findPageByDateRange( new PageRequest(0, 1), DateFormatFac.toDate( "2014-01-19" ), DateFormatFac.toDate( "2018-01-18" ) );
+		// Page<Transaction001> pg = repo.findAll(new PageRequest(0, 10));
+
+		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
+		
+		log.debug( "Total records: "+pg.getTotalPages(), this );
+		if (pg.getContent().size() > 0) {
+			Transaction001 transaction = pg.getContent().get(0);
+			TransactionType001 type = transaction.getTransactionType001();
+			log.debug("Transaction code " + type.getSystemCode().getCode()
+					+ " for transaction no. " + transaction.getTransactionNumber()
+					+ " and amount = " + NumberFormatFac.toMoney( ( transaction.getPayeeAmount()/100 ) + "" )
+					+ " and type = " + transaction.getTransactionType001().getSystemCode().getValue()
+					+ " and payee = " + transaction.getPayeeAmount()
+					+ " and payer = " + transaction.getPayerAccountNumber()
+					+ " and timestamp = " + DateFormatFac.toString( transaction.getLastUpdate() )
+					+ " and status = " + transaction.getStatus(), transaction);
+		}
+
+	}
+	
+	@Test
+	@Ignore
+	public void testGetTotalPayeeAmount() {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		long totalPayeeAmount = repo.getTotalPayeeAmount();
+		
+			log.debug("Total Payee Amount:  "+totalPayeeAmount, this );
+		
 
 	}
 	
@@ -125,7 +169,7 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	@Transactional
 	public void testGetOneEntryByOid() {
 		Assert.assertNotNull("Fundamo entry repo is null.", entryRepo);

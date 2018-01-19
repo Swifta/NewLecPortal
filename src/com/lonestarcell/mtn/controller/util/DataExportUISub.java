@@ -31,7 +31,17 @@ public class DataExportUISub extends AbstractDDataExportUI<MSub, OutSubscriber, 
 	protected  boolean setAllExportRecords( MSub mSub, In in, Collection<Item>records ){
 		
 		container = new BeanItemContainer<>(OutSubscriber.class );
-		Out out = mSub.setExportDataMultiTxnToday(in, container, records );
+		
+		Out out = new Out();
+		
+		log.debug( "Record is: "+records.size() );
+		
+		if( records.size() == 0 ){
+			out = mSub.setTxnTodayExportData( in, container );
+			
+		} else {
+			out = mSub.setExportDataMultiTxnToday(in, container, records );
+		}
 		
 		boolean status = out.getStatusCode() == 1;
 		if( status ){
@@ -43,8 +53,8 @@ public class DataExportUISub extends AbstractDDataExportUI<MSub, OutSubscriber, 
 		if( container == null ){
 			log.debug( "Container is null." );
 		} else {
-			log.debug( "Container is NOT null." );
-		}
+			log.debug( "Export container of size: "+container.size(), this );
+		} 
 			
 		return status;
 		

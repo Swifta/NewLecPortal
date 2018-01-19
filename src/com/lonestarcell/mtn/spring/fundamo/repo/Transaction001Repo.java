@@ -1,12 +1,14 @@
 package com.lonestarcell.mtn.spring.fundamo.repo;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Propagation;
 
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 
@@ -15,6 +17,13 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 // @Transactional( propagation = Propagation.MANDATORY )
 public interface Transaction001Repo extends JpaRepository< Transaction001, Long >{
 	public Page< Transaction001 > findByPayerAccountNumber( @Param( "payerAccountNumber" ) String payer, Pageable pageable );
-    // public Page< Transaction001 > getSubscriberTransactionHistory();
+    @Query( "SELECT SUM( t.payeeAmount ) FROM Transaction001 t" )
+	public long getTotalPayeeAmount();
+    
+    @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
+	public Page< Transaction001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
+    @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
+	public List< Transaction001 > findAllByDateRange( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+
 }

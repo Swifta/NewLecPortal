@@ -13,18 +13,13 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutSubscriber;
-import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
-import com.lonestarcell.mtn.controller.util.AllRowsActionsUITxn;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
-import com.lonestarcell.mtn.controller.util.MultiRowActionsUITxn;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
-import com.lonestarcell.mtn.controller.util.RowActionsUITxn;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MSub;
-import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -42,36 +37,38 @@ import com.vaadin.ui.UI;
 
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
-public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializable<DTxnUI,DTxnStateUI>, DUIControllable {
+public class DTxnStateUI extends DTxnStateUIDesign implements
+		DUserUIInitializable<DTxnUI, DTxnStateUI>, DUIControllable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private DTxnUI ancestor;
-	private Logger log = LogManager.getLogger( DTxnStateUI.class.getName() );
-	
-	
+	private Logger log = LogManager.getLogger(DTxnStateUI.class.getName());
+
 	private MSub mSub;
 	protected InTxn inTxn;
-	
+
 	private ApplicationContext springAppContext;
-	
-	
-	DTxnStateUI( DTxnUI a){
-		
-		this( a.getSpringAppContext());
-		this.setInDate(inTxn, 1 );
-		this.setSpringAppContext( a.getSpringAppContext() );
-		
-		init( a );
+
+	DTxnStateUI(DTxnUI a) {
+		this(a.getSpringAppContext());
+		init(a);
 	}
-	
-	DTxnStateUI( ApplicationContext cxt ){
+
+	/*
+	 * Shared constructor by both DTxnStateUI [ Parent class ] &
+	 * DTxnStateUIArchive [ Child class ]. Note init() is not called in this. It
+	 * only set's up data objects
+	 */
+	DTxnStateUI(ApplicationContext cxt) {
+
+		this.setSpringAppContext(cxt);
 		inTxn = new InTxn();
-		mSub = new MSub(  getCurrentUserId(), getCurrentUserSession(), getCurrentTimeCorrection(), cxt );
+		this.setInDate(inTxn, 1);
+		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
+				getCurrentTimeCorrection(), cxt);
 
 	}
-	
-	
 
 	public ApplicationContext getSpringAppContext() {
 		return springAppContext;
@@ -83,66 +80,59 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 
 	@Override
 	public void attachCommandListeners() {
-		
-	}
 
+	}
 
 	@Override
 	public void setHeader() {
-		this.lbDataTitle.setValue( " Transaction Records Today" );
+		this.lbDataTitle.setValue(" Transaction Records Today");
 	}
 
 	@Override
 	public void setContent() {
 		setHeader();
 		setFooter();
-		
+
 		swap(this);
 		attachCommandListeners();
-		this.vlTrxnTable.addComponent( loadGridData( new BeanItemContainer<>( OutSubscriber.class ) ) );
+		this.vlTrxnTable.addComponent(loadGridData(new BeanItemContainer<>(
+				OutSubscriber.class)));
 		this.vlTrxnTable.setHeightUndefined();
-		this.vlTrxnTable.setWidth( "1150px");
-		
-	}
-	
-	
+		this.vlTrxnTable.setWidth("1200px");
 
+	}
 
 	@Override
 	public void swap(Component cuid) {
-		//ancestor.setHeight("100%");
-		//cuid.setHeight("100%");
+		// ancestor.setHeight("100%");
+		// cuid.setHeight("100%");
 
-		
-		//ancestor.addStyleName("sn-p");
-		//cuid.addStyleName("sn-c");
-		
+		// ancestor.addStyleName("sn-p");
+		// cuid.addStyleName("sn-c");
+
 		cuid.setHeight("100%");
-		ancestor.getAncestorUI().getcMainContent().setHeight( "100%" );
-		//ancestor.getAncestorUI().getcMainContent().setWidth( "100%" );
-		ancestor.setHeight( "100%" );
-		
-		
-		log.debug( "Users height: "+cuid.getHeight() );
-		
-		ancestor.swap( cuid );
-		
+		ancestor.getAncestorUI().getcMainContent().setHeight("100%");
+		// ancestor.getAncestorUI().getcMainContent().setWidth( "100%" );
+		ancestor.setHeight("100%");
+
+		log.debug("Users height: " + cuid.getHeight());
+
+		ancestor.swap(cuid);
+
 	}
 
 	@Override
 	public void init(DTxnUI a) {
-		
-		setAncestorUI( a );
+
+		setAncestorUI(a);
 		setContent();
-		
+
 	}
-	
-	
 
 	@Override
 	public void setFooter() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -153,7 +143,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	@Override
 	public void setAncestorUI(DTxnUI a) {
 		this.ancestor = a;
-		
+
 	}
 
 	@Override
@@ -164,43 +154,39 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 	@Override
 	public void setParentUI(DTxnStateUI p) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
-	
-	protected Grid loadGridData( BeanItemContainer< OutSubscriber > beanItemContainer ) {
+
+	protected Grid loadGridData(
+			BeanItemContainer<OutSubscriber> beanItemContainer) {
 		try {
 
-			
-			log.debug( "Locale: "+UI.getCurrent().getLocale()  );
-			
+			log.debug("Locale: " + UI.getCurrent().getLocale());
+
 			In in = new In();
-			
+
 			BData<InTxn> inBData = new BData<>();
-			
-			
-			inTxn.setPage( 1 );
-			inBData.setData( inTxn );
-			in.setData( inBData );
-			
-			//TODO validate response
-			
-			Out out = mSub.searchTxnToday(in, beanItemContainer );
-			if( out.getStatusCode() != 1 ) {
-				Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
+
+			inTxn.setPage(1);
+			// this.setInDate(inTxn, ( 365 * 3) );
+			inBData.setData(inTxn);
+			in.setData(inBData);
+
+			// TODO validate response
+
+			Out out = mSub.searchTxnToday(in, beanItemContainer);
+			if (out.getStatusCode() != 1) {
+				Notification.show(out.getMsg(),
+						Notification.Type.WARNING_MESSAGE);
 			} else {
-				Notification.show(
-						out.getMsg(),
-						Notification.Type.HUMANIZED_MESSAGE );
+				Notification.show(out.getMsg(),
+						Notification.Type.HUMANIZED_MESSAGE);
 			}
 
 			Grid grid = new Grid();
-			
-			
 
 			// Add actions
-			
+
 			GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(
 					beanItemContainer);
 
@@ -211,9 +197,10 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 						@Override
 						public Component getValue(Item item, Object itemId,
 								Object propertyId) {
-							PopupView v = new PopupView("...", new RowActionsUISub( mSub, item ) );
-							v.setWidth( "100%" );
-							v.setHeight( "100%" );
+							PopupView v = new PopupView("...",
+									new RowActionsUISub(mSub, item));
+							v.setWidth("100%");
+							v.setHeight("100%");
 							return v;
 						}
 
@@ -222,70 +209,82 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 							return Component.class;
 						}
 
-					}); 
-			
-			
+					});
+
 			grid.setContainerDataSource(gpc);
 			grid.getColumn("actions").setRenderer(new ComponentRenderer());
-			
-			//transactionNumber, type, amount, status, payer, payee, timestamp;
-			//// "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp"
-			//grid.setColumnOrder( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "date", "actions" );
-			
-			grid.setColumnOrder( "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions" );
+
+			// transactionNumber, type, amount, status, payer, payee, timestamp;
+			// // "transactionNumber", "type", "amount", "status", "payer",
+			// "payee", "date"
+			// grid.setColumnOrder( "swiftaId", "mmoId", "msisdn", "meterNo",
+			// "amount", "rate", "statusDesc", "date", "actions" );
+
+			grid.setColumnOrder("transactionNumber", "type", "amount",
+					"status", "payer", "payee", "date", "actions");
 
 			grid.setFrozenColumnCount(2);
-			
+
 			HeaderRow header = grid.prependHeaderRow();
 			FooterRow footer = grid.prependFooterRow();
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
-			
-			
-			// Header config
-			// HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
-			HeaderCell dateFilterCellH = header.join( "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions" );
-			PaginationUIController pageC = new PaginationUIController( );
-			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(  mSub, grid, in, pageC  );
-			dateFilterCellH.setComponent( allRowsActionsUIH );
-			
-			header.setStyleName( "sn-date-filter-row" );
-			dateFilterCellH.setStyleName( "sn-no-border-right sn-no-border-left" );
-			
-			// Footer config
-			// FooterCell dateFilterCellF = footer.join( "swiftaId", "mmoId", "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions", "date" );
-		
-			FooterCell dateFilterCellF = footer.join( "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions" );
-			dateFilterCellF.setComponent( getFooterController(  mSub, grid, in, pageC  ) );
-			
-			//Init pagination controller after both header and footer have been set.
-			pageC.init( );
 
-			
-			footer.setStyleName( "sn-date-filter-row" );
-			dateFilterCellF.setStyleName( "sn-no-border-right sn-no-border-left" );
-			
-			PopupView v = new PopupView( "HHHH", null  );
-			v.setContent( new MultiRowActionsUISub( mSub, in, grid, v ) );
-			v.setHideOnMouseOut( true );
-			v.setVisible( true );
-			
-				
-			HeaderCell cellBulkActions = headerTextFilter.getCell( "actions" );
-			v.setWidth( "100%" );
-			v.setHeight( "100%" );
-			
-			cellBulkActions.setComponent( v );
-			
-			grid.getColumn( "actions" ).setWidth( 50 );
-			HeaderRow headerColumnNames = grid.getHeaderRow( 1 );
-			
-			HeaderCell cellActions = headerColumnNames.getCell( "actions" );
-			
-			cellActions.setStyleName( "sn-cell-actions" );
-			cellBulkActions.setStyleName( "sn-cell-actions" );
-			
+			// Header config
+			// HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId",
+			// "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions",
+			// "date" );
+			HeaderCell dateFilterCellH = header.join("transactionNumber",
+					"type", "amount", "status", "payer", "payee", "date",
+					"actions");
+			PaginationUIController pageC = new PaginationUIController();
+			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
+					grid, in, pageC);
+			dateFilterCellH.setComponent(allRowsActionsUIH);
+
+			header.setStyleName("sn-date-filter-row");
+			dateFilterCellH
+					.setStyleName("sn-no-border-right sn-no-border-left");
+
+			// Footer config
+			// FooterCell dateFilterCellF = footer.join( "swiftaId", "mmoId",
+			// "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions",
+			// "date" );
+
+			FooterCell dateFilterCellF = footer.join("transactionNumber",
+					"type", "amount", "status", "payer", "payee", "date",
+					"actions");
+			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
+					pageC));
+
+			// Init pagination controller after both header and footer have been
+			// set.
+			pageC.init();
+
+			footer.setStyleName("sn-date-filter-row");
+			dateFilterCellF
+					.setStyleName("sn-no-border-right sn-no-border-left");
+
+			PopupView v = new PopupView("HHHH", null);
+			v.setContent(new MultiRowActionsUISub(mSub, in, grid, v));
+			v.setHideOnMouseOut(true);
+			v.setVisible(true);
+
+			HeaderCell cellBulkActions = headerTextFilter.getCell("actions");
+			v.setWidth("100%");
+			v.setHeight("100%");
+
+			cellBulkActions.setComponent(v);
+
+			grid.getColumn("actions").setWidth(50);
+			HeaderRow headerColumnNames = grid.getHeaderRow(1);
+
+			HeaderCell cellActions = headerColumnNames.getCell("actions");
+
+			cellActions.setStyleName("sn-cell-actions");
+			cellBulkActions.setStyleName("sn-cell-actions");
+
 			// Hide unnecessary bean fields
-			
+
 			// grid.removeColumn( "sessionVar" );
 			// grid.removeColumn( "profileId" );
 			// grid.removeColumn( "payStatus" );
@@ -296,45 +295,47 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			// grid.removeColumn( "token" );
 			// grid.removeColumn( "reqCount" );
 			// grid.removeColumn( "txnType" );
-			
 
 			// Add search field
-			
-			// "transactionNumber", "type", "amount", "status", "payer", "payee", "timestamp", "actions"
-			
-			allRowsActionsUIH.prepareGridHeader( grid, "transactionNumber", "Transaction Number", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "type", "Type", false );
-			allRowsActionsUIH.prepareGridHeader( grid, "amount", "Amount", false );
-			allRowsActionsUIH.prepareGridHeader( grid, "status", "Status", false );
-			allRowsActionsUIH.prepareGridHeader( grid, "payer", "Payer", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "payee", "Payee", true );
-			allRowsActionsUIH.prepareGridHeader( grid, "timestamp", "Timestamp", false );
-			allRowsActionsUIH.prepareGridHeader( grid, "actions", "...", false );
-			
-			
+
+			// "transactionNumber", "type", "amount", "status", "payer",
+			// "payee", "date", "actions"
+
+			allRowsActionsUIH.prepareGridHeader(grid, "transactionNumber",
+					"Transaction Number", true);
+			allRowsActionsUIH.prepareGridHeader(grid, "type", "Type", false);
+			allRowsActionsUIH
+					.prepareGridHeader(grid, "amount", "Amount", false);
+			allRowsActionsUIH
+					.prepareGridHeader(grid, "status", "Status", false);
+			allRowsActionsUIH.prepareGridHeader(grid, "payer", "Payer", true);
+			allRowsActionsUIH.prepareGridHeader(grid, "payee", "Payee", true);
+			allRowsActionsUIH.prepareGridHeader(grid, "date", "Timestamp",
+					false);
+			allRowsActionsUIH.prepareGridHeader(grid, "actions", "...", false);
+
 			// Set column widths
-			
-			grid.getColumn( "payer" ).setWidth( 135 ).setResizable(false);
-			grid.getColumn( "payee" ).setWidth( 135 ).setResizable(false);
-			grid.getColumn( "transactionNumber" ).setWidth( 125 );
+
+			grid.getColumn("payer").setWidth( 200 ).setResizable(false);
+			grid.getColumn("payee").setWidth( 200 ).setResizable(false);
+			grid.getColumn("transactionNumber").setWidth(125);
 			// grid.getColumn( "mmoId" ).setWidth( 125 );
 			// grid.getColumn( "meterNo" ).setWidth( 135 );
-			grid.getColumn( "amount" ).setWidth( 100 );
+			grid.getColumn("amount").setWidth(100);
 			// grid.getColumn( "statusDesc" ).setWidth( 125 );
-			
-			grid.getColumn( "timestamp" ).setWidth( 178 ).setResizable(false);
+
+			grid.getColumn("date").setWidth(178).setResizable(false);
 			// grid.getColumn( "rate" ).setWidth( 70 );
-			
-			
-			grid.addStyleName( "sn-small-grid" );
+
+			grid.addStyleName("sn-small-grid");
 
 			grid.setSelectionMode(SelectionMode.MULTI);
-			grid.setHeight( "500px" );
-			grid.setWidth( "100%" );
-			
-			//DataExport dataExport = new DataExport();
+			grid.setHeight("600px");
+			grid.setWidth("100%");
+
+			// DataExport dataExport = new DataExport();
 			// dataExport.exportDataAsExcel( grid );
-			
+
 			return grid;
 
 		} catch (Exception e) {
@@ -345,57 +346,51 @@ public class DTxnStateUI extends DTxnStateUIDesign implements DUserUIInitializab
 			e.printStackTrace();
 
 		}
-		
-		
-		
+
 		return new Grid();
 	}
-	
-	protected AllRowsActionsUISub getHeaderController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUISub( mSub, grid, in, false, true, pageC );
+
+	protected AllRowsActionsUISub getHeaderController(MSub mSub, Grid grid,
+			In in, PaginationUIController pageC) {
+		return new AllRowsActionsUISub(mSub, grid, in, false, true, pageC);
 	}
-	
-	protected AllRowsActionsUISub getFooterController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUISub( mSub, grid, in, false, false, pageC );
+
+	protected AllRowsActionsUISub getFooterController(MSub mSub, Grid grid,
+			In in, PaginationUIController pageC) {
+		return new AllRowsActionsUISub(mSub, grid, in, false, false, pageC);
 	}
-	
-	protected long getCurrentUserId(){
-		return ( long ) UI.getCurrent().getSession().getAttribute( DLoginUIController.USER_ID );
+
+	protected long getCurrentUserId() {
+		return (long) UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.USER_ID);
 	}
-	
-	protected String getCurrentUserSession(){
-		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.SESSION_VAR );
+
+	protected String getCurrentUserSession() {
+		return (String) UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.SESSION_VAR);
 	}
-	
-	protected String getCurrentTimeCorrection(){
-		return ( String ) UI.getCurrent().getSession().getAttribute( DLoginUIController.TIME_CORRECTION );
+
+	protected String getCurrentTimeCorrection() {
+		return (String) UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.TIME_CORRECTION);
 	}
-	
-	protected void setInDate( InTxn inTxn, int dayOffSet ){
-		
-		
-		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+
+	protected void setInDate(InTxn inTxn, int dayOffSet) {
+
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
-		
-		String tDate = sdf.format( cal.getTime() );
-		log.debug( "To: "+tDate );
-		
-		inTxn.settDate(  tDate );
-		
-		cal.add(Calendar.DAY_OF_MONTH, -1*(dayOffSet) );
-		String fDate =  sdf.format( cal.getTime() );
-		log.debug( "From: "+fDate );
-		
-		inTxn.setfDate( fDate );
-		
-		
+
+		String tDate = sdf.format(cal.getTime());
+		log.debug("To: " + tDate);
+
+		inTxn.settDate(tDate);
+
+		cal.add(Calendar.DAY_OF_MONTH, -1 * (dayOffSet));
+		String fDate = sdf.format(cal.getTime());
+		log.debug("From: " + fDate);
+
+		inTxn.setfDate(fDate);
+
 	}
-	
-	
-
-
-	
-	
-
 
 }
