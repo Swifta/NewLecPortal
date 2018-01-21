@@ -1,8 +1,13 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -10,6 +15,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Proxy(lazy = false)
 @Table(name="ACCOUNT_IDENTIFIER001")
 @NamedQuery(name="AccountIdentifier001.findAll", query="SELECT a FROM AccountIdentifier001 a")
 public class AccountIdentifier001 implements Serializable {
@@ -29,7 +35,13 @@ public class AccountIdentifier001 implements Serializable {
 	// @Column(name="USER_ACCOUNT_OID")
 	// private BigDecimal userAccountOid;
 	
-	@ManyToOne( fetch = FetchType.LAZY)
+	/*
+	@OneToMany( fetch = FetchType.LAZY)
+	@JoinColumn( name = "USER_ACCOUNT_OID" )
+	private List< UserAccount001 > userAccount001s;
+	*/
+	
+	@ManyToOne( fetch = FetchType.LAZY )
 	@JoinColumn( name = "USER_ACCOUNT_OID" )
 	private UserAccount001 userAccount001;
 	
@@ -77,6 +89,11 @@ public class AccountIdentifier001 implements Serializable {
 	public void setUserAccount001(UserAccount001 userAccount001) {
 		this.userAccount001 = userAccount001;
 	}
+
+	
+	
+	
+	
 
 	/*
 	public BigDecimal getUserAccountOid() {

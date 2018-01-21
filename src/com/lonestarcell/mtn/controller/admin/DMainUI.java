@@ -242,6 +242,15 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		
 		// Disable Misc. for now
 		
+		this.btnHMenuDash.setEnabled( true );
+		this.btnHMenuTxn.setEnabled( true );
+		
+		this.btnHMenuInfo.setEnabled( false );
+		this.btnHMenuMisc.setEnabled( false );
+		this.btnHMenuPayment.setEnabled( false );
+		this.btnHMenuToken.setEnabled( false );
+		
+		
 		
 	}
 	

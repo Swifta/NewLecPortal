@@ -1,25 +1,21 @@
 package com.lonestarcell.mtn.controller.admin;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutSubscriber;
-import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUITxn;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
+import com.lonestarcell.mtn.controller.util.PopupViewPropertyValueGenerator;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
-import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MSub;
+import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -37,125 +33,36 @@ import com.vaadin.ui.UI;
 
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
-public class DTxnStateUI extends DTxnStateUIDesign implements
-		DUserUIInitializable<DTxnUI, DTxnStateUI>, DUIControllable {
+public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 
 	private static final long serialVersionUID = 1L;
-
-	private DTxnUI ancestor;
-	private Logger log = LogManager.getLogger(DTxnStateUI.class.getName());
-
-	protected MSub mSub;
-	protected InTxn inTxn;
-
-	private ApplicationContext springAppContext;
-
-	DTxnStateUI(DTxnUI a) {
-		this(a.getSpringAppContext());
-		init(a);
+	
+	private Logger log = LogManager.getLogger( DTxnStateMerchantArchiveUI.class.getName() );
+	
+	
+	DTxnStateMerchantArchiveUI( DTxnUI a){
+		super( a.getSpringAppContext() );
+		this.setInDate( inTxn, 4*365 );
+		this.init(a);
+		log.debug( "Archive UI loaded successfully." );
 	}
-
-	/*
-	 * Shared constructor by both DTxnStateUI [ Parent class ] &
-	 * DTxnStateUIArchive [ Child class ]. Note init() is not called in this. It
-	 * only set's up data objects
-	 */
-	DTxnStateUI(ApplicationContext cxt) {
-
-		this.setSpringAppContext(cxt);
-		inTxn = new InTxn();
-		this.setInDate(inTxn, 1);
-		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
-				getCurrentTimeCorrection(), cxt);
-
-	}
-
-	public ApplicationContext getSpringAppContext() {
-		return springAppContext;
-	}
-
-	public void setSpringAppContext(ApplicationContext springAppContext) {
-		this.springAppContext = springAppContext;
-	}
-
-	@Override
-	public void attachCommandListeners() {
-
-	}
-
+	
 	@Override
 	public void setHeader() {
-		this.lbDataTitle.setValue(" Transaction Records Today");
+		this.lbDataTitle.setValue("Merchant Transaction Archive");
 	}
-
+	
 	@Override
-	public void setContent() {
-		setHeader();
-		setFooter();
-
-		swap(this);
-		attachCommandListeners();
-		this.vlTrxnTable.addComponent(loadGridData(new BeanItemContainer<>(
-				OutSubscriber.class)));
-		this.vlTrxnTable.setHeightUndefined();
-		this.vlTrxnTable.setWidth("1200px");
-
+	protected AllRowsActionsUISub getHeaderController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUISub( mSub, grid, in, true, true, pageC );
 	}
-
+	
 	@Override
-	public void swap(Component cuid) {
-		// ancestor.setHeight("100%");
-		// cuid.setHeight("100%");
-
-		// ancestor.addStyleName("sn-p");
-		// cuid.addStyleName("sn-c");
-
-		cuid.setHeight("100%");
-		ancestor.getAncestorUI().getcMainContent().setHeight("100%");
-		// ancestor.getAncestorUI().getcMainContent().setWidth( "100%" );
-		ancestor.setHeight("100%");
-
-		log.debug("Users height: " + cuid.getHeight());
-
-		ancestor.swap(cuid);
-
+	protected AllRowsActionsUISub getFooterController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+		return new AllRowsActionsUISub( mSub, grid, in, false, false, pageC );
 	}
+	
 
-	@Override
-	public void init(DTxnUI a) {
-
-		setAncestorUI(a);
-		setContent();
-
-	}
-
-	@Override
-	public void setFooter() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public DTxnUI getAncestorUI() {
-		return ancestor;
-	}
-
-	@Override
-	public void setAncestorUI(DTxnUI a) {
-		this.ancestor = a;
-
-	}
-
-	@Override
-	public DTxnStateUI getParentUI() {
-		return this;
-	}
-
-	@Override
-	public void setParentUI(DTxnStateUI p) {
-		// TODO Auto-generated method stub
-
-	}
 
 	protected Grid loadGridData(
 			BeanItemContainer<OutSubscriber> beanItemContainer) {
@@ -191,35 +98,10 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 					beanItemContainer);
 
 			gpc.addGeneratedProperty("actions",
-					new PropertyValueGenerator<Component>() {
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						public Component getValue(Item item, Object itemId,
-								Object propertyId) {
-							PopupView v = new PopupView("...",
-									new RowActionsUISub(mSub, item));
-							v.setWidth("100%");
-							v.setHeight("100%");
-							return v;
-						}
-
-						@Override
-						public Class<Component> getType() {
-							return Component.class;
-						}
-
-					});
+					new PopupViewPropertyValueGenerator( mSub ));
 
 			grid.setContainerDataSource(gpc);
-			grid.getColumn("actions").setRenderer(new ComponentRenderer());
-
-			// transactionNumber, type, amount, status, payer, payee, timestamp;
-			// // "transactionNumber", "type", "amount", "status", "payer",
-			// "payee", "date"
-			// grid.setColumnOrder( "swiftaId", "mmoId", "msisdn", "meterNo",
-			// "amount", "rate", "statusDesc", "date", "actions" );
-
+			grid.getColumn("actions").setRenderer(new ComponentRenderer() );
 			grid.setColumnOrder("transactionNumber", "type", "amount",
 					"status", "payer", "payee", "date", "actions");
 
@@ -349,48 +231,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 
 		return new Grid();
 	}
+	
+	
 
-	protected AllRowsActionsUISub getHeaderController(MSub mSub, Grid grid,
-			In in, PaginationUIController pageC) {
-		return new AllRowsActionsUISub(mSub, grid, in, false, true, pageC);
-	}
-
-	protected AllRowsActionsUISub getFooterController(MSub mSub, Grid grid,
-			In in, PaginationUIController pageC) {
-		return new AllRowsActionsUISub(mSub, grid, in, false, false, pageC);
-	}
-
-	protected long getCurrentUserId() {
-		return (long) UI.getCurrent().getSession()
-				.getAttribute(DLoginUIController.USER_ID);
-	}
-
-	protected String getCurrentUserSession() {
-		return (String) UI.getCurrent().getSession()
-				.getAttribute(DLoginUIController.SESSION_VAR);
-	}
-
-	protected String getCurrentTimeCorrection() {
-		return (String) UI.getCurrent().getSession()
-				.getAttribute(DLoginUIController.TIME_CORRECTION);
-	}
-
-	protected void setInDate(InTxn inTxn, int dayOffSet) {
-
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar cal = Calendar.getInstance();
-
-		String tDate = sdf.format(cal.getTime());
-		log.debug("To: " + tDate);
-
-		inTxn.settDate(tDate);
-
-		cal.add(Calendar.DAY_OF_MONTH, -1 * (dayOffSet));
-		String fDate = sdf.format(cal.getTime());
-		log.debug("From: " + fDate);
-
-		inTxn.setfDate(fDate);
-
-	}
 
 }

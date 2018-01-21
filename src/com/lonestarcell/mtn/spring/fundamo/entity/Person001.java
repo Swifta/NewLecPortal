@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -12,6 +16,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @NamedQuery(name="Person001.findAll", query="SELECT p FROM Person001 p")
+@Proxy(lazy = false)
 public class Person001 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -60,8 +65,14 @@ public class Person001 implements Serializable {
 	@Column(name="HOME_PHONE_OID")
 	private BigDecimal homePhoneOid;
 
+	/*
 	@Column(name="ID_NUMBER")
 	private String idNumber;
+	*/
+	@OneToOne( fetch = FetchType.LAZY )
+	@JoinColumn(name="ID_NUMBER", referencedColumnName = "ID_NUMBER" )
+	private RegistrationRequestData001 registrationRequestData001;
+	
 
 	@Column(name="ID_TYPE")
 	private String idType;
@@ -254,6 +265,7 @@ public class Person001 implements Serializable {
 		this.homePhoneOid = homePhoneOid;
 	}
 
+	/*
 	public String getIdNumber() {
 		return this.idNumber;
 	}
@@ -261,9 +273,21 @@ public class Person001 implements Serializable {
 	public void setIdNumber(String idNumber) {
 		this.idNumber = idNumber;
 	}
+	*/
+	
+	
 
 	public String getIdType() {
 		return this.idType;
+	}
+
+	public RegistrationRequestData001 getRegistrationRequestData001() {
+		return registrationRequestData001;
+	}
+
+	public void setRegistrationRequestData001(
+			RegistrationRequestData001 registrationRequestData001) {
+		this.registrationRequestData001 = registrationRequestData001;
 	}
 
 	public void setIdType(String idType) {

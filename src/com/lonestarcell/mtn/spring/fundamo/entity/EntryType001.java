@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.sql.Timestamp;
 
 
@@ -10,6 +14,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Proxy(lazy = false)
 @Table(name="ENTRY_TYPE001")
 @NamedQuery(name="EntryType001.findAll", query="SELECT e FROM EntryType001 e")
 public class EntryType001 implements Serializable {

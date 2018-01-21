@@ -21,7 +21,9 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
+import com.lonestarcell.mtn.spring.fundamo.entity.Entry001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
+import com.lonestarcell.mtn.spring.fundamo.repo.Entry001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
@@ -137,7 +139,7 @@ public class MSub extends MDAO implements Serializable {
 				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
 				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
 				outSubscriber.setPayer(transaction.getPayerAccountNumber());
-				outSubscriber.setStatus(transaction.getStatus());
+				outSubscriber.setStatus(transaction.getSystemCode().getValue());
 				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
 				outSubscriber.setTransactionNumber(transaction
 						.getTransactionNumber() + "");
@@ -145,6 +147,104 @@ public class MSub extends MDAO implements Serializable {
 						.getSystemCode().getValue());
 
 				container.addBean(outSubscriber);
+
+			} while (itr.hasNext());
+			out.setStatusCode(1);
+			out.setMsg("Data fetch successful.");
+
+		} catch ( Exception e ) {
+			
+			container.addBean(outSubscriber);
+			BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+			bOutData.setData(container);
+			out.setData(bOutData);
+			
+			e.printStackTrace();
+			out.setMsg( "Data fetch error." );
+		}
+
+		return out;
+	}
+	
+	
+	
+	public Out searchTxnTodayMerchantArchive(In in, BeanItemContainer<OutSubscriber> container) {
+
+		Out out = this.checkAuthorization();
+		if (out.getStatusCode() != 1) {
+			out.setStatusCode(100);
+			return out;
+		}
+		out = new Out();
+
+		try {
+			Entry001Repo repo = springAppContext
+					.getBean(Entry001Repo.class);
+			if (repo == null) {
+				log.debug("Transaction001 repo is null");
+				out.setMsg("DAO error occured.");
+				return out;
+			}
+
+			Page< Entry001 > pages = null;
+
+			Pager pager = springAppContext.getBean(Pager.class);
+			
+			BData< ? > bInData = in.getData();
+			InTxn inTxn = ( InTxn ) bInData.getData();
+			
+			log.debug( "MSub from date:"+inTxn.getfDate(), this );
+			log.debug( "MSub to date:"+inTxn.gettDate(), this );
+
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				
+				pages = repo.findAll(pager.getPageRequest(inTxn.getPage()));
+				
+			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+				log.debug( "In date filter: ", this );
+				pages = repo.findPageByDateRange(
+						pager.getPageRequest(inTxn.getPage() ),
+						DateFormatFac.toDate( inTxn.getfDate() ),
+						DateFormatFac.toDate( inTxn.gettDate() ) );
+			}
+
+			if (pages == null) {
+				log.debug("Page object is null.");
+				out.setMsg("DAO error occured.");
+				return out;
+			}
+
+			if (pages.getNumberOfElements() == 0) {
+
+				container.addBean(outSubscriber);
+				BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+				bOutData.setData(container);
+				out.setData(bOutData);
+				out.setMsg("No records found.");
+
+				return out;
+			}
+
+			Iterator<Entry001> itr = pages.getContent().iterator();
+			do {
+				Entry001 entry = itr.next();
+
+				outSubscriber = new OutSubscriber();
+				
+				double amount = ( entry.getAmount()/ 100 );
+				
+				/*
+				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
+				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
+				outSubscriber.setPayer(transaction.getPayerAccountNumber());
+				outSubscriber.setStatus(transaction.getSystemCode().getValue());
+				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
+				outSubscriber.setTransactionNumber(transaction
+						.getTransactionNumber() + "");
+				outSubscriber.setType(transaction.getTransactionType001()
+						.getSystemCode().getValue());
+
+				container.addBean(outSubscriber); */
 
 			} while (itr.hasNext());
 			out.setStatusCode(1);
@@ -232,7 +332,7 @@ public class MSub extends MDAO implements Serializable {
 				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
 				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
 				outSubscriber.setPayer(transaction.getPayerAccountNumber());
-				outSubscriber.setStatus(transaction.getStatus());
+				outSubscriber.setStatus(transaction.getSystemCode().getValue());
 				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
 				outSubscriber.setTransactionNumber(transaction
 						.getTransactionNumber() + "");

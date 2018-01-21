@@ -1,9 +1,14 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -11,6 +16,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Proxy(lazy = false)
 @Table(name="LEDGER_ACCOUNT001")
 @NamedQuery(name="LedgerAccount001.findAll", query="SELECT l FROM LedgerAccount001 l")
 public class LedgerAccount001 implements Serializable {
@@ -18,6 +24,19 @@ public class LedgerAccount001 implements Serializable {
 
 	@Id
 	private long oid;
+	
+	/*
+		@OneToMany( fetch = FetchType.LAZY )
+		@JoinColumn( name = "oid", referencedColumnName = "ACCOUNT_OID"  )
+		private List< Entry001 > entry001s;
+	
+	*/
+	
+	@OneToMany( fetch = FetchType.LAZY, mappedBy = "userAccount001" )
+	// @JoinColumn( name = "oid", referencedColumnName = "ACCOUNT_OID"  )
+	private List< Entry001 > entry001s;
+	
+	
 
 	@Column(name="ACCOUNT_PROFILE_OID")
 	private BigDecimal accountProfileOid;
@@ -71,6 +90,7 @@ public class LedgerAccount001 implements Serializable {
 	public LedgerAccount001() {
 	}
 
+	
 	public long getOid() {
 		return this.oid;
 	}
@@ -78,10 +98,25 @@ public class LedgerAccount001 implements Serializable {
 	public void setOid(long oid) {
 		this.oid = oid;
 	}
+	
+	
+	
+	
+	public List<Entry001> getEntry001s() {
+		return entry001s;
+	}
+
+	public void setEntry001s(List<Entry001> entry001s) {
+		this.entry001s = entry001s;
+	}
+	
+	
 
 	public BigDecimal getAccountProfileOid() {
 		return this.accountProfileOid;
 	}
+
+	
 
 	public void setAccountProfileOid(BigDecimal accountProfileOid) {
 		this.accountProfileOid = accountProfileOid;

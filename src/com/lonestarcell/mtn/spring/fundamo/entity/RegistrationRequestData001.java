@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.sql.Timestamp;
 
 
@@ -12,6 +16,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="REGISTRATION_REQUEST_DATA001")
 @NamedQuery(name="RegistrationRequestData001.findAll", query="SELECT r FROM RegistrationRequestData001 r")
+@Proxy(lazy = false)
 public class RegistrationRequestData001 implements Serializable {
 	private static final long serialVersionUID = 1L;
 

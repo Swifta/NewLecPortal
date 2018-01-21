@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -12,6 +16,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @NamedQuery(name="Subscriber001.findAll", query="SELECT s FROM Subscriber001 s")
+@Proxy(lazy = false)
 public class Subscriber001 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -34,8 +39,14 @@ public class Subscriber001 implements Serializable {
 
 	private String name;
 
+	/*
 	@Column(name="PARTY_OID")
 	private BigDecimal partyOid;
+	*/
+	
+	@OneToOne( fetch = FetchType.LAZY )
+	@JoinColumn( name="PARTY_OID" )
+	private Person001 person001;
 
 	@Column(name="REGISTERED_BY_OID")
 	private BigDecimal registeredByOid;
@@ -107,16 +118,28 @@ public class Subscriber001 implements Serializable {
 		this.name = name;
 	}
 
+	/*
 	public BigDecimal getPartyOid() {
 		return this.partyOid;
 	}
 
 	public void setPartyOid(BigDecimal partyOid) {
 		this.partyOid = partyOid;
-	}
+	} */
+	
+	
+	
 
 	public BigDecimal getRegisteredByOid() {
 		return this.registeredByOid;
+	}
+
+	public Person001 getPerson001() {
+		return person001;
+	}
+
+	public void setPerson001(Person001 person001) {
+		this.person001 = person001;
 	}
 
 	public void setRegisteredByOid(BigDecimal registeredByOid) {

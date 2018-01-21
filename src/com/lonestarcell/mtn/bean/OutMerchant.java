@@ -2,7 +2,7 @@ package com.lonestarcell.mtn.bean;
 
 import java.io.Serializable;
 
-public class OutSubscriber implements IDataBean, Serializable {
+public class OutMerchant implements Serializable {
 	
 	private static final long serialVersionUID = 7431320759077668024L;
 	private String transactionNumber, type, amount, status, payer, payee, date;
@@ -47,11 +47,6 @@ public class OutSubscriber implements IDataBean, Serializable {
 	}
 	public void setDate(String date) {
 		this.date = date;
-	}
-	
-	@Override
-	public IDataBean getDataBean() {
-		return new OutSubscriber();
 	}
 	
 	

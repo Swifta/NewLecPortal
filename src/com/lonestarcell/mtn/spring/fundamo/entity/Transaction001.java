@@ -139,13 +139,11 @@ public class Transaction001 implements Serializable {
 	private BigDecimal serviceOid;
 	
 	
-	private String status;
-
+	//private String status;
+	 @ManyToOne(fetch=FetchType.LAZY )
+	 @JoinColumn( name = "status" )
+	 private Systemcode systemCode;
 	
-	/*  @ManyToOne(fetch=FetchType.LAZY )
-		@JoinTable( name = "SYSTEMCODES", joinColumns = @JoinColumn(name = "code", referencedColumnName = "status" ),  inverseJoinColumns = @JoinColumn(name = "code") )
-		private Systemcode systemCode;
-	*/
 
 	@Column(name="TILL_NUMBER")
 	private String tillNumber;
@@ -497,16 +495,27 @@ public class Transaction001 implements Serializable {
 		this.serviceOid = serviceOid;
 	}
 
+	/*
 	public String getStatus() {
 		return this.status;
 	}
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
+	} */
+	
+	
 
 	public String getTillNumber() {
 		return this.tillNumber;
+	}
+
+	public Systemcode getSystemCode() {
+		return systemCode;
+	}
+
+	public void setSystemCode(Systemcode systemCode) {
+		this.systemCode = systemCode;
 	}
 
 	public void setTillNumber(String tillNumber) {

@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.fundamo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -11,6 +15,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Proxy(lazy = false)
 @Table(name="CORPORATE_ACCOUNT_HOLDER001")
 @NamedQuery(name="CorporateAccountHolder001.findAll", query="SELECT c FROM CorporateAccountHolder001 c")
 public class CorporateAccountHolder001 implements Serializable {
@@ -33,8 +38,16 @@ public class CorporateAccountHolder001 implements Serializable {
 	@Column(name="CLASS_TYPE")
 	private BigDecimal classType;
 
+	/*
 	@Column(name="CORPORATE_ACC_HOLDER_G_OID")
 	private BigDecimal corporateAccHolderGOid;
+	*/
+	
+	
+	@ManyToOne( fetch = FetchType.LAZY )
+	@JoinColumn(name="CORPORATE_ACC_HOLDER_G_OID")
+	private CahGroup001 cahGroup001;
+	
 
 	@Column(name="CREDIT_CHECK")
 	private String creditCheck;
@@ -121,12 +134,23 @@ public class CorporateAccountHolder001 implements Serializable {
 		this.classType = classType;
 	}
 
+	
+	
+	/*
 	public BigDecimal getCorporateAccHolderGOid() {
 		return this.corporateAccHolderGOid;
 	}
 
 	public void setCorporateAccHolderGOid(BigDecimal corporateAccHolderGOid) {
 		this.corporateAccHolderGOid = corporateAccHolderGOid;
+	} */
+
+	public CahGroup001 getCahGroup001() {
+		return cahGroup001;
+	}
+
+	public void setCahGroup001(CahGroup001 cahGroup001) {
+		this.cahGroup001 = cahGroup001;
 	}
 
 	public String getCreditCheck() {
