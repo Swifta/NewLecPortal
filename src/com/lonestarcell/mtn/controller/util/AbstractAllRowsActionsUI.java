@@ -6,9 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,9 +56,12 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	protected OutTxnMeta outTxnMeta;
 	protected List<TextField> tFSearchFields = new ArrayList<>(4);
 	
+	protected  Set< String > gridColumnRemnantSet = new HashSet<>( 10 );
+	
 	private Logger log = LogManager.getLogger( AbstractAllRowsActionsUI.class.getName() );
 	
 	public AbstractAllRowsActionsUI( In in, boolean allowDateFilters, boolean isHeader, PaginationUIController pageC ){
+		
 		this.in = in;
 		this.allowDateFilters = allowDateFilters;
 		this.isHeader = isHeader;
@@ -74,6 +79,26 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 	}
 	
 	protected abstract void setOutTxnMeta();
+	
+	public void removeUnnecessaryColumns( Grid grid ){
+		if( grid == null )
+			return;
+		if( gridColumnRemnantSet.size() == 0 )
+			return;
+		
+		
+		Iterator< Column > itr = grid.getColumns().iterator();
+		while( itr.hasNext() ){
+			Column column = itr.next();
+			String propertyId = column.getPropertyId().toString();
+			log.debug( "Dead column property id: "+propertyId );
+			
+			if( !gridColumnRemnantSet.contains( propertyId ) )
+				grid.removeColumn( propertyId );
+		}
+		
+		
+	}
 
 	@Override
 	public void attachCommandListeners() {
@@ -421,6 +446,8 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends DDateFilterUIDes
 		
 		Column col = grid.getColumn(itemId);
 		col.setHeaderCaption(columnName);
+		
+		gridColumnRemnantSet.add( itemId );
 
 		if (isSetFilter)
 			addFilterField(container, grid.getHeaderRow(2), itemId);

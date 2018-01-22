@@ -34,7 +34,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SpringComponent
 @UIScope
-public class DMainUI extends DManagementUIDesign implements View,
+public class DMainUI extends DManagementUIDesign implements ISubUI, View,
 DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 
 	/**
@@ -247,8 +247,8 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		
 		this.btnHMenuInfo.setEnabled( false );
 		this.btnHMenuMisc.setEnabled( false );
-		this.btnHMenuPayment.setEnabled( false );
-		this.btnHMenuToken.setEnabled( false );
+		this.btnHMenuPayment.setEnabled( true );
+		this.btnHMenuToken.setEnabled( true );
 		
 		
 		
@@ -288,7 +288,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				log.debug( "Token menu clicked. " );
 				
 				if( setHMenuState( btnHMenuToken ) )
-					swap( new DTokenUI( getParentUI() ) );
+					swap( new DSubRegUI( getParentUI() ) );
 				
 			}
 			
@@ -308,7 +308,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				log.debug( "Payment menu clicked. " );
 				
 				if( setHMenuState( btnHMenuPayment ) )
-					swap( new DPaymentUI( getParentUI() ) );
+					swap( new DSubRegUI( getParentUI() ) );
 				
 			}
 			

@@ -190,30 +190,34 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	@Ignore
+	// @Ignore
 	@Transactional
-	public void testGetOneSubscriber() {
+	public void testGetOneSubscriber() throws ParseException {
 
 		
 		Assert.assertNotNull("Fundamo user account. repo is null.", repoUserAccount );
-		Page< UserAccount001 > pgu = repoUserAccount.findAll(new PageRequest( 0, 1 ) );
+		Page< UserAccount001 > pgu = repoUserAccount.findPageByDateRange(new PageRequest( 0, 15 ), DateFormatFac.toDate( "2014-01-14"), DateFormatFac.toDateUpperBound( "2014-01-14" ) );
 		Assert.assertNotEquals("No entry record.", pgu.getTotalPages(), 0);
 		
-		UserAccount001 ua = pgu.getContent().get( 0 );
+		int total = pgu.getContent().size();
+		
+		for( int x = total-1; x >= 0; x-- ) {
 			
-		log.debug( "User acount count: "+pgu.getSize()
-		+" Name: "+ua.getSubscriber001().getName()
-		+" MSISDN: "+ua.getSubscriber001().getPerson001().getRegistrationRequestData001().getMsisdn()
-		+" ID NUmber: "+ua.getSubscriber001().getPerson001().getRegistrationRequestData001().getIdNumber()
-		+" Name: "+ua.getSubscriber001().getName()
-		+" ID TYPE: "+ua.getSystemCode().getValue()
-		+" Date of birth: "+ua.getSubscriber001().getPerson001().getDateOfBirth()
-		+" Date of Reg.: "+ua.getSubscriber001().getLastUpdate()
-		+" Account Status: "+ua.getSystemCode().getValue()
-		+pgu.getSize(), ua  );
-		//UserAccount001 userAccount = pg.getContent().get( 0 ).getUserAccount001();
-		//log.debug( "Entry transaction no: "+transaction.getTransactionNumber(), transaction );
-		//log.debug( "Entry userAccount no: "+userAccount.getUserAccountNumber(), userAccount );
+			UserAccount001 ua = pgu.getContent().get( x );
+			log.debug( "User acount count: "+pgu.getSize()
+			+" Name: "+ua.getSubscriber001().getName()
+			+" MSISDN: "+ua.getSubscriber001().getPerson001().getRegistrationRequestData001().getMsisdn()
+			+" ID NUmber: "+ua.getSubscriber001().getPerson001().getRegistrationRequestData001().getIdNumber()
+			+" Name: "+ua.getSubscriber001().getName()
+			+" ID TYPE: "+ua.getSystemCode().getValue()
+			+" Date of birth: "+ua.getSubscriber001().getPerson001().getDateOfBirth()
+			+" Date of Reg.: "+ua.getSubscriber001().getLastUpdate()
+			+" Account Status: "+ua.getSystemCode().getValue(), ua  );
+			//UserAccount001 userAccount = pg.getContent().get( 0 ).getUserAccount001();
+			//log.debug( "Entry transaction no: "+transaction.getTransactionNumber(), transaction );
+			//log.debug( "Entry userAccount no: "+userAccount.getUserAccountNumber(), userAccount );
+		
+		}
 		
 
 	}
@@ -292,7 +296,7 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	@Transactional
 	public void testGetOneEntryPageByDate() throws ParseException {
 		Assert.assertNotNull("Fundamo entry repo is null.", entryRepo);

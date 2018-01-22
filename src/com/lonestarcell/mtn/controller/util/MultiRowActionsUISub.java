@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
+import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.admin.MTxn;
 import com.vaadin.data.Item;
@@ -28,7 +29,7 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 	private Button btnExport;
 	private Button btnRefresh;
 	private Grid grid;
-	private MSub mSub;
+	private IModel mSub;
 	private In in;
 	
 	private Component exportUI;
@@ -36,7 +37,7 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 	
 	private PopupView popupView;
 
-	public MultiRowActionsUISub( MSub mSub, In in, Grid grid, PopupView popupView ){
+	public MultiRowActionsUISub( IModel mSub, In in, Grid grid, PopupView popupView ){
 		this.setPopupView( popupView);
 		this.grid = grid;
 		this.mSub = mSub;

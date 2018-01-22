@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
+import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
 import com.vaadin.data.Item;
 import com.vaadin.server.FontAwesome;
@@ -20,9 +21,9 @@ public class RowActionsUISub extends VerticalLayout implements DUIControllable{
 	private Button btnRefresh;
 	private Item record;
 	private Logger log = LogManager.getLogger( RowActionsUISub.class.getName() );
-	private MSub mSub;
+	private IModel mSub;
 	
-	public RowActionsUISub( MSub mSub, Item record ){
+	public RowActionsUISub( IModel mSub, Item record ){
 		this.mSub = mSub;
 		setRecord( record );
 		

@@ -9,8 +9,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.VerticalLayout;
 
-public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI,DTxnUI>, DUIControllable {
+public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI,ISubUI>, ISubUI, DUIControllable {
 
 	/**
 	 * 
@@ -161,14 +162,20 @@ public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI
 	}
 
 	@Override
-	public DTxnUI getParentUI() {
+	public ISubUI getParentUI() {
 		return this;
 	}
 
 	@Override
-	public void setParentUI(DTxnUI p) {
+	public void setParentUI(ISubUI p) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public VerticalLayout getcMainContent() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

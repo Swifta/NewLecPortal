@@ -2,7 +2,6 @@ package com.lonestarcell.mtn.model.admin;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,11 +11,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutSubscriber;
+import com.lonestarcell.mtn.bean.OutSubscriberTest;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
@@ -25,17 +26,16 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Entry001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 import com.lonestarcell.mtn.spring.fundamo.repo.Entry001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
-import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MSub extends MDAO implements Serializable {
+public class MSub extends MDAO implements IModel, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Logger log = LogManager.getLogger(MSub.class.getName());
 
-	private OutSubscriber outSubscriber;
+	
 
 	public MSub(Long d, String s, String t, ApplicationContext cxt) {
 		super(d, s, cxt);
@@ -43,7 +43,8 @@ public class MSub extends MDAO implements Serializable {
 		log.debug(" MDAO initialized successfully.");
 	}
 
-	public Out setTxnToday(In in, BeanItemContainer<OutSubscriber> container) {
+	@Override
+	public Out set(In in, BeanItemContainer<AbstractDataBean> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -59,7 +60,7 @@ public class MSub extends MDAO implements Serializable {
 		// Set relevant data;
 		// From entity to UI component datasource convenience bean.
 
-		outSubscriber = new OutSubscriber();
+		OutSubscriber outSubscriber = new OutSubscriber();
 		container.addBean(outSubscriber);
 
 		out.setStatusCode(1);
@@ -70,8 +71,8 @@ public class MSub extends MDAO implements Serializable {
 	
 	
 	
-	
-	public Out searchTxnToday(In in, BeanItemContainer<OutSubscriber> container) {
+	@Override
+	public Out search(In in, BeanItemContainer<AbstractDataBean> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -119,8 +120,8 @@ public class MSub extends MDAO implements Serializable {
 
 			if (pages.getNumberOfElements() == 0) {
 
-				container.addBean(outSubscriber);
-				BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+				container.addBean( new OutSubscriberTest());
+				BData<BeanItemContainer< AbstractDataBean >> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
 				out.setMsg("No records found.");
@@ -132,19 +133,19 @@ public class MSub extends MDAO implements Serializable {
 			do {
 				Transaction001 transaction = itr.next();
 
-				outSubscriber = new OutSubscriber();
+				OutSubscriber outSubscriber = new OutSubscriber();
 				
-				double amount = ( transaction.getPayeeAmount()/ 100 );
+				double amount = ( transaction.getPayeeAmount()/ 100 ); 
 				
-				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
-				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
-				outSubscriber.setPayer(transaction.getPayerAccountNumber());
-				outSubscriber.setStatus(transaction.getSystemCode().getValue());
-				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
-				outSubscriber.setTransactionNumber(transaction
-						.getTransactionNumber() + "");
+				outSubscriber.setTransactionNumber(  transaction.getTransactionNumber()+"" );
 				outSubscriber.setType(transaction.getTransactionType001()
-						.getSystemCode().getValue());
+						.getSystemCode().getValue()); 
+				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
+				outSubscriber.setStatus(transaction.getSystemCode().getValue());
+				outSubscriber.setPayer(transaction.getPayerAccountNumber());
+				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
+				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
+				
 
 				container.addBean(outSubscriber);
 
@@ -154,8 +155,8 @@ public class MSub extends MDAO implements Serializable {
 
 		} catch ( Exception e ) {
 			
-			container.addBean(outSubscriber);
-			BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+			container.addBean( new OutSubscriberTest() );
+			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
 			
@@ -165,6 +166,7 @@ public class MSub extends MDAO implements Serializable {
 
 		return out;
 	}
+	
 	
 	
 	
@@ -216,7 +218,7 @@ public class MSub extends MDAO implements Serializable {
 
 			if (pages.getNumberOfElements() == 0) {
 
-				container.addBean(outSubscriber);
+				container.addBean( new OutSubscriber ( ));
 				BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
@@ -229,7 +231,7 @@ public class MSub extends MDAO implements Serializable {
 			do {
 				Entry001 entry = itr.next();
 
-				outSubscriber = new OutSubscriber();
+				OutSubscriber outSubscriber = new OutSubscriber();
 				
 				double amount = ( entry.getAmount()/ 100 );
 				
@@ -252,7 +254,7 @@ public class MSub extends MDAO implements Serializable {
 
 		} catch ( Exception e ) {
 			
-			container.addBean(outSubscriber);
+			container.addBean( new OutSubscriber() );
 			BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
@@ -265,8 +267,8 @@ public class MSub extends MDAO implements Serializable {
 	}
 	
 	
-	
-	public Out setTxnTodayExportData(In in, BeanItemContainer<OutSubscriber> container) {
+	@Override
+	public Out setExportData(In in, BeanItemContainer<AbstractDataBean> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -312,8 +314,8 @@ public class MSub extends MDAO implements Serializable {
 
 			if ( records.size() == 0) {
 
-				container.addBean(outSubscriber);
-				BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+				container.addBean( new OutSubscriber() );
+				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
 				out.setMsg("No records found.");
@@ -325,7 +327,7 @@ public class MSub extends MDAO implements Serializable {
 			do {
 				Transaction001 transaction = itr.next();
 
-				outSubscriber = new OutSubscriber();
+				OutSubscriber  outSubscriber = new OutSubscriber();
 				
 				double amount = ( transaction.getPayeeAmount()/ 100 );
 				
@@ -347,8 +349,8 @@ public class MSub extends MDAO implements Serializable {
 
 		} catch ( Exception e ) {
 			
-			container.addBean(outSubscriber);
-			BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+			container.addBean(new OutSubscriber() );
+			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
 			
@@ -360,7 +362,10 @@ public class MSub extends MDAO implements Serializable {
 	}
 
 
-	public Out setTxnMeta(In in, OutTxnMeta outSubscriber) {
+	
+	
+	@Override
+	public Out setMeta(In in, OutTxnMeta outSubscriber) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -383,9 +388,10 @@ public class MSub extends MDAO implements Serializable {
 		out.setMsg("Txn meta computed successfully.");
 
 		return out;
-	}
+	} 
 
-	public Out searchTxnMeta(In in, OutTxnMeta outSubscriber) {
+	@Override
+	public Out searchMeta(In in, OutTxnMeta outSubscriber) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -415,8 +421,9 @@ public class MSub extends MDAO implements Serializable {
 		return out;
 	}
 
-	public Out setExportDataMultiTxnToday(In in,
-			BeanItemContainer<OutSubscriber> container, Collection<Item> records) {
+	@Override
+	public Out setExportDataMulti(In in,
+			BeanItemContainer<AbstractDataBean> container, Collection<Item> records) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -441,7 +448,7 @@ public class MSub extends MDAO implements Serializable {
 
 		// TODO Loop things here
 
-		outSubscriber = new OutSubscriber();
+		OutSubscriber outSubscriber = new OutSubscriber();
 
 		container.addBean(outSubscriber);
 

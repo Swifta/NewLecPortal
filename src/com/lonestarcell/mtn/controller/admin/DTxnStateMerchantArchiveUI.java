@@ -4,18 +4,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lonestarcell.mtn.bean.BData;
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
-import com.lonestarcell.mtn.bean.OutSubscriber;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
-import com.lonestarcell.mtn.controller.util.AllRowsActionsUITxn;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
-import com.lonestarcell.mtn.controller.util.PopupViewPropertyValueGenerator;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
-import com.lonestarcell.mtn.model.admin.MSub;
-import com.lonestarcell.mtn.model.admin.MTxn;
+import com.lonestarcell.mtn.model.admin.IModel;
+import com.lonestarcell.mtn.model.admin.MMerchant;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -33,16 +31,18 @@ import com.vaadin.ui.UI;
 
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
-public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
+public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Logger log = LogManager.getLogger( DTxnStateMerchantArchiveUI.class.getName() );
 	
 	
-	DTxnStateMerchantArchiveUI( DTxnUI a){
-		super( a.getSpringAppContext() );
-		this.setInDate( inTxn, 4*365 );
+	DTxnStateMerchantArchiveUI( ISubUI a){
+		super( a );
+		// this.setInDate( inTxn, 4*365 );
+		mSub = new MMerchant(getCurrentUserId(), getCurrentUserSession(),
+				getCurrentTimeCorrection(), a.getSpringAppContext() );
 		this.init(a);
 		log.debug( "Archive UI loaded successfully." );
 	}
@@ -53,20 +53,27 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 	}
 	
 	@Override
-	protected AllRowsActionsUISub getHeaderController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+	protected AllRowsActionsUISub getHeaderController( IModel mSub, Grid grid, In in, PaginationUIController pageC ){
 		return new AllRowsActionsUISub( mSub, grid, in, true, true, pageC );
 	}
 	
 	@Override
-	protected AllRowsActionsUISub getFooterController( MSub mSub, Grid grid, In in, PaginationUIController pageC ){
+	protected AllRowsActionsUISub getFooterController( IModel mSub, Grid grid, In in, PaginationUIController pageC ){
 		return new AllRowsActionsUISub( mSub, grid, in, false, false, pageC );
 	}
 	
-
-
+	@Override
 	protected Grid loadGridData(
-			BeanItemContainer<OutSubscriber> beanItemContainer) {
+			BeanItemContainer<AbstractDataBean> beanItemContainer) {
+		
+		Grid grid = new Grid();
+		grid.addStyleName("sn-small-grid");
+		grid.setSelectionMode(SelectionMode.MULTI);
+		grid.setHeight("600px");
+		grid.setWidth("100%");
+		
 		try {
+			
 
 			log.debug("Locale: " + UI.getCurrent().getLocale());
 
@@ -81,7 +88,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 
 			// TODO validate response
 
-			Out out = mSub.searchTxnToday(in, beanItemContainer);
+			Out out = mSub.search(in, beanItemContainer);
 			if (out.getStatusCode() != 1) {
 				Notification.show(out.getMsg(),
 						Notification.Type.WARNING_MESSAGE);
@@ -90,34 +97,44 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 						Notification.Type.HUMANIZED_MESSAGE);
 			}
 
-			Grid grid = new Grid();
-
 			// Add actions
 
 			GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(
 					beanItemContainer);
 
 			gpc.addGeneratedProperty("actions",
-					new PopupViewPropertyValueGenerator( mSub ));
+					new PropertyValueGenerator<Component>() {
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						public Component getValue(Item item, Object itemId,
+								Object propertyId) {
+							PopupView v = new PopupView("...",
+									new RowActionsUISub(mSub, item));
+							v.setWidth("100%");
+							v.setHeight("100%");
+							return v;
+						}
+
+						@Override
+						public Class<Component> getType() {
+							return Component.class;
+						}
+
+					});
 
 			grid.setContainerDataSource(gpc);
-			grid.getColumn("actions").setRenderer(new ComponentRenderer() );
-			grid.setColumnOrder("transactionNumber", "type", "amount",
-					"status", "payer", "payee", "date", "actions");
-
+			grid.getColumn("actions").setRenderer(new ComponentRenderer());
+			
+			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11", "actions");
 			grid.setFrozenColumnCount(2);
 
 			HeaderRow header = grid.prependHeaderRow();
 			FooterRow footer = grid.prependFooterRow();
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
-
-			// Header config
-			// HeaderCell dateFilterCellH = header.join( "swiftaId", "mmoId",
-			// "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions",
-			// "date" );
-			HeaderCell dateFilterCellH = header.join("transactionNumber",
-					"type", "amount", "status", "payer", "payee", "date",
-					"actions");
+			
+			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11", "actions");
+			
 			PaginationUIController pageC = new PaginationUIController();
 			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
 					grid, in, pageC);
@@ -126,20 +143,14 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 			header.setStyleName("sn-date-filter-row");
 			dateFilterCellH
 					.setStyleName("sn-no-border-right sn-no-border-left");
-
-			// Footer config
-			// FooterCell dateFilterCellF = footer.join( "swiftaId", "mmoId",
-			// "msisdn", "meterNo", "amount", "rate", "statusDesc", "actions",
-			// "date" );
-
-			FooterCell dateFilterCellF = footer.join("transactionNumber",
-					"type", "amount", "status", "payer", "payee", "date",
-					"actions");
+			
+			// Preparing footer
+			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11", "actions");
+			
 			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
 					pageC));
 
-			// Init pagination controller after both header and footer have been
-			// set.
+			// Initialize pagination controller after both header and footer have been set.
 			pageC.init();
 
 			footer.setStyleName("sn-date-filter-row");
@@ -164,59 +175,49 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 
 			cellActions.setStyleName("sn-cell-actions");
 			cellBulkActions.setStyleName("sn-cell-actions");
+			
 
-			// Hide unnecessary bean fields
-
-			// grid.removeColumn( "sessionVar" );
-			// grid.removeColumn( "profileId" );
-			// grid.removeColumn( "payStatus" );
-			// grid.removeColumn( "tokenStatus" );
-			// grid.removeColumn( "itronId" );
-			// grid.removeColumn( "reqCurrency" );
-			// grid.removeColumn( "statusDesc" );
-			// grid.removeColumn( "token" );
-			// grid.removeColumn( "reqCount" );
-			// grid.removeColumn( "txnType" );
-
+			//private String name, msisdn,  tno, type, amount,  status, channel, desc, payee, payer, entryDate ;
+			
 			// Add search field
-
-			// "transactionNumber", "type", "amount", "status", "payer",
-			// "payee", "date", "actions"
-
-			allRowsActionsUIH.prepareGridHeader(grid, "transactionNumber",
-					"Transaction Number", true);
-			allRowsActionsUIH.prepareGridHeader(grid, "type", "Type", false);
+			
+			allRowsActionsUIH.prepareGridHeader(grid, "column1",
+					"Corp Name", true);
+			allRowsActionsUIH.prepareGridHeader(grid, "column2", "MSISDN", false);
+			
+			allRowsActionsUIH.prepareGridHeader(grid, "column3", "T. Number", false);
+			
+			allRowsActionsUIH.prepareGridHeader(grid, "column4", "Type", false);
 			allRowsActionsUIH
-					.prepareGridHeader(grid, "amount", "Amount", false);
+					.prepareGridHeader(grid, "column5", "Amount", false);
+			
 			allRowsActionsUIH
-					.prepareGridHeader(grid, "status", "Status", false);
-			allRowsActionsUIH.prepareGridHeader(grid, "payer", "Payer", true);
-			allRowsActionsUIH.prepareGridHeader(grid, "payee", "Payee", true);
-			allRowsActionsUIH.prepareGridHeader(grid, "date", "Timestamp",
-					false);
+			.prepareGridHeader(grid, "column6", "Status", false);
+			
+			allRowsActionsUIH
+			.prepareGridHeader(grid, "column7", "Channel", false);
+			
+			allRowsActionsUIH
+			.prepareGridHeader(grid, "column8", "Channel", false);
+			allRowsActionsUIH
+					.prepareGridHeader(grid, "column4", "Description", false);
+			
+			allRowsActionsUIH.prepareGridHeader(grid, "column9", "Payer", true);
+			allRowsActionsUIH.prepareGridHeader(grid, "column10", "Payee", true);
+			allRowsActionsUIH.prepareGridHeader(grid, "column11", "Timestamp",
+					false); 
 			allRowsActionsUIH.prepareGridHeader(grid, "actions", "...", false);
 
 			// Set column widths
 
-			grid.getColumn("payer").setWidth( 200 ).setResizable(false);
-			grid.getColumn("payee").setWidth( 200 ).setResizable(false);
-			grid.getColumn("transactionNumber").setWidth(125);
-			// grid.getColumn( "mmoId" ).setWidth( 125 );
-			// grid.getColumn( "meterNo" ).setWidth( 135 );
-			grid.getColumn("amount").setWidth(100);
-			// grid.getColumn( "statusDesc" ).setWidth( 125 );
+			grid.getColumn("column1").setWidth(125);
+			grid.getColumn("column2").setWidth( 150 ).setResizable(false);
+			grid.getColumn("column3").setWidth( 150);
+			grid.getColumn("column5").setWidth( 150 ).setResizable(false);
+			grid.getColumn("column6").setWidth( 150 ).setResizable(false);
+			grid.getColumn("column11").setWidth(178).setResizable(false);
 
-			grid.getColumn("date").setWidth(178).setResizable(false);
-			// grid.getColumn( "rate" ).setWidth( 70 );
-
-			grid.addStyleName("sn-small-grid");
-
-			grid.setSelectionMode(SelectionMode.MULTI);
-			grid.setHeight("600px");
-			grid.setWidth("100%");
-
-			// DataExport dataExport = new DataExport();
-			// dataExport.exportDataAsExcel( grid );
+			allRowsActionsUIH.removeUnnecessaryColumns(grid);
 
 			return grid;
 
@@ -228,9 +229,11 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateUI {
 			e.printStackTrace();
 
 		}
-
-		return new Grid();
+		
+		return grid;
 	}
+
+
 	
 	
 

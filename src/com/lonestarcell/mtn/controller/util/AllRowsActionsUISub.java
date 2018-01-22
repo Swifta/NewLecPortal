@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
-import com.lonestarcell.mtn.bean.OutSubscriber;
-import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
+import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
-import com.lonestarcell.mtn.model.admin.MTxn;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -35,14 +34,14 @@ import com.vaadin.ui.TextField;
 
 public class AllRowsActionsUISub
 		extends
-		AbstractAllRowsActionsUI<MSub, OutSubscriber, TextChangeListenerSub<OutSubscriber>> {
+		AbstractAllRowsActionsUI<IModel, AbstractDataBean, TextChangeListenerSub<AbstractDataBean>> {
 
 	private static final long serialVersionUID = 1L;
 
 	private Logger log = LogManager.getLogger(AllRowsActionsUISub.class
 			.getName());
 
-	public AllRowsActionsUISub(MSub mSub, Grid grid, In in,
+	public AllRowsActionsUISub(IModel mSub, Grid grid, In in,
 			boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
 		super(in, allowDateFilters, isHeader, pageC);
@@ -52,7 +51,7 @@ public class AllRowsActionsUISub
 	}
 
 	@Override
-	protected void setModel(MSub model) {
+	protected void setModel(IModel model) {
 		this.model = model;
 	}
 
@@ -65,7 +64,7 @@ public class AllRowsActionsUISub
 		outTxnMeta
 				.setTotalRecord(new ObjectProperty<String>("0", String.class));
 
-		Out out = model.searchTxnMeta(in, outTxnMeta);
+		Out out = model.searchMeta(in, outTxnMeta);
 		if (out.getStatusCode() != 1)
 			Notification.show(out.getMsg(), Notification.Type.ERROR_MESSAGE);
 
@@ -77,7 +76,7 @@ public class AllRowsActionsUISub
 
 		container.removeAllItems();
 		inTxn.setPage(page);
-		model.searchTxnToday(in, container);
+		model.search(in, container);
 		format();
 
 	}
@@ -103,8 +102,8 @@ public class AllRowsActionsUISub
 		}
 
 		// TODO validate response
-		Out out = model.searchTxnToday(in, container);
-		model.searchTxnMeta(in, outTxnMeta);
+		Out out = model.search(in, container);
+		model.searchMeta(in, outTxnMeta);
 
 		if (out.getStatusCode() != 1) {
 			Notification.show(out.getMsg(), Notification.Type.ERROR_MESSAGE);
@@ -116,7 +115,7 @@ public class AllRowsActionsUISub
 	}
 
 	@Override
-	protected void addFilterField(BeanItemContainer<OutSubscriber> container,
+	protected void addFilterField(BeanItemContainer<AbstractDataBean> container,
 			HeaderRow filterHeader, String itemId) {
 		TextField tF = new TextField();
 		tF.setStyleName("sn-tf-filter");
@@ -126,7 +125,7 @@ public class AllRowsActionsUISub
 		HeaderCell cFilter = filterHeader.getCell(itemId);
 		cFilter.setComponent(tF);
 
-		TextChangeListenerSub<OutSubscriber> tChangeListener = getTextChangeListner(
+		TextChangeListenerSub<AbstractDataBean> tChangeListener = getTextChangeListner(
 				container, itemId, tF);
 		tF.addTextChangeListener(tChangeListener);
 		tFSearchFields.add(tF);
@@ -142,7 +141,7 @@ public class AllRowsActionsUISub
 
 	@Override
 	protected ShortcutListener getSearchShortcutListener(TextField tF,
-			String itemId, BeanItemContainer<OutSubscriber> container) {
+			String itemId, BeanItemContainer<AbstractDataBean> container) {
 
 		return new ShortcutListener("", KeyCode.ENTER, null) {
 			private static final long serialVersionUID = 1L;
@@ -161,9 +160,9 @@ public class AllRowsActionsUISub
 				inBData.setData(inTxn);
 				in.setData(inBData);
 
-				Out out = model.searchTxnToday(in, container);
+				Out out = model.search(in, container);
 
-				model.searchTxnMeta(in, outTxnMeta);
+				model.searchMeta(in, outTxnMeta);
 
 				if (out.getStatusCode() != 1) {
 					Notification.show(out.getMsg(),
@@ -195,7 +194,7 @@ public class AllRowsActionsUISub
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void setBeanItemContainer() {
-		container = ((BeanItemContainer<OutSubscriber>) ((GeneratedPropertyContainer) grid
+		container = ((BeanItemContainer<AbstractDataBean>) ((GeneratedPropertyContainer) grid
 				.getContainerDataSource()).getWrappedContainer());
 
 	}
@@ -207,10 +206,10 @@ public class AllRowsActionsUISub
 	}
 
 	@Override
-	protected TextChangeListenerSub<OutSubscriber> getTextChangeListner(
-			BeanItemContainer<OutSubscriber> container, String itemId,
+	protected TextChangeListenerSub<AbstractDataBean> getTextChangeListner(
+			BeanItemContainer<AbstractDataBean> container, String itemId,
 			TextField tF) {
-		return new TextChangeListenerSub<OutSubscriber>(container, inTxn,
+		return new TextChangeListenerSub<AbstractDataBean>(container, inTxn,
 				itemId, tF);
 	}
 
