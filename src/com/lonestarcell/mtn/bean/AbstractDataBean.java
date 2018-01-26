@@ -5,6 +5,7 @@ import java.io.Serializable;
 public abstract class AbstractDataBean implements IDataBean, Serializable {
 
 	private static final long serialVersionUID = 1L;
+	protected String date;
 	protected String column1;
 	protected String column2;
 	protected String column3;
@@ -59,6 +60,10 @@ public abstract class AbstractDataBean implements IDataBean, Serializable {
 
 	public String getColumn11() {
 		return column11;
+	}
+
+	public String getDate() {
+		return date;
 	}
 	
 	

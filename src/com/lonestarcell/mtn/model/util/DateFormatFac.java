@@ -32,5 +32,10 @@ public class DateFormatFac {
 		return df.format( date );
 	}
 	
+	public static String toStringDateOnly( Date date ) throws ParseException{
+		DateFormat df = new SimpleDateFormat( "yyyy-MM-dd" );
+		return df.format( date );
+	}
+	
 	
 }

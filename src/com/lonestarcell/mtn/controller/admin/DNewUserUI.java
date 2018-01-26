@@ -39,7 +39,7 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 	
 	private DUserUI ancestor;
 	private Item record;
-	private Logger log = LogManager.getLogger( DUserSetCredsUI.class.getName() );
+	private Logger log = LogManager.getLogger();
 	
 	DNewUserUI( DUserUI a){
 		init( a );
@@ -203,6 +203,8 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 		
 		In in = new In();
 		in.setData( bData );
+		
+		
 		
 		Out out = mUserDetails.addNewUser( in );
 		return out;

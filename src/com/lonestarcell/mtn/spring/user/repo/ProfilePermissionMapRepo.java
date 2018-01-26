@@ -15,5 +15,6 @@ import com.lonestarcell.mtn.spring.user.entity.ProfilePermissionMap;
 @Transactional( propagation = Propagation.REQUIRED )
 public interface ProfilePermissionMapRepo extends JpaRepository< ProfilePermissionMap, Short >{
 	public List< ProfilePermissionMap > findByProfileProfileId( @Param( value = "profileId" ) Short id );
+	public ProfilePermissionMap findByProfileProfileIdAndPermissionId( @Param( value = "profileId" ) Short profileId, @Param( value = "id" ) Short permissionId );
 	
 }

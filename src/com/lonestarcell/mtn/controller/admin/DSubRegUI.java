@@ -4,7 +4,8 @@ public class DSubRegUI extends DTxnUI implements DUserUIInitializable<DMainUI,IS
 
 	private static final long serialVersionUID = 1L;
 	DSubRegUI(DMainUI a) {
-		super(a);
+		super(a.getSpringAppContext() );
+		this.init(a);
 	}
 	
 	@Override

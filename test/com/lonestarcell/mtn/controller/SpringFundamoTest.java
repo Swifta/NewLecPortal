@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 
+
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -20,9 +22,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 
+
+
 import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
+import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.config.Config;
 import com.lonestarcell.mtn.spring.config.DataAccessConfigFundamo;
 import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
@@ -93,6 +99,98 @@ public class SpringFundamoTest {
 	
 	@Test
 	@Ignore
+	public void testGetFirstPage() throws ParseException {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Page<Transaction001> pg = repo.findFirstPageByDate(new PageRequest(0, 20), DateFormatFac.toDate( "2010-02-01" ) );
+
+		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
+		
+		Iterator< Transaction001 > itr = pg.getContent().iterator();
+		
+		while( itr.hasNext() ){
+		
+			Transaction001 transaction = itr.next();
+			TransactionType001 type = transaction.getTransactionType001();
+			log.debug("Transaction code " + type.getSystemCode().getCode()
+					+ " for transaction no. " + transaction.getTransactionNumber()
+					+ " and amount = " + transaction.getPayeeAmount()
+					+ " and type = " + transaction.getTransactionType001().getSystemCode().getValue()
+					+ " and payee = " + transaction.getPayeeAmount()
+					+ " and payer = " + transaction.getPayerAccountNumber()
+					+ " and status = " + transaction.getSystemCode().getValue()
+					+ " and status = " + transaction.getLastUpdate(),transaction);
+		
+		}
+
+	}
+	
+	
+	@Test
+	@Ignore
+	public void testGetFirstPageMer() throws ParseException {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Page<Entry001> pg = entryRepo.findFirstPageByDate(new PageRequest(0, 20), DateFormatFac.toDate( "2010-02-01" ) );
+		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
+		Iterator< Entry001 > itr = pg.getContent().iterator();
+		
+		log.info( "Total elements: "+pg.getTotalElements() );
+		log.info( "No. of elements: "+pg.getNumberOfElements() );
+		
+		
+		while( itr.hasNext() ){
+		
+			Entry001 entry = itr.next();
+			log.info( "Date: "+entry.getEntryDate() );
+		
+		}
+
+	}
+	
+	
+	
+	@Test
+	@Ignore
+	public void testGetFirstPageLedger() throws ParseException {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Page<Object[]> pg = ledgerRepo.getFirstPageAllSumByDateRange(new PageRequest(0, 20), DateFormatFac.toDate( "2010-02-01" ) );
+		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
+		Iterator< Object[] > itr = pg.getContent().iterator();
+		
+		log.info( "Total elements: "+pg.getTotalElements() );
+		log.info( "No. of elements: "+pg.getNumberOfElements() );
+		
+		while( itr.hasNext() ){
+			Object[] obj = itr.next();
+			log.info( "Date: "+obj[ obj.length -1  ] );
+		
+		}
+
+	}
+
+
+	@Test
+	@Ignore
+	public void testGetByDateRangeAmountAndCount() throws ParseException {
+		double amount = 0;
+		long rowCount = 0;
+		
+		List< Object[] > lsObj = repo.findByDateRangeAmountAndCount( DateFormatFac.toDate( "2010-02-01" ),DateFormatFac.toDateUpperBound( "2010-02-03" ) );
+		Assert.assertNotNull( "Amount - Count obj list is null.", lsObj );
+		
+		log.debug( "Obj list size: "+lsObj.size()  );
+		if (lsObj != null) {
+			Object[ ] obj = lsObj.get( 0 );
+			rowCount = Long.valueOf(obj[1].toString());
+			amount = Double.valueOf(obj[0].toString());
+		}
+		
+		log.info( "Amount: "+amount, this );
+		log.info( "Count: "+rowCount, this );
+	}
+	
+	
+	@Test
+	@Ignore
 	public void testGetOnePageByDateRange() throws ParseException {
 		Assert.assertNotNull("Fundamo repo is null.", repo);
 		Page<Transaction001> pg = repo.findPageByDateRange( new PageRequest(0, 1), DateFormatFac.toDate( "2014-01-19" ), DateFormatFac.toDate( "2018-01-18" ) );
@@ -119,13 +217,79 @@ public class SpringFundamoTest {
 	@Test
 	@Ignore
 	public void testGetTotalPayeeAmount() {
-		Assert.assertNotNull("Fundamo repo is null.", repo);
-		long totalPayeeAmount = repo.getTotalPayeeAmount();
 		
-			log.debug("Total Payee Amount:  "+totalPayeeAmount, this );
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		double totalPayeeAmount = repo.getTotalPayeeAmount();
+		log.debug("Total Payee Amount:  "+totalPayeeAmount, this );
 		
 
 	}
+	
+	@Test
+	@Ignore
+	public void testGetTotalTransactionByDateRange() throws ParseException {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		long total = repo.findByDateRangeCount( DateFormatFac.toDate( "2011-01-01" ),  DateFormatFac.toDate( "2012-01-01" ) );
+		log.debug("Total transaction count:  "+total, this );
+	}
+	
+	
+	
+	
+	@Test
+	@Ignore
+	public void testGetTotalAmountByDateRange() throws ParseException {
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		double total = repo.findByDateRangeAmount( DateFormatFac.toDate( "2011-01-01" ),  DateFormatFac.toDate( "2012-01-01" ) );
+		log.debug("Total transaction amount:  "+total, this );
+	}
+	
+	
+	@Test
+	@Ignore
+	public void testGetInitialDateSub() throws ParseException {
+		
+		long t1 = new Date().getTime();
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Date date = repo.getInitialDate();
+		
+		log.info("Very initial date:  "+DateFormatFacRuntime.toString(date), this );
+		
+		long tt = new Date().getTime() - t1;
+		log.info( "Time taken by query: "+( tt )+" ms(s)" );
+	}
+	
+	
+	@Test
+	@Ignore
+	public void testGetInitialDateMer() throws ParseException {
+		
+		long t1 = new Date().getTime();
+		Assert.assertNotNull("Fundamo repo is null.", entryRepo );
+		Date date = entryRepo.findEarliestDate();
+		
+		log.info("Very initial date:  "+DateFormatFacRuntime.toString(date), this );
+		
+		long tt = new Date().getTime() - t1;
+		log.info( "Time taken by query: "+( tt )+" ms(s)" );
+	}
+	
+	@Test
+	@Ignore
+	public void testGetInitialDateLedger() throws ParseException {
+		
+		long t1 = new Date().getTime();
+		Assert.assertNotNull("Fundamo repo is null.", entryRepo );
+		Date date = ledgerRepo.findEarliestDate();
+		log.info("Very initial date:  "+DateFormatFacRuntime.toString(date), this );
+		
+		long tt = new Date().getTime() - t1;
+		log.info( "Time taken by query: "+( tt )+" ms(s)" );
+	}
+	
+	
+	
+	
 	
 	@Test
 	@Ignore
@@ -168,21 +332,23 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	@Ignore
+	// @Ignore
 	@Transactional
 	public void testGetOneLedgerAccount() throws ParseException {
 		Assert.assertNotNull("Fundamo ledger repo is null.", ledgerRepo );
-		List< Object[] > records = ledgerRepo.getAllSum( DateFormatFac.toDate( "2011-06-10" ) );
-		Assert.assertNotEquals("No ledger record.", records.size(), 0);
+		Page< Object[] > pages = ledgerRepo.getAllSumByDateRange( new Pager().getPageRequest( 1 ), DateFormatFac.toDate( "2011-06-10" ), DateFormatFac.toDateUpperBound( "2011-06-10" ) );
+		Assert.assertNotEquals("No ledger record.", pages.getTotalPages(), 0);
 		
-		log.debug( "Record of sum fetched successfully with count: "+records.size() );
+		List< Object[] > records = pages.getContent();
+		
 		
 		Iterator< Object[] > itr = records.iterator();
 		while( itr.hasNext() ){
 			Object[] record = itr.next();
-			log.debug( "AccNo: "+record[ 0 ]
+			log.info( "AccNo: "+record[ 0 ]
 					+"Name: "+record[ 1 ]
-					+"Amount: "+record[ 2 ],
+					+"Amount: "+record[ 2 ]
+					+"Date: "+record[ 3 ],
 					records );
 		}		
 
@@ -190,13 +356,13 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	@Transactional
 	public void testGetOneSubscriber() throws ParseException {
 
 		
 		Assert.assertNotNull("Fundamo user account. repo is null.", repoUserAccount );
-		Page< UserAccount001 > pgu = repoUserAccount.findPageByDateRange(new PageRequest( 0, 15 ), DateFormatFac.toDate( "2014-01-14"), DateFormatFac.toDateUpperBound( "2014-01-14" ) );
+		Page< UserAccount001 > pgu = repoUserAccount.findPageByDateRange(new PageRequest( 0, 15 ), DateFormatFac.toDate( "2011-01-14"), DateFormatFac.toDateUpperBound( "2014-01-14" ) );
 		Assert.assertNotEquals("No entry record.", pgu.getTotalPages(), 0);
 		
 		int total = pgu.getContent().size();
@@ -213,6 +379,34 @@ public class SpringFundamoTest {
 			+" Date of birth: "+ua.getSubscriber001().getPerson001().getDateOfBirth()
 			+" Date of Reg.: "+ua.getSubscriber001().getLastUpdate()
 			+" Account Status: "+ua.getSystemCode().getValue(), ua  );
+			//UserAccount001 userAccount = pg.getContent().get( 0 ).getUserAccount001();
+			//log.debug( "Entry transaction no: "+transaction.getTransactionNumber(), transaction );
+			//log.debug( "Entry userAccount no: "+userAccount.getUserAccountNumber(), userAccount );
+		
+		} 
+		
+
+	}
+	
+	
+	
+	@Test
+	@Ignore
+	@Transactional
+	public void testGetOneSubscriberGroupBy() throws ParseException {
+
+		
+		Assert.assertNotNull("Fundamo user account. repo is null.", repoUserAccount );
+		Page< Object[] > pgu = repoUserAccount.findPageByDateRangeRaw(new PageRequest( 0, 100 ), DateFormatFac.toDate( "2011-01-14"), DateFormatFac.toDateUpperBound( "2014-01-14" ) );
+		Assert.assertNotEquals("No entry record.", pgu.getTotalPages(), 0);
+		
+		int total = pgu.getContent().size();
+		
+		for( int x = total-1; x >= 0; x-- ) {
+			
+			Object[] ua = pgu.getContent().get( x );
+			log.debug( "User acount count: "+pgu.getSize()
+			+" Account Status: "+ua[0], ua  );
 			//UserAccount001 userAccount = pg.getContent().get( 0 ).getUserAccount001();
 			//log.debug( "Entry transaction no: "+transaction.getTransactionNumber(), transaction );
 			//log.debug( "Entry userAccount no: "+userAccount.getUserAccountNumber(), userAccount );

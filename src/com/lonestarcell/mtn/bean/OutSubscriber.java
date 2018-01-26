@@ -56,7 +56,7 @@ public class OutSubscriber extends AbstractDataBean {
 		return date;
 	}
 	public void setDate(String date) {
-		this.column7 = date;
+		super.date = date;
 		this.date = date;
 	}
 	

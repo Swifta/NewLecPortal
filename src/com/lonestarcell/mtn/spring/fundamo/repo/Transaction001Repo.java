@@ -18,12 +18,34 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 public interface Transaction001Repo extends JpaRepository< Transaction001, Long >{
 	public Page< Transaction001 > findByPayerAccountNumber( @Param( "payerAccountNumber" ) String payer, Pageable pageable );
     @Query( "SELECT SUM( t.payeeAmount ) FROM Transaction001 t" )
-	public long getTotalPayeeAmount();
+	public double getTotalPayeeAmount();
+    
+    @Query( "SELECT SUM( t.payeeAmount ) AS amount, COUNT( t.oid ) AS count FROM Transaction001 t" )
+	public List< Object[] > getTotalAmountAndCountAll();
+    
+    @Query( "SELECT MIN( t.lastUpdate ) FROM Transaction001 t" )
+	public Date getInitialDate();
     
     @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
 	public Page< Transaction001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
+    @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate >= :fDate ORDER BY t.lastUpdate" )
+	public Page< Transaction001 > findFirstPageByDate( Pageable pageable, @Param( "fDate" ) Date fDate );
+    
+    @Query( "SELECT MIN( t.lastUpdate ) FROM Transaction001 t" )
+	public Date findEarliestDate();
+
+    
     @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
 	public List< Transaction001 > findAllByDateRange( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    
+    @Query( "SELECT SUM( t.payeeAmount ) FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
+   	public double findByDateRangeAmount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    
+   	@Query( "SELECT SUM( t.payeeAmount ) AS a, COUNT( t ) AS t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
+   	public List< Object[] > findByDateRangeAmountAndCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    
+    @Query( "SELECT COUNT( t ) FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
+   	public long findByDateRangeCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 
 }

@@ -22,12 +22,12 @@ public class JDBCPoolManager {
 		p.setUrl("jdbc:mysql://localhost:3306/afrinnewdb_test");
 		
 		// Remote test db
-		p.setUsername("swifta");
-		p.setPassword("swift@123");
+		// p.setUsername("swifta");
+		// p.setPassword("swift@123");
 		
 		// Local test db
-		p.setUsername("test");
-		p.setPassword("adm!n");
+		p.setUsername("ben-app");
+		p.setPassword("b3n-a99@b3n-aPP");
 		
 		//p.setRemoveAbandoned( true );
 		//p.setTestOnBorrow( true );

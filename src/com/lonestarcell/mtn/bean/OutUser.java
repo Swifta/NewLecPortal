@@ -5,14 +5,15 @@ import java.io.Serializable;
 public class OutUser implements Serializable {
 	
 	private static final long serialVersionUID = 7431320759077668024L;
-	private String dateAdded, lastLogin, org, username, email, userStatus, profile, changePass, userSession;
+	private String date, lastLogin, org, username, email, userStatus, profile, changePass, userSession;
 	private int profileId;
 	private Long userId;
-	public String getDateAdded() {
-		return dateAdded;
+	
+	public String getDate() {
+		return date;
 	}
-	public void setDateAdded(String dateAdded) {
-		this.dateAdded = dateAdded;
+	public void setDate(String date) {
+		this.date = date;
 	}
 	public String getLastLogin() {
 		return lastLogin;

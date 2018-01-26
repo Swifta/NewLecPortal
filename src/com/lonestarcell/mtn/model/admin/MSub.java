@@ -109,7 +109,7 @@ public class MSub extends MDAO implements IModel, Serializable {
 				pages = repo.findPageByDateRange(
 						pager.getPageRequest(inTxn.getPage() ),
 						DateFormatFac.toDate( inTxn.getfDate() ),
-						DateFormatFac.toDate( inTxn.gettDate() ) );
+						DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
 			}
 
 			if (pages == null) {
@@ -365,33 +365,14 @@ public class MSub extends MDAO implements IModel, Serializable {
 	
 	
 	@Override
-	public Out setMeta(In in, OutTxnMeta outSubscriber) {
-
-		Out out = this.checkAuthorization();
-		if (out.getStatusCode() != 1) {
-			out.setStatusCode(100);
-			return out;
-		}
-		out = new Out();
-
-		/*
-		 * Perform the following ops. 1. Set total records 2. TODO Set Total
-		 * revenue 3. TODO Filter by date:
-		 */
-
-		Transaction001Repo repo = (Transaction001Repo) springAppContext
-				.getBean(Transaction001Repo.class);
-		Page<Transaction001> pages = repo.findAll(new PageRequest(0, 1));
-		outSubscriber.getTotalRecord().setValue(pages.getTotalPages() + "");
-
-		out.setStatusCode(1);
-		out.setMsg("Txn meta computed successfully.");
-
-		return out;
+	public Out setMeta(In in, OutTxnMeta meta ) {
+		// TODO Double check with original setTxnMeta, check for any variance
+		// TODO I did check, can't tell the difference at the moment.
+		return this.searchMeta(in, meta );
 	} 
 
 	@Override
-	public Out searchMeta(In in, OutTxnMeta outSubscriber) {
+	public Out searchMeta(In in, OutTxnMeta meta ) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -399,24 +380,61 @@ public class MSub extends MDAO implements IModel, Serializable {
 			return out;
 		}
 		out = new Out();
+		
+		try {
+			Transaction001Repo repo = springAppContext
+					.getBean(Transaction001Repo.class);
+			if (repo == null) {
+				log.debug("Transaction001 repo is null");
+				out.setMsg("DAO error occured - 1.");
+				return out;
+			}
+			
+			BData< ? > bInData = in.getData();
+			InTxn inTxn = ( InTxn ) bInData.getData();
+			
+			long rowCount = 0L;
+			double amount = 0D;
+			
+			log.debug( "MSub from date:"+inTxn.getfDate(), this );
+			log.debug( "MSub to date:"+inTxn.gettDate(), this );
 
-		BData<?> bInData = in.getData();
-		InTxn inTxn = (InTxn) bInData.getData();
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				
+				List< Object[] > lsObj = repo.getTotalAmountAndCountAll();
+				if ( lsObj != null) {
+					Object[] obj = lsObj.get( 0 );
+					rowCount = Long.valueOf( obj[ 1 ].toString() );
+					amount =  Double.valueOf( obj[ 0 ].toString() );
+				} 
+				
+			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+				log.debug( "In date filter: ", this );
+				
+				List< Object[] > lsObj = repo.findByDateRangeAmountAndCount( DateFormatFac.toDate( inTxn.getfDate() ),DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
+				if ( lsObj != null) {
+					Object[] obj = lsObj.get( 0 );
+					rowCount = Long.valueOf( obj[ 1 ].toString() );
+					amount =  Double.valueOf( obj[ 0 ].toString() );
+				} 
+			}
 
-		/*
-		 * Perform the following ops. 1. Set total records 2. TODO Set Total
-		 * revenue 3. TODO Filter by date:
-		 */
+			
+			
+			log.info( "Amount: "+amount );
+			log.info( "Total: "+rowCount );
+			
+			meta.getTotalRecord().setValue( rowCount + "");
+			meta.getTotalRevenue().setValue(
+					( amount / 100) + "");
+			
+			out.setStatusCode(1);
+			out.setMsg("Txn meta computed successfully.");
 
-		Transaction001Repo repo = (Transaction001Repo) springAppContext
-				.getBean(Transaction001Repo.class);
-		Page<Transaction001> pages = repo.findAll(new PageRequest(0, 1));
-		outSubscriber.getTotalRecord().setValue(pages.getTotalPages() + "");
-		outSubscriber.getTotalRevenue().setValue(
-				(repo.getTotalPayeeAmount() / 100) + "");
-
-		out.setStatusCode(1);
-		out.setMsg("Txn meta computed successfully.");
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			out.setMsg( "Data fetch error." );
+		}
 
 		return out;
 	}

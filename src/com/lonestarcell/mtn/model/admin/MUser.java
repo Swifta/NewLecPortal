@@ -11,16 +11,18 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
+import com.lonestarcell.mtn.bean.OutUserExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MUser extends Model {
+public class MUser extends Model implements IModel {
 
 	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(MUser.class.getName());
@@ -146,7 +148,7 @@ public class MUser extends Model {
 				outTxn.setUserStatus( userStatusDesc );
 				
 				outTxn.setChangePass( rs.getString( "change_password" ) );
-				outTxn.setDateAdded( rs.getString( "date_added" ) );
+				outTxn.setDate( rs.getString( "date_added" ) );
 				outTxn.setLastLogin( rs.getString( "last_login" ) );
 				outTxn.setOrg( rs.getString( "org" ) );
 				outTxn.setProfile( rs.getString( "profile_name" ) );
@@ -340,7 +342,7 @@ public class MUser extends Model {
 				outTxn.setUserStatus( userStatusDesc );
 				
 				outTxn.setChangePass( rs.getString( "change_password" ) );
-				outTxn.setDateAdded( rs.getString( "date_added" ) );
+				outTxn.setDate( rs.getString( "date_added" ) );
 				outTxn.setLastLogin( rs.getString( "last_login" ) );
 				outTxn.setOrg( rs.getString( "org" ) );
 				outTxn.setProfile( rs.getString( "profile_name" ) );
@@ -992,6 +994,66 @@ public class MUser extends Model {
 		}
 		
 		return out;
+	}
+
+	@Override
+	public Out search(In in, BeanItemContainer<AbstractDataBean> container) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Out set(In in, BeanItemContainer<AbstractDataBean> container) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public Out setMeta(In in, OutTxnMeta outSubscriber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Out searchMeta(In in, OutTxnMeta outSubscriber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Out setExportData(In in,
+			BeanItemContainer<AbstractDataBean> container) {
+		
+		BeanItemContainer<OutUser> uContainer = new BeanItemContainer<>(OutUser.class);
+		Out out = this.setUsers(in, uContainer );
+		if( out.getStatusCode() == 1 ){
+			
+			Iterator< OutUser > itr = uContainer.getItemIds().iterator();
+			while( itr.hasNext() ){
+				OutUser user = itr.next();
+				OutUserExport uExport = new OutUserExport();
+				uExport.setUsername( user.getUsername() );
+				uExport.setFirstName( user.getEmail() );
+				uExport.setDate( user.getDate() );
+				container.addBean( uExport );
+			}
+		}
+		
+		return out;
+	}
+
+
+	@Override
+	public Out setExportDataMulti(In in,
+			BeanItemContainer<AbstractDataBean> container,
+			Collection<Item> records) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

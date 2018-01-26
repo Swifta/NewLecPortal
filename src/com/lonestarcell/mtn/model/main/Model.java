@@ -15,7 +15,7 @@ import com.lonestarcell.mtn.model.util.JDBCPoolManager;
 public class Model {
 	protected static DataSource dataSource;
 	public Out out;
-	private Logger log = LogManager.getLogger();
+	private Logger log = LogManager.getLogger(); // adm!n
 
 	static {
 		try {

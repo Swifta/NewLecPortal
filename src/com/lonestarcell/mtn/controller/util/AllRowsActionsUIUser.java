@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,11 +12,18 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.model.admin.MUser;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -44,7 +53,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 		
 		//Disable data export for users.
 		this.btnExport.setVisible( false );
-		this.btnExportOps.setVisible( false );
+		this.btnExportOps.setVisible( true );
 		super.setContent();
 		this.lbTotalRevenue.setVisible( false );
 	}
@@ -159,6 +168,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	protected void setBeanItemContainer() {
 		container = ((BeanItemContainer<OutUser>) ((GeneratedPropertyContainer)  grid.getContainerDataSource())
 				.getWrappedContainer());
+		super.container = container;
 		
 	}
 
@@ -182,8 +192,48 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 
 	@Override
 	protected void attachBtnExportOps() {
-		// TODO Auto-generated method stub
-		
+
+		this.btnExportOps.addClickListener(new ClickListener() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				 new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
+			}
+
+		});
+
+		this.btnExportOps.addBlurListener(new BlurListener() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void blur(BlurEvent event) {
+
+				// btnExportOps.removeStyleName( "sn-btn-export-ops-active" );
+				moreDropDown.removeStyleName("sn-data-export-active");
+				log.debug(" Export menu blurred.");
+
+			}
+
+		});
+
+		this.btnExportOps.addFocusListener(new FocusListener() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void focus(FocusEvent event) {
+
+				// btnExportOps.removeStyleName( "sn-btn-export-ops-active" );
+				// / moreDropDown.addStyleName( "sn-data-export-active" );
+				log.debug(" Export menu focus.");
+
+			}
+
+		});
+
 	}
 
 }

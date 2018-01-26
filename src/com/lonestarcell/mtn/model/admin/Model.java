@@ -26,7 +26,7 @@ public class Model  implements Serializable {
 	protected static DataSource dataSource;
 	protected Long userAuthId;
 	protected String userAuthSession, timeCorrection;
-	public Out out;
+	protected Out out;
 	private Logger log = LogManager.getLogger();
 	protected ApplicationContext springAppContext;
 	

@@ -124,6 +124,7 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	
 
 	public void init() {
+		log.info( "Pagination has been initiated." );
 		this.initBtns();
 		this.attachCommandListeners();
 	}
@@ -190,7 +191,7 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	}
 	
 	private void initNavigation( Long total ){
-		
+		log.debug( "Pagination initialization with total: "+total );
 		pages = getTotalPages( total );
 		if( pages <= 1 ){
 			

@@ -120,7 +120,6 @@ public class DUserNewRoleUI extends DUserNewRoleUIDesign implements
 						
 						
 						Profile profile = profileRepo.saveAndFlush( new Profile( tFNewRoleName.getValue(), tARoleDesc.getValue() ) );
-						// Out out = resetUserPassAdmin();
 						if( profile != null ){
 							
 							Notification.show( "Role "+profile.getProfileName()+" with id "+profile.getProfileId()+" added successfully.",

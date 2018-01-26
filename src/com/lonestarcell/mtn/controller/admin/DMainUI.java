@@ -13,7 +13,6 @@ import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.design.admin.DManagementUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserSelfCare;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
@@ -23,7 +22,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -245,10 +243,13 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		this.btnHMenuDash.setEnabled( true );
 		this.btnHMenuTxn.setEnabled( true );
 		
-		this.btnHMenuInfo.setEnabled( false );
+		this.btnHMenuInfo.setEnabled( true );
 		this.btnHMenuMisc.setEnabled( false );
 		this.btnHMenuPayment.setEnabled( true );
-		this.btnHMenuToken.setEnabled( true );
+		
+		// this.btnHMenuToken.setEnabled( true );
+		// this.btnHMenuPayment.setCaption( "x-subscriber 1" );
+		this.btnHMenuToken.setCaption( "x-subscriber 3" );
 		
 		
 		
@@ -267,7 +268,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				log.debug( "Token menu clicked. " );
 				
 				if( setHMenuState( btnHMenuInfo ) )
-					swap( new DInfoUI( getParentUI() ) );
+					swap( new DLedgerUI( getParentUI() ) );
 				
 			}
 			
@@ -288,7 +289,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				log.debug( "Token menu clicked. " );
 				
 				if( setHMenuState( btnHMenuToken ) )
-					swap( new DSubRegUI( getParentUI() ) );
+					swap( new DTokenUI( getParentUI() ) );
 				
 			}
 			

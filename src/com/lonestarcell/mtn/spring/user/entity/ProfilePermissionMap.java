@@ -1,7 +1,10 @@
 package com.lonestarcell.mtn.spring.user.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Generated;
 
 
 /**
@@ -15,6 +18,7 @@ public class ProfilePermissionMap implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	private int id;
 
 	//bi-directional many-to-one association to Permission
@@ -28,6 +32,16 @@ public class ProfilePermissionMap implements Serializable {
 
 	public ProfilePermissionMap() {
 	}
+	
+	
+
+	public ProfilePermissionMap( Permission permission, Profile profile) {
+		super();
+		this.permission = permission;
+		this.profile = profile;
+	}
+
+
 
 	public int getId() {
 		return this.id;

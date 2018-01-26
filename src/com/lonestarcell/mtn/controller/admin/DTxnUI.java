@@ -30,6 +30,10 @@ public class DTxnUI extends DTxnUIDesign implements DUserUIInitializable<DMainUI
 		init( a );
 	}
 	
+	protected DTxnUI( ApplicationContext cxt ){
+		this.setSpringAppContext( cxt );
+	}
+	
 	
 	
 

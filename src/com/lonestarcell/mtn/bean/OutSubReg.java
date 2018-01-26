@@ -53,7 +53,7 @@ public class OutSubReg extends AbstractDataBean implements Serializable {
 		return regDate;
 	}
 	public void setRegDate(String regDate) {
-		this.column7 = regDate;
+		super.date = regDate;
 		this.regDate = regDate;
 	}
 	

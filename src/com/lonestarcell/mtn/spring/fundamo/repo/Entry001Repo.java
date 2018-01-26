@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.spring.fundamo.repo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,26 @@ public interface Entry001Repo extends JpaRepository< Entry001, Long >{
     @Query( "SELECT e FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
 	public Page< Entry001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
     
+    @Query( "SELECT COUNT( e ) FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
+	public long findPageByDateRangeCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    
+    @Query( "SELECT SUM( e.amount ), COUNT( e ) FROM Entry001 e" )
+	public List< Object[] > getTotalAmountAndCountAll();
+	
+    @Query( "SELECT SUM( e.amount ), COUNT( e ) FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
+	public List< Object[] > findByDateRangeAmountAndCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+	
+	@Query( "SELECT MIN( e.entryDate ) FROM Entry001 e" )
+	public Date findEarliestDate();
+    
     @Query( "SELECT e FROM Entry001 e WHERE e.entryDate = :date" )
 	public Page< Entry001 > findPageByDate( Pageable pageable, @Param( "date" ) Date date );
+    
+    @Query( "SELECT e FROM Entry001 e WHERE e.entryDate > :date ORDER BY e.entryDate" )
+	public Page< Entry001 > findFirstPageByDate( Pageable pageable, @Param( "date" ) Date date );
+    
+    
+    @Query( "SELECT COUNT( e ) FROM Entry001 e WHERE e.entryDate = :date" )
+	public long findPageByDateCount( @Param( "date" ) Date date );
 	
 }

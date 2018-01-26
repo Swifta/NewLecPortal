@@ -232,11 +232,11 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			grid.getColumn("actions").setRenderer(new ComponentRenderer());
 			
 			 
-			//username, email, org, userStatus, profile, lastLogin, dateAdded, actions
+			//username, email, org, userStatus, profile, lastLogin, date, actions
 			
 			// userId, profileId, changePass, userSession, 
 			
-			grid.setColumnOrder( "username", "email", "org", "userStatus", "profile", "lastLogin", "dateAdded", "actions" );
+			grid.setColumnOrder( "username", "email", "org", "userStatus", "profile", "lastLogin", "date", "actions" );
 
 			grid.setFrozenColumnCount(2);
 			
@@ -245,7 +245,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
 			
 			// Header config
-			HeaderCell dateFilterCellH = header.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "dateAdded", "actions"  );
+			HeaderCell dateFilterCellH = header.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "date", "actions"  );
 			PaginationUIController pageC = new PaginationUIController( );
 			
 			AllRowsActionsUIUser allRowsActionsUIUse = new AllRowsActionsUIUser( mTxn, grid, in, true, true, pageC );
@@ -255,7 +255,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			dateFilterCellH.setStyleName( "sn-no-border-right sn-no-border-left" );
 			
 			// Footer config
-			FooterCell dateFilterCellF = footer.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "dateAdded", "actions"  );
+			FooterCell dateFilterCellF = footer.join(  "username", "email", "org", "userStatus", "profile", "lastLogin", "date", "actions"  );
 		
 			dateFilterCellF.setComponent( new AllRowsActionsUIUser( mTxn, grid, in, false, false, pageC ) );
 			
@@ -299,7 +299,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			allRowsActionsUIUse.prepareGridHeader(grid, "userStatus", "Status", true );
 			allRowsActionsUIUse.prepareGridHeader(grid, "profile", "Profile", true );
 			allRowsActionsUIUse.prepareGridHeader(grid, "lastLogin", "Last Login", false );
-			allRowsActionsUIUse.prepareGridHeader(grid, "dateAdded", "Added On", false );
+			allRowsActionsUIUse.prepareGridHeader(grid, "date", "Added On", false );
 			allRowsActionsUIUse.prepareGridHeader(grid, "actions", "...", false );
 			
 			
@@ -312,7 +312,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			grid.getColumn( "email" ).setWidth( 215 );
 			
 			
-			grid.addStyleName( "sn-small-grid" );
+			// grid.addStyleName( "sn-small-grid" );
 
 			grid.setSelectionMode(SelectionMode.MULTI);
 			grid.setHeight( "500px" );

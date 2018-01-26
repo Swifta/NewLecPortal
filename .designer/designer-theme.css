@@ -14642,3 +14642,7 @@ div.v-layout.v-horizontal.v-widget {
 	right: 10px;
 	font-size: 40px;
 }
+
+.lec_portal .v-select-twincol-buttons .v-button {
+	color: #fcca09;
+}

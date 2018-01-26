@@ -33,8 +33,10 @@ import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
@@ -42,17 +44,19 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		DUserUIInitializable<ISubUI, DTxnStateUI>, DUIControllable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private ISubUI ancestor;
-	private Logger log = LogManager.getLogger(DTxnStateUI.class.getName());
+	protected Logger log = LogManager.getLogger(DTxnStateUI.class.getName());
 
 	protected IModel mSub;
 	protected InTxn inTxn;
 
 	private ApplicationContext springAppContext;
 
-	DTxnStateUI(ISubUI a) {
+	DTxnStateUI( ISubUI a) {
 		this(a.getSpringAppContext());
+		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
+				getCurrentTimeCorrection(), springAppContext );
 		init(a);
 	}
 
@@ -65,9 +69,6 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		this.setSpringAppContext(cxt);
 		inTxn = new InTxn();
 		this.setInDate(inTxn, 1);
-		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
-				getCurrentTimeCorrection(), cxt );
-
 	}
 	
 	
@@ -101,7 +102,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		this.vlTrxnTable.addComponent(loadGridData(new BeanItemContainer<>(
 				AbstractDataBean.class)));
 		this.vlTrxnTable.setHeightUndefined();
-		this.vlTrxnTable.setWidth("1200px");
+		// this.vlTrxnTable.setWidth("1200px");
+		this.vlTrxnTable.setWidth("100%");
 
 	}
 
@@ -114,6 +116,13 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		// cuid.addStyleName("sn-c");
 
 		cuid.setHeight("100%");
+		
+		// TODO testing max content width
+		cuid.setWidth( "100%" );
+		((VerticalLayout)( (  Panel )cuid).getContent()).setWidth( "100%" );
+		// VerticalLayout v = null;
+		
+		
 		ancestor.getAncestorUI().getcMainContent().setHeight("100%");
 		// ancestor.getAncestorUI().getcMainContent().setWidth( "100%" );
 		ancestor.setHeight("100%");
@@ -167,11 +176,11 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		grid.addStyleName("sn-small-grid");
 		grid.setSelectionMode(SelectionMode.MULTI);
 		grid.setHeight("600px");
-		grid.setWidth("100%");
+		//grid.setWidth("100%");
+		grid.setWidthUndefined();
 		
 		try {
 			
-
 			log.debug("Locale: " + UI.getCurrent().getLocale());
 
 			In in = new In();
@@ -189,6 +198,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			if (out.getStatusCode() != 1) {
 				Notification.show(out.getMsg(),
 						Notification.Type.WARNING_MESSAGE);
+				return grid;
 			} else {
 				Notification.show(out.getMsg(),
 						Notification.Type.HUMANIZED_MESSAGE);
@@ -223,14 +233,14 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			grid.setContainerDataSource(gpc);
 			grid.getColumn("actions").setRenderer(new ComponentRenderer());
 			
-			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7", "actions");
+			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7", "date", "actions");
 			grid.setFrozenColumnCount(2);
 
 			HeaderRow header = grid.prependHeaderRow();
 			FooterRow footer = grid.prependFooterRow();
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
 			
-			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7", "actions");
+			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7", "date", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
 			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
@@ -242,7 +252,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 					.setStyleName("sn-no-border-right sn-no-border-left");
 			
 			// Preparing footer
-			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7", "actions");
+			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			
 			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
 					pageC));
@@ -285,7 +295,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 					.prepareGridHeader(grid, "column4", "Status", false);
 			allRowsActionsUIH.prepareGridHeader(grid, "column5", "Payer", true);
 			allRowsActionsUIH.prepareGridHeader(grid, "column6", "Payee", true);
-			allRowsActionsUIH.prepareGridHeader(grid, "column7", "Timestamp",
+			allRowsActionsUIH.prepareGridHeader(grid, "date", "Timestamp",
 					false); 
 			allRowsActionsUIH.prepareGridHeader(grid, "actions", "...", false);
 
@@ -296,7 +306,9 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			grid.getColumn("column3").setWidth(100);
 			grid.getColumn("column5").setWidth( 200 ).setResizable(false);
 			grid.getColumn("column6").setWidth( 200 ).setResizable(false);
-			grid.getColumn("column7").setWidth(178).setResizable(false);
+			grid.getColumn("date").setWidth(178).setResizable(false);
+			
+			// grid.addStyleName( "sn-small-grid" );
 
 			// DataExport dataExport = new DataExport();
 			// dataExport.exportDataAsExcel( grid );
@@ -357,7 +369,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		String fDate = sdf.format(cal.getTime());
 		log.debug("From: " + fDate);
 
-		inTxn.setfDate(fDate);
+		inTxn.setfDate( "2010-02-01" );
+		inTxn.settDate( "2010-02-03" );
 
 	}
 

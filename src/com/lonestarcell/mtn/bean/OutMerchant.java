@@ -80,7 +80,7 @@ public class OutMerchant extends AbstractDataBean implements Serializable {
 		return entryDate;
 	}
 	public void setEntryDate(String entryDate) {
-		this.column11 = entryDate;
+		super.date = entryDate;
 		this.entryDate = entryDate;
 	}
 	

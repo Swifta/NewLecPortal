@@ -1,7 +1,9 @@
 package com.lonestarcell.mtn.spring.user.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -26,6 +28,7 @@ public class Permission implements Serializable {
 
 	public Permission() {
 	}
+
 
 	public short getId() {
 		return this.id;

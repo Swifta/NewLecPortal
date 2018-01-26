@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.spring.config;
 
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -83,9 +84,14 @@ public class DataAccessConfigFundamo {
 	@Bean( name="fundamoDataSource" )
 	public DataSource dataSource() {
 
+		// TimeZone tZone = TimeZone.getTimeZone( "Africa/Porto-Novo" );
+		// TimeZone.setDefault( tZone );
 		PoolProperties p = new PoolProperties();
 
-		p.setUrl("jdbc:oracle:thin:@10.77.23.58:1521:FDCORE");
+		
+		// p.setUrl("jdbc:oracle:thin:@192.168.195.23:1521:FDCORE");
+		p.setUrl("jdbc:oracle:thin:@10.77.23.58:1521:FDCORE"); //192.168.195.23
+		
 		p.setUsername("fundamo");
 		p.setPassword("MMfund29");
 		p.setDriverClassName("oracle.jdbc.driver.OracleDriver");
@@ -93,6 +99,8 @@ public class DataAccessConfigFundamo {
 		p.setMinEvictableIdleTimeMillis(5000);
 		p.setTimeBetweenEvictionRunsMillis(5000);
 		p.setMinIdle(0);
+		
+		
 
 		log.info("fun DB URL: " + p.getUrl(), this);
 		DataSource ds = new DataSource(p);

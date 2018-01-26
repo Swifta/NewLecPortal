@@ -12,6 +12,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+
 public class DUI extends DUIDesign implements View, DUIInitializable,
 		DUIControllable {
 

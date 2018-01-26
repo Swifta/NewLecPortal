@@ -100,8 +100,8 @@ public class DataAccessConfigX {
 		*/
 		
 		p.setUrl( "jdbc:mysql://localhost:3306/benin_portal_db" );
-		p.setUsername( "root" );
-		p.setPassword( "adm!n" );
+		p.setUsername( "ben-app" );
+		p.setPassword( "b3n-a99@b3n-aPP" );
 		p.setDriverClassName( "com.mysql.jdbc.Driver" );
 		
 		p.setMinEvictableIdleTimeMillis(5000);

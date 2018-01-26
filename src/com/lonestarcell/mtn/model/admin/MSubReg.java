@@ -19,20 +19,15 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutMerchant;
 import com.lonestarcell.mtn.bean.OutSubReg;
 import com.lonestarcell.mtn.bean.OutSubscriber;
-import com.lonestarcell.mtn.bean.OutSubscriberTest;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
-import com.lonestarcell.mtn.spring.fundamo.entity.AccountIdentifier001;
-import com.lonestarcell.mtn.spring.fundamo.entity.CorporateAccountHolder001;
-import com.lonestarcell.mtn.spring.fundamo.entity.Entry001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Person001;
 import com.lonestarcell.mtn.spring.fundamo.entity.RegistrationRequestData001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Subscriber001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 import com.lonestarcell.mtn.spring.fundamo.entity.UserAccount001;
-import com.lonestarcell.mtn.spring.fundamo.repo.Entry001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.UserAccount001Repo;
 import com.vaadin.data.Item;
@@ -114,8 +109,8 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 				log.debug( "In date filter: ", this );
 				pages = repo.findPageByDateRange(
 						pager.getPageRequest(inTxn.getPage() ),
-						DateFormatFac.toDate( "2014-01-14"), 
-						DateFormatFac.toDateUpperBound( "2014-01-14" ) );
+						DateFormatFac.toDate( /*inTxn.getfDate()*/ "2011-01-14" ), 
+						DateFormatFac.toDateUpperBound( /*inTxn.gettDate()*/ "2014-01-14" )  ); // new PageRequest( 0, 15 ), DateFormatFac.toDate( "2011-01-14"), DateFormatFac.toDateUpperBound( "2014-01-14" )
 			}
 
 			if (pages == null) {
@@ -166,7 +161,7 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 				outSubReg.setMsisdn( regData.getMsisdn() );
 				outSubReg.setIdNo( regData.getIdNumber() );
 				outSubReg.setIdType( regData.getIdType() );
-				outSubReg.setDob( DateFormatFac.toString( per.getDateOfBirth() ) );
+				outSubReg.setDob( DateFormatFac.toStringDateOnly( per.getDateOfBirth() ) );
 				outSubReg.setStatus( ua.getSystemCode().getValue() );
 				outSubReg.setRegDate( DateFormatFac.toString( sub.getLastUpdate() ) );
 				
@@ -187,7 +182,7 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 			out.setData(bOutData);
 			
 			e.printStackTrace();
-			out.setMsg( e.getMessage()+" - Data fetch error - " );
+			out.setMsg( "Data fetch error" );
 			log.error( e.getMessage(), this );
 		}
 

@@ -18,6 +18,7 @@ import com.lonestarcell.mtn.spring.config.JpaConfig;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
@@ -31,6 +32,7 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 @Theme("lec_portal")
 @Push
+@Title( "MTN Benin Reports Portal" )
 public class PortalUI extends UI {
 	
 	@Configuration
@@ -68,21 +70,8 @@ public class PortalUI extends UI {
     }
 
 	@Override
+	
 	protected void init(VaadinRequest request) {
-		
-		if( profileRepo != null ){
-			log.debug( "Profile repo is wired.", this );
-		} else {
-			log.debug( "Profile repo is null.", this );
-		}
-		
-		/*
-		if( defaultUI != null ){
-			log.debug( "Main UI component is wired.", this );
-		} else {
-			log.debug( "Main UI component is null.", this );
-		} */
-		
 		
 		
 		Navigator nav = UI.getCurrent().getNavigator();

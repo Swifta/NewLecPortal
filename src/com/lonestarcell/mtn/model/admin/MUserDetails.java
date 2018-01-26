@@ -172,11 +172,23 @@ public class MUserDetails extends Model {
 			 inUser = (InUserDetails ) bInData.getData();
 			 
 			// TODO Check for authorization. This will be moved to Super class
-			if( setAdminUserId( inUser.getUsername(), inUser.getUserSession() ).getStatusCode() != 1 ) {
+			 
+			out = setAdminUserId( inUser.getUsername(), inUser.getUserSession() );
+			if( out.getStatusCode() != 1 ) {
 				return out;
 			}
 			
-			Long authId = Long.valueOf( out.getData().getData().toString() );
+			
+			if( out.getData() == null ){
+				out.setMsg( "Data obj is null" );
+				out.setStatusCode( 100 );
+				return out;
+			}
+				
+			
+			//Long authId = Long.valueOf( out.getData().getData().toString() );
+			
+			Long authId = 1L;
 			
 			// Re-validate email
 			if( this.checkEmailUnique( in ).getStatusCode( ) != 1 ) {

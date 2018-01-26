@@ -54,7 +54,7 @@ public class ProfilePermissionMapTest {
 	
 	@Test
 	@Transactional
-	// @Ignore
+	@Ignore
 	public void testFindByProfileId(){
 		Assert.assertNotNull( "Repo is null.", repo );
 		
@@ -70,6 +70,19 @@ public class ProfilePermissionMapTest {
 			
 		}
 		
+		
+	}
+	
+	
+	@Test
+	@Transactional
+	// @Ignore
+	public void testFindByProfileIdAndPermissionId(){
+		Assert.assertNotNull( "Repo is null.", repo );
+		
+		ProfilePermissionMap profilePermMap = repo.findByProfileProfileIdAndPermissionId( ( short ) 1, ( short ) 1 );
+		Assert.assertNotNull( "No such profile permission map", profilePermMap );
+		log.debug( "Profile Permission map id: "+profilePermMap.getId(), repo );
 		
 	}
 	

@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.controller.admin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.vaadin.ui.UI;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
@@ -13,7 +14,6 @@ import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
 import com.lonestarcell.mtn.model.admin.IModel;
-import com.lonestarcell.mtn.model.admin.MMerchant;
 import com.lonestarcell.mtn.model.admin.MSubReg;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -28,20 +28,14 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.UI;
-
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
 public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 
 	private static final long serialVersionUID = 1L;
-	
-	private Logger log = LogManager.getLogger( DTxnStateSubRegArchiveUI.class.getName() );
-	
-	
+    private Logger log = LogManager.getLogger( DTxnStateSubRegArchiveUI.class.getName() );
 	DTxnStateSubRegArchiveUI( ISubUI a){
-		super( a );
-		this.setInDate( inTxn, 4*365 );
+		super( a.getSpringAppContext() );
 		mSub = new MSubReg(getCurrentUserId(), getCurrentUserSession(),
 				getCurrentTimeCorrection(), a.getSpringAppContext() );
 		this.init(a);
@@ -73,10 +67,20 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 		grid.setHeight("600px");
 		grid.setWidth("100%");
 		
+		if( log == null ){
+			System.err.println( "log is really null huh!!!????" );
+		}
+		if( UI.getCurrent() == null ){
+			log.error( "Current UI is null -." );
+		} else {
+			log.error( "Current UI is set -." );
+		}
+		log.debug("Locale: " + UI.getCurrent().getLocale());
+		
 		try {
 			
 
-			log.debug("Locale: " + UI.getCurrent().getLocale());
+			
 
 			In in = new In();
 
@@ -93,6 +97,7 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 			if (out.getStatusCode() != 1) {
 				Notification.show(out.getMsg(),
 						Notification.Type.WARNING_MESSAGE);
+				return grid;
 			} else {
 				Notification.show(out.getMsg(),
 						Notification.Type.HUMANIZED_MESSAGE);
@@ -127,14 +132,14 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 			grid.setContainerDataSource(gpc);
 			grid.getColumn("actions").setRenderer(new ComponentRenderer());
 			
-			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7", "actions");
+			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			grid.setFrozenColumnCount(2);
 
 			HeaderRow header = grid.prependHeaderRow();
 			FooterRow footer = grid.prependFooterRow();
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
 			
-			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7", "actions");
+			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
 			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
@@ -146,7 +151,7 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 					.setStyleName("sn-no-border-right sn-no-border-left");
 			
 			// Preparing footer
-			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7", "actions");
+			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			
 			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
 					pageC));
@@ -195,18 +200,20 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 			allRowsActionsUIH
 			.prepareGridHeader(grid, "column6", "Status", false);
 			
-			allRowsActionsUIH.prepareGridHeader(grid, "column7", "Date of Registration",
+			allRowsActionsUIH.prepareGridHeader(grid, "date", "Time of Registration",
 					false); 
 			allRowsActionsUIH.prepareGridHeader(grid, "actions", "...", false);
 
 			// Set column widths
 
-			grid.getColumn("column1").setWidth(125);
+			grid.getColumn("column1").setWidth(250);
 			grid.getColumn("column2").setWidth( 150 ).setResizable(false);
 			grid.getColumn("column3").setWidth( 150);
 			grid.getColumn("column5").setWidth( 178 ).setResizable(false);
 			grid.getColumn("column6").setWidth( 150 ).setResizable(false);
-			grid.getColumn("column7").setWidth(178).setResizable(false);
+			grid.getColumn("date").setWidth(178).setResizable(false);
+			
+			// grid.addStyleName( "sn-small-grid" );
 
 			allRowsActionsUIH.removeUnnecessaryColumns(grid);
 

@@ -327,8 +327,8 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 		return out;
 	} 
 
-	@Override
-	public Out searchMeta(In in, OutTxnMeta outSubscriber) {
+	//@Override
+	public Out searchMetax(In in, OutTxnMeta outSubscriber) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -354,6 +354,75 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 
 		out.setStatusCode(1);
 		out.setMsg("Txn meta computed successfully.");
+
+		return out;
+	}
+	
+	
+	@Override
+	public Out searchMeta(In in, OutTxnMeta meta ) {
+
+		Out out = this.checkAuthorization();
+		if (out.getStatusCode() != 1) {
+			out.setStatusCode(100);
+			return out;
+		}
+		out = new Out();
+		
+		try {
+			Entry001Repo repo = springAppContext
+					.getBean(Entry001Repo.class);
+			if (repo == null) {
+				log.debug("Entry001 repo is null");
+				out.setMsg("DAO error occured - 1.");
+				return out;
+			}
+			
+			BData< ? > bInData = in.getData();
+			InTxn inTxn = ( InTxn ) bInData.getData();
+			
+			long rowCount = 0L;
+			double amount = 0D;
+			
+			log.debug( "MSub from date:"+inTxn.getfDate(), this );
+			log.debug( "MSub to date:"+inTxn.gettDate(), this );
+
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				
+				List< Object[] > lsObj = repo.getTotalAmountAndCountAll();
+				if ( lsObj != null) {
+					Object[] obj = lsObj.get( 0 );
+					rowCount = Long.valueOf( obj[ 1 ].toString() );
+					amount =  Double.valueOf( obj[ 0 ].toString() );
+				} 
+				
+			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+				log.debug( "In date filter: ", this );
+				
+				List< Object[] > lsObj = repo.findByDateRangeAmountAndCount( DateFormatFac.toDate( inTxn.getfDate() ),DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
+				if ( lsObj != null) {
+					Object[] obj = lsObj.get( 0 );
+					rowCount = Long.valueOf( obj[ 1 ].toString() );
+					amount =  Double.valueOf( obj[ 0 ].toString() );
+				} 
+			}
+
+			
+			
+			log.info( "Amount: "+amount );
+			log.info( "Total: "+rowCount );
+			
+			meta.getTotalRecord().setValue( rowCount + "");
+			meta.getTotalRevenue().setValue(
+					( amount / 100) + "");
+			
+			out.setStatusCode(1);
+			out.setMsg("Txn meta computed successfully.");
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			out.setMsg( "Data fetch error." );
+		}
 
 		return out;
 	}

@@ -39,13 +39,14 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 	
 	
 	DTxnStateMerchantArchiveUI( ISubUI a){
-		super( a );
-		// this.setInDate( inTxn, 4*365 );
+		super( a.getSpringAppContext() );
 		mSub = new MMerchant(getCurrentUserId(), getCurrentUserSession(),
 				getCurrentTimeCorrection(), a.getSpringAppContext() );
 		this.init(a);
 		log.debug( "Archive UI loaded successfully." );
 	}
+	
+	
 	
 	@Override
 	public void setHeader() {
@@ -92,6 +93,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			if (out.getStatusCode() != 1) {
 				Notification.show(out.getMsg(),
 						Notification.Type.WARNING_MESSAGE);
+				return grid;
 			} else {
 				Notification.show(out.getMsg(),
 						Notification.Type.HUMANIZED_MESSAGE);
@@ -126,14 +128,14 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			grid.setContainerDataSource(gpc);
 			grid.getColumn("actions").setRenderer(new ComponentRenderer());
 			
-			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11", "actions");
+			grid.setColumnOrder("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11","date", "actions");
 			grid.setFrozenColumnCount(2);
 
 			HeaderRow header = grid.prependHeaderRow();
 			FooterRow footer = grid.prependFooterRow();
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
 			
-			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11", "actions");
+			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11","date", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
 			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
@@ -145,7 +147,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 					.setStyleName("sn-no-border-right sn-no-border-left");
 			
 			// Preparing footer
-			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11", "actions");
+			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11","date", "actions");
 			
 			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
 					pageC));
@@ -186,36 +188,34 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			allRowsActionsUIH.prepareGridHeader(grid, "column2", "MSISDN", false);
 			
 			allRowsActionsUIH.prepareGridHeader(grid, "column3", "T. Number", false);
-			
+
 			allRowsActionsUIH.prepareGridHeader(grid, "column4", "Type", false);
 			allRowsActionsUIH
 					.prepareGridHeader(grid, "column5", "Amount", false);
 			
-			allRowsActionsUIH
-			.prepareGridHeader(grid, "column6", "Status", false);
+			allRowsActionsUIH.prepareGridHeader(grid, "column6", "Status", false);
 			
-			allRowsActionsUIH
-			.prepareGridHeader(grid, "column7", "Channel", false);
+			allRowsActionsUIH.prepareGridHeader(grid, "column7", "Channel", false);
 			
-			allRowsActionsUIH
-			.prepareGridHeader(grid, "column8", "Channel", false);
-			allRowsActionsUIH
-					.prepareGridHeader(grid, "column4", "Description", false);
+			allRowsActionsUIH.prepareGridHeader(grid, "column8", "Description", false);
+			// allRowsActionsUIH.prepareGridHeader(grid, "column4", "Description", false);
 			
 			allRowsActionsUIH.prepareGridHeader(grid, "column9", "Payer", true);
 			allRowsActionsUIH.prepareGridHeader(grid, "column10", "Payee", true);
-			allRowsActionsUIH.prepareGridHeader(grid, "column11", "Timestamp",
+			allRowsActionsUIH.prepareGridHeader(grid, "date", "Timestamp",
 					false); 
 			allRowsActionsUIH.prepareGridHeader(grid, "actions", "...", false);
 
 			// Set column widths
 
-			grid.getColumn("column1").setWidth(125);
-			grid.getColumn("column2").setWidth( 150 ).setResizable(false);
-			grid.getColumn("column3").setWidth( 150);
-			grid.getColumn("column5").setWidth( 150 ).setResizable(false);
-			grid.getColumn("column6").setWidth( 150 ).setResizable(false);
-			grid.getColumn("column11").setWidth(178).setResizable(false);
+			// grid.getColumn("column1").setWidth(125);
+			// grid.getColumn("column2").setWidth( 150 ).setResizable(false);
+			// grid.getColumn("column3").setWidth( 150);
+			// grid.getColumn("column5").setWidth( 150 ).setResizable(false);
+			// grid.getColumn("column6").setWidth( 150 ).setResizable(false);
+			// grid.getColumn("date").setWidth(178).setResizable(false);
+			
+			// grid.addStyleName( "sn-small-grid" );
 
 			allRowsActionsUIH.removeUnnecessaryColumns(grid);
 
@@ -231,6 +231,12 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 		}
 		
 		return grid;
+	}
+	
+	@Override
+	protected void setInDate(InTxn inTxn, int dayOffSet) {
+			inTxn.setfDate( "2010-02-01" );
+			inTxn.settDate( "2010-02-02" );
 	}
 
 

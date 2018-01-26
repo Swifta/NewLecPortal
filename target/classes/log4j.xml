@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true"
+  xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+	    <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern"
+			value="[%-5level] %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+	    </layout>
+	</appender>
+	
+	<appender name="file" class="org.apache.log4j.FileAppender">
+	    <param name="file" value="/opt/tomcat/logs/catalina.out" />
+	    <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern"
+			value="[%-5level] %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+	    </layout>
+	</appender>
+	
+	<appender name="rollingFile" class="org.apache.log4j.DailyRollingFileAppender">
+	    <!--  param name="append" value="false" /-->
+	    <!--  param name="maxFileSize" value="1MB" /-->
+	    <!--  param name="maxBackupIndex" value="10" /-->
+	    <!--  param name="FileNamePattern" value="d2c-.%d{yyyyMMdd}.log.gz" / -->
+	    <!-- param name="file" value="/opt/d2c/logs/hibernate/d2c-hib.log" /-->
+	     <param name="file" value="/opt/tomcat/logs/catalina.out" />
+	    <param name="DatePattern" value="'_._'yyyy-MM-dd.'_.log'" />
+	    
+	    <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern"
+			value="[%-5level] %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+	    </layout>
+	</appender>
+	
+	
+
+	<root>
+		<level value="ERROR" />
+		<!-- appender-ref ref="console" /-->
+		<appender-ref ref="rollingFile" />
+	</root>
+
+</log4j:configuration>
