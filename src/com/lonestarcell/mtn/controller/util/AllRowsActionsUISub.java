@@ -11,6 +11,7 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
+import com.lonestarcell.mtn.controller.admin.DPgExportLimitUI;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
@@ -24,6 +25,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
@@ -222,7 +224,19 @@ public class AllRowsActionsUISub
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				 new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
+				//TODO Page
+				Object val = comboPgExportLimit.getValue();
+				if( val == null ){
+					String msg = "Please select page limit";
+					comboPgExportLimit.setComponentError( new UserError( msg ) );
+					Notification.show( msg, Notification.Type.WARNING_MESSAGE );
+					
+					return;
+				} 
+				
+				new DPgExportLimitUI( pageC, model, in, new ArrayList<Item>(), moreDropDown );
+				// Value here. I don't kow how we are passing it down.
+				 // new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
 			}
 
 		});

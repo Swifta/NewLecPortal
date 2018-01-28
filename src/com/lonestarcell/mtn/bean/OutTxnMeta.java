@@ -2,18 +2,27 @@ package com.lonestarcell.mtn.bean;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 public class OutTxnMeta implements Serializable{
 	
 	private static final long serialVersionUID = -8474942313392257605L;
 	private Property< String > totalRecord, totalRevenue;
+	private Item pgExportLimitItems;
 	private Long totalTxnFail, totalTxnSuccess, totalTokenFail, totalTokenSuccess, totalInfoFail, totalInfoSuccess, totalSMSFail, totalSMSSuccess;
 	private String sTotalTxnFail, sTotalTxnSuccess, sTotalTokenFail, sTotalTokenSuccess, sTotalInfoFail, sTotalInfoSuccess, sTotalSMSFail, sTotalSMSSuccess;
 	
 	
 	private String sTotalInfo, sTotalToken, sTotalSMS, sTotalTxn;
 	
+	
+	public Item getPgExportLimitItems() {
+		return pgExportLimitItems;
+	}
+	public void setPgExportLimitItems(Item pgExportLimitItems) {
+		this.pgExportLimitItems = pgExportLimitItems;
+	}
 	public Property<String> getTotalRecord() {
 		return totalRecord;
 	}

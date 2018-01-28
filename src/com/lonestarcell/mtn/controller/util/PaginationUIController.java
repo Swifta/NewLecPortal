@@ -36,6 +36,7 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	private int newPage = 1;
 	private int pages = 0;
 	private Label lbTotalRecords;
+	private float pageLength;
 	
 	
 	public PaginationUIController(){
@@ -47,6 +48,17 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	}
 
 	
+
+
+	
+
+	public float getPageLength() {
+		return pageLength;
+	}
+
+	public void setPageLength(float pageLength) {
+		this.pageLength = pageLength;
+	}
 
 	public int getNewPage() {
 		return newPage;
@@ -130,10 +142,16 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	}
 	
 	
+	public int getPages() {
+		return pages;
+	}
+
+
 	private int getTotalPages( Long total ){
 		
 		int pages = 0;
 		Float pageLength = 15F;
+		this.setPageLength( pageLength );
 		pages = (int)Math.ceil( total/pageLength );
 		
 		return pages;

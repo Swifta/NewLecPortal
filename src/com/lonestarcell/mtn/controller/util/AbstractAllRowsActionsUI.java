@@ -117,6 +117,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 		// Data Export
 		this.attachBtnExportOps();
+		this.attachComboExportPgCount();
 		this.initDataExportUI();
 
 	}
@@ -130,6 +131,8 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 		if (outTxnMeta.getTotalRevenue().getValue() == null)
 			outTxnMeta.getTotalRevenue().setValue("0");
+		
+		outTxnMeta.getTotalRecord().getValue();
 
 		double revenue = Double.valueOf(outTxnMeta.getTotalRevenue().getValue()
 				.replaceAll(",", ""));
@@ -139,13 +142,21 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		outTxnMeta.getTotalRevenue().setValue(
 				nf.format(revenue).replace("$", ""));
 
-		if (outTxnMeta.getTotalRecord().getValue() == null)
-			outTxnMeta.getTotalRecord().setValue("0");
-
-		long records = Long.valueOf(outTxnMeta.getTotalRecord().getValue()
+		String tRecord = outTxnMeta.getTotalRecord().getValue();
+		if (tRecord == null)
+			tRecord = "0";
+		
+		long records = Long.valueOf(tRecord
 				.toString().replaceAll(",", ""));
 		nf = NumberFormat.getNumberInstance(Locale.US);
 		outTxnMeta.getTotalRecord().setValue(nf.format(records));
+		
+		formatPgExportLimit( pageC.getCurrentPage(), Integer.valueOf( tRecord ));
+	}
+	
+	
+	private void formatPgExportLimit( int pg, int pgCount ){
+		
 	}
 
 	private void attachBtnBeforeNext() {
@@ -273,6 +284,13 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		});
 	}
 
+	protected void attachComboExportPgCount() {
+		
+		this.comboPgExportLimit.addBlurListener(e -> {
+			comboPgExportLimit.setComponentError(null);
+		});
+	}
+
 	protected abstract void attachBtnExportOps();
 
 	protected abstract void initDataExportUI();
@@ -309,9 +327,9 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		this.cDateFilters.setVisible(this.allowDateFilters);
 
 		if (this.isHeader) {
-			
-			this.dFStartDate.setDateFormat( "yyyy-MM-dd" );
-			this.dFLastDate.setDateFormat( "yyyy-MM-dd" );
+
+			this.dFStartDate.setDateFormat("yyyy-MM-dd");
+			this.dFLastDate.setDateFormat("yyyy-MM-dd");
 			// Initialize start & end date
 			if (inTxn.getfDate() != null)
 				this.dFStartDate.setValue(DateFormatFacRuntime.toDate(inTxn
@@ -327,6 +345,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 					.getTotalRevenue());
 			this.lbTotalRecords.setPropertyDataSource(outTxnMeta
 					.getTotalRecord());
+			
 
 			// Paginations for header
 

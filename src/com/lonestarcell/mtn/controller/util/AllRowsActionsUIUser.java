@@ -11,6 +11,7 @@ import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
+import com.lonestarcell.mtn.controller.admin.DPgExportLimitUI;
 import com.lonestarcell.mtn.model.admin.MUser;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -22,6 +23,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
@@ -41,6 +43,8 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 		this.setModel( model );
 		this.setGrid( grid );
 		this.init();
+		
+		
 	}
 	
 	@Override
@@ -199,7 +203,19 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				 new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
+				
+				//TODO Page
+				Object val = comboPgExportLimit.getValue();
+				if( val == null ){
+					String msg = "Please select page limit";
+					comboPgExportLimit.setComponentError( new UserError( msg ) );
+					Notification.show( msg, Notification.Type.WARNING_MESSAGE );
+					
+					return;
+				} 
+				
+				new DPgExportLimitUI( pageC, model, in, new ArrayList<Item>(), moreDropDown );
+			    // new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
 			}
 
 		});

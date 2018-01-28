@@ -41,6 +41,7 @@ import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -87,7 +88,8 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		attachCommandListeners();
 		this.vlTrxnTable.addComponent( loadGridData( beanItemContainer ) );
 		this.vlTrxnTable.setHeightUndefined();
-		this.vlTrxnTable.setWidth( "1150px");
+		// this.vlTrxnTable.setWidth( "1150px");
+		this.vlTrxnTable.setWidth( "100%" );
 		
 	}
 	
@@ -101,6 +103,8 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		this.beanItemContainer = beanItemContainer;
 	}
 
+	
+	/*
 	@Override
 	public void swap(Component cuid) {
 		//ancestor.setHeight("100%");
@@ -120,6 +124,35 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		
 		ancestor.swap( cuid );
 		
+	}*/
+	
+	// New swap size config.
+	@Override
+	public void swap(Component cuid) {
+		// ancestor.setHeight("100%");
+		// cuid.setHeight("100%");
+
+		// ancestor.addStyleName("sn-p");
+		// cuid.addStyleName("sn-c");
+
+		cuid.setHeight("100%");
+		
+		// TODO testing max content width
+		cuid.setWidth( "100%" );
+		((VerticalLayout)( (  Panel )cuid).getContent()).setWidth( "100%" );
+		// VerticalLayout v = null;
+		
+		
+		
+		
+		ancestor.getAncestorUI().getcMainContent().setHeight("100%");
+		// ancestor.getAncestorUI().getcMainContent().setWidth( "100%" );
+		ancestor.setHeight("100%");
+
+		log.debug("Users height: " + cuid.getHeight());
+
+		ancestor.swap(cuid);
+
 	}
 
 	@Override
@@ -167,8 +200,11 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 	public Grid loadGridData( BeanItemContainer<OutUser> beanItemContainer ) {
 		try {
 
-			
-			
+			Grid grid = new Grid();
+			grid.addStyleName("sn-small-grid");
+			grid.setSelectionMode(SelectionMode.MULTI);
+			grid.setHeight("600px");
+			grid.setWidth("100%");
 			
 			In in = new In();
 			
@@ -198,10 +234,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			
 			mTxn.setUsers(in, beanItemContainer );
 
-			Grid grid = new Grid();
 			
-			
-
 			// Add actions
 			
 			GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(
@@ -314,9 +347,9 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 			
 			// grid.addStyleName( "sn-small-grid" );
 
-			grid.setSelectionMode(SelectionMode.MULTI);
-			grid.setHeight( "500px" );
-			grid.setWidth( "100%" );
+			// grid.setSelectionMode(SelectionMode.MULTI);
+			// grid.setHeight( "500px" );
+			// grid.setWidth( "100%" );
 			
 			
 			Notification.show(
