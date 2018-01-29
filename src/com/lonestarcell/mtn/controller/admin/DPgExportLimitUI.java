@@ -1,18 +1,26 @@
 package com.lonestarcell.mtn.controller.admin;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
+import org.vaadin.haijian.CSVExporter;
+import org.vaadin.haijian.ExcelExporter;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.DataExportUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
@@ -21,17 +29,21 @@ import com.lonestarcell.mtn.design.admin.DPgExportLimitUIDesign;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.spring.user.entity.Profile;
+import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
@@ -51,20 +63,25 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 	private IModel model;
 	private In in;
 	private VerticalLayout cMoreOps;
-	private Collection< Item > records;
+	private Collection<Item> records;
 	private Accordion accoRoles;
 	private ApplicationContext springAppContext;
 	private ProfileRepo profileRepo;
-	
+	private ExcelExporter xlsExporter;
+	private CSVExporter cSVExporter;
+
 	private PaginationUIController pageC;
 	private long rowCount;
+	private InTxn inTxn;
 
-	public DPgExportLimitUI(PaginationUIController pageC, IModel mSub, In in, Collection<Item> records, VerticalLayout cMoreOps) {
+	public DPgExportLimitUI(PaginationUIController pageC, IModel mSub, In in,
+			Collection<Item> records, VerticalLayout cMoreOps) {
 		this.pageC = pageC;
-		this.setModel( mSub );
-		this.setIn( in );
+		this.setModel(mSub);
+		this.setIn(in);
+		this.setInTxn(in.getData().getData());
 		this.setRecord(record);
-		this.setcMoreOps( cMoreOps );
+		this.setcMoreOps(cMoreOps);
 		init(null);
 	}
 
@@ -75,9 +92,14 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 		init(accoRoles);
 		log.debug("New role contructor run.");
 	}
-	
-	
-	
+
+	public InTxn getInTxn() {
+		return inTxn;
+	}
+
+	public void setInTxn(Object inTxn) {
+		this.inTxn = (InTxn) inTxn;
+	}
 
 	public Collection<Item> getRecords() {
 		return records;
@@ -144,53 +166,56 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 
 	@Override
 	public void attachCommandListeners() {
-		this.attachBtnCancel();
-		this.attachOnClose();
 		// this.attachBtnGenNewPass();
 		this.attachBtnSave();
-		this.attachBtnCSV();
 		this.setComboContent();
+		this.attachBtnXLS();
+		this.attachBtnCSV();
 	}
 
-	private void attachBtnCSV() {
-		this.btnCSV.addClickListener( e->{
-			if( !combosSet() )
-				return;
-			// TODO Handle export
-			
-			new DataExportUISub( model, in, new ArrayList<Item>(), cMoreOps );
-	
-		});
-
-
+	private boolean combosSet() {
+		this.comboPgExportLimitFrom.setComponentError( null );
+		this.comboPgExportLimitPgCount.setComponentError( null );
+		
+		return isComboSet(this.comboPgExportLimitFrom)
+				&& isComboSet(this.comboPgExportLimitPgCount);
 	}
-	
-	private boolean combosSet(){
-		return isComboSet( this.comboPgExportLimitFrom) && isComboSet( this.comboPgExportLimitPgCount);
-	}
-	private boolean isComboSet( ComboBox combo ){
-		if( combo.getValue() == null ){
-			combo.setComponentError( new UserError( "Required." ) );
+
+	private boolean isComboSet(ComboBox combo) {
+		if (combo.getValue() == null) {
+			combo.setComponentError(new UserError("Required."));
 			return false;
 		}
 		return true;
 	}
-	
-	private void setComboContent(){
-		
+
+	private void setComboContent() {
+
 		comboPgExportLimitFrom.removeAllItems();
 		comboPgExportLimitPgCount.removeAllItems();
 		int pages = pageC.getPages();
 		int curPage = pageC.getCurrentPage();
+		inTxn.setPageSize( pageC.getPageLength() );
 
 		for (int i = 1; i <= pages; i++)
 			comboPgExportLimitFrom.addItems(i);
 		comboPgExportLimitFrom.setValue(curPage);
+		inTxn.setPage( curPage );
 
 		setComboItems(comboPgExportLimitFrom.getValue());
 
 		comboPgExportLimitFrom.addValueChangeListener(e -> {
-			setComboItems(e.getProperty().getValue());
+
+			Object obj = e.getProperty().getValue();
+			if (obj != null)
+				inTxn.setPage(Integer.valueOf(obj.toString()));
+			setComboItems(obj);
+		});
+
+		comboPgExportLimitPgCount.addValueChangeListener(e -> {
+			Object obj = e.getProperty().getValue();
+			if (obj != null)
+				inTxn.setPageExportLimit(Integer.valueOf(obj.toString()));
 		});
 	}
 
@@ -203,8 +228,8 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 		int fromPg = Integer.valueOf(obj.toString());
 		float exportPgCount = rowCount - ((fromPg - 1) * pgLen);
 		int exportPgs = (int) Math.ceil(exportPgCount / pgLen);
-		log.info("Export pgs: " + exportPgs);
-		
+		log.debug("Export pgs: " + exportPgs);
+
 		comboPgExportLimitPgCount.removeAllItems();
 
 		// Only next 10 pages can be exported.
@@ -212,7 +237,10 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 			if (i <= exportPgs)
 				comboPgExportLimitPgCount.addItem(i);
 
-		comboPgExportLimitPgCount.setValue(exportPgs - (exportPgs - 1));
+		long defaultLimit = exportPgs - (exportPgs - 1);
+		log.info( "Default limit: "+defaultLimit );
+		comboPgExportLimitPgCount.setValue( exportPgs - (exportPgs - 1) );
+		inTxn.setPageExportLimit( ( int ) defaultLimit );
 
 	}
 
@@ -238,25 +266,6 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 
 	}
 
-	private Out resetUserPassAdmin() {
-		MUserDetails mUserDetails = new MUserDetails(getCurrentUserId(),
-				getCurrentUserSession());
-		InUserDetails inData = new InUserDetails();
-		setAuth(inData);
-		inData.setRecord(record);
-
-		BData<InUserDetails> bData = new BData<>();
-		bData.setData(inData);
-
-		In in = new In();
-		in.setData(bData);
-
-		Out out = mUserDetails.resetUserPassAdmin(in);
-
-		return out;
-
-	}
-
 	/*
 	 * private void attachBtnGenNewPass(){ this.btnGenNewPass.addClickListener(
 	 * new ClickListener(){
@@ -276,87 +285,6 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 	 * }); }
 	 */
 
-	private boolean isFormValid() {
-
-		// if( !this.isTFValid( this.tFNewRoleName ) )
-		// return false;
-
-		return true;
-	}
-
-	private boolean isTFValid(TextField tF) {
-
-		if (!tF.isValid()) {
-
-			// lbErrorMsg.removeStyleName("sn-display-none");
-			// lbNormalMsg.addStyleName("sn-display-none");
-
-			Iterator<Validator> itr = tF.getValidators().iterator();
-			String msg = "";
-			while (itr.hasNext()) {
-				RequiredTFValidator v = (RequiredTFValidator) itr.next();
-				msg += v.getErrorMessage();
-			}
-
-			// lbErrorMsg.setValue( tF.getCaption()+" Error. "+msg );
-
-			return false;
-
-		} else {
-
-			// lbNormalMsg.removeStyleName("sn-display-none");
-			// lbErrorMsg.addStyleName("sn-display-none");
-
-		}
-
-		return true;
-
-	}
-
-	private void attachBtnCancel() {
-
-	}
-
-	private void attachOnClose() {
-		processingPopup.addCloseListener(new CloseListener() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void windowClose(CloseEvent e) {
-				// refreshRecord();
-				// new DUserDetailsUI( record );
-
-			}
-
-		});
-	}
-
-	private boolean refreshRecord() {
-
-		if (record != null) {
-
-			InUserDetails inData = new InUserDetails();
-			setAuth(inData);
-			inData.setRecord(record);
-
-			BData<InUserDetails> bData = new BData<>();
-			bData.setData(inData);
-
-			In in = new In();
-			in.setData(bData);
-
-			MUserDetails mUserDetails = new MUserDetails(getCurrentUserId(),
-					getCurrentUserSession());
-			Out out = mUserDetails.setUserDetails(in);
-			return out.getStatusCode() == 1;
-
-		}
-
-		return false;
-
-	}
-
 	public Item getRecord() {
 		return record;
 	}
@@ -372,6 +300,15 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 		attachCommandListeners();
 		setPropertyDataSource();
 		setContent();
+		
+		xlsExporter = this.getExcelExporterCtrl();
+		cSVExporter = this.getCSVExporterCtrl();
+		
+		xlsExporter.addStyleName( "sn-display-none" );
+		cSVExporter.addStyleName( "sn-display-none" );
+		this.cExportCtrls.replaceComponent( btnXLSDownloadPlaceholder, xlsExporter );
+		this.cExportCtrls.replaceComponent( btnCSVDownloadPlaceholder, cSVExporter );
+		
 
 	}
 
@@ -410,10 +347,6 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 		// this.tFNewRoleName.setComponentError( null );
 	}
 
-	private void format() {
-
-	}
-
 	private void showPopup() {
 		processingPopup.setContent(this);
 		processingPopup.center();
@@ -434,7 +367,7 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 		// } else {
 
 		// Notification.show("Oops... error loading data. Please  try again.",
-				//Notification.Type.ERROR_MESSAGE);
+		// Notification.Type.ERROR_MESSAGE);
 		// }
 	}
 
@@ -455,6 +388,142 @@ public class DPgExportLimitUI extends DPgExportLimitUIDesign implements
 	private String getCurrentUserSession() {
 		return (String) UI.getCurrent().getSession()
 				.getAttribute(DLoginUIController.SESSION_VAR);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void attachBtnXLS(){
+		this.btnXLS.addClickListener( e->{
+			if (!combosSet())
+				return;
+			// Load data
+			BeanItemContainer<AbstractDataBean> container = new BeanItemContainer<AbstractDataBean>(
+					AbstractDataBean.class);
+			
+			Out out = model.setExportData(in, container);
+			if (out.getStatusCode() != 1) {
+				showWarn("Failed to load export data. Please try again/contact support.");
+				return;
+			}
+			
+			BeanItemContainer<OutUser> c = ( BeanItemContainer< OutUser >)out.getData().getData();
+			
+			xlsExporter.setContainerToBeExported( c );
+			xlsExporter.removeStyleName( "sn-display-none" );
+			btnXLS.setVisible( false );
+			showSuccess( "File ready. Click download icon" );
+	
+		});
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private void attachBtnCSV(){
+		this.btnCSV.addClickListener( e->{
+			if (!combosSet())
+				return;
+			// Load data
+			BeanItemContainer<AbstractDataBean> container = new BeanItemContainer<AbstractDataBean>(
+					AbstractDataBean.class);
+			Out out = model.setExportData(in, container);
+			if (out.getStatusCode() != 1) {
+				showWarn("Failed to load export data. Please try again/contact support.");
+				return;
+			}
+			
+			BeanItemContainer<OutUser> c = ( BeanItemContainer< OutUser >)out.getData().getData();
+			cSVExporter.setContainerToBeExported(c);
+			cSVExporter.removeStyleName( "sn-display-none" );
+			btnCSV.setVisible( false );
+			showSuccess( "File ready. Click download icon" );
+			
+		});
+	}
+	
+	
+	
+	private ExcelExporter getExcelExporterCtrl() {
+
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String fileName = sdf.format(new Date()) + "_" + "_by_"
+				+ this.getCurrentUsername();
+
+		ExcelExporter excelExporter = new ExcelExporter();
+		excelExporter.setDateFormat("yyyy-MM-dd");
+		excelExporter.setContainerToBeExported(new BeanItemContainer<OutUser>(
+				OutUser.class));
+		excelExporter.setCaption("");
+		excelExporter.setIcon(FontAwesome.DOWNLOAD);
+		excelExporter.addStyleName("friendly icon-only link");
+		excelExporter.setDescription("Download .xls");
+		excelExporter.setDownloadFileName(fileName);
+		excelExporter.setDisableOnClick(true);
+		
+		// excelExporter.setEnabled( false );
+		
+		
+
+		excelExporter.setDisableOnClick(true);
+		excelExporter
+				.addClickListener(e -> {
+					xlsExporter.addStyleName( "sn-display-none" );
+					btnXLS.setVisible( true );
+					xlsExporter.setEnabled( true );
+					showSuccess( "Now download... please wait." );
+				});
+
+		return excelExporter;
+
+	}
+
+
+
+	private CSVExporter getCSVExporterCtrl() {
+
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String fileName = sdf.format(new Date()) + "_" + "_by_"
+				+ this.getCurrentUsername();
+
+		CSVExporter cSVExporter = new CSVExporter();
+
+		cSVExporter.setDateFormat("yyyy-MM-dd");
+		// cSVExporter.setTableToBeExported( table );
+
+		cSVExporter.setContainerToBeExported(new BeanItemContainer<OutUser>(
+				OutUser.class));
+		cSVExporter.setCaption("");
+		cSVExporter.setIcon(FontAwesome.DOWNLOAD);
+		cSVExporter.addStyleName("friendly icon-only link");
+		cSVExporter.setDescription("Download .csv");
+		cSVExporter.setDownloadFileName(fileName);
+		cSVExporter.setDisableOnClick(true);
+
+		cSVExporter
+				.addClickListener(e -> {
+					cSVExporter.addStyleName( "sn-display-none" );
+					btnCSV.setVisible( true );
+					cSVExporter.setEnabled( true );
+					showSuccess( "Now download... please wait." );
+				});
+
+		return cSVExporter;
+
+	}
+
+	private void showError(String msg) {
+		Notification.show(msg, Notification.Type.ERROR_MESSAGE);
+	}
+
+	private void showWarn(String msg) {
+		Notification.show(msg, Notification.Type.WARNING_MESSAGE);
+	}
+
+	private void showSuccess(String msg) {
+		Notification.show(msg, Notification.Type.HUMANIZED_MESSAGE);
+	}
+
+	private String getCurrentUsername() {
+		return (String) UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.USERNAME);
 	}
 
 }

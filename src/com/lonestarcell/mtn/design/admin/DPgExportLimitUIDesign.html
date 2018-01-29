@@ -30,11 +30,17 @@
      <option>10</option> 
     </vaadin-combo-box> 
    </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout :center> 
+   <vaadin-horizontal-layout _id="cExportCtrls" :center> 
     <vaadin-button icon="fonticon://FontAwesome/f0f6" description="CSV" style-name="friendly icon-only link" plain-text _id="btnCSV">
       Button 
     </vaadin-button> 
+    <vaadin-button visible="false" style-name="friendly icon-only link" plain-text _id="btnCSVDownloadPlaceholder">
+      Button 
+    </vaadin-button> 
     <vaadin-button icon="fonticon://FontAwesome/f1c3" description="XLS" style-name="friendly icon-only link" plain-text _id="btnXLS">
+      Button 
+    </vaadin-button> 
+    <vaadin-button visible="false" style-name="friendly icon-only link" plain-text _id="btnXLSDownloadPlaceholder">
       Button 
     </vaadin-button> 
    </vaadin-horizontal-layout> 

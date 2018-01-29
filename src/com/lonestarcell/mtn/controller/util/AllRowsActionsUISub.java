@@ -224,19 +224,7 @@ public class AllRowsActionsUISub
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//TODO Page
-				Object val = comboPgExportLimit.getValue();
-				if( val == null ){
-					String msg = "Please select page limit";
-					comboPgExportLimit.setComponentError( new UserError( msg ) );
-					Notification.show( msg, Notification.Type.WARNING_MESSAGE );
-					
-					return;
-				} 
-				
 				new DPgExportLimitUI( pageC, model, in, new ArrayList<Item>(), moreDropDown );
-				// Value here. I don't kow how we are passing it down.
-				 // new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
 			}
 
 		});

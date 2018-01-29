@@ -4,7 +4,24 @@ public class InTxn {
 	
 	private String searchReqCur, searchToken, searchItronId, searchTokenStatus, searchTxnType, searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
 	private int page;
+	private int pageExportLimit;
+	private float pageSize;
 
+	
+	
+	
+	public float getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(float pageSize) {
+		this.pageSize = pageSize;
+	}
+	public int getPageExportLimit() {
+		return pageExportLimit;
+	}
+	public void setPageExportLimit(int pageExportLimit) {
+		this.pageExportLimit = pageExportLimit;
+	}
 	public String getUsername() {
 		return username;
 	}

@@ -29,5 +29,14 @@ public class Pager implements IPager {
 
 	}
 
+	@Override
+	public Pageable getPageRequest(int pgNo, int pgLen ) {
+		if( pgNo <= 0 )
+			pgNo = 1;
+		if( pgLen <= 0 )
+			pgLen = 5;
+		return new PageRequest( pgNo - 1, pgLen );
+	}
+
 	
 }

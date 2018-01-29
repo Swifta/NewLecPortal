@@ -22,37 +22,23 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.bean.OutUserExport;
-import com.lonestarcell.mtn.model.util.DateFormatFac;
-import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MUser extends Model implements IModel {
+public class MDAOUser extends Model implements IModel {
 
 	private static final long serialVersionUID = 1L;
-	private Logger log = LogManager.getLogger(MUser.class.getName());
+	private Logger log = LogManager.getLogger(MDAOUser.class.getName());
 
 	private OutUser outTxn;
 	private InTxn inTxn;
 
-	public MUser(Long userId, String userSession, ApplicationContext cxt ) {
+	public MDAOUser(Long userId, String userSession, ApplicationContext cxt ) {
 		super(userId, userSession);
 		this.springAppContext = cxt;
-		
-		if (dataSource == null) {
-			log.error("DataSource is null.");
-			throw new IllegalStateException("DataSource cannot be null.");
-		}
-
-		log.debug(" Model initialized successfully.");
-
-	}
-	
-	public MUser(Long userId, String userSession ) {
-		super(userId, userSession);
 		
 		if (dataSource == null) {
 			log.error("DataSource is null.");
@@ -1029,8 +1015,6 @@ public class MUser extends Model implements IModel {
 
 		int exportPgLen = (int) Math.ceil(inTxn.getPageSize()
 				* inTxn.getPageExportLimit());
-		
-		log.debug( "Export page length: "+exportPgLen );
 
 		Page<User> pg = repo.findAll(pager.getPageRequest(inTxn.getPage(),
 				exportPgLen));
@@ -1050,17 +1034,12 @@ public class MUser extends Model implements IModel {
 		}
 
 		Iterator<User> itrU = users.iterator();
-		BeanItemContainer<OutUser> c = new BeanItemContainer<>(OutUser.class);
+		BeanItemContainer<User> c = new BeanItemContainer<>(User.class);
 		while (itrU.hasNext()) {
-			User user = itrU.next();
-			OutUser oUser = new OutUser();
-			oUser.setEmail( user.getEmail() );
-			oUser.setDate( DateFormatFacRuntime.toString( user.getDateAdded() ) );
-			oUser.setUsername( user.getUsername());
-			c.addBean( oUser );
+			c.addBean(itrU.next());
 		}
 
-		BData<BeanItemContainer<OutUser>> bData = new BData<>();
+		BData<BeanItemContainer<User>> bData = new BData<>();
 		bData.setData(c);
 		out.setData(bData);
 		out.setStatusCode(1);

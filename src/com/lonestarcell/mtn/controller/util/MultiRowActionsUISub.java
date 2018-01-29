@@ -152,6 +152,10 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 					records.add( grid.getContainerDataSource().getItem( itemId ) );		
 				}
 				
+				
+				
+				
+				
 				VerticalLayout v = new DataExportUISub( mSub, in, records, new VerticalLayout() ).getcMoreOps();
 				v.setWidth( "37px" );
 				getPopupViewContainer().replaceComponent(exportUI, v );

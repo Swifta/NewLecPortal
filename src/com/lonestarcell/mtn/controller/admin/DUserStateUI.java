@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -59,10 +60,27 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 	private MUser mTxn;
 	private InTxn inTxn;
 	
+	private ApplicationContext springAppContext;
+	
 	
 	DUserStateUI( DUserUI a){
+		this.setSpringAppContext( a.getSpringAppContext() );
 		init( a );
 	}
+	
+	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
 
 	@Override
 	public void attachCommandListeners() {
@@ -157,7 +175,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 
 	@Override
 	public void init(DUserUI a) {
-		mTxn = new MUser(  getCurrentUserId(), getCurrentUserSession()  );
+		mTxn = new MUser(  getCurrentUserId(), getCurrentUserSession(), getSpringAppContext()  );
 		inTxn = new InTxn();
 		
 		// Scale left footer by user grid container height.
@@ -738,7 +756,7 @@ public class DUserStateUI extends DUserStateUIDesign implements DUserUIInitializ
 		
 		
 		protected Out expireSessionMultiUserRecord ( Collection< Item > records ){
-			MUser mUserDetails = new MUser( getCurrentUserId(), getCurrentUserSession() );
+			MUser mUserDetails = new MUser( getCurrentUserId(), getCurrentUserSession(), getSpringAppContext() );
 			return mUserDetails.expireSessionMultiUserRecord( records );
 			
 		}

@@ -19,7 +19,7 @@ public class JDBCPoolManager {
 	private void initJDBCPool() {
 
 		PoolProperties p = new PoolProperties();
-		p.setUrl("jdbc:mysql://localhost:3306/afrinnewdb_test");
+		p.setUrl("jdbc:mysql://localhost:3306/benin_portal_db");
 		
 		// Remote test db
 		// p.setUsername("swifta");
