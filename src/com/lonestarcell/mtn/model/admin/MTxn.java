@@ -4050,7 +4050,8 @@ public class MTxn extends Model implements Serializable {
 
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			out.setMsg( "Could not complete operation. " );
+			out.setMsg( "Data engine in mute. " );
+			out.setStatusCode( 100 );
 			e.printStackTrace();
 			
 		} finally {

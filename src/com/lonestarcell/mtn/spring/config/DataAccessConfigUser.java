@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,19 @@ public class DataAccessConfigUser {
 	*/
 	
 	private static Logger log = LogManager.getLogger();
-
+	
+	
+	@Bean
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
+	}
+	
+	/*
+	@Bean
+	public SelmaMapper selmaMapper(){
+		return Selma.builder(SelmaMapper.class).build();
+	}*/
+	
 	
 	@Primary
 	@Bean( name = "userEntityManagerFactory" )

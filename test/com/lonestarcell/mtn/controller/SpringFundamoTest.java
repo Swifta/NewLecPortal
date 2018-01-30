@@ -89,7 +89,7 @@ public class SpringFundamoTest {
 					+ " for transaction no. " + transaction.getTransactionNumber()
 					+ " and amount = " + transaction.getPayeeAmount()
 					+ " and type = " + transaction.getTransactionType001().getSystemCode().getValue()
-					+ " and payee = " + transaction.getPayeeAmount()
+					+ " and payee = " + transaction.getPayeeAccountNumber()
 					+ " and payer = " + transaction.getPayerAccountNumber()
 					+ " and status = " + transaction.getSystemCode().getValue(), transaction);
 		}

@@ -267,6 +267,11 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 				container.addBean(outSubscriber);
 
 			} while (itr.hasNext());
+			
+			BData< BeanItemContainer< AbstractDataBean > > bData = new BData<>();
+			bData.setData( container );
+			out.setData( bData );
+			
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 

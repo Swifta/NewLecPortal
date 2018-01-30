@@ -9,7 +9,9 @@ import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUILedger;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
+import com.lonestarcell.mtn.controller.util.MultiRowActionsUILedger;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
@@ -46,7 +48,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 	
 	@Override
 	public void setHeader() {
-		this.lbDataTitle.setValue("Subscriber Registration Archive");
+		this.lbDataTitle.setValue("Ledger Archive");
 	}
 	
 	@Override
@@ -136,8 +138,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
-			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
-					grid, in, pageC);
+			AllRowsActionsUISub allRowsActionsUIH = new AllRowsActionsUILedger( mSub, grid, in, true, true, pageC );
 			dateFilterCellH.setComponent(allRowsActionsUIH);
 
 			header.setStyleName("sn-date-filter-row");
@@ -147,8 +148,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 			// Preparing footer
 			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4", "actions");
 			
-			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
-					pageC));
+			dateFilterCellF.setComponent( new AllRowsActionsUILedger( mSub, grid, in, false, false, pageC ) );
 
 			// Initialize pagination controller after both header and footer have been set.
 			pageC.init();
@@ -158,7 +158,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 					.setStyleName("sn-no-border-right sn-no-border-left");
 
 			PopupView v = new PopupView("HHHH", null);
-			v.setContent(new MultiRowActionsUISub(mSub, in, grid, v));
+			v.setContent(new MultiRowActionsUILedger(mSub, in, grid, v));
 			v.setHideOnMouseOut(true);
 			v.setVisible(true);
 

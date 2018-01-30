@@ -259,7 +259,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements DUserUIInitializable
 		
 		Out out = this.loadData();
 		if( out.getStatusCode() != 1 ) {
-			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
+			Notification.show( out.getMsg(), Notification.Type.WARNING_MESSAGE );
 			return;
 		} else {
 			format();

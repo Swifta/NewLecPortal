@@ -89,8 +89,8 @@ public class DataAccessConfigFundamo {
 		PoolProperties p = new PoolProperties();
 
 		
-		// p.setUrl("jdbc:oracle:thin:@192.168.195.23:1521:FDCORE");
-		p.setUrl("jdbc:oracle:thin:@10.77.23.58:1521:FDCORE"); //192.168.195.23
+		p.setUrl("jdbc:oracle:thin:@192.168.195.23:1521:FDCORE");
+		// p.setUrl("jdbc:oracle:thin:@10.77.23.58:1521:FDCORE"); //192.168.195.23
 		
 		p.setUsername("fundamo");
 		p.setPassword("MMfund29");

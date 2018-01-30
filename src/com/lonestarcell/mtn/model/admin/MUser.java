@@ -6,26 +6,21 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Page;
-
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
+import com.lonestarcell.mtn.bean.ExportUser;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
-import com.lonestarcell.mtn.bean.OutUserExport;
-import com.lonestarcell.mtn.model.util.DateFormatFac;
-import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.Pager;
-import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -271,6 +266,21 @@ public class MUser extends Model implements IModel {
 			if (page > 1) {
 				pageMin = (page - 1) * pageLength + 1;
 			}
+			
+			
+			BeanItemContainer< OutUser > exportRawData = null;
+
+			if ( inTxn.isExportOp() ) {
+				exportRawData = new BeanItemContainer<>( OutUser.class );
+				page = inTxn.getPage();
+				pageLength = inTxn.getExportPgLen();
+				pageMin = 0;
+				if (page > 1) {
+					pageMin = (page - 1) * pageLength + 1;
+				}
+			}
+			
+			
 
 			conn.setReadOnly(true);
 			ps = conn.prepareStatement(q);
@@ -339,8 +349,16 @@ public class MUser extends Model implements IModel {
 				outTxn.setEmail(rs.getString("email"));
 
 				container.addBean(outTxn);
+				if( inTxn.isExportOp() )
+					exportRawData.addBean( outTxn );
 
 			} while (rs.next());
+			
+			if( inTxn.isExportOp() ){
+				BData< BeanItemContainer< OutUser > > bData = new BData<>();
+				bData.setData( exportRawData );
+				out.setData( bData );
+			}
 
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
@@ -1015,6 +1033,7 @@ public class MUser extends Model implements IModel {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Out setExportData(In in,
 			BeanItemContainer<AbstractDataBean> container) {
@@ -1031,52 +1050,35 @@ public class MUser extends Model implements IModel {
 				* inTxn.getPageExportLimit());
 		
 		log.debug( "Export page length: "+exportPgLen );
-
-		Page<User> pg = repo.findAll(pager.getPageRequest(inTxn.getPage(),
-				exportPgLen));
-
-		out = new Out();
-		if (pg == null) {
-			out.setStatusCode(100);
-			out.setMsg("Export data page not set");
+		
+		inTxn.setExportPgLen(exportPgLen);
+		inTxn.setExportOp(true);
+		out = this.searchUsers(in, new BeanItemContainer< OutUser > ( OutUser.class ) );
+		inTxn.setExportOp(false);
+		log.debug( "Feeder function returned. " );
+		if (out.getStatusCode() != 1)
 			return out;
-		}
 
-		List<User> users = pg.getContent();
-		if (users.size() == 0) {
-			out.setStatusCode(100);
-			out.setMsg("Export data page is empty");
-			return out;
-		}
+		log.debug( "Proceeding to package for export. " );
+		// TODO Repackage data for export
+		
+		ModelMapper packer = springAppContext.getBean( ModelMapper.class );
 
-		Iterator<User> itrU = users.iterator();
-		BeanItemContainer<OutUser> c = new BeanItemContainer<>(OutUser.class);
-		while (itrU.hasNext()) {
-			User user = itrU.next();
-			OutUser oUser = new OutUser();
-			oUser.setEmail( user.getEmail() );
-			oUser.setDate( DateFormatFacRuntime.toString( user.getDateAdded() ) );
-			oUser.setUsername( user.getUsername());
-			c.addBean( oUser );
+		
+		BeanItemContainer< OutUser > rawData = (BeanItemContainer< OutUser >) out.getData().getData();
+		Iterator< OutUser > itrRaw = rawData.getItemIds().iterator();
+		BeanItemContainer<ExportUser> c = new BeanItemContainer<>( ExportUser.class );
+		while (itrRaw.hasNext()) {
+			OutUser tRaw = itrRaw.next();
+			ExportUser t = packer.map( tRaw, ExportUser.class );
+			c.addBean( t );
 		}
-
-		BData<BeanItemContainer<OutUser>> bData = new BData<>();
-		bData.setData(c);
-		out.setData(bData);
+		
+		BData< BeanItemContainer< ExportUser > > bData = new BData<>();
+		bData.setData( c );
+		out.setData( bData );
 		out.setStatusCode(1);
 		out.setMsg("Export data set.");
-
-		/*
-		 * BeanItemContainer<OutUser> uContainer = new BeanItemContainer<>(
-		 * OutUser.class); Out out = this.setUsers(in, uContainer); if
-		 * (out.getStatusCode() == 1) {
-		 * 
-		 * Iterator<OutUser> itr = uContainer.getItemIds().iterator(); while
-		 * (itr.hasNext()) { OutUser user = itr.next(); OutUserExport uExport =
-		 * new OutUserExport(); uExport.setUsername(user.getUsername());
-		 * uExport.setFirstName(user.getEmail());
-		 * uExport.setDate(user.getDate()); container.addBean(uExport); } }
-		 */
 
 		return out;
 	}

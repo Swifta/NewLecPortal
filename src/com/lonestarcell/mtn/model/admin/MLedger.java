@@ -3,16 +3,18 @@ package com.lonestarcell.mtn.model.admin;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
+import com.lonestarcell.mtn.bean.ExportLedger;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
@@ -93,14 +95,26 @@ public class MLedger extends MDAO implements IModel, Serializable {
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
 
+			Pageable pgR = null;
+			
+			BeanItemContainer< OutLedger > exportRawData = null;
+
+			if ( inTxn.isExportOp() ) {
+				pgR = pager.getPageRequest(inTxn.getPage(),
+						inTxn.getExportPgLen());
+				exportRawData = new BeanItemContainer<>( OutLedger.class );
+			} else {
+				pgR = pager.getPageRequest(inTxn.getPage());
+			}
+				
+
 			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-
-				pages = repo.getAllSum(pager.getPageRequest(inTxn.getPage()));
-
+				
+				// TODO Dates always
+				pages = repo.getAllSum(pgR);
 			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 				log.debug("In date filter: ", this);
-				pages = repo.getAllSumByDateRange(
-						pager.getPageRequest(inTxn.getPage()),
+				pages = repo.getAllSumByDateRange(pgR,
 						DateFormatFac.toDate(inTxn.getfDate()),
 						DateFormatFac.toDate(inTxn.gettDate()));
 			}
@@ -136,11 +150,20 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				outLedger.setName(obj[1].toString());
 				outLedger.setAmount(NumberFormatFac.toMoney(String
 						.valueOf((Double.valueOf(obj[2].toString()) / 100))));
-				outLedger.setDate( obj[ 3 ].toString() );
+				outLedger.setDate(obj[3].toString());
 
 				container.addBean(outLedger);
+				if( inTxn.isExportOp() )
+					exportRawData.addBean( outLedger );
 
 			} while (itr.hasNext());
+			
+			if( inTxn.isExportOp() ){
+				BData< BeanItemContainer< OutLedger > > bData = new BData<>();
+				bData.setData( exportRawData );
+				out.setData( bData );
+			}
+
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 
@@ -159,6 +182,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 		return out;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Out setExportData(In in,
 			BeanItemContainer<AbstractDataBean> container) {
@@ -171,74 +195,43 @@ public class MLedger extends MDAO implements IModel, Serializable {
 		out = new Out();
 
 		try {
-			Transaction001Repo repo = springAppContext
-					.getBean(Transaction001Repo.class);
-			if (repo == null) {
-				log.debug("Transaction001 repo is null");
-				out.setMsg("DAO error occured.");
-				return out;
-			}
-
-			List<Transaction001> records = null;
 
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
 
-			log.debug("MSub from date:" + inTxn.getfDate(), this);
-			log.debug("MSub to date:" + inTxn.gettDate(), this);
+			log.debug("Page no: " + inTxn.getPage());
+			log.debug("Page export limit: " + inTxn.getPageExportLimit());
+			int exportPgLen = (int) Math.ceil(inTxn.getPageSize()
+					* inTxn.getPageExportLimit());
 
-			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+			inTxn.setExportPgLen(exportPgLen);
+			inTxn.setExportOp(true);
 
-				records = repo.findAll();
+			out = this.search(in, container);
+			inTxn.setExportOp(false);
 
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug("In date filter: ", this);
-				records = repo.findAllByDateRange(
-						DateFormatFac.toDate(inTxn.getfDate()),
-						DateFormatFac.toDate(inTxn.gettDate()));
-			}
-
-			if (records == null) {
-				log.debug("Page object is null.");
-				out.setMsg("DAO error occured.");
+			if (out.getStatusCode() != 1)
 				return out;
+
+			// TODO Repackage data for export
+			
+			ModelMapper packer = springAppContext.getBean( ModelMapper.class );
+
+			
+			BeanItemContainer< OutLedger > rawData = (BeanItemContainer< OutLedger >) out.getData().getData();
+			Iterator< OutLedger > itrRaw = rawData.getItemIds().iterator();
+			BeanItemContainer<ExportLedger> c = new BeanItemContainer<>( ExportLedger.class );
+			while (itrRaw.hasNext()) {
+				OutLedger tRaw = itrRaw.next();
+				ExportLedger t = packer.map( tRaw, ExportLedger.class );
+				c.addBean( t );
 			}
-
-			if (records.size() == 0) {
-
-				container.addBean(new OutSubscriber());
-				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
-				bOutData.setData(container);
-				out.setData(bOutData);
-				out.setMsg("No records found.");
-
-				return out;
-			}
-
-			Iterator<Transaction001> itr = records.iterator();
-			do {
-				Transaction001 transaction = itr.next();
-
-				OutSubscriber outSubscriber = new OutSubscriber();
-
-				double amount = (transaction.getPayeeAmount() / 100);
-
-				outSubscriber.setAmount(NumberFormatFac.toMoney(amount + ""));
-				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
-				outSubscriber.setPayer(transaction.getPayerAccountNumber());
-				outSubscriber.setStatus(transaction.getSystemCode().getValue());
-				outSubscriber.setDate(DateFormatFac.toString(transaction
-						.getLastUpdate()));
-				outSubscriber.setTransactionNumber(transaction
-						.getTransactionNumber() + "");
-				outSubscriber.setType(transaction.getTransactionType001()
-						.getSystemCode().getValue());
-
-				container.addBean(outSubscriber);
-
-			} while (itr.hasNext());
+			
+			BData< BeanItemContainer< ExportLedger > > bData = new BData<>();
+			bData.setData( c );
+			out.setData( bData );
 			out.setStatusCode(1);
-			out.setMsg("Data fetch successful.");
+			out.setMsg("Export data set.");
 
 		} catch (Exception e) {
 

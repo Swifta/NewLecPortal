@@ -8,7 +8,9 @@ import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUIMerchant;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
+import com.lonestarcell.mtn.controller.util.MultiRowActionsUIMerchant;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
@@ -138,8 +140,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11","date", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
-			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
-					grid, in, pageC);
+			AllRowsActionsUIMerchant allRowsActionsUIH = new AllRowsActionsUIMerchant( mSub, grid, in, true, true, pageC );
 			dateFilterCellH.setComponent(allRowsActionsUIH);
 
 			header.setStyleName("sn-date-filter-row");
@@ -149,8 +150,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			// Preparing footer
 			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","column8","column9","column10","column11","date", "actions");
 			
-			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
-					pageC));
+			dateFilterCellF.setComponent( new AllRowsActionsUIMerchant( mSub, grid, in, false, false, pageC ));
 
 			// Initialize pagination controller after both header and footer have been set.
 			pageC.init();
@@ -160,7 +160,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 					.setStyleName("sn-no-border-right sn-no-border-left");
 
 			PopupView v = new PopupView("HHHH", null);
-			v.setContent(new MultiRowActionsUISub(mSub, in, grid, v));
+			v.setContent(new MultiRowActionsUIMerchant(mSub, in, grid, v));
 			v.setHideOnMouseOut(true);
 			v.setVisible(true);
 

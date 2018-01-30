@@ -1,11 +1,9 @@
-package com.lonestarcell.mtn.controller.admin;
+package com.lonestarcell.mtn.controller.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,43 +12,30 @@ import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.haijian.CSVExporter;
 import org.vaadin.haijian.ExcelExporter;
 
-import com.lonestarcell.mtn.bean.AbstractDataBean;
-import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.InUserDetails;
-import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutUser;
+import com.lonestarcell.mtn.controller.admin.DUIControllable;
+import com.lonestarcell.mtn.controller.admin.DUserRoleUI;
+import com.lonestarcell.mtn.controller.admin.IExporter;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.util.DataExportUISub;
-import com.lonestarcell.mtn.controller.util.PaginationUIController;
-import com.lonestarcell.mtn.controller.util.RequiredTFValidator;
 import com.lonestarcell.mtn.design.admin.DPgExportLimitUIDesign;
 import com.lonestarcell.mtn.model.admin.IModel;
-import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.spring.user.entity.Profile;
-import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Accordion;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
 
 public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesign implements
 		DUIControllable, IExporter< T > {
@@ -201,12 +186,21 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		comboPgExportLimitPgCount.removeAllItems();
 		int pages = pageC.getPages();
 		int curPage = pageC.getCurrentPage();
+		
 		inTxn.setPageSize(pageC.getPageLength());
 
 		for (int i = 1; i <= pages; i++)
 			comboPgExportLimitFrom.addItems(i);
-		comboPgExportLimitFrom.setValue(curPage);
-		inTxn.setPage(curPage);
+		
+		// In initialization of pagination controller, current page value is 2.
+		// Conditioning to fix this state affair.
+		if( pageC.getNewPage() == 1 ){
+			comboPgExportLimitFrom.setValue( 1);
+			inTxn.setPage( 1 );
+		} else {
+			comboPgExportLimitFrom.setValue(curPage);
+			inTxn.setPage(curPage);
+		}
 
 		setComboItems(comboPgExportLimitFrom.getValue());
 

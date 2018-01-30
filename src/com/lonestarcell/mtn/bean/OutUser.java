@@ -79,16 +79,4 @@ public class OutUser implements Serializable {
 	
 	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

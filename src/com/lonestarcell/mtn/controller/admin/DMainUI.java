@@ -245,7 +245,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		
 		this.btnHMenuInfo.setEnabled( true );
 		this.btnHMenuMisc.setEnabled( false );
-		this.btnHMenuPayment.setEnabled( true );
+		this.btnHMenuPayment.setEnabled( false );
 		
 		// this.btnHMenuToken.setEnabled( true );
 		// this.btnHMenuPayment.setCaption( "x-subscriber 1" );

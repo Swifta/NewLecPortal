@@ -29,6 +29,10 @@ public interface Transaction001Repo extends JpaRepository< Transaction001, Long 
     @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
 	public Page< Transaction001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
+    // @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
+ 	// public Page< Transaction001 > findPageByDateRangeSearch( @Param( "msisdn" ) String search, Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+
+    
     @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate >= :fDate ORDER BY t.lastUpdate" )
 	public Page< Transaction001 > findFirstPageByDate( Pageable pageable, @Param( "fDate" ) Date fDate );
     

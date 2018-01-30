@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @NamedQuery(name="Profile.findAll", query="SELECT p FROM Profile p")
 @Proxy(lazy = false)
+@Table(name="profile")
 public class Profile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
