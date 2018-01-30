@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.controller.admin.AbstractDPgExportLimitUI;
+import com.lonestarcell.mtn.controller.admin.DPgExportLimitUIUser;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
@@ -37,6 +39,8 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 	
 	private PopupView popupView;
 
+	public MultiRowActionsUISub(){
+	}
 	public MultiRowActionsUISub( IModel mSub, In in, Grid grid, PopupView popupView ){
 		this.setPopupView( popupView);
 		this.grid = grid;
@@ -152,17 +156,17 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 					records.add( grid.getContainerDataSource().getItem( itemId ) );		
 				}
 				
+				new DPgExportLimitUIUser( records );
 				
 				
-				
-				
+				/*
 				VerticalLayout v = new DataExportUISub( mSub, in, records, new VerticalLayout() ).getcMoreOps();
 				v.setWidth( "37px" );
 				getPopupViewContainer().replaceComponent(exportUI, v );
 				exportUI = v;
 				
 				otherOpUI.setVisible( false );
-				exportUI.setVisible( true );
+				exportUI.setVisible( true ); */
 			}
 			
 		});

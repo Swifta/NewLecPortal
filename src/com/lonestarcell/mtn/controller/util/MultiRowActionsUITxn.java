@@ -86,7 +86,7 @@ public class MultiRowActionsUITxn extends VerticalLayout implements DUIControlla
 		this.addComponent( exportUI );
 		
 		this.otherOpUI.setVisible( true );
-		this.exportUI.setVisible( false );
+		this.exportUI.setVisible( true );
 		
 		
 		

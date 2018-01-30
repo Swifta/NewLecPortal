@@ -176,8 +176,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		grid.addStyleName("sn-small-grid");
 		grid.setSelectionMode(SelectionMode.MULTI);
 		grid.setHeight("600px");
-		//grid.setWidth("100%");
-		grid.setWidthUndefined();
+		grid.setWidth("100%");
+		// grid.setWidthUndefined();
 		
 		try {
 			

@@ -11,7 +11,8 @@ import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
-import com.lonestarcell.mtn.controller.admin.DPgExportLimitUI;
+import com.lonestarcell.mtn.controller.admin.AbstractDPgExportLimitUI;
+import com.lonestarcell.mtn.controller.admin.DPgExportLimitUIUser;
 import com.lonestarcell.mtn.model.admin.MUser;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -203,18 +204,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
-				//TODO Page
-				Object val = comboPgExportLimit.getValue();
-				if( val == null ){
-					String msg = "Please select page limit";
-					comboPgExportLimit.setComponentError( new UserError( msg ) );
-					Notification.show( msg, Notification.Type.WARNING_MESSAGE );
-					
-					return;
-				} 
-				
-				new DPgExportLimitUI( pageC, model, in, new ArrayList<Item>(), moreDropDown );
+				new DPgExportLimitUIUser( pageC, model, in, new ArrayList<Item>(), moreDropDown );
 			    // new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
 			}
 

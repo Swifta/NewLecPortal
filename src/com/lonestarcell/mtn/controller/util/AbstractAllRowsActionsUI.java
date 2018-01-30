@@ -117,7 +117,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 		// Data Export
 		this.attachBtnExportOps();
-		this.attachComboExportPgCount();
 		this.initDataExportUI();
 
 	}
@@ -284,13 +283,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		});
 	}
 
-	protected void attachComboExportPgCount() {
-		
-		this.comboPgExportLimit.addBlurListener(e -> {
-			comboPgExportLimit.setComponentError(null);
-		});
-	}
-
+	
 	protected abstract void attachBtnExportOps();
 
 	protected abstract void initDataExportUI();
