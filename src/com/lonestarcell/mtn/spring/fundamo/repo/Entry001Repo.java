@@ -1,5 +1,6 @@
 package com.lonestarcell.mtn.spring.fundamo.repo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -24,29 +25,63 @@ public interface Entry001Repo extends JpaRepository< Entry001, Long >{
 	// public Page< Entry001 > findByUserAccount001AccountIdentifier001TypeName( @Param( "typeName" ) String typeName, Pageable pageable );
 	// public Page< Transaction001 > getSubscriberTransactionHistory();
 	
-    @Query( "SELECT e FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
+	String joinStr = "  JOIN e.transaction001 t JOIN e.userAccount001 uAcc JOIN uAcc.corporateAccountHolder001 corp ";
+	String conditionStrDateRange = " ( e.entryDate BETWEEN :fDate AND :tDate ) ";
+	String conditionStrNotNull = " e.userAccount001 IS NOT NULL  AND uAcc.corporateAccountHolder001 IS NOT NULL ";
+	String conditionStr = conditionStrDateRange+" AND "+conditionStrNotNull;
+			
+	
+	public List< Entry001 > findByOid( long oid );
+    @Query( "SELECT e FROM Entry001 e "+joinStr+" WHERE "+conditionStr )
 	public Page< Entry001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
     
-    @Query( "SELECT COUNT( e ) FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
-	public long findPageByDateRangeCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    @Query( "SELECT SUM( e.amount ) FROM Entry001 e "+joinStr+" WHERE "+conditionStr )
+	public double findPageByDateRangeAmount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+
     
-    @Query( "SELECT SUM( e.amount ), COUNT( e ) FROM Entry001 e" )
-	public List< Object[] > getTotalAmountAndCountAll();
+    // @Query( "SELECT COUNT( e ) FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
+	// public long findPageByDateRangeCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    
+    //  @Query( "SELECT SUM( e.amount ), COUNT( e ) FROM Entry001 e" )
+	// public List< Object[] > getTotalAmountAndCountAll();
 	
-    @Query( "SELECT SUM( e.amount ), COUNT( e ) FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
-	public List< Object[] > findByDateRangeAmountAndCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    // @Query( "SELECT SUM( e.amount ), COUNT( e ) FROM Entry001 e WHERE e.entryDate BETWEEN :fDate AND :tDate" )
+	// public List< Object[] > findByDateRangeAmountAndCount( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
 	@Query( "SELECT MIN( e.entryDate ) FROM Entry001 e" )
 	public Date findEarliestDate();
     
-    @Query( "SELECT e FROM Entry001 e WHERE e.entryDate = :date" )
+    @Query( "SELECT e FROM Entry001 e "+joinStr+" WHERE e.entryDate = :date AND "+conditionStrNotNull )
 	public Page< Entry001 > findPageByDate( Pageable pageable, @Param( "date" ) Date date );
     
-    @Query( "SELECT e FROM Entry001 e WHERE e.entryDate > :date ORDER BY e.entryDate" )
+    @Query( "SELECT e FROM Entry001 e  "+joinStr+"  WHERE e.entryDate > :date AND "+conditionStrNotNull+" ORDER BY e.entryDate" )
 	public Page< Entry001 > findFirstPageByDate( Pageable pageable, @Param( "date" ) Date date );
     
     
-    @Query( "SELECT COUNT( e ) FROM Entry001 e WHERE e.entryDate = :date" )
-	public long findPageByDateCount( @Param( "date" ) Date date );
+   //  @Query( "SELECT COUNT( e ) FROM Entry001 e WHERE e.entryDate = :date" )
+	// public long findPageByDateCount( @Param( "date" ) Date date );
+    
+    
+	// Search by something
+	
+	@Query("SELECT e FROM Entry001 e  "+joinStr+"  WHERE t.payerAccountNumber LIKE %:payerAccNo% AND "+conditionStrNotNull)
+	public Page<Entry001> findPageByPayerAccountNumber(Pageable pageable, @Param("payerAccNo") String payerAccNo);
+	@Query("SELECT SUM( e.amount ) FROM Entry001 e  "+joinStr+"  WHERE t.payerAccountNumber LIKE %:payerAccNo% AND "+conditionStrNotNull)
+	public double findPageByPayerAccountNumberAmount( @Param("payerAccNo") String payerAccNo );
+
+	@Query("SELECT e FROM Entry001 e  "+joinStr+" WHERE t.payeeAccountNumber LIKE %:payeeAccNo% AND "+conditionStrNotNull)
+	public Page<Entry001> findPageByPayeeAccountNumber(Pageable pageable, @Param("payeeAccNo") String payeeAccNo);
+	@Query("SELECT SUM( e.amount ) FROM Entry001 e  "+joinStr+" WHERE t.payeeAccountNumber LIKE %:payeeAccNo% AND "+conditionStrNotNull)
+	public double findPageByPayeeAccountNumberAmount( @Param("payeeAccNo") String payeeAccNo );
+
+	@Query("SELECT e FROM Entry001 e  "+joinStr+"  WHERE t.transactionNumber = :tNo AND "+conditionStrNotNull)
+	public Page<Entry001> findPageByTransactionNumber( Pageable pageable, @Param("tNo") BigDecimal tNo );
+	@Query("SELECT SUM( e.amount ) FROM Entry001 e  "+joinStr+"  WHERE t.transactionNumber = :tNo AND "+conditionStrNotNull)
+	public double findPageByTransactionNumberAmount( @Param("tNo") BigDecimal tNo );
+	
+	@Query("SELECT e FROM Entry001 e "+joinStr+" WHERE corp.name LIKE %:name% AND "+conditionStrNotNull)
+	public Page<Entry001> findPageByCorpName( Pageable pageable, @Param("name") String name );
+	
+	
 	
 }

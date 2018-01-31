@@ -4,67 +4,69 @@ import java.io.Serializable;
 
 public class ExportMerchant  implements Serializable {
 	
-	private static final long serialVersionUID = 7431320759077668024L;
-	private String name, msisdn,  tno, type, amount,  status, channel, desc, payee, payer, entryDate ;
-	public String getName() {
-		return name;
+	private static final long serialVersionUID = 7431320759077668024L; // desc switched for column10
+	private String column1, column2,  column3, column4, column5,  column6, column7, column8, column9, desc, entryDate;
+	// private String name, msisdn,  tno, type, amount,  status, channel, desc, payee, payer, entryDate ;
+	// desc switched for column10
+	public String getColumn1() {
+		return column1;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setColumn1(String column1) {
+		this.column1 = column1;
 	}
-	public String getMsisdn() {
-		return msisdn;
+	public String getColumn2() {
+		return column2;
 	}
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
+	public void setColumn2(String column2) {
+		this.column2 = column2;
 	}
-	public String getTno() {
-		return tno;
+	public String getColumn3() {
+		return column3;
 	}
-	public void setTno(String tno) {
-		this.tno = tno;
+	public void setColumn3(String column3) {
+		this.column3 = column3;
 	}
-	public String getType() {
-		return type;
+	public String getColumn4() {
+		return column4;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setColumn4(String column4) {
+		this.column4 = column4;
 	}
-	public String getAmount() {
-		return amount;
+	public String getColumn5() {
+		return column5;
 	}
-	public void setAmount(String amount) {
-		this.amount = amount;
+	public void setColumn5(String column5) {
+		this.column5 = column5;
 	}
-	public String getStatus() {
-		return status;
+	public String getColumn6() {
+		return column6;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setColumn6(String column6) {
+		this.column6 = column6;
 	}
-	public String getChannel() {
-		return channel;
+	public String getColumn7() {
+		return column7;
 	}
-	public void setChannel(String channel) {
-		this.channel = channel;
+	public void setColumn7(String column7) {
+		this.column7 = column7;
+	}
+	public String getColumn8() {
+		return column8;
+	}
+	public void setColumn8(String column8) {
+		this.column8 = column8;
+	}
+	public String getColumn9() {
+		return column9;
+	}
+	public void setColumn9(String column9) {
+		this.column9 = column9;
 	}
 	public String getDesc() {
 		return desc;
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
-	}
-	public String getPayee() {
-		return payee;
-	}
-	public void setPayee(String payee) {
-		this.payee = payee;
-	}
-	public String getPayer() {
-		return payer;
-	}
-	public void setPayer(String payer) {
-		this.payer = payer;
 	}
 	public String getEntryDate() {
 		return entryDate;

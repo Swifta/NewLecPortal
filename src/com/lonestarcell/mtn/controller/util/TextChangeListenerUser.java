@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +36,9 @@ public class TextChangeListenerUser<O> implements TextChangeListener{
 		String val = event.getText();
 		if( val != null && val.trim().isEmpty() )
 			val = null;
+		
+
+		
 		
 		if( itemId.equals( "email" ) ){
 			inTxn.setSearchEmail( val );

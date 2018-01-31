@@ -3,6 +3,8 @@ package com.lonestarcell.mtn.controller.util;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.vaadin.haijian.Exporter;
+
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.ExportLedger;
 import com.lonestarcell.mtn.bean.In;
@@ -57,6 +59,7 @@ public class DPgExportLimitUILedger extends
 						Table table = new Table( "Ledger Transaction Report" );
 						table.setContainerDataSource( c );
 						xlsExporter.setTableToBeExported( table );
+						renameColumns( xlsExporter );
 						// xlsExporter.setContainerToBeExported(c);
 						xlsExporter.removeStyleName("sn-display-none");
 						btnXLS.setVisible(false);
@@ -100,6 +103,7 @@ public class DPgExportLimitUILedger extends
 						Table table = new Table( "Ledger Transaction Report" );
 						table.setContainerDataSource( c );
 						cSVExporter.setTableToBeExported( table );
+						renameColumns( cSVExporter );
 						// cSVExporter.setContainerToBeExported(c);
 						cSVExporter.removeStyleName("sn-display-none");
 						btnCSV.setVisible(false);
@@ -125,9 +129,9 @@ public class DPgExportLimitUILedger extends
 			while (itr.hasNext()) {
 				Item record = itr.next();
 				ExportLedger t = new ExportLedger();
-				t.setAccNo( ( String ) record.getItemProperty( "column1" ).getValue() );
-				t.setName( ( String ) record.getItemProperty( "column2" ).getValue() );
-				t.setAmount( ( String ) record.getItemProperty( "column3" ).getValue() );
+				t.setColumn1( ( String ) record.getItemProperty( "column1" ).getValue() );
+				t.setColumn2( ( String ) record.getItemProperty( "column2" ).getValue() );
+				t.setColumn3( ( String ) record.getItemProperty( "column3" ).getValue() );
 				t.setDate( ( String ) record.getItemProperty( "date" ).getValue() );
 				c.addBean(t);
 			}
@@ -143,5 +147,22 @@ public class DPgExportLimitUILedger extends
 		}
 
 		return c;
+	}
+	
+	
+	//accNo, name,  amount, date;
+	
+	private void renameColumns( Exporter exporter ){
+		
+		exporter.setColumnHeader( "column1", "Acc. No." );
+		exporter.setColumnHeader( "column2", "Name" );
+		exporter.setColumnHeader( "column3", "Amount" );
+		exporter.setColumnHeader( "date", "Latest Timestamp" );
+		
+	}
+
+	@Override
+	protected BeanItemContainer<ExportLedger> getExportBean() {
+		return new BeanItemContainer< ExportLedger >( ExportLedger.class );
 	}
 }

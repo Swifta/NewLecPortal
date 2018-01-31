@@ -1,9 +1,12 @@
 package com.lonestarcell.mtn.model.admin;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,8 +40,6 @@ public class MSub extends MDAO implements IModel, Serializable {
 
 	private Logger log = LogManager.getLogger(MSub.class.getName());
 
-	
-
 	public MSub(Long d, String s, String t, ApplicationContext cxt) {
 		super(d, s, cxt);
 		this.timeCorrection = " " + t;
@@ -70,9 +71,6 @@ public class MSub extends MDAO implements IModel, Serializable {
 		return out;
 	}
 
-	
-	
-	
 	@Override
 	public Out search(In in, BeanItemContainer<AbstractDataBean> container) {
 
@@ -95,37 +93,87 @@ public class MSub extends MDAO implements IModel, Serializable {
 			Page<Transaction001> pages = null;
 
 			Pager pager = springAppContext.getBean(Pager.class);
-			
-			BData< ? > bInData = in.getData();
-			InTxn inTxn = ( InTxn ) bInData.getData();
-			
-			log.debug( "MSub from date:"+inTxn.getfDate(), this );
-			log.debug( "MSub to date:"+inTxn.gettDate(), this );
-			
-			Pageable pgR = null;
-			BeanItemContainer< OutSubscriber > exportRawData = null;
 
-			if ( inTxn.isExportOp() ) {
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
+			Map<String, Object> searchMap = inTxn.getSearchMap();
+			Set<String> searchKeySet = searchMap.keySet();
+
+			log.debug("MSub from date:" + inTxn.getfDate(), this);
+			log.debug("MSub to date:" + inTxn.gettDate(), this);
+
+			Pageable pgR = null;
+			BeanItemContainer<OutSubscriber> exportRawData = null;
+			double tAmount = 0D;
+			long rowCount = 0L;
+
+			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
-				exportRawData = new BeanItemContainer<>( OutSubscriber.class );
+				exportRawData = new BeanItemContainer<>(OutSubscriber.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
 			}
-			
-			
 
-			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-				
-				// TODO Dates always;
-				pages = repo.findAll( pgR );
-				
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug( "In date filter: ", this );
-				pages = repo.findPageByDateRange(
-						pgR,
-						DateFormatFac.toDate( inTxn.getfDate() ),
-						DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
+			boolean isSearch = false;
+
+			if (searchKeySet.size() != 0) {
+				if (searchKeySet.contains("column1")) {
+
+					Object val = searchMap.get("column1");
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						BigDecimal tNo = BigDecimal.valueOf(Long
+								.valueOf((String) val));
+						pages = repo.findPageByTransactionNumber(pgR,
+								tNo);
+						tAmount = repo.findPageByTransactionNumberAmount(tNo);
+
+					}
+
+				} else if (searchKeySet.contains("column5")) {
+
+					Object val = searchMap.get("column5");
+
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						pages = repo.findPageByPayerAccountNumber(pgR,
+								(String) val);
+						tAmount = repo
+								.findPageByPayerAccountNumberAmount((String) val);
+					}
+
+				} else if (searchKeySet.contains("column6")) {
+
+					Object val = searchMap.get("column6");
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						pages = repo.findPageByPayeeAccountNumber(pgR,
+								(String) val);
+						tAmount = repo
+								.findPageByPayeeAccountNumberAmount((String) val);
+					}
+
+				}
+
+			}
+
+			if (!isSearch) {
+				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+					inTxn.setfDate("2010-02-01");
+					inTxn.settDate("2010-02-03");
+				}
+
+				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+					log.debug("In date filter: ", this);
+					pages = repo.findPageByDateRange(pgR,
+							DateFormatFac.toDate(inTxn.getfDate()),
+							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+					tAmount = repo.findPageByDateRangeAmount(
+							DateFormatFac.toDate(inTxn.getfDate()),
+							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+				}
 			}
 
 			if (pages == null) {
@@ -136,8 +184,8 @@ public class MSub extends MDAO implements IModel, Serializable {
 
 			if (pages.getNumberOfElements() == 0) {
 
-				container.addBean( new OutSubscriberTest());
-				BData<BeanItemContainer< AbstractDataBean >> bOutData = new BData<>();
+				container.addBean(new OutSubscriberTest());
+				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
 				out.setMsg("No records found.");
@@ -145,156 +193,63 @@ public class MSub extends MDAO implements IModel, Serializable {
 				return out;
 			}
 
+			rowCount = pages.getTotalElements();
 			Iterator<Transaction001> itr = pages.getContent().iterator();
 			do {
 				Transaction001 transaction = itr.next();
 
 				OutSubscriber outSubscriber = new OutSubscriber();
-				
-				double amount = ( transaction.getPayeeAmount()/ 100 ); 
-				
-				outSubscriber.setTransactionNumber(  transaction.getTransactionNumber()+"" );
-				outSubscriber.setType(transaction.getTransactionType001()
-						.getSystemCode().getValue()); 
-				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
-				outSubscriber.setStatus(transaction.getSystemCode().getValue());
-				outSubscriber.setPayer(transaction.getPayerAccountNumber());
-				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
-				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
-				
 
-				container.addBean(outSubscriber);
-				if( inTxn.isExportOp() )
-					exportRawData.addBean( outSubscriber );
+				double amount = (transaction.getPayeeAmount() / 100);
 
-			} while (itr.hasNext());
-			
-			if( inTxn.isExportOp() ){
-				BData< BeanItemContainer< OutSubscriber > > bData = new BData<>();
-				bData.setData( exportRawData );
-				out.setData( bData );
-			}
-			
-			out.setStatusCode(1);
-			out.setMsg("Data fetch successful.");
-
-		} catch ( Exception e ) {
-			
-			container.addBean( new OutSubscriber() );
-			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
-			bOutData.setData(container);
-			out.setData(bOutData);
-			
-			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
-		}
-
-		return out;
-	}
-	
-	
-	
-	
-	public Out searchTxnTodayMerchantArchive(In in, BeanItemContainer<OutSubscriber> container) {
-
-		Out out = this.checkAuthorization();
-		if (out.getStatusCode() != 1) {
-			out.setStatusCode(100);
-			return out;
-		}
-		out = new Out();
-
-		try {
-			Entry001Repo repo = springAppContext
-					.getBean(Entry001Repo.class);
-			if (repo == null) {
-				log.debug("Transaction001 repo is null");
-				out.setMsg("DAO error occured.");
-				return out;
-			}
-
-			Page< Entry001 > pages = null;
-
-			Pager pager = springAppContext.getBean(Pager.class);
-			
-			BData< ? > bInData = in.getData();
-			InTxn inTxn = ( InTxn ) bInData.getData();
-			
-			log.debug( "MSub from date:"+inTxn.getfDate(), this );
-			log.debug( "MSub to date:"+inTxn.gettDate(), this );
-
-			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-				
-				pages = repo.findAll(pager.getPageRequest(inTxn.getPage()));
-				
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug( "In date filter: ", this );
-				pages = repo.findPageByDateRange(
-						pager.getPageRequest(inTxn.getPage() ),
-						DateFormatFac.toDate( inTxn.getfDate() ),
-						DateFormatFac.toDate( inTxn.gettDate() ) );
-			}
-
-			if (pages == null) {
-				log.debug("Page object is null.");
-				out.setMsg("DAO error occured.");
-				return out;
-			}
-
-			if (pages.getNumberOfElements() == 0) {
-
-				container.addBean( new OutSubscriber ( ));
-				BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
-				bOutData.setData(container);
-				out.setData(bOutData);
-				out.setMsg("No records found.");
-
-				return out;
-			}
-
-			Iterator<Entry001> itr = pages.getContent().iterator();
-			do {
-				Entry001 entry = itr.next();
-
-				OutSubscriber outSubscriber = new OutSubscriber();
-				
-				double amount = ( entry.getAmount()/ 100 );
-				
-				/*
-				outSubscriber.setAmount( NumberFormatFac.toMoney( amount + "" ) );
-				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
-				outSubscriber.setPayer(transaction.getPayerAccountNumber());
-				outSubscriber.setStatus(transaction.getSystemCode().getValue());
-				outSubscriber.setDate( DateFormatFac.toString( transaction.getLastUpdate() ));
 				outSubscriber.setTransactionNumber(transaction
 						.getTransactionNumber() + "");
 				outSubscriber.setType(transaction.getTransactionType001()
 						.getSystemCode().getValue());
+				outSubscriber.setAmount(NumberFormatFac.toMoney(amount + ""));
+				outSubscriber.setStatus(transaction.getSystemCode().getValue());
+				outSubscriber.setPayer(transaction.getPayerAccountNumber());
+				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
+				outSubscriber.setDate(DateFormatFac.toString(transaction
+						.getLastUpdate()));
 
-				container.addBean(outSubscriber); */
+				container.addBean(outSubscriber);
+				if (inTxn.isExportOp())
+					exportRawData.addBean(outSubscriber);
 
 			} while (itr.hasNext());
+
+			if (inTxn.isExportOp()) {
+				BData<BeanItemContainer<OutSubscriber>> bData = new BData<>();
+				bData.setData(exportRawData);
+				out.setData(bData);
+			} else {
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue(rowCount + "");
+				meta.getTotalRevenue().setValue((tAmount / 100) + "");
+			}
+
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 
-		} catch ( Exception e ) {
-			
-			container.addBean( new OutSubscriber() );
-			BData<BeanItemContainer<OutSubscriber>> bOutData = new BData<>();
+		} catch (Exception e) {
+
+			container.addBean(new OutSubscriber());
+			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
-			
+
 			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
+			out.setMsg("Data fetch error.");
 		}
 
 		return out;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Out setExportData(In in, BeanItemContainer<AbstractDataBean> container) {
+	public Out setExportData(In in,
+			BeanItemContainer<AbstractDataBean> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -319,57 +274,55 @@ public class MSub extends MDAO implements IModel, Serializable {
 			out = this.search(in, container);
 			inTxn.setExportOp(false);
 
-			log.debug( "Feeder function returned. " );
+			log.debug("Feeder function returned. ");
 			if (out.getStatusCode() != 1)
 				return out;
 
-			log.debug( "Proceeding to package for export. " );
+			log.debug("Proceeding to package for export. ");
 			// TODO Repackage data for export
-			
-			ModelMapper packer = springAppContext.getBean( ModelMapper.class );
 
-			
-			BeanItemContainer< OutSubscriber > rawData = (BeanItemContainer< OutSubscriber >) out.getData().getData();
-			Iterator< OutSubscriber > itrRaw = rawData.getItemIds().iterator();
-			BeanItemContainer<ExportSubscriber> c = new BeanItemContainer<>( ExportSubscriber.class );
+			ModelMapper packer = springAppContext.getBean(ModelMapper.class);
+
+			BeanItemContainer<OutSubscriber> rawData = (BeanItemContainer<OutSubscriber>) out
+					.getData().getData();
+			Iterator<OutSubscriber> itrRaw = rawData.getItemIds().iterator();
+			BeanItemContainer<ExportSubscriber> c = new BeanItemContainer<>(
+					ExportSubscriber.class);
 			while (itrRaw.hasNext()) {
 				OutSubscriber tRaw = itrRaw.next();
-				ExportSubscriber t = packer.map( tRaw, ExportSubscriber.class );
-				c.addBean( t );
+				ExportSubscriber t = packer.map(tRaw, ExportSubscriber.class);
+				c.addBean(t);
 			}
-			
-			BData< BeanItemContainer< ExportSubscriber > > bData = new BData<>();
-			bData.setData( c );
-			out.setData( bData );
+
+			BData<BeanItemContainer<ExportSubscriber>> bData = new BData<>();
+			bData.setData(c);
+			out.setData(bData);
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 
-		} catch ( Exception e ) {
-			
-			container.addBean(new OutSubscriber() );
+		} catch (Exception e) {
+
+			container.addBean(new OutSubscriber());
 			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
-			
+
 			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
+			out.setMsg("Data fetch error.");
 		}
 
 		return out;
 	}
 
-
-	
-	
 	@Override
-	public Out setMeta(In in, OutTxnMeta meta ) {
+	public Out setMeta(In in, OutTxnMeta meta) {
 		// TODO Double check with original setTxnMeta, check for any variance
 		// TODO I did check, can't tell the difference at the moment.
-		return this.searchMeta(in, meta );
-	} 
+		return this.searchMeta(in, meta);
+	}
 
 	@Override
-	public Out searchMeta(In in, OutTxnMeta meta ) {
+	public Out searchMeta(In in, OutTxnMeta meta) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -377,7 +330,7 @@ public class MSub extends MDAO implements IModel, Serializable {
 			return out;
 		}
 		out = new Out();
-		
+
 		try {
 			Transaction001Repo repo = springAppContext
 					.getBean(Transaction001Repo.class);
@@ -386,51 +339,50 @@ public class MSub extends MDAO implements IModel, Serializable {
 				out.setMsg("DAO error occured - 1.");
 				return out;
 			}
-			
-			BData< ? > bInData = in.getData();
-			InTxn inTxn = ( InTxn ) bInData.getData();
-			
+
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
 			long rowCount = 0L;
 			double amount = 0D;
-			
-			log.debug( "MSub from date:"+inTxn.getfDate(), this );
-			log.debug( "MSub to date:"+inTxn.gettDate(), this );
+
+			log.debug("MSub from date:" + inTxn.getfDate(), this);
+			log.debug("MSub to date:" + inTxn.gettDate(), this);
 
 			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-				
-				List< Object[] > lsObj = repo.getTotalAmountAndCountAll();
-				if ( lsObj != null) {
-					Object[] obj = lsObj.get( 0 );
-					rowCount = Long.valueOf( obj[ 1 ].toString() );
-					amount =  Double.valueOf( obj[ 0 ].toString() );
-				} 
-				
+
+				List<Object[]> lsObj = repo.getTotalAmountAndCountAll();
+				if (lsObj != null) {
+					Object[] obj = lsObj.get(0);
+					rowCount = Long.valueOf(obj[1].toString());
+					amount = Double.valueOf(obj[0].toString());
+				}
+
 			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug( "In date filter: ", this );
-				
-				List< Object[] > lsObj = repo.findByDateRangeAmountAndCount( DateFormatFac.toDate( inTxn.getfDate() ),DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
-				if ( lsObj != null) {
-					Object[] obj = lsObj.get( 0 );
-					rowCount = Long.valueOf( obj[ 1 ].toString() );
-					amount =  Double.valueOf( obj[ 0 ].toString() );
-				} 
+				log.debug("In date filter: ", this);
+
+				List<Object[]> lsObj = repo.findByDateRangeAmountAndCount(
+						DateFormatFac.toDate(inTxn.getfDate()),
+						DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+				if (lsObj != null) {
+					Object[] obj = lsObj.get(0);
+					rowCount = Long.valueOf(obj[1].toString());
+					amount = Double.valueOf(obj[0].toString());
+				}
 			}
 
-			
-			
-			log.info( "Amount: "+amount );
-			log.info( "Total: "+rowCount );
-			
-			meta.getTotalRecord().setValue( rowCount + "");
-			meta.getTotalRevenue().setValue(
-					( amount / 100) + "");
-			
+			log.info("Amount: " + amount);
+			log.info("Total: " + rowCount);
+
+			meta.getTotalRecord().setValue(rowCount + "");
+			meta.getTotalRevenue().setValue((amount / 100) + "");
+
 			out.setStatusCode(1);
 			out.setMsg("Txn meta computed successfully.");
 
-		} catch ( Exception e ) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
+			out.setMsg("Data fetch error.");
 		}
 
 		return out;
@@ -438,39 +390,10 @@ public class MSub extends MDAO implements IModel, Serializable {
 
 	@Override
 	public Out setExportDataMulti(In in,
-			BeanItemContainer<AbstractDataBean> container, Collection<Item> records) {
-
-		Out out = this.checkAuthorization();
-		if (out.getStatusCode() != 1) {
-			out.setStatusCode(100);
-			return out;
-		}
-
-		out = new Out();
-
-		// TODO Handle No record edge case
-		/*
-		 * rs = ps.executeQuery(); if( !rs.next() ) { log.debug( "No result" );
-		 * out.setMsg( "No search result found." );
-		 * 
-		 * container.addBean( outTxn );
-		 * 
-		 * BData<BeanItemContainer<OutTxn>> bOutData = new BData<>();
-		 * bOutData.setData( container );
-		 * 
-		 * out.setData( bOutData ); return out; }
-		 */
-
-		// TODO Loop things here
-
-		OutSubscriber outSubscriber = new OutSubscriber();
-
-		container.addBean(outSubscriber);
-
-		out.setStatusCode(1);
-		out.setMsg("Data fetch successful.");
-
-		return out;
+			BeanItemContainer<AbstractDataBean> container,
+			Collection<Item> records) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

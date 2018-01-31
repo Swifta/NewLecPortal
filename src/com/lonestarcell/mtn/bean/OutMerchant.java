@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class OutMerchant extends AbstractDataBean implements Serializable {
 	
 	private static final long serialVersionUID = 7431320759077668024L;
-	private String name, msisdn,  tno, type, amount,  status, channel, desc, payee, payer, entryDate ;
+	private String name, msisdn,  tno, type, amount,  status, channel, desc, payer, payee, entryDate ;
 	public String getName() {
 		return name;
 	}
@@ -62,20 +62,23 @@ public class OutMerchant extends AbstractDataBean implements Serializable {
 		this.column8 = desc;
 		this.desc = desc;
 	}
-	public String getPayee() {
-		return payee;
-	}
-	public void setPayee(String payee) {
-		this.column9 = payee;
-		this.payee = payee;
-	}
+
 	public String getPayer() {
 		return payer;
 	}
 	public void setPayer(String payer) {
-		this.column10 = payer;
+		this.column9 = payer;
 		this.payer = payer;
 	}
+	
+	public String getPayee() {
+		return payee;
+	}
+	public void setPayee(String payee) {
+		this.column10 = payee;
+		this.payee = payee;
+	}
+	
 	public String getEntryDate() {
 		return entryDate;
 	}

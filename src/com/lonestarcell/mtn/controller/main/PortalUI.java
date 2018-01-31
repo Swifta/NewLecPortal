@@ -54,7 +54,7 @@ public class PortalUI extends UI {
 	private ProfileRepo profileRepo;
 
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = PortalUI.class, widgetset = "com.lonestarcell.mtn.controller.main.widgetset.Lec_portalWidgetset")
+	@VaadinServletConfiguration(productionMode = true, ui = PortalUI.class, widgetset = "com.lonestarcell.mtn.controller.main.widgetset.Lec_portalWidgetset")
 	
 	/*
 	 * Instead of VaadinServlet, extend SpringVaadinServlet

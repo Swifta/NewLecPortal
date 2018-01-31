@@ -58,16 +58,20 @@ public class AllRowsActionsUISub
 
 	@Override
 	protected void setOutTxnMeta() {
-
+		outTxnMeta = inTxn.getMeta();
+		
+		/*
 		outTxnMeta = new OutTxnMeta();
 		outTxnMeta
 				.setTotalRevenue(new ObjectProperty<String>("0", String.class));
 		outTxnMeta
 				.setTotalRecord(new ObjectProperty<String>("0", String.class));
 
-		Out out = model.searchMeta(in, outTxnMeta);
-		if (out.getStatusCode() != 1)
-			Notification.show(out.getMsg(), Notification.Type.ERROR_MESSAGE);
+		inTxn.setMeta( outTxnMeta ); */
+		
+		// Out out = model.searchMeta(in, outTxnMeta);
+		// if (out.getStatusCode() != 1)
+			// Notification.show(out.getMsg(), Notification.Type.ERROR_MESSAGE);
 
 	}
 
@@ -104,8 +108,7 @@ public class AllRowsActionsUISub
 
 		// TODO validate response
 		Out out = model.search(in, container);
-		model.searchMeta(in, outTxnMeta);
-
+		//model.searchMeta(in, outTxnMeta);
 		if (out.getStatusCode() != 1) {
 			Notification.show(out.getMsg(), Notification.Type.ERROR_MESSAGE);
 			return;
@@ -160,16 +163,31 @@ public class AllRowsActionsUISub
 				inTxn.setPage(1);
 				inBData.setData(inTxn);
 				in.setData(inBData);
+				
+				// Set OutTxnMeta
+				
+				// Set OutTxnMeta
+				
+				/*
+				OutTxnMeta outTxnMeta = new OutTxnMeta();
+				outTxnMeta
+						.setTotalRevenue(new ObjectProperty<String>("0", String.class));
+				outTxnMeta
+						.setTotalRecord(new ObjectProperty<String>("0", String.class));
+				inTxn.setMeta( outTxnMeta ); */
+				
+				
 
 				Out out = model.search(in, container);
 
-				model.searchMeta(in, outTxnMeta);
+				// model.searchMeta(in, outTxnMeta);
 
 				if (out.getStatusCode() != 1) {
 					Notification.show(out.getMsg(),
 							Notification.Type.WARNING_MESSAGE);
 					return;
 				}
+				
 				format();
 
 			}

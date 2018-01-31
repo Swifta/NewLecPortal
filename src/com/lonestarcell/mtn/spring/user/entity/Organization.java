@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Proxy;
+
 import java.util.List;
 
 
@@ -12,6 +14,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Proxy(lazy = false)
 @NamedQuery(name="Organization.findAll", query="SELECT o FROM Organization o")
 @Table(name="organization")
 public class Organization implements Serializable {

@@ -12,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.ExportUser;
@@ -21,6 +23,7 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.model.util.Pager;
+import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -1053,24 +1056,31 @@ public class MUser extends Model implements IModel {
 		
 		inTxn.setExportPgLen(exportPgLen);
 		inTxn.setExportOp(true);
-		out = this.searchUsers(in, new BeanItemContainer< OutUser > ( OutUser.class ) );
+		// out = this.searchUsers(in, new BeanItemContainer< OutUser > ( OutUser.class ) );
+		
+		Page< User > pg = repo.findAll( pager.getPageRequest( inTxn.getPage(), exportPgLen ) );
 		inTxn.setExportOp(false);
 		log.debug( "Feeder function returned. " );
-		if (out.getStatusCode() != 1)
-			return out;
+		if ( pg == null || pg.getTotalElements() == 0)
+			return new Out();
 
 		log.debug( "Proceeding to package for export. " );
 		// TODO Repackage data for export
-		
-		ModelMapper packer = springAppContext.getBean( ModelMapper.class );
 
 		
-		BeanItemContainer< OutUser > rawData = (BeanItemContainer< OutUser >) out.getData().getData();
-		Iterator< OutUser > itrRaw = rawData.getItemIds().iterator();
+		//BeanItemContainer< Us > rawData = (BeanItemContainer< OutUser >) out.getData().getData();
+		Iterator< User > itrRaw = pg.getContent().iterator();
 		BeanItemContainer<ExportUser> c = new BeanItemContainer<>( ExportUser.class );
 		while (itrRaw.hasNext()) {
-			OutUser tRaw = itrRaw.next();
-			ExportUser t = packer.map( tRaw, ExportUser.class );
+			User tRaw = itrRaw.next();
+			ExportUser t = new ExportUser();
+			t.setColumn1( tRaw.getUsername() );
+			t.setColumn2( tRaw.getEmail() );
+			t.setColumn3( tRaw.getOrganization().getName() );
+			t.setColumn4( tRaw.getStatus()+"");
+			t.setColumn5( tRaw.getProfile().getProfileName() );
+			t.setColumn6( ( tRaw.getLastLogin() != null )?tRaw.getLastLogin().toString():"" );
+			t.setDate( (tRaw.getDateAdded() != null )?tRaw.getDateAdded().toString():"" );
 			c.addBean( t );
 		}
 		

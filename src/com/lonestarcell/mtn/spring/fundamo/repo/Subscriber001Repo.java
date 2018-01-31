@@ -18,6 +18,10 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 // @Transactional( propagation = Propagation.MANDATORY )
 public interface Subscriber001Repo extends JpaRepository< Subscriber001, Long >{
 	
+	String joinStr = " JOIN sub.person001 p ";
+	String conStrDateRange = "  sub.lastUpdate BETWEEN :fDate AND :tDate ";
+	String conStrDate = "  sub.lastUpdate BETWEEN :fDate AND :tDate ";
+	String conStr = " ";
 	/*
 	public Page< Transaction001 > findByPayerAccountNumber( @Param( "payerAccountNumber" ) String payer, Pageable pageable );
     @Query( "SELECT SUM( t.payeeAmount ) FROM Transaction001 t" )
@@ -26,7 +30,12 @@ public interface Subscriber001Repo extends JpaRepository< Subscriber001, Long >{
     @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
 	public Page< Transaction001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
-    @Query( "SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate" )
-	public List< Transaction001 > findAllByDateRange( @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	*/
+	
+    @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.lastUpdate BETWEEN :fDate AND :tDate" )
+	public Page< Subscriber001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
+    
+    @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.name LIKE %:name% " )
+	public Page< Subscriber001 > findPageByName( Pageable pageable, @Param( "name" ) String name );
+	
 }

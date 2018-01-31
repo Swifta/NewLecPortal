@@ -3,6 +3,8 @@ package com.lonestarcell.mtn.model.admin;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,28 +97,63 @@ public class MLedger extends MDAO implements IModel, Serializable {
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
 
-			Pageable pgR = null;
+			Map<String, Object> searchMap = inTxn.getSearchMap();
+			Set<String> searchKeySet = searchMap.keySet();
 			
-			BeanItemContainer< OutLedger > exportRawData = null;
+			double tAmount = 0D;
+			long rowCount = 0L;
 
-			if ( inTxn.isExportOp() ) {
+			Pageable pgR = null;
+
+			BeanItemContainer<OutLedger> exportRawData = null;
+
+			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
-				exportRawData = new BeanItemContainer<>( OutLedger.class );
+				exportRawData = new BeanItemContainer<>(OutLedger.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
 			}
-				
 
-			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-				
-				// TODO Dates always
-				pages = repo.getAllSum(pgR);
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug("In date filter: ", this);
-				pages = repo.getAllSumByDateRange(pgR,
-						DateFormatFac.toDate(inTxn.getfDate()),
-						DateFormatFac.toDate(inTxn.gettDate()));
+			boolean isSearch = false;
+			
+			if (searchKeySet.size() != 0) {
+				if (searchKeySet.contains("column1")) {
+
+					Object val = searchMap.get("column1");
+
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						pages = repo.getAllSumByAccNo(pgR,
+								(String) val);
+					}
+
+				} else if (searchKeySet.contains("column2")) {
+
+					Object val = searchMap.get("column2");
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						pages = repo.getAllSumByName(pgR,
+								(String) val);
+					}
+
+				}
+
+			}
+
+			if (!isSearch) {
+				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+					inTxn.setfDate("2010-02-01");
+					inTxn.settDate("2010-02-03");
+				}
+
+				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+					log.debug("In date filter: ", this);
+					pages = repo.getAllSumByDateRange(pgR,
+							DateFormatFac.toDate(inTxn.getfDate()),
+							DateFormatFac.toDate(inTxn.gettDate()));
+				}
+
 			}
 
 			if (pages == null) {
@@ -136,6 +173,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				return out;
 			}
 
+			rowCount = pages.getTotalElements();
 			Iterator<Object[]> itr = pages.getContent().iterator();
 
 			Object[] obj = null;
@@ -153,15 +191,19 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				outLedger.setDate(obj[3].toString());
 
 				container.addBean(outLedger);
-				if( inTxn.isExportOp() )
-					exportRawData.addBean( outLedger );
+				if (inTxn.isExportOp())
+					exportRawData.addBean(outLedger);
 
 			} while (itr.hasNext());
-			
-			if( inTxn.isExportOp() ){
-				BData< BeanItemContainer< OutLedger > > bData = new BData<>();
-				bData.setData( exportRawData );
-				out.setData( bData );
+
+			if (inTxn.isExportOp()) {
+				BData<BeanItemContainer<OutLedger>> bData = new BData<>();
+				bData.setData(exportRawData);
+				out.setData(bData);
+			}else {
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue(rowCount + "");
+				meta.getTotalRevenue().setValue((tAmount / 100) + "");
 			}
 
 			out.setStatusCode(1);
@@ -214,22 +256,23 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				return out;
 
 			// TODO Repackage data for export
-			
-			ModelMapper packer = springAppContext.getBean( ModelMapper.class );
 
-			
-			BeanItemContainer< OutLedger > rawData = (BeanItemContainer< OutLedger >) out.getData().getData();
-			Iterator< OutLedger > itrRaw = rawData.getItemIds().iterator();
-			BeanItemContainer<ExportLedger> c = new BeanItemContainer<>( ExportLedger.class );
+			ModelMapper packer = springAppContext.getBean(ModelMapper.class);
+
+			BeanItemContainer<OutLedger> rawData = (BeanItemContainer<OutLedger>) out
+					.getData().getData();
+			Iterator<OutLedger> itrRaw = rawData.getItemIds().iterator();
+			BeanItemContainer<ExportLedger> c = new BeanItemContainer<>(
+					ExportLedger.class);
 			while (itrRaw.hasNext()) {
 				OutLedger tRaw = itrRaw.next();
-				ExportLedger t = packer.map( tRaw, ExportLedger.class );
-				c.addBean( t );
+				ExportLedger t = packer.map(tRaw, ExportLedger.class);
+				c.addBean(t);
 			}
-			
-			BData< BeanItemContainer< ExportLedger > > bData = new BData<>();
-			bData.setData( c );
-			out.setData( bData );
+
+			BData<BeanItemContainer<ExportLedger>> bData = new BData<>();
+			bData.setData(c);
+			out.setData(bData);
 			out.setStatusCode(1);
 			out.setMsg("Export data set.");
 

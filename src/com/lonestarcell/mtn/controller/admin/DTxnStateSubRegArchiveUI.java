@@ -9,10 +9,13 @@ import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUILedger;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUISubReg;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUILedger;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
+import com.lonestarcell.mtn.controller.util.MultiRowActionsUISubReg;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
 import com.lonestarcell.mtn.model.admin.IModel;
@@ -20,6 +23,7 @@ import com.lonestarcell.mtn.model.admin.MSubReg;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -93,6 +97,15 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 			// this.setInDate(inTxn, ( 365 * 3) );
 			inBData.setData(inTxn);
 			in.setData(inBData);
+			
+			// Set OutTxnMeta
+			OutTxnMeta outTxnMeta = new OutTxnMeta();
+			outTxnMeta
+					.setTotalRevenue(new ObjectProperty<String>("0", String.class));
+			outTxnMeta
+					.setTotalRecord(new ObjectProperty<String>("0", String.class));
+			inTxn.setMeta( outTxnMeta );
+			
 
 			// TODO validate response
 
@@ -145,7 +158,7 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
-			AllRowsActionsUISub allRowsActionsUIH = new AllRowsActionsUILedger( mSub, grid, in, true, true, pageC );
+			AllRowsActionsUISub allRowsActionsUIH = new AllRowsActionsUISubReg( mSub, grid, in, true, true, pageC );
 			dateFilterCellH.setComponent(allRowsActionsUIH);
 
 			header.setStyleName("sn-date-filter-row");
@@ -155,7 +168,7 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 			// Preparing footer
 			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			
-			dateFilterCellF.setComponent(new AllRowsActionsUILedger( mSub, grid, in, false, false, pageC ) );
+			dateFilterCellF.setComponent(new AllRowsActionsUISubReg( mSub, grid, in, false, false, pageC ) );
 
 			// Initialize pagination controller after both header and footer have been set.
 			pageC.init();
@@ -165,7 +178,7 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 					.setStyleName("sn-no-border-right sn-no-border-left");
 
 			PopupView v = new PopupView("HHHH", null);
-			v.setContent(new MultiRowActionsUILedger(mSub, in, grid, v));
+			v.setContent(new MultiRowActionsUISubReg(mSub, in, grid, v));
 			v.setHideOnMouseOut(true);
 			v.setVisible(true);
 

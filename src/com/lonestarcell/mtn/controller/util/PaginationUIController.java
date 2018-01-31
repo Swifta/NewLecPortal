@@ -37,6 +37,7 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	private int pages = 0;
 	private Label lbTotalRecords;
 	private float pageLength;
+	private long rowCount;
 	
 	
 	public PaginationUIController(){
@@ -51,6 +52,14 @@ public class PaginationUIController implements DUIControllable, Serializable{
 
 
 	
+
+	public long getRowCount() {
+		return rowCount;
+	}
+
+	public void setRowCount(long rowCount) {
+		this.rowCount = rowCount;
+	}
 
 	public float getPageLength() {
 		return pageLength;
@@ -161,6 +170,7 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	private void attachOPTotalRecords(){
 		
 		 Long total = Long.valueOf( this.lbTotalRecords.getValue().toString().replaceAll(",", "") );
+		 setRowCount( total );
 		 initNavigation( total );
 		
 		this.lbTotalRecords.addValueChangeListener( new ValueChangeListener(){
@@ -170,6 +180,7 @@ public class PaginationUIController implements DUIControllable, Serializable{
 			public void valueChange(ValueChangeEvent event) {
 				
 					Long total = Long.valueOf( event.getProperty().getValue().toString().replaceAll(",", "") );
+					setRowCount( total );
 					currentPage = 2;
 					newPage = 1;
 					initNavigation( total );

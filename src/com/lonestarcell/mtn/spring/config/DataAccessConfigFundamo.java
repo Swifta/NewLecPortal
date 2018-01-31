@@ -59,7 +59,7 @@ public class DataAccessConfigFundamo {
 
 		adapter.setDatabase(Database.ORACLE);
 		// adapter.setDatabasePlatform( "MYSQL" );
-		adapter.setShowSql(true);
+		adapter.setShowSql(false);
 		adapter.setGenerateDdl(false);
 		return adapter;
 	}
@@ -90,7 +90,7 @@ public class DataAccessConfigFundamo {
 
 		
 		p.setUrl("jdbc:oracle:thin:@192.168.195.23:1521:FDCORE");
-		// p.setUrl("jdbc:oracle:thin:@10.77.23.58:1521:FDCORE"); //192.168.195.23
+		p.setUrl("jdbc:oracle:thin:@10.77.23.58:1521:FDCORE"); //192.168.195.23
 		
 		p.setUsername("fundamo");
 		p.setPassword("MMfund29");

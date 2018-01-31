@@ -140,4 +140,9 @@ public class PgExportLimitUILedger extends
 
 		return c;
 	}
+
+	@Override
+	protected BeanItemContainer<AbstractDataBean> getExportBean() {
+		return new BeanItemContainer<AbstractDataBean>(AbstractDataBean.class);
+	}
 }

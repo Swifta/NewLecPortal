@@ -1,7 +1,11 @@
 package com.lonestarcell.mtn.spring.user.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Proxy;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -13,6 +17,7 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@Proxy(lazy = false)
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 

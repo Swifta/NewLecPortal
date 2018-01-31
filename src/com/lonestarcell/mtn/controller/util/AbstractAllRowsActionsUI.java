@@ -70,6 +70,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		this.pageC = pageC;
 
 	}
+	
 
 	protected abstract void setGrid(Grid grid);
 

@@ -125,10 +125,12 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	}
 
 	public long getRowCount() {
-		Object obj = pageC.getLbTotalRecords().getValue();
+		Object obj = pageC.getLbTotalRecords().getValue(); 
 		if (obj == null)
 			obj = "0";
-		return Long.valueOf(obj.toString());
+		else
+			return pageC.getRowCount();
+		return Long.valueOf(obj.toString().replace( ",", ""));
 	}
 
 	public ProfileRepo getProfileRepo() {
@@ -537,8 +539,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		cSVExporter.setDateFormat("yyyy-MM-dd");
 		// cSVExporter.setTableToBeExported( table );
 
-		cSVExporter.setContainerToBeExported(new BeanItemContainer<OutUser>(
-				OutUser.class));
+		cSVExporter.setContainerToBeExported( getExportBean() );
 		cSVExporter.setCaption("");
 		cSVExporter.setIcon(FontAwesome.DOWNLOAD);
 		cSVExporter.addStyleName("friendly icon-only link");
@@ -556,6 +557,8 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		return cSVExporter;
 
 	}
+	
+	protected abstract BeanItemContainer< T > getExportBean();
 
 	protected void showError(String msg) {
 		Notification.show(msg, Notification.Type.ERROR_MESSAGE);
@@ -569,7 +572,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		Notification.show(msg, Notification.Type.HUMANIZED_MESSAGE);
 	}
 
-	private String getCurrentUsername() {
+	protected String getCurrentUsername() {
 		return (String) UI.getCurrent().getSession()
 				.getAttribute(DLoginUIController.USERNAME);
 	}

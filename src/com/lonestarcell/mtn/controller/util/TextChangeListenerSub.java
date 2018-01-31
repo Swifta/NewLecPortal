@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +36,10 @@ public class TextChangeListenerSub<O> implements TextChangeListener{
 		String val = event.getText();
 		if( val != null && val.trim().isEmpty() )
 			val = null;
+		
+		Map< String, Object > searchMap = inTxn.getSearchMap();
+		searchMap.clear();
+		searchMap.put( itemId, val );
 		
 		if( itemId.equals( "swiftaId" ) ){
 			inTxn.setSearchSID( val );

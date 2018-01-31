@@ -13,6 +13,7 @@ import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
@@ -24,6 +25,7 @@ import com.lonestarcell.mtn.model.admin.MSub;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -188,6 +190,17 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			BData<InTxn> inBData = new BData<>();
 
 			inTxn.setPage(1);
+			
+			// Set OutTxnMeta
+			OutTxnMeta outTxnMeta = new OutTxnMeta();
+			outTxnMeta
+					.setTotalRevenue(new ObjectProperty<String>("0", String.class));
+			outTxnMeta
+					.setTotalRecord(new ObjectProperty<String>("0", String.class));
+			inTxn.setMeta( outTxnMeta );
+			
+			
+			
 			// this.setInDate(inTxn, ( 365 * 3) );
 			inBData.setData(inTxn);
 			in.setData(inBData);

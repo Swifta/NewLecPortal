@@ -7,55 +7,56 @@ public class ExportSubscriber implements Serializable {
 	private static final long serialVersionUID = 7431320759077668024L;
 	
 	// Weird naming for mapper & export column order reconciliation.
-	private String transactionNumber, type, amount, status, payer, payee,date;
-
+	//private String transactionNumber, type, amount, status, payer, payee, date;
 	
-	public String getTransactionNumber() {
-		return transactionNumber;
+	private String column1, column2, column3, column4, column5, column6, date;
+
+	public String getColumn1() {
+		return column1;
 	}
 
-	public void setTransactionNumber(String transactionNumber) {
-		this.transactionNumber = transactionNumber;
+	public void setColumn1(String column1) {
+		this.column1 = column1;
 	}
 
-	public String getType() {
-		return type;
+	public String getColumn2() {
+		return column2;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setColumn2(String column2) {
+		this.column2 = column2;
 	}
 
-	public String getAmount() {
-		return amount;
+	public String getColumn3() {
+		return column3;
 	}
 
-	public void setAmount(String amount) {
-		this.amount = amount;
+	public void setColumn3(String column3) {
+		this.column3 = column3;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getColumn4() {
+		return column4;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setColumn4(String column4) {
+		this.column4 = column4;
 	}
 
-	public String getPayer() {
-		return payer;
+	public String getColumn5() {
+		return column5;
 	}
 
-	public void setPayer(String payer) {
-		this.payer = payer;
+	public void setColumn5(String column5) {
+		this.column5 = column5;
 	}
 
-	public String getPayee() {
-		return payee;
+	public String getColumn6() {
+		return column6;
 	}
 
-	public void setPayee(String payee) {
-		this.payee = payee;
+	public void setColumn6(String column6) {
+		this.column6 = column6;
 	}
 
 	public String getDate() {
@@ -65,6 +66,13 @@ public class ExportSubscriber implements Serializable {
 	public void setDate(String date) {
 		this.date = date;
 	}
+
+	
+	
+	
+
+	
+	
 	
 
 	

@@ -8,6 +8,7 @@ import org.hibernate.annotations.Proxy;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -24,6 +25,7 @@ public class Person001 implements Serializable {
 	private long oid;
 
 	private String agent;
+	
 
 	@Column(name="ALTERNATE_CONTACT_NUMBER")
 	private String alternateContactNumber;
@@ -65,13 +67,22 @@ public class Person001 implements Serializable {
 	@Column(name="HOME_PHONE_OID")
 	private BigDecimal homePhoneOid;
 
-	/*
+	
+	
 	@Column(name="ID_NUMBER")
 	private String idNumber;
-	*/
+	
+	
+	
+	/*
 	@OneToOne( fetch = FetchType.LAZY )
 	@JoinColumn(name="ID_NUMBER", referencedColumnName = "ID_NUMBER" )
 	private RegistrationRequestData001 registrationRequestData001;
+	*/
+	
+	 @OneToMany( fetch = FetchType.EAGER, mappedBy = "person001" )
+	 // @JoinColumn(name="ID_NUMBER", referencedColumnName = "ID_NUMBER" )
+	 private List< RegistrationRequestData001 > registrationRequestData001s;
 	
 
 	@Column(name="ID_TYPE")
@@ -265,7 +276,7 @@ public class Person001 implements Serializable {
 		this.homePhoneOid = homePhoneOid;
 	}
 
-	/*
+	
 	public String getIdNumber() {
 		return this.idNumber;
 	}
@@ -273,7 +284,7 @@ public class Person001 implements Serializable {
 	public void setIdNumber(String idNumber) {
 		this.idNumber = idNumber;
 	}
-	*/
+	
 	
 	
 
@@ -281,6 +292,7 @@ public class Person001 implements Serializable {
 		return this.idType;
 	}
 
+	/*
 	public RegistrationRequestData001 getRegistrationRequestData001() {
 		return registrationRequestData001;
 	}
@@ -288,11 +300,23 @@ public class Person001 implements Serializable {
 	public void setRegistrationRequestData001(
 			RegistrationRequestData001 registrationRequestData001) {
 		this.registrationRequestData001 = registrationRequestData001;
-	}
+	} */
+	
+	
 
 	public void setIdType(String idType) {
 		this.idType = idType;
 	}
+
+	
+	public List<RegistrationRequestData001> getRegistrationRequestData001s() {
+		return registrationRequestData001s;
+	}
+
+	public void setRegistrationRequestData001s(
+			List<RegistrationRequestData001> registrationRequestData001s) {
+		this.registrationRequestData001s = registrationRequestData001s;
+	} 
 
 	public String getIdVerificationStatus() {
 		return this.idVerificationStatus;

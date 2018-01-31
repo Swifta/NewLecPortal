@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vaadin.haijian.Exporter;
 
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.ExportSubscriber;
@@ -62,6 +63,7 @@ public class DPgExportLimitUISub extends
 						Table table = new Table( "Subscriber Transaction Report" );
 						table.setContainerDataSource( c );
 						xlsExporter.setTableToBeExported( table );
+						renameColumns( xlsExporter );
 						//xlsExporter.setContainerToBeExported(c);
 						xlsExporter.removeStyleName("sn-display-none");
 						btnXLS.setVisible(false);
@@ -105,6 +107,7 @@ public class DPgExportLimitUISub extends
 						Table table = new Table( "Merchant Transaction Report" );
 						table.setContainerDataSource( c );
 						cSVExporter.setTableToBeExported( table );
+						renameColumns( cSVExporter );
 						// cSVExporter.setContainerToBeExported(c);
 						cSVExporter.removeStyleName("sn-display-none");
 						btnCSV.setVisible(false);
@@ -120,6 +123,7 @@ public class DPgExportLimitUISub extends
 				});
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public BeanItemContainer< ExportSubscriber > getExportData() {
@@ -130,12 +134,12 @@ public class DPgExportLimitUISub extends
 			while (itr.hasNext()) {
 				Item record = itr.next();
 				ExportSubscriber t = new ExportSubscriber();
-				t.setTransactionNumber( ( String ) record.getItemProperty( "column1" ).getValue() );
-				t.setType( ( String ) record.getItemProperty( "column2" ).getValue() );
-				t.setAmount( ( String ) record.getItemProperty( "column3" ).getValue() );
-				t.setStatus( ( String ) record.getItemProperty( "column4" ).getValue() );
-				t.setPayer( ( String ) record.getItemProperty( "column5" ).getValue() );
-				t.setPayee( ( String ) record.getItemProperty( "column6" ).getValue() );
+				t.setColumn1( ( String ) record.getItemProperty( "column1" ).getValue() );
+				t.setColumn2( ( String ) record.getItemProperty( "column2" ).getValue() );
+				t.setColumn3( ( String ) record.getItemProperty( "column3" ).getValue() );
+				t.setColumn4( ( String ) record.getItemProperty( "column4" ).getValue() );
+				t.setColumn5( ( String ) record.getItemProperty( "column5" ).getValue() );
+				t.setColumn6( ( String ) record.getItemProperty( "column6" ).getValue() );
 				t.setDate( ( String ) record.getItemProperty( "date" ).getValue() );
 
 				c.addBean(t);
@@ -155,4 +159,24 @@ public class DPgExportLimitUISub extends
 
 		return c;
 	}
+	
+	
+	private void renameColumns( Exporter exporter ){
+		//transactionNumber, type, amount, status, payer, payee, date;
+		exporter.setColumnHeader( "column1", "Transaction No." );
+		exporter.setColumnHeader( "column2", "Type" );
+		exporter.setColumnHeader( "column3", "Amount" );
+		exporter.setColumnHeader( "column4", "Status" );
+		exporter.setColumnHeader( "column5", "Payer" );
+		exporter.setColumnHeader( "column6", "Payee" );
+		exporter.setColumnHeader( "date", "Timestamp" );
+	}
+	
+
+	@Override
+	protected BeanItemContainer<ExportSubscriber> getExportBean() {
+		return new BeanItemContainer<ExportSubscriber>(ExportSubscriber.class);
+	}
+	
+	
 }

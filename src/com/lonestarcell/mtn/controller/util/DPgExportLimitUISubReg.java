@@ -1,7 +1,14 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
+
+import org.vaadin.haijian.CSVExporter;
+import org.vaadin.haijian.ExcelExporter;
+import org.vaadin.haijian.Exporter;
 
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.ExportSubReg;
@@ -54,9 +61,12 @@ public class DPgExportLimitUISubReg extends
 							return;
 						}
 
+						
 						Table table = new Table( "Subscriber Registration Transaction Report" );
 						table.setContainerDataSource( c );
 						xlsExporter.setTableToBeExported( table );
+						table.setColumnHeader( "column1", "Name" );
+						renameColumns( xlsExporter );
 						// xlsExporter.setContainerToBeExported(c);
 						xlsExporter.removeStyleName("sn-display-none");
 						btnXLS.setVisible(false);
@@ -100,6 +110,7 @@ public class DPgExportLimitUISubReg extends
 						Table table = new Table( "Subscriber Registration Transaction Report" );
 						table.setContainerDataSource( c );
 						cSVExporter.setTableToBeExported( table );
+						renameColumns( cSVExporter );
 						// cSVExporter.setContainerToBeExported(c);
 						cSVExporter.removeStyleName("sn-display-none");
 						btnCSV.setVisible(false);
@@ -115,6 +126,8 @@ public class DPgExportLimitUISubReg extends
 				});
 	}
 
+	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public BeanItemContainer< ExportSubReg > getExportData() {
@@ -125,12 +138,12 @@ public class DPgExportLimitUISubReg extends
 			while (itr.hasNext()) {
 				Item record = itr.next();			
 				ExportSubReg t = new ExportSubReg();
-				t.setName( ( String ) record.getItemProperty("column1").getValue() );
-				t.setMsisdn( ( String ) record.getItemProperty("column2").getValue()  );
-				t.setIdNo( ( String ) record.getItemProperty("column3").getValue()  );
-				t.setIdType( ( String ) record.getItemProperty("column4").getValue()  );
-				t.setDob(  ( String ) record.getItemProperty("column5").getValue()  );
-				t.setStatus(  ( String ) record.getItemProperty("column6").getValue()  );
+				t.setColumn1( ( String ) record.getItemProperty("column1").getValue() );
+				t.setColumn2( ( String ) record.getItemProperty("column2").getValue()  );
+				t.setColumn3( ( String ) record.getItemProperty("column3").getValue()  );
+				t.setColumn4( ( String ) record.getItemProperty("column4").getValue()  );
+				t.setColumn5(  ( String ) record.getItemProperty("column5").getValue()  );
+				t.setColumn6(  ( String ) record.getItemProperty("column6").getValue()  );
 				t.setRegDate(  ( String ) record.getItemProperty("date").getValue()  );
 				c.addBean(t);
 			}
@@ -146,5 +159,22 @@ public class DPgExportLimitUISubReg extends
 		}
 
 		return c;
+	}
+	
+	private void renameColumns( Exporter exporter ){
+		// private String name, msisdn,  idNo, idType, dob, status, regDate;
+		exporter.setColumnHeader( "column1", "NAME" );
+		exporter.setColumnHeader( "column2", "MSISDN" );
+		exporter.setColumnHeader( "column3", "ID Number" );
+		exporter.setColumnHeader( "column4", "ID Type" );
+		exporter.setColumnHeader( "column5", "Date of Birth" );
+		exporter.setColumnHeader( "column6", "Status" );
+		exporter.setColumnHeader( "regDate", "Registration Timestamp" );
+	}
+	
+
+	@Override
+	protected BeanItemContainer<ExportSubReg> getExportBean() {
+		return new BeanItemContainer< ExportSubReg >( ExportSubReg.class );
 	}
 }

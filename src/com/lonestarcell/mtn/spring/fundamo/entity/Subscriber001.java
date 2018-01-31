@@ -8,6 +8,7 @@ import org.hibernate.annotations.Proxy;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Table(name="SUBSCRIBER001")
 @NamedQuery(name="Subscriber001.findAll", query="SELECT s FROM Subscriber001 s")
 @Proxy(lazy = false)
 public class Subscriber001 implements Serializable {
@@ -44,6 +46,9 @@ public class Subscriber001 implements Serializable {
 	private BigDecimal partyOid;
 	*/
 	
+	@OneToMany( fetch = FetchType.EAGER, mappedBy = "subscriber001" )
+	private List< UserAccount001 > userAccount001s;
+	
 	@OneToOne( fetch = FetchType.LAZY )
 	@JoinColumn( name="PARTY_OID" )
 	private Person001 person001;
@@ -61,10 +66,39 @@ public class Subscriber001 implements Serializable {
 
 	public Subscriber001() {
 	}
+	
+	
+
+	/*
+	public UserAccount001 getUserAccount001() {
+		return userAccount001;
+	}
+
+
+
+	public void setUserAccount001(UserAccount001 userAccount001) {
+		this.userAccount001 = userAccount001;
+	} */
+	
+	
+
+
 
 	public long getOid() {
 		return this.oid;
 	}
+
+	public List<UserAccount001> getUserAccount001s() {
+		return userAccount001s;
+	}
+
+
+
+	public void setUserAccount001s(List<UserAccount001> userAccount001s) {
+		this.userAccount001s = userAccount001s;
+	}
+
+
 
 	public void setOid(long oid) {
 		this.oid = oid;

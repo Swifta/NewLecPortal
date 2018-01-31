@@ -1,9 +1,12 @@
 package com.lonestarcell.mtn.model.admin;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,8 +45,6 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 
 	private Logger log = LogManager.getLogger(MMerchant.class.getName());
 
-	
-
 	public MMerchant(Long d, String s, String t, ApplicationContext cxt) {
 		super(d, s, cxt);
 		this.timeCorrection = " " + t;
@@ -75,9 +76,6 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 		return out;
 	}
 
-	
-	
-	
 	@Override
 	public Out search(In in, BeanItemContainer<AbstractDataBean> container) {
 
@@ -89,8 +87,7 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 		out = new Out();
 
 		try {
-			Entry001Repo repo = springAppContext
-					.getBean(Entry001Repo.class);
+			Entry001Repo repo = springAppContext.getBean(Entry001Repo.class);
 			if (repo == null) {
 				log.debug("Transaction001 repo is null");
 				out.setMsg("DAO error occured.");
@@ -100,31 +97,92 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 			Page<Entry001> pages = null;
 
 			Pager pager = springAppContext.getBean(Pager.class);
-			
-			BData< ? > bInData = in.getData();
-			InTxn inTxn = ( InTxn ) bInData.getData();
-			BeanItemContainer< OutMerchant > exportRawData = null;
-			
+
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+			BeanItemContainer<OutMerchant> exportRawData = null;
+
+			Map<String, Object> searchMap = inTxn.getSearchMap();
+			Set<String> searchKeySet = searchMap.keySet();
 
 			Pageable pgR = null;
-			if ( inTxn.isExportOp() ){
+			double tAmount = 0D;
+			long rowCount = 0L;
+
+			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
-				exportRawData = new BeanItemContainer<>( OutMerchant.class );
+				exportRawData = new BeanItemContainer<>(OutMerchant.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
 			}
 
-			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-				
-				pages = repo.findAll( pgR );
-				
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug( "In date filter: ", this );
-				pages = repo.findPageByDateRange(
-						pgR,
-						DateFormatFac.toDate( inTxn.getfDate() ),
-						DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
+			boolean isSearch = false;
+			
+			/*
+			if( searchKeySet.size() != 0){
+				Iterator< String > itr = searchKeySet.iterator();
+					while( itr.hasNext()){
+							String key = itr.next();
+							log.info( "Search column "+key+" value: "+searchMap.get( key ) );
+					}
+			} */
+
+			if (searchKeySet.size() != 0) {
+				if (searchKeySet.contains("column3")) {
+
+					Object val = searchMap.get("column3");
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						BigDecimal tNo = BigDecimal.valueOf(Long
+								.valueOf((String) val));
+						pages = repo.findPageByTransactionNumber(pgR, tNo);
+						tAmount = repo.findPageByTransactionNumberAmount(tNo);
+
+					}
+
+				} else if (searchKeySet.contains("column9")) {
+
+					Object val = searchMap.get("column9");
+
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						pages = repo.findPageByPayerAccountNumber(pgR,
+								(String) val);
+						tAmount = repo
+								.findPageByPayerAccountNumberAmount((String) val);
+					}
+
+				} else if (searchKeySet.contains("column10")) {
+
+					Object val = searchMap.get("column10");
+					if (val != null && !val.toString().trim().isEmpty()) {
+						isSearch = true;
+						pages = repo.findPageByPayeeAccountNumber(pgR,
+								(String) val);
+						tAmount = repo
+								.findPageByPayeeAccountNumberAmount((String) val);
+					}
+
+				}
+
+			}
+
+			if (!isSearch) {
+				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+					inTxn.setfDate("2010-02-01");
+					inTxn.settDate("2010-02-03");
+				}
+
+				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+					log.debug("In date filter: ", this);
+					pages = repo.findPageByDateRange(pgR,
+							DateFormatFac.toDate(inTxn.getfDate()),
+							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+					tAmount = repo.findPageByDateRangeAmount(
+							DateFormatFac.toDate(inTxn.getfDate()),
+							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+				}
 			}
 
 			if (pages == null) {
@@ -135,8 +193,8 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 
 			if (pages.getNumberOfElements() == 0) {
 
-				container.addBean( new OutMerchant());
-				BData<BeanItemContainer< AbstractDataBean >> bOutData = new BData<>();
+				container.addBean(new OutMerchant());
+				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
 				out.setMsg("No records found.");
@@ -145,91 +203,97 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 			}
 
 			Iterator<Entry001> itr = pages.getContent().iterator();
-			
+
 			Entry001 entry = null;
 			Transaction001 t = null;
 			UserAccount001 ua = null;
 			OutMerchant outMerchant = null;
-			
+
+			rowCount = pages.getTotalElements();
+			log.debug( "row count: "+rowCount, this );
+
 			do {
 				entry = itr.next();
 
 				outMerchant = new OutMerchant();
 				t = entry.getTransaction001();
 				ua = entry.getUserAccount001();
-				
-				if( ua == null ){
+
+				if (ua == null) {
 					ua = new UserAccount001();
 				}
-				CorporateAccountHolder001 corp = ua.getCorporateAccountHolder001();
-				
-				if( corp == null ){
+				CorporateAccountHolder001 corp = ua
+						.getCorporateAccountHolder001();
+
+				if (corp == null) {
 					corp = new CorporateAccountHolder001();
 				}
-				
-				double amount = ( entry.getAmount()/ 100 );
-				outMerchant.setName( corp.getName() );
-				outMerchant.setTno( entry.getTransactionNumber()+"" );
-				
-				List< AccountIdentifier001 > ais = ua.getAccountIdentifier001s();
-				
-				if( ais != null ){
-					Iterator< AccountIdentifier001 > itrAi = ais.iterator();
-					
-					while( itrAi.hasNext() ){
+
+				double amount = (entry.getAmount() / 100);
+				outMerchant.setName(corp.getName());
+				outMerchant.setTno(entry.getTransactionNumber() + "");
+
+				List<AccountIdentifier001> ais = ua.getAccountIdentifier001s();
+
+				if (ais != null) {
+					Iterator<AccountIdentifier001> itrAi = ais.iterator();
+
+					while (itrAi.hasNext()) {
 						AccountIdentifier001 ai = itrAi.next();
-						if( ai != null ){
-							if( ai.getTypeName().equals( "ACI003" ) ){
-								outMerchant.setMsisdn( ai.getName() );
-								outMerchant.setType( "ACI003" );
+						if (ai != null) {
+							if (ai.getTypeName().equals("ACI003")) {
+								outMerchant.setMsisdn(ai.getName());
+								outMerchant.setType("ACI003");
 							}
 						}
 					}
 				}
-				
-				
-				outMerchant.setAmount( NumberFormatFac.toMoney( amount + "" ) );
-				outMerchant.setStatus( t.getSystemCode().getValue() );
-				outMerchant.setChannel( t.getChannel() );
-				outMerchant.setDesc( entry.getDescription() );
-				outMerchant.setPayee( t.getPayeeAccountNumber() );
-				outMerchant.setPayer( t.getPayerAccountNumber() );
-				outMerchant.setEntryDate( DateFormatFac.toString( entry.getEntryDate() ) );
 
-				container.addBean( outMerchant );
-				if( inTxn.isExportOp() )
-					exportRawData.addBean( outMerchant );
-				
+				outMerchant.setAmount(NumberFormatFac.toMoney(amount + ""));
+				outMerchant.setStatus(t.getSystemCode().getValue());
+				outMerchant.setChannel(t.getChannel());
+				outMerchant.setDesc(entry.getDescription());
+				outMerchant.setPayee(t.getPayeeAccountNumber());
+				outMerchant.setPayer(t.getPayerAccountNumber());
+				outMerchant.setEntryDate(DateFormatFac.toString(entry
+						.getEntryDate()));
+
+				container.addBean(outMerchant);
+				if (inTxn.isExportOp())
+					exportRawData.addBean(outMerchant);
 
 			} while (itr.hasNext());
-			
-			if( inTxn.isExportOp() ){
-				BData< BeanItemContainer< OutMerchant > > bData = new BData<>();
-				bData.setData( exportRawData );
-				out.setData( bData );
+
+			if (inTxn.isExportOp()) {
+				BData<BeanItemContainer<OutMerchant>> bData = new BData<>();
+				bData.setData(exportRawData);
+				out.setData(bData);
+			} else {
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue(rowCount + "");
+				meta.getTotalRevenue().setValue((tAmount / 100) + "");
 			}
-			
+
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
+		} catch (Exception e) {
 
-		} catch ( Exception e ) {
-			
-			container.addBean( new OutSubscriberTest() );
+			container.addBean(new OutSubscriberTest());
 			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
-			
+
 			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
+			out.setMsg("Data fetch error.");
 		}
 
 		return out;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Out setExportData(In in, BeanItemContainer<AbstractDataBean> container) {
+	public Out setExportData(In in,
+			BeanItemContainer<AbstractDataBean> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -257,44 +321,41 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 				return out;
 
 			// TODO Repackage data for export
-			
-			
-			ModelMapper packer = springAppContext.getBean( ModelMapper.class );
 
-			
-			BeanItemContainer< OutMerchant > rawData = (BeanItemContainer< OutMerchant >) out.getData().getData();
-			Iterator< OutMerchant > itrRaw = rawData.getItemIds().iterator();
-			BeanItemContainer<ExportMerchant> c = new BeanItemContainer<>( ExportMerchant.class );
+			ModelMapper packer = springAppContext.getBean(ModelMapper.class);
+
+			BeanItemContainer<OutMerchant> rawData = (BeanItemContainer<OutMerchant>) out
+					.getData().getData();
+			Iterator<OutMerchant> itrRaw = rawData.getItemIds().iterator();
+			BeanItemContainer<ExportMerchant> c = new BeanItemContainer<>(
+					ExportMerchant.class);
 			while (itrRaw.hasNext()) {
 				OutMerchant tRaw = itrRaw.next();
-				ExportMerchant t = packer.map( tRaw, ExportMerchant.class );
-				c.addBean( t );
+				ExportMerchant t = packer.map(tRaw, ExportMerchant.class);
+				c.addBean(t);
 			}
-			
-			BData< BeanItemContainer< ExportMerchant > > bData = new BData<>();
-			bData.setData( c );
-			out.setData( bData );
-			
+
+			BData<BeanItemContainer<ExportMerchant>> bData = new BData<>();
+			bData.setData(c);
+			out.setData(bData);
+
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 
-		} catch ( Exception e ) {
-			
-			container.addBean(new OutSubscriber() );
+		} catch (Exception e) {
+
+			container.addBean(new OutSubscriber());
 			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
-			
+
 			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
+			out.setMsg("Data fetch error.");
 		}
 
 		return out;
 	}
 
-
-	
-	
 	@Override
 	public Out setMeta(In in, OutTxnMeta outSubscriber) {
 
@@ -319,9 +380,9 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 		out.setMsg("Txn meta computed successfully.");
 
 		return out;
-	} 
+	}
 
-	//@Override
+	// @Override
 	public Out searchMetax(In in, OutTxnMeta outSubscriber) {
 
 		Out out = this.checkAuthorization();
@@ -351,10 +412,9 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 
 		return out;
 	}
-	
-	
+
 	@Override
-	public Out searchMeta(In in, OutTxnMeta meta ) {
+	public Out searchMeta(In in, OutTxnMeta meta) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -362,60 +422,59 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 			return out;
 		}
 		out = new Out();
-		
+
 		try {
-			Entry001Repo repo = springAppContext
-					.getBean(Entry001Repo.class);
+			Entry001Repo repo = springAppContext.getBean(Entry001Repo.class);
 			if (repo == null) {
 				log.debug("Entry001 repo is null");
 				out.setMsg("DAO error occured - 1.");
 				return out;
 			}
-			
-			BData< ? > bInData = in.getData();
-			InTxn inTxn = ( InTxn ) bInData.getData();
-			
+
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
 			long rowCount = 0L;
 			double amount = 0D;
-			
-			log.debug( "MSub from date:"+inTxn.getfDate(), this );
-			log.debug( "MSub to date:"+inTxn.gettDate(), this );
 
+			log.debug("MSub from date:" + inTxn.getfDate(), this);
+			log.debug("MSub to date:" + inTxn.gettDate(), this);
+
+			/*
 			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-				
-				List< Object[] > lsObj = repo.getTotalAmountAndCountAll();
-				if ( lsObj != null) {
-					Object[] obj = lsObj.get( 0 );
-					rowCount = Long.valueOf( obj[ 1 ].toString() );
-					amount =  Double.valueOf( obj[ 0 ].toString() );
-				} 
-				
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug( "In date filter: ", this );
-				
-				List< Object[] > lsObj = repo.findByDateRangeAmountAndCount( DateFormatFac.toDate( inTxn.getfDate() ),DateFormatFac.toDateUpperBound( inTxn.gettDate() ) );
-				if ( lsObj != null) {
-					Object[] obj = lsObj.get( 0 );
-					rowCount = Long.valueOf( obj[ 1 ].toString() );
-					amount =  Double.valueOf( obj[ 0 ].toString() );
-				} 
-			}
 
-			
-			
-			log.info( "Amount: "+amount );
-			log.info( "Total: "+rowCount );
-			
-			meta.getTotalRecord().setValue( rowCount + "");
-			meta.getTotalRevenue().setValue(
-					( amount / 100) + "");
-			
+				List<Object[]> lsObj = repo.getTotalAmountAndCountAll();
+				if (lsObj != null) {
+					Object[] obj = lsObj.get(0);
+					rowCount = Long.valueOf(obj[1].toString());
+					amount = Double.valueOf(obj[0].toString());
+				}
+
+			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
+				log.debug("In date filter: ", this);
+
+				List<Object[]> lsObj = repo.findByDateRangeAmountAndCount(
+						DateFormatFac.toDate(inTxn.getfDate()),
+						DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+				if (lsObj != null) {
+					Object[] obj = lsObj.get(0);
+					rowCount = Long.valueOf(obj[1].toString());
+					amount = Double.valueOf(obj[0].toString());
+				}
+			} */
+
+			log.info("Amount: " + amount);
+			log.info("Total: " + rowCount);
+
+			meta.getTotalRecord().setValue(rowCount + "");
+			meta.getTotalRevenue().setValue((amount / 100) + "");
+
 			out.setStatusCode(1);
 			out.setMsg("Txn meta computed successfully.");
 
-		} catch ( Exception e ) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			out.setMsg( "Data fetch error." );
+			out.setMsg("Data fetch error.");
 		}
 
 		return out;
@@ -423,7 +482,8 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 
 	@Override
 	public Out setExportDataMulti(In in,
-			BeanItemContainer<AbstractDataBean> container, Collection<Item> records) {
+			BeanItemContainer<AbstractDataBean> container,
+			Collection<Item> records) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {

@@ -38,8 +38,13 @@ public class RegistrationRequestData001 implements Serializable {
 	@Column(name="FIRST_NAME")
 	private String firstName;
 
-	@Column(name="ID_NUMBER")
-	private String idNumber;
+	// @Column(name="ID_NUMBER")
+	//private String idNumber;
+	
+	@ManyToOne( fetch = FetchType.LAZY )
+	@JoinColumn(name="ID_NUMBER", referencedColumnName = "ID_NUMBER" )
+	private Person001 person001;
+	
 
 	@Column(name="ID_TYPE")
 	private String idType;
@@ -114,16 +119,27 @@ public class RegistrationRequestData001 implements Serializable {
 		this.firstName = firstName;
 	}
 
+	/*
 	public String getIdNumber() {
 		return this.idNumber;
 	}
 
 	public void setIdNumber(String idNumber) {
 		this.idNumber = idNumber;
-	}
+	} */
+	
+	
 
 	public String getIdType() {
 		return this.idType;
+	}
+
+	public Person001 getPerson001() {
+		return person001;
+	}
+
+	public void setPerson001(Person001 person001) {
+		this.person001 = person001;
 	}
 
 	public void setIdType(String idType) {

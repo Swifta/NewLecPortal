@@ -8,6 +8,7 @@ import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUIMerchant;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUIMerchant;
@@ -19,6 +20,7 @@ import com.lonestarcell.mtn.model.admin.MMerchant;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -88,6 +90,14 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			// this.setInDate(inTxn, ( 365 * 3) );
 			inBData.setData(inTxn);
 			in.setData(inBData);
+			
+			// Set OutTxnMeta
+			OutTxnMeta outTxnMeta = new OutTxnMeta();
+			outTxnMeta
+					.setTotalRevenue(new ObjectProperty<String>("0", String.class));
+			outTxnMeta
+					.setTotalRecord(new ObjectProperty<String>("0", String.class));
+			inTxn.setMeta( outTxnMeta );
 
 			// TODO validate response
 
@@ -184,10 +194,10 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			// Add search field
 			
 			allRowsActionsUIH.prepareGridHeader(grid, "column1",
-					"Corp Name", true);
+					"Corp Name", false );
 			allRowsActionsUIH.prepareGridHeader(grid, "column2", "MSISDN", false);
 			
-			allRowsActionsUIH.prepareGridHeader(grid, "column3", "T. Number", false);
+			allRowsActionsUIH.prepareGridHeader(grid, "column3", "T. Number", true );
 
 			allRowsActionsUIH.prepareGridHeader(grid, "column4", "Type", false);
 			allRowsActionsUIH
@@ -208,7 +218,10 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 
 			// Set column widths
 
-			// grid.getColumn("column1").setWidth(125);
+			grid.getColumn("column4").setWidth(100);
+			grid.getColumn("column5").setWidth(100);
+			grid.getColumn("column6").setWidth(100);
+			grid.getColumn("column7").setWidth(100);
 			// grid.getColumn("column2").setWidth( 150 ).setResizable(false);
 			// grid.getColumn("column3").setWidth( 150);
 			// grid.getColumn("column5").setWidth( 150 ).setResizable(false);
@@ -236,7 +249,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 	@Override
 	protected void setInDate(InTxn inTxn, int dayOffSet) {
 			inTxn.setfDate( "2010-02-01" );
-			inTxn.settDate( "2010-02-02" );
+			inTxn.settDate( "2010-06-30" );
 	}
 
 

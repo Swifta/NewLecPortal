@@ -1,5 +1,8 @@
 package com.lonestarcell.mtn.bean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InTxn {
 	
 	private String searchReqCur, searchToken, searchItronId, searchTokenStatus, searchTxnType, searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
@@ -7,11 +10,26 @@ public class InTxn {
 	private int pageExportLimit, exportPgLen;
 	private float pageSize;
 	private boolean isExportOp = false;
+	private Map< String, Object > searchMap = new HashMap< >();
+	
+	private OutTxnMeta meta;
 
 	
 	
 	
 	
+	public OutTxnMeta getMeta() {
+		return meta;
+	}
+	public void setMeta(OutTxnMeta meta) {
+		this.meta = meta;
+	}
+	public Map<String, Object> getSearchMap() {
+		return searchMap;
+	}
+	public void setSearchMap(Map<String, Object> searchMap) {
+		this.searchMap = searchMap;
+	}
 	public int getExportPgLen() {
 		return exportPgLen;
 	}

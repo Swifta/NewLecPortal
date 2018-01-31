@@ -3,6 +3,8 @@ package com.lonestarcell.mtn.controller.util;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.vaadin.haijian.Exporter;
+
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.ExportUser;
 import com.lonestarcell.mtn.bean.In;
@@ -13,6 +15,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
@@ -52,7 +55,12 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 							return;
 						}
 
-						xlsExporter.setContainerToBeExported(c);
+						Table table = new Table( "Portal Users Report" );
+						table.setContainerDataSource( c );
+						xlsExporter.setTableToBeExported( table );
+						renameColumns( xlsExporter );
+						
+						// xlsExporter.setContainerToBeExported(c);
 						xlsExporter.removeStyleName("sn-display-none");
 						btnXLS.setVisible(false);
 						showSuccess("File ready. Click download icon");
@@ -91,7 +99,11 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 							return;
 						}
 
-						cSVExporter.setContainerToBeExported(c);
+						Table table = new Table( "Portal Users Report" );
+						table.setContainerDataSource( c );
+						cSVExporter.setTableToBeExported( table );
+						renameColumns( cSVExporter );
+						// cSVExporter.setContainerToBeExported(c);
 						cSVExporter.removeStyleName("sn-display-none");
 						btnCSV.setVisible(false);
 						showSuccess("File ready. Click download icon");
@@ -117,12 +129,12 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 				Item record = itr.next();
 				
 				ExportUser u = new ExportUser();
-				u.setUsername( ( String ) record.getItemProperty("username").getValue() );
-				u.setEmail(  ( String ) record.getItemProperty("email").getValue()  );
-				u.setOrg(  ( String ) record.getItemProperty("org").getValue()  );
-				u.setUserStatus(  ( String ) record.getItemProperty("userStatus").getValue()  );
-				u.setProfile(  ( String ) record.getItemProperty("profile").getValue()  );
-				u.setLastLogin(  ( String ) record.getItemProperty("lastLogin").getValue()  );
+				u.setColumn1( ( String ) record.getItemProperty("username").getValue() );
+				u.setColumn2(  ( String ) record.getItemProperty("email").getValue()  );
+				u.setColumn3(  ( String ) record.getItemProperty("org").getValue()  );
+				u.setColumn4(  ( String ) record.getItemProperty("userStatus").getValue()  );
+				u.setColumn5(  ( String ) record.getItemProperty("profile").getValue()  );
+				u.setColumn6(  ( String ) record.getItemProperty("lastLogin").getValue()  );
 				u.setDate( ( String ) record.getItemProperty("date").getValue()  );
 				
 				c.addBean(u);
@@ -139,5 +151,21 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 		}
 
 		return c;
+	}
+	
+	// username, email, lastLogin, org, userStatus, profile, date;
+	private void renameColumns( Exporter exporter ){
+		exporter.setColumnHeader( "column1", "Username" );
+		exporter.setColumnHeader( "column2", "email" );
+		exporter.setColumnHeader( "column3", "Organization" );
+		exporter.setColumnHeader( "column4", "Status" );
+		exporter.setColumnHeader( "column5", "Profile" );
+		exporter.setColumnHeader( "column6", "Lastest login Timestamp" );
+		exporter.setColumnHeader( "date", "Creation Timestamp" );
+	}
+
+	@Override
+	protected BeanItemContainer<ExportUser> getExportBean() {
+		return new BeanItemContainer<ExportUser>(ExportUser.class);
 	}
 }
