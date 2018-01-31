@@ -108,6 +108,11 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 			Pageable pgR = null;
 			double tAmount = 0D;
 			long rowCount = 0L;
+			
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				inTxn.setfDate("2010-02-01");
+				inTxn.settDate("2010-02-03");
+			}
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
@@ -148,9 +153,11 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayerAccountNumber(pgR,
-								(String) val);
+								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 						tAmount = repo
-								.findPageByPayerAccountNumberAmount((String) val);
+								.findPageByPayerAccountNumberAmount((String) val, DateFormatFac.toDate(inTxn.getfDate()),
+										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
 				} else if (searchKeySet.contains("column10")) {
@@ -159,9 +166,11 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayeeAccountNumber(pgR,
-								(String) val);
+								(String) val,DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 						tAmount = repo
-								.findPageByPayeeAccountNumberAmount((String) val);
+								.findPageByPayeeAccountNumberAmount((String) val,DateFormatFac.toDate(inTxn.getfDate()),
+										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
 				}
@@ -169,10 +178,6 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 			}
 
 			if (!isSearch) {
-				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-					inTxn.setfDate("2010-02-01");
-					inTxn.settDate("2010-02-03");
-				}
 
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);

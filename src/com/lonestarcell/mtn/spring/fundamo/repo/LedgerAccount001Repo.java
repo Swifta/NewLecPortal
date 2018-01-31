@@ -16,6 +16,7 @@ import com.lonestarcell.mtn.spring.fundamo.entity.LedgerAccount001;
 // @Transactional( propagation = Propagation.MANDATORY )
 public interface LedgerAccount001Repo extends JpaRepository< LedgerAccount001, Long >{
 	
+	String conDateRangeStr = " e.entryDate BETWEEN :fDate AND :tDate ";
 	@Query( "SELECT DISTINCT l.ledgerAccountNumber AS accNo, l.name, SUM( e.amount ) AS amount FROM LedgerAccount001 l JOIN l.entry001s e WHERE e.entryDate < :tDate GROUP BY l.ledgerAccountNumber, l.name" )
 	public Page< Object[] > getAllSum( Pageable pageable, @Param( "tDate" ) Date tDate );
 	
@@ -39,11 +40,11 @@ public interface LedgerAccount001Repo extends JpaRepository< LedgerAccount001, L
 	
 	// Search
 	
-	@Query( "SELECT DISTINCT l.ledgerAccountNumber AS accNo, l.name, SUM( e.amount ) AS amount, MAX( e.entryDate ) FROM LedgerAccount001 l JOIN l.entry001s e WHERE l.ledgerAccountNumber LIKE %:accNo% GROUP BY l.ledgerAccountNumber, l.name" )
-	public Page< Object[] > getAllSumByAccNo( Pageable page, @Param( "accNo" ) String accNo );
+	@Query( "SELECT DISTINCT l.ledgerAccountNumber AS accNo, l.name, SUM( e.amount ) AS amount, MAX( e.entryDate ) FROM LedgerAccount001 l JOIN l.entry001s e WHERE l.ledgerAccountNumber LIKE %:accNo%  AND "+conDateRangeStr+"  GROUP BY l.ledgerAccountNumber, l.name" )
+	public Page< Object[] > getAllSumByAccNo( Pageable page, @Param( "accNo" ) String accNo, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate  );
 	
-	@Query( "SELECT DISTINCT l.ledgerAccountNumber AS accNo, l.name, SUM( e.amount ) AS amount, MAX( e.entryDate ) FROM LedgerAccount001 l JOIN l.entry001s e WHERE l.name LIKE %:name% GROUP BY l.ledgerAccountNumber, l.name" )
-	public Page< Object[] > getAllSumByName( Pageable page, @Param( "name" ) String name );
+	@Query( "SELECT DISTINCT l.ledgerAccountNumber AS accNo, l.name, SUM( e.amount ) AS amount, MAX( e.entryDate ) FROM LedgerAccount001 l JOIN l.entry001s e WHERE l.name LIKE %:name% AND "+conDateRangeStr+" GROUP BY l.ledgerAccountNumber, l.name" )
+	public Page< Object[] > getAllSumByName( Pageable page, @Param( "name" ) String name, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate  );
 	
 	
 

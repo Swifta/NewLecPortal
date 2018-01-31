@@ -35,7 +35,7 @@ public interface Subscriber001Repo extends JpaRepository< Subscriber001, Long >{
     @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.lastUpdate BETWEEN :fDate AND :tDate" )
 	public Page< Subscriber001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
     
-    @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.name LIKE %:name% " )
-	public Page< Subscriber001 > findPageByName( Pageable pageable, @Param( "name" ) String name );
+    @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.name LIKE %:name% AND "+conStrDateRange )
+	public Page< Subscriber001 > findPageByName( Pageable pageable, @Param( "name" ) String name, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
 }

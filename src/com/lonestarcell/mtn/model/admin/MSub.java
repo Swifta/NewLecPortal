@@ -27,9 +27,7 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
-import com.lonestarcell.mtn.spring.fundamo.entity.Entry001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
-import com.lonestarcell.mtn.spring.fundamo.repo.Entry001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -107,6 +105,14 @@ public class MSub extends MDAO implements IModel, Serializable {
 			BeanItemContainer<OutSubscriber> exportRawData = null;
 			double tAmount = 0D;
 			long rowCount = 0L;
+			
+			// Date fall back
+			
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				inTxn.setfDate("2010-02-01");
+				inTxn.settDate("2010-02-03");
+			}
+			
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
@@ -139,9 +145,11 @@ public class MSub extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayerAccountNumber(pgR,
-								(String) val);
+								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 						tAmount = repo
-								.findPageByPayerAccountNumberAmount((String) val);
+								.findPageByPayerAccountNumberAmount((String) val, DateFormatFac.toDate(inTxn.getfDate()),
+										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
 				} else if (searchKeySet.contains("column6")) {
@@ -150,9 +158,11 @@ public class MSub extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayeeAccountNumber(pgR,
-								(String) val);
+								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 						tAmount = repo
-								.findPageByPayeeAccountNumberAmount((String) val);
+								.findPageByPayeeAccountNumberAmount((String) val, DateFormatFac.toDate(inTxn.getfDate()),
+										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
 				}
@@ -160,11 +170,6 @@ public class MSub extends MDAO implements IModel, Serializable {
 			}
 
 			if (!isSearch) {
-				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-					inTxn.setfDate("2010-02-01");
-					inTxn.settDate("2010-02-03");
-				}
-
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
 					pages = repo.findPageByDateRange(pgR,

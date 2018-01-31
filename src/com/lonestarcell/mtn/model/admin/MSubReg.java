@@ -115,6 +115,12 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 			Pageable pgR = null;
 			double tAmount = 0D;
 			long rowCount = 0L;
+			
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				inTxn.setfDate("2010-02-01");
+				inTxn.settDate("2010-02-03");
+			}
+
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
@@ -133,7 +139,8 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 					Object val = searchMap.get("column1");
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
-						pages = repo.findPageByName(pgR, ( String ) val);
+						pages = repo.findPageByName(pgR, ( String ) val,DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
 				} 
@@ -141,11 +148,6 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 			}
 
 			if (!isSearch) {
-				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-					inTxn.setfDate("2010-02-01");
-					inTxn.settDate("2010-02-03");
-				}
-
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
 					pages = repo.findPageByDateRange(pgR,

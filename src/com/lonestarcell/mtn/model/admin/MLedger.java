@@ -102,6 +102,11 @@ public class MLedger extends MDAO implements IModel, Serializable {
 			
 			double tAmount = 0D;
 			long rowCount = 0L;
+			
+			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+				inTxn.setfDate("2010-02-01");
+				inTxn.settDate("2010-02-03");
+			}
 
 			Pageable pgR = null;
 
@@ -125,7 +130,8 @@ public class MLedger extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.getAllSumByAccNo(pgR,
-								(String) val);
+								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDate(inTxn.gettDate()));
 					}
 
 				} else if (searchKeySet.contains("column2")) {
@@ -134,7 +140,8 @@ public class MLedger extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.getAllSumByName(pgR,
-								(String) val);
+								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								DateFormatFac.toDate(inTxn.gettDate()));
 					}
 
 				}
@@ -142,11 +149,6 @@ public class MLedger extends MDAO implements IModel, Serializable {
 			}
 
 			if (!isSearch) {
-				if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-					inTxn.setfDate("2010-02-01");
-					inTxn.settDate("2010-02-03");
-				}
-
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
 					pages = repo.getAllSumByDateRange(pgR,
