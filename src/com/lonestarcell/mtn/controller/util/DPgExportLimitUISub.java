@@ -16,7 +16,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.server.UserError;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -39,7 +41,10 @@ public class DPgExportLimitUISub extends
 	public void attachBtnXLS() {
 		this.btnXLS
 				.addClickListener(e -> {
+					
+					exportHandler( xlsExporter, btnXLS );
 
+					/*
 					try {
 						if (!isMulti())
 							if (!combosSet())
@@ -73,18 +78,69 @@ public class DPgExportLimitUISub extends
 						ex.printStackTrace();
 						btnXLS.setComponentError(new UserError(
 								"Data export failed. Please try again/contact support."));
-						btnXLS.setIcon(FontAwesome.FILE_TEXT);
+						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
 						btnXLS.setEnabled(true);
-					}
+					} */
+
+				}); 
+	}
+	
+	
+	@Override
+	public void attachBtnPdf() {
+		this.btnPDF
+				.addClickListener(e -> {
+
+					exportHandler( pdfExporter, btnPDF );
+					/*
+					try {
+						if (!isMulti())
+							if (!combosSet())
+								return;
+
+						btnPDF.setIcon(FontAwesome.SPINNER);
+						btnPDF.setImmediate(true);
+						btnPDF.setComponentError(null);
+
+						BeanItemContainer<ExportSubscriber> c = this
+								.getExportData();
+
+						btnPDF.setIcon( FontAwesome.FILE_PDF_O );
+						btnPDF.setEnabled(true);
+
+						if (c == null) {
+							showWarn("Failed to load export data. Please try again/contact support.");
+							return;
+						}
+
+						Table table = new Table( "Subscriber Transaction Report" );
+						table.setContainerDataSource( c );
+						pdfExporter.setTableToBeExported( table );
+						renameColumns( pdfExporter );
+						//xlsExporter.setContainerToBeExported(c);
+						pdfExporter.removeStyleName("sn-display-none");
+						btnPDF.setVisible(false);
+						showSuccess("File ready. Click download icon");
+
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						btnPDF.setComponentError(new UserError(
+								"Data export failed. Please try again/contact support."));
+						btnPDF.setIcon(FontAwesome.FILE_PDF_O  );
+						btnPDF.setEnabled(true);
+					} */
+					
 
 				});
 	}
+	
 
 	@Override
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
 
+					/*
 					try {
 						if (!isMulti())
 							if (!combosSet())
@@ -118,11 +174,14 @@ public class DPgExportLimitUISub extends
 								"Data export failed. Please try again/contact support."));
 						btnCSV.setIcon(FontAwesome.FILE_TEXT);
 						btnCSV.setEnabled(true);
-					}
+					} */
+					
+					exportHandler( cSVExporter, btnCSV );
 
 				});
 	}
 
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -161,7 +220,8 @@ public class DPgExportLimitUISub extends
 	}
 	
 	
-	private void renameColumns( Exporter exporter ){
+	@Override
+	protected void renameColumns( Exporter exporter ){
 		//transactionNumber, type, amount, status, payer, payee, date;
 		exporter.setColumnHeader( "column1", "Transaction No." );
 		exporter.setColumnHeader( "column2", "Type" );

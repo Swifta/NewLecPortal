@@ -23,6 +23,8 @@ public class DPgExportLimitUIDesign extends VerticalLayout {
 	protected ComboBox comboPgExportLimitFrom;
 	protected ComboBox comboPgExportLimitPgCount;
 	protected HorizontalLayout cExportCtrls;
+	protected Button btnPDF;
+	protected Button btnPDFDownloadPlaceholder;
 	protected Button btnCSV;
 	protected Button btnCSVDownloadPlaceholder;
 	protected Button btnXLS;

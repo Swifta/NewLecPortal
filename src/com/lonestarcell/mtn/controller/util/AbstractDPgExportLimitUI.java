@@ -11,7 +11,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.haijian.CSVExporter;
 import org.vaadin.haijian.ExcelExporter;
+import org.vaadin.haijian.Exporter;
+import org.vaadin.haijian.PdfExporter;
 
+import com.lonestarcell.mtn.bean.ExportSubscriber;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.InUserDetails;
@@ -27,8 +30,10 @@ import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
@@ -53,6 +58,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	private ApplicationContext springAppContext;
 	private ProfileRepo profileRepo;
 	protected ExcelExporter xlsExporter;
+	protected PdfExporter pdfExporter;
 	protected CSVExporter cSVExporter;
 
 	private PaginationUIController pageC;
@@ -164,6 +170,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 			this.setComboContent();
 		this.attachBtnXLS();
 		this.attachBtnCSV();
+		this.attachBtnPdf();
 	}
 
 	protected boolean combosSet() {
@@ -309,13 +316,21 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 
 		xlsExporter = this.getExcelExporterCtrl();
 		cSVExporter = this.getCSVExporterCtrl();
+		pdfExporter = this.getPdfExporterCtrl();
 
 		xlsExporter.addStyleName("sn-display-none");
+		pdfExporter.addStyleName("sn-display-none");
 		cSVExporter.addStyleName("sn-display-none");
+		
+		
 		this.cExportCtrls.replaceComponent(btnXLSDownloadPlaceholder,
 				xlsExporter);
+		
 		this.cExportCtrls.replaceComponent(btnCSVDownloadPlaceholder,
 				cSVExporter);
+		
+		this.cExportCtrls.replaceComponent(btnPDFDownloadPlaceholder,
+				pdfExporter);
 
 	}
 
@@ -530,6 +545,106 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		return excelExporter;
 
 	}
+	
+	public void attachBtnPdf() {
+		
+	}
+	
+	
+	protected PdfExporter getPdfExporterCtrl() {
+
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String fileName = sdf.format(new Date()) + "_" + "_by_"
+				+ this.getCurrentUsername();
+
+		PdfExporter pdfExporter = new PdfExporter();
+		
+		pdfExporter.setDateFormat("yyyy-MM-dd");
+		pdfExporter.setContainerToBeExported(new BeanItemContainer<ExportSubscriber>(
+				ExportSubscriber.class));
+		
+		
+		pdfExporter.setDateFormat("yyyy-MM-dd");
+		pdfExporter.setCaption("");
+		pdfExporter.setIcon(FontAwesome.DOWNLOAD);
+		pdfExporter.addStyleName("friendly icon-only link");
+		pdfExporter.setDescription("Download .pdf");
+		pdfExporter.setDownloadFileName(fileName);
+		pdfExporter.setDisableOnClick(true);
+		
+
+		// excelExporter.setEnabled( false );
+
+		pdfExporter.setDisableOnClick(true);
+		pdfExporter.addClickListener(e -> {
+			pdfExporter.addStyleName("sn-display-none");
+			btnPDF.setVisible(true);
+			pdfExporter.setEnabled(true);
+			// showSuccess("Now download... please wait.");
+		});
+
+		return pdfExporter;
+
+	}
+	
+	
+	protected void exportHandler( Exporter exporter, Button btn ){
+		
+		Resource icon = btn.getIcon();
+		
+		try {
+			if (!isMulti())
+				if (!combosSet())
+					return;
+
+			btn.setIcon(FontAwesome.SPINNER);
+			btn.setImmediate(true);
+			btn.setComponentError(null);
+
+			BeanItemContainer<T> c = this
+					.getExportData();
+
+			btn.setIcon( icon );
+			btn.setEnabled(true);
+
+			if (c == null) {
+				showWarn("Failed to load export data. Please try again/contact support.");
+				return;
+			}
+
+			Table table = new Table( "Subscriber Transaction Report" );
+			table.setContainerDataSource( c );
+			exporter.setTableToBeExported( table );
+			renameColumns( exporter );
+			//xlsExporter.setContainerToBeExported(c);
+			exporter.removeStyleName("sn-display-none");
+			btn.setVisible(false);
+			showSuccess("File ready. Click download icon");
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			btn.setComponentError(new UserError(
+					"Data export failed. Please try again/contact support."));
+			btn.setIcon( icon );
+			btn.setEnabled(true);
+		}
+
+
+	}
+	
+	protected void renameColumns( Exporter exporter ){
+		//transactionNumber, type, amount, status, payer, payee, date;
+		
+		/*
+		exporter.setColumnHeader( "column1", "Transaction No." );
+		exporter.setColumnHeader( "column2", "Type" );
+		exporter.setColumnHeader( "column3", "Amount" );
+		exporter.setColumnHeader( "column4", "Status" );
+		exporter.setColumnHeader( "column5", "Payer" );
+		exporter.setColumnHeader( "column6", "Payee" );
+		exporter.setColumnHeader( "date", "Timestamp" ); */
+	}
+
 
 	private CSVExporter getCSVExporterCtrl() {
 

@@ -69,7 +69,7 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 						ex.printStackTrace();
 						btnXLS.setComponentError(new UserError(
 								"Data export failed. Please try again/contact support."));
-						btnXLS.setIcon(FontAwesome.FILE_TEXT);
+						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
 						btnXLS.setEnabled(true);
 					}
 
