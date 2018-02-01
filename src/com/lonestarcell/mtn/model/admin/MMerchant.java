@@ -266,7 +266,13 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 					}
 				}
 
-				outMerchant.setAmount(NumberFormatFac.toMoney(amount + ""));
+				if ( inTxn.isExportOp() )
+					outMerchant.setAmount(amount + "");
+				else
+					outMerchant.setAmount(NumberFormatFac
+							.toMoney(amount + ""));
+				
+				//outMerchant.setAmount(NumberFormatFac.toMoney(amount + ""));
 				outMerchant.setStatus(t.getSystemCode().getValue());
 				outMerchant.setChannel(t.getChannel());
 				outMerchant.setDesc(entry.getDescription());

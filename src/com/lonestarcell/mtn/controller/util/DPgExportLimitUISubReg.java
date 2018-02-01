@@ -41,45 +41,7 @@ public class DPgExportLimitUISubReg extends
 		this.btnXLS
 				.addClickListener(e -> {
 
-					try {
-						if (!isMulti())
-							if (!combosSet())
-								return;
-
-						btnXLS.setIcon(FontAwesome.SPINNER);
-						btnXLS.setImmediate(true);
-						btnXLS.setComponentError(null);
-
-						BeanItemContainer<ExportSubReg> c = this
-								.getExportData();
-
-						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
-						btnXLS.setEnabled(true);
-
-						if (c == null) {
-							showWarn("Failed to load export data. Please try again/contact support.");
-							return;
-						}
-
-						
-						Table table = new Table( "Subscriber Registration Transaction Report" );
-						table.setContainerDataSource( c );
-						xlsExporter.setTableToBeExported( table );
-						table.setColumnHeader( "column1", "Name" );
-						renameColumns( xlsExporter );
-						// xlsExporter.setContainerToBeExported(c);
-						xlsExporter.removeStyleName("sn-display-none");
-						btnXLS.setVisible(false);
-						showSuccess("File ready. Click download icon");
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						btnXLS.setComponentError(new UserError(
-								"Data export failed. Please try again/contact support."));
-						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
-						btnXLS.setEnabled(true);
-					}
-
+					exportHandler( xlsExporter, btnXLS );
 				});
 	}
 
@@ -87,42 +49,15 @@ public class DPgExportLimitUISubReg extends
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
-
-					try {
-						if (!isMulti())
-							if (!combosSet())
-								return;
-
-						btnCSV.setIcon(FontAwesome.SPINNER);
-						btnCSV.setImmediate(true);
-						btnCSV.setComponentError(null);
-						// Load data
-						BeanItemContainer<ExportSubReg> c = this
-								.getExportData();
-						btnCSV.setIcon(FontAwesome.FILE_TEXT);
-						btnCSV.setEnabled(true);
-
-						if (c == null) {
-							showWarn("Failed to load export data. Please try again/contact support.");
-							return;
-						}
-						
-						Table table = new Table( "Subscriber Registration Transaction Report" );
-						table.setContainerDataSource( c );
-						cSVExporter.setTableToBeExported( table );
-						renameColumns( cSVExporter );
-						// cSVExporter.setContainerToBeExported(c);
-						cSVExporter.removeStyleName("sn-display-none");
-						btnCSV.setVisible(false);
-						showSuccess("File ready. Click download icon");
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						btnCSV.setComponentError(new UserError(
-								"Data export failed. Please try again/contact support."));
-						btnCSV.setIcon(FontAwesome.FILE_TEXT);
-						btnCSV.setEnabled(true);
-					}
-
+					exportHandler(cSVExporter, btnCSV);
+				});
+	}
+	
+	@Override
+	public void attachBtnPDF() {
+		this.btnPDF
+				.addClickListener(e -> {
+					exportHandler(pdfExporter, btnPDF);
 				});
 	}
 
@@ -161,7 +96,8 @@ public class DPgExportLimitUISubReg extends
 		return c;
 	}
 	
-	private void renameColumns( Exporter exporter ){
+	@Override
+	protected void renameColumns( Exporter exporter ){
 		// private String name, msisdn,  idNo, idType, dob, status, regDate;
 		exporter.setColumnHeader( "column1", "NAME" );
 		exporter.setColumnHeader( "column2", "MSISDN" );

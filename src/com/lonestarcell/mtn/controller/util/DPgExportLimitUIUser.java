@@ -36,6 +36,8 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 		this.btnXLS
 				.addClickListener(e -> {
 
+					exportHandler( xlsExporter, btnXLS );
+					/*
 					try {
 						if (!isMulti())
 							if (!combosSet())
@@ -71,7 +73,7 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 								"Data export failed. Please try again/contact support."));
 						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
 						btnXLS.setEnabled(true);
-					}
+					} */
 
 				});
 	}
@@ -80,41 +82,16 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
+					exportHandler( cSVExporter, btnCSV );
 
-					try {
-						if (!isMulti())
-							if (!combosSet())
-								return;
-
-						btnCSV.setIcon(FontAwesome.SPINNER);
-						btnCSV.setImmediate(true);
-						btnCSV.setComponentError(null);
-						// Load data
-						BeanItemContainer<ExportUser> c = this.getExportData();
-						btnCSV.setIcon(FontAwesome.FILE_TEXT);
-						btnCSV.setEnabled(true);
-
-						if (c == null) {
-							showWarn("Failed to load export data. Please try again/contact support.");
-							return;
-						}
-
-						Table table = new Table( "Portal Users Report" );
-						table.setContainerDataSource( c );
-						cSVExporter.setTableToBeExported( table );
-						renameColumns( cSVExporter );
-						// cSVExporter.setContainerToBeExported(c);
-						cSVExporter.removeStyleName("sn-display-none");
-						btnCSV.setVisible(false);
-						showSuccess("File ready. Click download icon");
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						btnCSV.setComponentError(new UserError(
-								"Data export failed. Please try again/contact support."));
-						btnCSV.setIcon(FontAwesome.FILE_TEXT);
-						btnCSV.setEnabled(true);
-
-					}
+				});
+	}
+	
+	@Override
+	public void attachBtnPDF() {
+		this.btnPDF
+				.addClickListener(e -> {
+					exportHandler( pdfExporter, btnPDF );
 
 				});
 	}
@@ -154,7 +131,8 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 	}
 	
 	// username, email, lastLogin, org, userStatus, profile, date;
-	private void renameColumns( Exporter exporter ){
+	@Override
+	protected void renameColumns( Exporter exporter ){
 		exporter.setColumnHeader( "column1", "Username" );
 		exporter.setColumnHeader( "column2", "email" );
 		exporter.setColumnHeader( "column3", "Organization" );

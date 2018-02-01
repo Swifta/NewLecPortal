@@ -145,4 +145,10 @@ public class PgExportLimitUILedger extends
 	protected BeanItemContainer<AbstractDataBean> getExportBean() {
 		return new BeanItemContainer<AbstractDataBean>(AbstractDataBean.class);
 	}
+
+	@Override
+	public void attachBtnPDF() {
+		// TODO Auto-generated method stub
+		
+	}
 }

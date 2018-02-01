@@ -12,9 +12,6 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.UserError;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 public class DPgExportLimitUIMerchant extends
@@ -35,44 +32,7 @@ public class DPgExportLimitUIMerchant extends
 	public void attachBtnXLS() {
 		this.btnXLS
 				.addClickListener(e -> {
-
-					try {
-						if (!isMulti())
-							if (!combosSet())
-								return;
-
-						btnXLS.setIcon(FontAwesome.SPINNER);
-						btnXLS.setImmediate(true);
-						btnXLS.setComponentError(null);
-
-						BeanItemContainer< ExportMerchant > c = this
-								.getExportData();
-
-						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
-						btnXLS.setEnabled(true);
-
-						if (c == null) {
-							showWarn("Failed to load export data. Please try again/contact support.");
-							return;
-						}
-
-						Table table = new Table( "Merchant Transaction Report" );
-						table.setContainerDataSource( c );
-						xlsExporter.setTableToBeExported( table );
-						//xlsExporter.setContainerToBeExported(c);
-						renameColumns( xlsExporter );
-						xlsExporter.removeStyleName("sn-display-none");
-						btnXLS.setVisible(false);
-						showSuccess("File ready. Click download icon");
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						btnXLS.setComponentError(new UserError(
-								"Data export failed. Please try again/contact support."));
-						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
-						btnXLS.setEnabled(true);
-					}
-
+					exportHandler( xlsExporter, btnXLS );
 				});
 	}
 
@@ -80,42 +40,16 @@ public class DPgExportLimitUIMerchant extends
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
+					exportHandler( cSVExporter, btnCSV );
 
-					try {
-						if (!isMulti())
-							if (!combosSet())
-								return;
-
-						btnCSV.setIcon(FontAwesome.SPINNER);
-						btnCSV.setImmediate(true);
-						btnCSV.setComponentError(null);
-						// Load data
-						BeanItemContainer<ExportMerchant> c = this
-								.getExportData();
-						btnCSV.setIcon(FontAwesome.FILE_TEXT);
-						btnCSV.setEnabled(true);
-
-						if (c == null) {
-							showWarn("Failed to load export data. Please try again/contact support.");
-							return;
-						}
-
-						Table table = new Table( "Merchant Transaction Report" );
-						table.setContainerDataSource( c );
-						cSVExporter.setTableToBeExported( table );
-						// cSVExporter.setContainerToBeExported(c);
-						renameColumns( cSVExporter );
-						cSVExporter.removeStyleName("sn-display-none");
-						btnCSV.setVisible(false);
-						showSuccess("File ready. Click download icon");
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						btnCSV.setComponentError(new UserError(
-								"Data export failed. Please try again/contact support."));
-						btnCSV.setIcon(FontAwesome.FILE_TEXT);
-						btnCSV.setEnabled(true);
-					}
-
+				});
+	}
+	
+	@Override
+	public void attachBtnPDF() {
+		this.btnCSV
+				.addClickListener(e -> {
+					exportHandler( pdfExporter, btnPDF );
 				});
 	}
 
@@ -161,7 +95,8 @@ public class DPgExportLimitUIMerchant extends
 	// desc switched for column10
 	
 	
-	private void renameColumns( Exporter exporter ){
+	@Override
+	protected void renameColumns( Exporter exporter ){
 		
 		exporter.setColumnHeader( "column1", "Name" );
 		exporter.setColumnHeader( "column2", "MSISDN" );

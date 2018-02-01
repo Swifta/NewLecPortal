@@ -50,7 +50,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	private Window processingPopup;
 	private Logger log = LogManager.getLogger(AbstractDPgExportLimitUI.class.getName());
 	private Item record;
-	protected IModel model;
+	protected IModel<?> model;
 	protected In in;
 	private VerticalLayout cMoreOps;
 	protected Collection<Item> records;
@@ -170,7 +170,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 			this.setComboContent();
 		this.attachBtnXLS();
 		this.attachBtnCSV();
-		this.attachBtnPdf();
+		this.attachBtnPDF();
 	}
 
 	protected boolean combosSet() {
@@ -311,7 +311,6 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		this.accoRoles = accoRoles;
 		this.setProcessingPopup(new Window("Export records"));
 		attachCommandListeners();
-		setPropertyDataSource();
 		setContent();
 
 		xlsExporter = this.getExcelExporterCtrl();
@@ -341,82 +340,10 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 			this.comboPgExportLimitFrom.setEnabled( false );;
 			this.comboPgExportLimitPgCount.setEnabled( false );
 		}
-		
 		return is;
 	}
 
-	
-	/*@SuppressWarnings("unchecked")
-	@Override
-	public Out getExportData() {
-		BeanItemContainer<OutUser> c = new BeanItemContainer<>(OutUser.class);
-		if (isMulti()) {
-			Iterator<Item> itr = records.iterator();
-			while (itr.hasNext()) {
-				Item record = itr.next();
-				Property<?> column = record.getItemProperty("username");
-				String val = column.getValue().toString();
-				OutUser user = new OutUser();
-				user.setUsername(val);
-				c.addBean(user);
-			}
 
-		} else {
-
-			Out out = model.setExportData(in,
-					new BeanItemContainer<AbstractDataBean>(
-							AbstractDataBean.class));
-			if (out.getStatusCode() != 1)
-				return null;
-			
-			c = (BeanItemContainer<OutUser>) out.getData().getData();
-
-		}
-		
-		Out out = new Out();
-		BData< BeanItemContainer< OutUser > > bData = new BData<>();
-		bData.setData( c );
-		out.setData( bData );
-		if( c != null && c.size() != 0 )
-			out.setStatusCode( 1 );
-		
-		return out;
-	} */
-
-	@SuppressWarnings("unchecked")
-	private void setPropertyDataSource() {
-
-		// lbNormalMsg.removeStyleName("sn-display-none");
-		// lbErrorMsg.addStyleName("sn-display-none");
-
-		/*
-		 * record.getItemProperty( "newUsername" ).setValue(
-		 * record.getItemProperty( "username" ).getValue() );
-		 * record.getItemProperty( "newPassword" ).setValue( MUtil.genNewPass()
-		 * );
-		 * 
-		 * this.tFNewUsername.setPropertyDataSource( record.getItemProperty(
-		 * "newUsername" ) ); this.tFNewPassword.setPropertyDataSource(
-		 * record.getItemProperty( "newPassword" ) );
-		 * 
-		 * this.tFNewUsername.addValidator( new RequiredTFValidator( "" ) );
-		 * this.tFNewPassword.addValidator( new RequiredTFValidator( "" ) );
-		 * 
-		 * 
-		 * 
-		 * this.tFNewUsername.setReadOnly( true );
-		 * this.tFNewPassword.setReadOnly( true );
-		 * 
-		 * log.debug( "Field data sources have been initialized successfully."
-		 * );
-		 */
-
-		RequiredTFValidator rTFValidator = new RequiredTFValidator(
-				"Field required in valid format");
-		// this.tFNewRoleName.addValidator(rTFValidator );
-		// this.tFNewRoleName.setImmediate( true );
-		// this.tFNewRoleName.setComponentError( null );
-	}
 
 	private void showPopup() {
 		processingPopup.setContent(this);
@@ -466,54 +393,9 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	public abstract BeanItemContainer< T > getExportData();
 
-	/*
-	@SuppressWarnings("unchecked")
-	@Override
-	public void attachBtnXLS() {
-		this.btnXLS.addClickListener(e -> {
-			if( !isMulti() )
-				if (!combosSet())
-					return;
-			
-				BeanItemContainer< OutUser > c = extractData();
-				if ( c == null ) {
-					showWarn("Failed to load export data. Please try again/contact support.");
-					return;
-				}
-				
-				xlsExporter.setContainerToBeExported(c);
-				xlsExporter.removeStyleName("sn-display-none");
-				btnXLS.setVisible(false);
-				showSuccess("File ready. Click download icon");
 
-			});
-	} */
-
-	/*
-	@Override
-	public void attachBtnCSV() {
-		this.btnCSV
-				.addClickListener(e -> {
-					if( !isMulti() )
-						if ( !combosSet() )
-							return;
-					// Load data
-					BeanItemContainer< OutUser > c = extractData();
-					if ( c == null ) {
-						showWarn("Failed to load export data. Please try again/contact support.");
-						return;
-					}
-
-					cSVExporter.setContainerToBeExported(c);
-					cSVExporter.removeStyleName("sn-display-none");
-					btnCSV.setVisible(false);
-					showSuccess("File ready. Click download icon");
-
-				});
-	} */
 
 	private ExcelExporter getExcelExporterCtrl() {
 
@@ -546,12 +428,8 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 
 	}
 	
-	public void attachBtnPdf() {
-		
-	}
 	
-	
-	protected PdfExporter getPdfExporterCtrl() {
+	private PdfExporter getPdfExporterCtrl() {
 
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String fileName = sdf.format(new Date()) + "_" + "_by_"
@@ -572,10 +450,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		pdfExporter.setDownloadFileName(fileName);
 		pdfExporter.setDisableOnClick(true);
 		
-
 		// excelExporter.setEnabled( false );
-
-		pdfExporter.setDisableOnClick(true);
 		pdfExporter.addClickListener(e -> {
 			pdfExporter.addStyleName("sn-display-none");
 			btnPDF.setVisible(true);
@@ -600,6 +475,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 			btn.setIcon(FontAwesome.SPINNER);
 			btn.setImmediate(true);
 			btn.setComponentError(null);
+			btn.setEnabled( false );
 
 			BeanItemContainer<T> c = this
 					.getExportData();
@@ -619,7 +495,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 			//xlsExporter.setContainerToBeExported(c);
 			exporter.removeStyleName("sn-display-none");
 			btn.setVisible(false);
-			showSuccess("File ready. Click download icon");
+			// showSuccess("File ready. Click download icon");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -6,5 +6,6 @@ public interface IExporter< T > {
 	BeanItemContainer< T > getExportData();
 	void attachBtnXLS();
 	void attachBtnCSV();
+	void attachBtnPDF();
 
 }
