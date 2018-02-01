@@ -19,9 +19,7 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 public interface Subscriber001Repo extends JpaRepository< Subscriber001, Long >{
 	
 	String joinStr = " JOIN sub.person001 p ";
-	String conStrDateRange = "  sub.lastUpdate BETWEEN :fDate AND :tDate ";
-	String conStrDate = "  sub.lastUpdate BETWEEN :fDate AND :tDate ";
-	String conStr = " ";
+	String conStrDateRange = " sub.lastUpdate BETWEEN :fDate AND :tDate ORDER BY sub.lastUpdate ";
 	/*
 	public Page< Transaction001 > findByPayerAccountNumber( @Param( "payerAccountNumber" ) String payer, Pageable pageable );
     @Query( "SELECT SUM( t.payeeAmount ) FROM Transaction001 t" )
@@ -32,7 +30,7 @@ public interface Subscriber001Repo extends JpaRepository< Subscriber001, Long >{
 	
 	*/
 	
-    @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.lastUpdate BETWEEN :fDate AND :tDate" )
+    @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE "+conStrDateRange )
 	public Page< Subscriber001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
     
     @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE sub.name LIKE %:name% AND "+conStrDateRange )

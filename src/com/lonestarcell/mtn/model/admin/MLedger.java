@@ -2,6 +2,7 @@ package com.lonestarcell.mtn.model.admin;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,7 @@ import com.lonestarcell.mtn.bean.OutSubReg;
 import com.lonestarcell.mtn.bean.OutSubscriber;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
@@ -34,7 +36,7 @@ import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MLedger extends MDAO implements IModel, Serializable {
+public class MLedger extends MDAO implements IModel< LedgerAccount001Repo >, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -116,7 +118,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				inTxn.setfDate("2010-02-01");
 				inTxn.settDate("2010-02-03");
 			}
-			
+			Date fDate = DateFormatFacRuntime.toDate( inTxn.getfDate() );
 			
 
 			Pageable pgR = null;
@@ -126,6 +128,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
+				fDate = this.getExportFDate(inTxn, repo );
 				exportRawData = new BeanItemContainer<>(OutLedger.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
@@ -141,7 +144,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.getAllSumByAccNo(pgR,
-								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								(String) val, fDate,
 								DateFormatFac.toDate(inTxn.gettDate()));
 					}
 
@@ -151,7 +154,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.getAllSumByName(pgR,
-								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								(String) val, fDate,
 								DateFormatFac.toDate(inTxn.gettDate()));
 					}
 
@@ -163,7 +166,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
 					pages = repo.getAllSumByDateRange(pgR,
-							DateFormatFac.toDate(inTxn.getfDate()),
+							fDate,
 							DateFormatFac.toDate(inTxn.gettDate()));
 				}
 
@@ -428,6 +431,36 @@ public class MLedger extends MDAO implements IModel, Serializable {
 		out.setMsg("Data fetch successful.");
 
 		return out;
+	}
+	
+	
+	@Override
+	public Date getExportFDate( InTxn inTxn, LedgerAccount001Repo repo ){
+		
+		int fromPgNo = inTxn.getExportFPgNo();
+		log.info( "In export F-PgNo "+fromPgNo );
+		int excludePgNo = fromPgNo - 1;
+		if( fromPgNo <= 1 ) {
+			excludePgNo = 1;
+			fromPgNo = 1;
+		}
+		
+		//  - find max date in excludePgNo page of that.
+		Page< Object[] > expoExcludePage = repo.getAllSumByDateRange(
+				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
+						));
+		//Date expoFDate = ( Date ) expoExcludePage.getContent().get( expoExcludePage.getNumberOfElements() - 1 )[ 3 ];
+		// probable latest date in exclude page [ still under testing ]
+		
+		Date expoFDate  = null;
+		int tElements = expoExcludePage.getNumberOfElements();
+		
+		if( fromPgNo == 1 )
+			expoFDate = ( Date ) expoExcludePage.getContent().get( 1 )[ 3 ];
+		else
+			expoFDate = ( Date ) expoExcludePage.getContent().get( tElements - 1 )[ 3 ];
+		log.info( "Export F-Date?: "+expoFDate.toString() );
+		return expoFDate;
 	}
 
 }

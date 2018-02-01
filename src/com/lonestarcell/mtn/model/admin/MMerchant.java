@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.model.admin;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.lonestarcell.mtn.bean.OutSubscriber;
 import com.lonestarcell.mtn.bean.OutSubscriberTest;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.fundamo.entity.AccountIdentifier001;
@@ -39,7 +41,7 @@ import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MMerchant extends MDAO implements IModel, Serializable {
+public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -121,25 +123,19 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 				inTxn.setfDate("2010-02-01");
 				inTxn.settDate("2010-02-03");
 			}
+			
+			Date fDate = DateFormatFacRuntime.toDate( inTxn.getfDate() );
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
+				fDate = this.getExportFDate(inTxn, repo );
 				exportRawData = new BeanItemContainer<>(OutMerchant.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
 			}
 
 			boolean isSearch = false;
-			
-			/*
-			if( searchKeySet.size() != 0){
-				Iterator< String > itr = searchKeySet.iterator();
-					while( itr.hasNext()){
-							String key = itr.next();
-							log.info( "Search column "+key+" value: "+searchMap.get( key ) );
-					}
-			} */
 
 			if (searchKeySet.size() != 0) {
 				if (searchKeySet.contains("column3")) {
@@ -150,6 +146,8 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 						BigDecimal tNo = BigDecimal.valueOf(Long
 								.valueOf((String) val));
 						pages = repo.findPageByTransactionNumber(pgR, tNo);
+						
+						if( !inTxn.isExportOp() )
 						tAmount = repo.findPageByTransactionNumberAmount(tNo);
 
 					}
@@ -161,10 +159,12 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayerAccountNumber(pgR,
-								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								(String) val, fDate,
 								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+						
+						if( !inTxn.isExportOp() )
 						tAmount = repo
-								.findPageByPayerAccountNumberAmount((String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								.findPageByPayerAccountNumberAmount((String) val, fDate,
 										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
@@ -174,10 +174,12 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayeeAccountNumber(pgR,
-								(String) val,DateFormatFac.toDate(inTxn.getfDate()),
+								(String) val, fDate,
 								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+						
+						if( !inTxn.isExportOp() )
 						tAmount = repo
-								.findPageByPayeeAccountNumberAmount((String) val,DateFormatFac.toDate(inTxn.getfDate()),
+								.findPageByPayeeAccountNumberAmount((String) val, fDate,
 										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
@@ -190,10 +192,12 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
 					pages = repo.findPageByDateRange(pgR,
-							DateFormatFac.toDate(inTxn.getfDate()),
+							fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+					
+					if( !inTxn.isExportOp() )
 					tAmount = repo.findPageByDateRangeAmount(
-							DateFormatFac.toDate(inTxn.getfDate()),
+							fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 				}
 			}
@@ -344,7 +348,11 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 					ExportMerchant.class);
 			while (itrRaw.hasNext()) {
 				OutMerchant tRaw = itrRaw.next();
+				// Swap payer for description
+				String payee = tRaw.getColumn10();
 				ExportMerchant t = packer.map(tRaw, ExportMerchant.class);
+				t.setColumn8( payee );
+				
 				c.addBean(t);
 			}
 
@@ -529,6 +537,33 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 		out.setMsg("Data fetch successful.");
 
 		return out;
+	}
+	
+	
+	@Override
+	public Date getExportFDate( InTxn inTxn, Entry001Repo repo ){
+		
+		int fromPgNo = inTxn.getExportFPgNo();
+		log.info( "In export F-PgNo "+fromPgNo );
+		int excludePgNo = fromPgNo - 1;
+		if( fromPgNo <= 1 ) {
+			excludePgNo = 1;
+			fromPgNo = 1;
+		}
+		
+		Page< Entry001 > expoExcludePage = repo.findPageByDateRange(
+				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
+						));
+		Date expoFDate  = null;
+		int tElements = expoExcludePage.getNumberOfElements();
+		
+		if( fromPgNo == 1 )
+			expoFDate = expoExcludePage.getContent().get( 1 ).getLastUpdate();
+		else
+			expoFDate = expoExcludePage.getContent().get( tElements - 1 ).getLastUpdate();
+		log.info( "Export F-Date?: "+expoFDate.toString() );
+		
+		return expoFDate;
 	}
 
 }

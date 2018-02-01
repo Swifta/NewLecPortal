@@ -28,11 +28,13 @@ public interface Entry001Repo extends JpaRepository< Entry001, Long >{
 	String joinStr = "  JOIN e.transaction001 t JOIN e.userAccount001 uAcc JOIN uAcc.corporateAccountHolder001 corp ";
 	String conditionStrDateRange = " ( e.entryDate BETWEEN :fDate AND :tDate ) ";
 	String conditionStrNotNull = " e.userAccount001 IS NOT NULL  AND uAcc.corporateAccountHolder001 IS NOT NULL ";
-	String conditionStr = conditionStrDateRange+" AND "+conditionStrNotNull;
+	String conditionStr = conditionStrNotNull+" AND "+  conditionStrDateRange;
+	String conditionOrderBy = " ORDER BY e.entryDate ";
+	
 			
 	
 	public List< Entry001 > findByOid( long oid );
-    @Query( "SELECT e FROM Entry001 e "+joinStr+" WHERE "+conditionStr )
+    @Query( "SELECT e FROM Entry001 e "+joinStr+" WHERE "+conditionStr + conditionOrderBy)
 	public Page< Entry001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
     
     @Query( "SELECT COALESCE( SUM( e.amount ), 0 ) FROM Entry001 e "+joinStr+" WHERE "+conditionStr )
@@ -51,10 +53,10 @@ public interface Entry001Repo extends JpaRepository< Entry001, Long >{
 	@Query( "SELECT MIN( e.entryDate ) FROM Entry001 e" )
 	public Date findEarliestDate();
     
-    @Query( "SELECT e FROM Entry001 e "+joinStr+" WHERE e.entryDate = :date AND "+conditionStrNotNull )
+    @Query( "SELECT e FROM Entry001 e "+joinStr+" WHERE e.entryDate = :date AND "+conditionStrNotNull+conditionOrderBy )
 	public Page< Entry001 > findPageByDate( Pageable pageable, @Param( "date" ) Date date );
     
-    @Query( "SELECT e FROM Entry001 e  "+joinStr+"  WHERE e.entryDate > :date AND "+conditionStrNotNull+" ORDER BY e.entryDate" )
+    @Query( "SELECT e FROM Entry001 e  "+joinStr+"  WHERE e.entryDate > :date AND "+conditionStrNotNull+conditionOrderBy )
 	public Page< Entry001 > findFirstPageByDate( Pageable pageable, @Param( "date" ) Date date );
     
     
@@ -64,12 +66,12 @@ public interface Entry001Repo extends JpaRepository< Entry001, Long >{
     
 	// Search by something
 	
-	@Query("SELECT e FROM Entry001 e  "+joinStr+"  WHERE t.payerAccountNumber LIKE %:payerAccNo% AND "+conditionStr)
+	@Query("SELECT e FROM Entry001 e  "+joinStr+"  WHERE t.payerAccountNumber LIKE %:payerAccNo% AND "+conditionStr +conditionOrderBy)
 	public Page<Entry001> findPageByPayerAccountNumber(Pageable pageable, @Param("payerAccNo") String payerAccNo, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate);
 	@Query("SELECT COALESCE( SUM( e.amount ), 0 ) FROM Entry001 e  "+joinStr+"  WHERE t.payerAccountNumber LIKE %:payerAccNo% AND "+conditionStr)
 	public double findPageByPayerAccountNumberAmount( @Param("payerAccNo") String payerAccNo, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 
-	@Query("SELECT e FROM Entry001 e  "+joinStr+" WHERE t.payeeAccountNumber LIKE %:payeeAccNo% AND "+conditionStr)
+	@Query("SELECT e FROM Entry001 e  "+joinStr+" WHERE t.payeeAccountNumber LIKE %:payeeAccNo% AND "+conditionStr+conditionOrderBy)
 	public Page<Entry001> findPageByPayeeAccountNumber(Pageable pageable, @Param("payeeAccNo") String payeeAccNo, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate);
 	@Query("SELECT COALESCE( SUM( e.amount ), 0 ) FROM Entry001 e  "+joinStr+" WHERE t.payeeAccountNumber LIKE %:payeeAccNo% AND "+conditionStr)
 	public double findPageByPayeeAccountNumberAmount( @Param("payeeAccNo") String payeeAccNo, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
@@ -79,7 +81,7 @@ public interface Entry001Repo extends JpaRepository< Entry001, Long >{
 	@Query("SELECT COALESCE( SUM( e.amount ), 0 ) FROM Entry001 e  "+joinStr+"  WHERE t.transactionNumber = :tNo AND "+conditionStrNotNull)
 	public double findPageByTransactionNumberAmount( @Param("tNo") BigDecimal tNo );
 	
-	@Query("SELECT e FROM Entry001 e "+joinStr+" WHERE corp.name LIKE %:name% AND "+conditionStr)
+	@Query("SELECT e FROM Entry001 e "+joinStr+" WHERE corp.name LIKE %:name% AND "+conditionStr+conditionOrderBy)
 	public Page<Entry001> findPageByCorpName( Pageable pageable, @Param("name") String name, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
 	
 	

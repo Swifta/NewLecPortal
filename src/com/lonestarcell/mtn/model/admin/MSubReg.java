@@ -2,6 +2,7 @@ package com.lonestarcell.mtn.model.admin;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import com.lonestarcell.mtn.bean.OutSubReg;
 import com.lonestarcell.mtn.bean.OutSubscriber;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.fundamo.entity.Person001;
@@ -39,7 +41,7 @@ import com.lonestarcell.mtn.spring.fundamo.repo.UserAccount001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MSubReg extends MDAO implements IModel, Serializable {
+public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -128,10 +130,12 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 				inTxn.settDate("2010-02-03");
 			}
 
+			Date fDate = DateFormatFacRuntime.toDate( inTxn.getfDate() );
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
+				fDate = this.getExportFDate(inTxn, repo );
 				exportRawData = new BeanItemContainer<>(OutSubReg.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
@@ -146,7 +150,7 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 					Object val = searchMap.get("column1");
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
-						pages = repo.findPageByName(pgR, ( String ) val,DateFormatFac.toDate(inTxn.getfDate()),
+						pages = repo.findPageByName(pgR, ( String ) val,fDate,
 								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
@@ -158,7 +162,7 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
 					pages = repo.findPageByDateRange(pgR,
-							DateFormatFac.toDate(inTxn.getfDate()),
+							fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 				}
 			}
@@ -419,6 +423,34 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 		out.setMsg("Data fetch successful.");
 
 		return out;
+	}
+	
+	
+	
+	@Override
+	public Date getExportFDate( InTxn inTxn, Subscriber001Repo repo ){
+		
+		int fromPgNo = inTxn.getExportFPgNo();
+		log.info( "In export F-PgNo "+fromPgNo );
+		int excludePgNo = fromPgNo - 1;
+		if( fromPgNo <= 1 ) {
+			excludePgNo = 1;
+			fromPgNo = 1;
+		}
+		
+		//  - find max date in excludePgNo page of that.
+		Page< Subscriber001 > expoExcludePage = repo.findPageByDateRange(
+				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
+						));
+		Date expoFDate  = null;
+		int tElements = expoExcludePage.getNumberOfElements();
+		
+		if( fromPgNo == 1 )
+			expoFDate = expoExcludePage.getContent().get( 1 ).getLastUpdate();
+		else
+			expoFDate = expoExcludePage.getContent().get( tElements - 1 ).getLastUpdate();
+		log.info( "Export F-Date?: "+expoFDate.toString() );
+		return expoFDate;
 	}
 
 }

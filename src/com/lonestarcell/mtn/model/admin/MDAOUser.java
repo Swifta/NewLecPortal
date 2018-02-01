@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,12 +24,13 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.bean.OutUserExport;
 import com.lonestarcell.mtn.model.util.Pager;
+import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MDAOUser extends Model implements IModel {
+public class MDAOUser extends Model implements IModel< UserRepo > {
 
 	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(MDAOUser.class.getName());
@@ -1064,6 +1066,12 @@ public class MDAOUser extends Model implements IModel {
 	public Out setExportDataMulti(In in,
 			BeanItemContainer<AbstractDataBean> container,
 			Collection<Item> records) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Date getExportFDate(InTxn inTxn, UserRepo repo) {
 		// TODO Auto-generated method stub
 		return null;
 	}

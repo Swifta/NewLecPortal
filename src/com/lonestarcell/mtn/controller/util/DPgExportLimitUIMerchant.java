@@ -170,8 +170,8 @@ public class DPgExportLimitUIMerchant extends
 		exporter.setColumnHeader( "column5", "Amount" );
 		exporter.setColumnHeader( "column6", "Status" );
 		exporter.setColumnHeader( "column7", "Channel" );
-		exporter.setColumnHeader( "column8", "Payer" );
-		exporter.setColumnHeader( "column9", "Payeee" );
+		exporter.setColumnHeader( "column8", "Payee" );
+		exporter.setColumnHeader( "column9", "Payer" );
 		exporter.setColumnHeader( "desc", "Description" );
 		exporter.setColumnHeader( "entryDate", "Timestamp" );
 		

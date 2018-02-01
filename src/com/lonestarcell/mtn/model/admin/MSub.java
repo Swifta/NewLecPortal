@@ -35,7 +35,7 @@ import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MSub extends MDAO implements IModel, Serializable {
+public class MSub extends MDAO implements IModel< Transaction001Repo >, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -272,18 +272,32 @@ public class MSub extends MDAO implements IModel, Serializable {
 		return out;
 	}
 	
-	private Date getExportFDate( InTxn inTxn, Transaction001Repo repo ){
+	@Override
+	public Date getExportFDate( InTxn inTxn, Transaction001Repo repo ){
 		
 		int fromPgNo = inTxn.getExportFPgNo();
 		log.info( "In export F-PgNo "+fromPgNo );
+		
+		
 		int excludePgNo = fromPgNo - 1;
+		if( fromPgNo <= 1 ) {
+			excludePgNo = 1;
+			fromPgNo = 1;
+		}
 		
 		//  - find max date in excludePgNo page of that.
 		Page< Transaction001 > expoExcludePage = repo.findPageByDateRange(
 				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
 						));
-		Date expoFDate = expoExcludePage.getContent().get( expoExcludePage.getNumberOfElements() - 1 ).getLastUpdate();
-		// probable latest date in exclude page [ still under testing ]
+		Date expoFDate  = null;
+		int tElements = expoExcludePage.getNumberOfElements();
+		
+		//  - Get fast date of 1st date if fromPgNo == 1, else, get last date of current page
+		if( fromPgNo == 1 )
+			expoFDate = expoExcludePage.getContent().get( 1 ).getLastUpdate();
+		else
+			expoFDate = expoExcludePage.getContent().get( tElements - 1 ).getLastUpdate();
+		// - Probable latest date in exclude page [ still under testing ]
 		log.info( "Export F-Date?: "+expoFDate.toString() );
 		return expoFDate;
 	}

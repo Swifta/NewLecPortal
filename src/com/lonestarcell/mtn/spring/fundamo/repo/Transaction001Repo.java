@@ -17,10 +17,10 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 @Repository
 // @Transactional( propagation = Propagation.MANDATORY )
 public interface Transaction001Repo extends JpaRepository<Transaction001, Long> {
+	
+	String conDateRangeStr = " t.lastUpdate BETWEEN :fDate AND :tDate ORDER BY  t.lastUpdate ";
 	public Page<Transaction001> findByPayerAccountNumber(
 			@Param("payerAccountNumber") String payer, Pageable pageable);
-
-	String conDateRangeStr = " t.lastUpdate BETWEEN :fDate AND :tDate ";
 	
 	@Query("SELECT SUM( t.payeeAmount ) FROM Transaction001 t")
 	public double getTotalPayeeAmount();
@@ -54,7 +54,7 @@ public interface Transaction001Repo extends JpaRepository<Transaction001, Long> 
 	public long findByDateRangeCount(@Param("fDate") Date fDate,
 			@Param("tDate") Date tDate);
 
-	@Query("SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate ORDER BY t.lastUpdate")
+	@Query("SELECT t FROM Transaction001 t WHERE "+conDateRangeStr )
 	public Page<Transaction001> findPageByDateRange(Pageable pageable, @Param("fDate") Date fDate, @Param("tDate") Date tDate);
 	
 	@Query("SELECT t FROM Transaction001 t WHERE t.lastUpdate >= :fDate ORDER BY t.lastUpdate")
