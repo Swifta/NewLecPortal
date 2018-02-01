@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.model.admin;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
@@ -25,6 +27,7 @@ import com.lonestarcell.mtn.bean.OutSubscriber;
 import com.lonestarcell.mtn.bean.OutSubscriberTest;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
@@ -120,9 +123,11 @@ public class MSub extends MDAO implements IModel, Serializable {
 				inTxn.settDate("2010-02-03");
 			}
 			
+			Date fDate = DateFormatFacRuntime.toDate( inTxn.getfDate() );
 
 			if (inTxn.isExportOp()) {
-				pgR = pager.getPageRequest(inTxn.getPage(),
+				fDate = this.getExportFDate(inTxn, repo );
+				pgR = pager.getPageRequest(0,
 						inTxn.getExportPgLen());
 				exportRawData = new BeanItemContainer<>(OutSubscriber.class);
 			} else {
@@ -141,6 +146,7 @@ public class MSub extends MDAO implements IModel, Serializable {
 								.valueOf((String) val));
 						pages = repo.findPageByTransactionNumber(pgR,
 								tNo);
+						if( !inTxn.isExportOp() )
 						tAmount = repo.findPageByTransactionNumberAmount(tNo);
 
 					}
@@ -152,10 +158,11 @@ public class MSub extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayerAccountNumber(pgR,
-								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								(String) val, fDate,
 								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+						if( !inTxn.isExportOp() )
 						tAmount = repo
-								.findPageByPayerAccountNumberAmount((String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								.findPageByPayerAccountNumberAmount((String) val, fDate,
 										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
@@ -165,10 +172,11 @@ public class MSub extends MDAO implements IModel, Serializable {
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayeeAccountNumber(pgR,
-								(String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								(String) val, fDate,
 								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+						if( !inTxn.isExportOp() )
 						tAmount = repo
-								.findPageByPayeeAccountNumberAmount((String) val, DateFormatFac.toDate(inTxn.getfDate()),
+								.findPageByPayeeAccountNumberAmount((String) val, fDate,
 										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 					}
 
@@ -178,24 +186,28 @@ public class MSub extends MDAO implements IModel, Serializable {
 
 			if (!isSearch) {
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-					log.debug("In date filter: ", this);
-					pages = repo.findPageByDateRange(pgR,
-							DateFormatFac.toDate(inTxn.getfDate()),
+					
+					 pages = repo.findPageByDateRange(pgR,
+							fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+					 
+					 // Amount should not be called in data export
+					if( !inTxn.isExportOp() )
 					tAmount = repo.findPageByDateRangeAmount(
-							DateFormatFac.toDate(inTxn.getfDate()),
+							fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 				}
 			}
 
 			if (pages == null) {
-				log.debug("Page object is null.");
+				log.info("Page object is null.");
 				out.setMsg("DAO error occured.");
 				return out;
 			}
 
 			if (pages.getNumberOfElements() == 0) {
-
+				
+				log.info("Record count is 0.");
 				container.addBean(new OutSubscriberTest());
 				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 				bOutData.setData(container);
@@ -205,7 +217,9 @@ public class MSub extends MDAO implements IModel, Serializable {
 				return out;
 			}
 
+			
 			rowCount = pages.getTotalElements();
+			log.info( "Fetched record count: "+rowCount );
 			Iterator<Transaction001> itr = pages.getContent().iterator();
 			do {
 				Transaction001 transaction = itr.next();
@@ -257,6 +271,22 @@ public class MSub extends MDAO implements IModel, Serializable {
 
 		return out;
 	}
+	
+	private Date getExportFDate( InTxn inTxn, Transaction001Repo repo ){
+		
+		int fromPgNo = inTxn.getExportFPgNo();
+		log.info( "In export F-PgNo "+fromPgNo );
+		int excludePgNo = fromPgNo - 1;
+		
+		//  - find max date in excludePgNo page of that.
+		Page< Transaction001 > expoExcludePage = repo.findPageByDateRange(
+				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
+						));
+		Date expoFDate = expoExcludePage.getContent().get( expoExcludePage.getNumberOfElements() - 1 ).getLastUpdate();
+		// probable latest date in exclude page [ still under testing ]
+		log.info( "Export F-Date?: "+expoFDate.toString() );
+		return expoFDate;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -279,6 +309,9 @@ public class MSub extends MDAO implements IModel, Serializable {
 			log.debug("Page export limit: " + inTxn.getPageExportLimit());
 			int exportPgLen = (int) Math.ceil(inTxn.getPageSize()
 					* inTxn.getPageExportLimit());
+			
+			log.info( "Export pg len: "+exportPgLen );
+			log.info( "Export start page: "+inTxn.getPage() );
 
 			inTxn.setExportPgLen(exportPgLen);
 			inTxn.setExportOp(true);

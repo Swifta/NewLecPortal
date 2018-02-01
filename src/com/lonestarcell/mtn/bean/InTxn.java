@@ -7,7 +7,7 @@ public class InTxn {
 	
 	private String fDefaultDate, tDefaultDate, searchReqCur, searchToken, searchItronId, searchTokenStatus, searchTxnType, searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
 	private int page;
-	private int pageExportLimit, exportPgLen;
+	private int pageExportLimit, exportPgLen, exportFPgNo;
 	private float pageSize;
 	private boolean isExportOp = false;
 	private Map< String, Object > searchMap = new HashMap< >();
@@ -15,6 +15,12 @@ public class InTxn {
 	private OutTxnMeta meta;
 
 	
+	public int getExportFPgNo() {
+		return exportFPgNo;
+	}
+	public void setExportFPgNo(int exportFPgNo) {
+		this.exportFPgNo = exportFPgNo;
+	}
 	public String getfDefaultDate() {
 		return fDefaultDate;
 	}

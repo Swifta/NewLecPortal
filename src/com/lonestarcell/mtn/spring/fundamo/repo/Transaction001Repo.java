@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -53,8 +54,16 @@ public interface Transaction001Repo extends JpaRepository<Transaction001, Long> 
 	public long findByDateRangeCount(@Param("fDate") Date fDate,
 			@Param("tDate") Date tDate);
 
-	@Query("SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate")
+	@Query("SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate ORDER BY t.lastUpdate")
 	public Page<Transaction001> findPageByDateRange(Pageable pageable, @Param("fDate") Date fDate, @Param("tDate") Date tDate);
+	
+	@Query("SELECT t FROM Transaction001 t WHERE t.lastUpdate >= :fDate ORDER BY t.lastUpdate")
+	public Page<Transaction001> findPageByDate(Pageable pageable, @Param("fDate") Date fDate );
+	
+	
+	@Query("SELECT t FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate")
+	public Slice<Transaction001> findSliceByDateRange(Pageable pageable, @Param("fDate") Date fDate, @Param("tDate") Date tDate);
+	
 
 	@Query("SELECT COALESCE(  SUM( t.payeeAmount ), 0 ) FROM Transaction001 t WHERE t.lastUpdate BETWEEN :fDate AND :tDate")
 	public double findPageByDateRangeAmount(@Param("fDate") Date fDate, @Param("tDate") Date tDate);

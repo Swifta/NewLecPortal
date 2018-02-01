@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +75,71 @@ public class SpringFundamoTest {
 		Assert.assertNotNull("Fundamo entry repo is null.", entryRepo);
 	}
 
+	@Test
+	@Ignore
+	public void testSetExportDataLimitTxn() throws ParseException {
+
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Page<Transaction001> pg = repo.findPageByDateRange(
+				new Pager().getPageRequest(11, 105), DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDateUpperBound("2010-04-30"));
+		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
+
+		log.info("Results count: " + pg.getTotalElements());
+	}
+	
+	
+	@Test
+	@Ignore
+	public void testSetExportDataSliceLimitTxn() throws ParseException {
+
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Slice<Transaction001> pg = repo.findSliceByDateRange(
+				new Pager().getPageRequest(13, 105), DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDateUpperBound("2010-04-30"));
+		Assert.assertNotEquals("No transaction record.", pg.getNumberOfElements(), 0);
+
+		log.info("Results count: " + pg.getNumberOfElements());
+	}
+	
+	
+	@Test
+	// @Ignore
+	public void testFindExportDateTxn() throws ParseException {
+
+		int fromPgNo = 13;
+		int appPgLen = 15;
+		int limit = 7;
+		int exportPgLen = limit*appPgLen; // 105;
+		
+		int excludePgNo = fromPgNo - 1;
+		// TODO find max date in excludePgNo page of that.
+		// int dropLen = excludePgNo * appPgLen;
+		// int includePgLen = dropLen + exportPgLen;
+		// TODO find max date in first page of that;
+		
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		Page< Transaction001 > expoExcludePage = repo.findPageByDateRange(
+				new Pager().getPageRequest( excludePgNo ), DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDateUpperBound("2010-04-30"));
+		
+		Assert.assertNotNull( "Export exclude page is null", expoExcludePage );
+		
+		// TODO Get latest date
+		Iterator< Transaction001 > itr = expoExcludePage.iterator();
+		while( itr.hasNext() ){
+			Transaction001 t = itr.next();
+			log.info( "Exclude page dates:"+t.getLastUpdate().toString() );
+		}
+		
+		Date expoFDate = expoExcludePage.getContent().get( expoExcludePage.getNumberOfElements() - 1 ).getLastUpdate();
+		// TODO probable latest date in exclude page
+		log.info( "Export F-Date?: "+expoFDate.toString() );
+		
+		Page< Transaction001 > expoPage = repo.findPageByDateRange(
+				new Pager().getPageRequest( 0, exportPgLen ), expoFDate, DateFormatFac.toDateUpperBound("2010-04-30") );
+
+		Assert.assertNotNull( "Export page is null", expoPage );
+		log.info( "Start date: "+expoPage.getNumberOfElements(), this );
+	}
+	
 	@Test
 	@Ignore
 	public void testSearchByPayerAccountNumber() throws ParseException {
@@ -147,7 +213,7 @@ public class SpringFundamoTest {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testFindPageByPayerAccountNumberAmount() throws ParseException {
 
 		Assert.assertNotNull("Fundamo repo is null.", entryRepo);

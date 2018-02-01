@@ -17,17 +17,25 @@ public class DateFormatFacRuntime {
 		}
 	}
 
-	public static Date toDateUpperBound(String sDate) throws ParseException {
+	public static Date toDateUpperBound(String sDate)
+			throws ParseRuntimeException {
 
-		// TODO Do I need to care about timezone/locale?
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = df.parse(sDate);
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR, 23);
-		cal.set(Calendar.MINUTE, 59);
-		cal.set(Calendar.SECOND, 59);
-		return cal.getTime();
+		try {
+			// TODO Do I need to care about timezone/locale?
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = df.parse(sDate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.set(Calendar.HOUR, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			return cal.getTime();
+
+		} catch (Exception ex) {
+
+			ex.printStackTrace();
+			throw new ParseRuntimeException(ex.getMessage());
+		}
 	}
 
 	public static String toString(Date date) throws ParseRuntimeException {
@@ -40,7 +48,8 @@ public class DateFormatFacRuntime {
 		}
 	}
 
-	public static String toStringDateOnly(Date date) throws ParseException {
+	public static String toStringDateOnly(Date date)
+			throws ParseRuntimeException {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			return df.format(date);

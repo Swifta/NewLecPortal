@@ -198,10 +198,12 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		// Conditioning to fix this state affair.
 		if( pageC.getNewPage() == 1 ){
 			comboPgExportLimitFrom.setValue( 1);
-			inTxn.setPage( 1 );
+			// inTxn.setPage( 1 );
+			inTxn.setExportFPgNo( 1 );
 		} else {
 			comboPgExportLimitFrom.setValue(curPage);
-			inTxn.setPage(curPage);
+			// inTxn.setPage(curPage);
+			inTxn.setExportFPgNo( curPage );
 		}
 
 		setComboItems(comboPgExportLimitFrom.getValue());
@@ -210,7 +212,8 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 
 			Object obj = e.getProperty().getValue();
 			if (obj != null)
-				inTxn.setPage(Integer.valueOf(obj.toString()));
+				//inTxn.setPage(Integer.valueOf(obj.toString()));
+				inTxn.setExportFPgNo( Integer.valueOf(obj.toString()));
 			setComboItems(obj);
 		});
 
