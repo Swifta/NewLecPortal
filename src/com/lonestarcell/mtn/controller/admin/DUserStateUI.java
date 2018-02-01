@@ -17,6 +17,7 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
@@ -30,6 +31,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -163,6 +165,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		mTxn = new MUser(getCurrentUserId(), getCurrentUserSession(),
 				getSpringAppContext());
 		inTxn = new InTxn();
+		setInDate(inTxn, 1);
 
 		// Scale left footer by user grid container height.
 		a.getRightContent().setHeight("100%");
@@ -213,6 +216,16 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 			BData<InTxn> inBData = new BData<>();
 
+			
+			// Set OutTxnMeta
+			OutTxnMeta outTxnMeta = new OutTxnMeta();
+			outTxnMeta
+					.setTotalRevenue(new ObjectProperty<String>("0", String.class));
+			outTxnMeta
+					.setTotalRecord(new ObjectProperty<String>("0", String.class));
+			inTxn.setMeta( outTxnMeta );
+			
+			
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();
 
@@ -1107,6 +1120,17 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		protected Out refreshMultiUserRecord() {
 			return mTxn.refreshMultiUserRecord(records);
 		}
+
+	}
+	
+	
+	protected void setInDate(InTxn inTxn, int dayOffSet) {
+
+		inTxn.setfDate( "2016-01-01" );
+		inTxn.settDate( "2017-12-31" );
+		
+		inTxn.setfDefaultDate( inTxn.getfDate() );
+		inTxn.settDefaultDate( inTxn.gettDate() );
 
 	}
 

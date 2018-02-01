@@ -64,6 +64,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	@Override
 	protected void setOutTxnMeta() {
 		
+		/*
 		outTxnMeta = new OutTxnMeta();
 		outTxnMeta.setTotalRevenue( new ObjectProperty<String>( "0", String.class ) );
 		outTxnMeta.setTotalRecord( new ObjectProperty<String>( "0", String.class ) );
@@ -71,6 +72,8 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 		Out out = model.searchUserMeta( in, outTxnMeta );
 		if( out.getStatusCode() != 1 )
 			Notification.show( out.getMsg(), Notification.Type.ERROR_MESSAGE );
+			*/
+		outTxnMeta = inTxn.getMeta();
 		
 	}
 

@@ -370,20 +370,11 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 
 	protected void setInDate(InTxn inTxn, int dayOffSet) {
 
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar cal = Calendar.getInstance();
-
-		String tDate = sdf.format(cal.getTime());
-		log.debug("To: " + tDate);
-
-		inTxn.settDate(tDate);
-
-		cal.add(Calendar.DAY_OF_MONTH, -1 * (dayOffSet));
-		String fDate = sdf.format(cal.getTime());
-		log.debug("From: " + fDate);
-
 		inTxn.setfDate( "2010-02-01" );
 		inTxn.settDate( "2010-02-03" );
+		
+		inTxn.setfDefaultDate( inTxn.getfDate() );
+		inTxn.settDefaultDate( inTxn.gettDate() );
 
 	}
 

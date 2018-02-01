@@ -19,19 +19,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.lonestarcell.mtn.model.util.Pager;
 import com.lonestarcell.mtn.spring.config.Config;
 import com.lonestarcell.mtn.spring.config.DataAccessConfigFundamo;
-import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
 import com.lonestarcell.mtn.spring.config.JpaConfig;
-import com.lonestarcell.mtn.spring.fundamo.entity.AccountIdentifier001;
 import com.lonestarcell.mtn.spring.fundamo.entity.CorporateAccountHolder001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Entry001;
-import com.lonestarcell.mtn.spring.fundamo.entity.LedgerAccount001;
 import com.lonestarcell.mtn.spring.fundamo.entity.RegistrationRequestData001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Subscriber001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
@@ -84,7 +80,7 @@ public class SpringFundamoTest {
 
 		Assert.assertNotNull("Fundamo repo is null.", repo);
 		Page<Transaction001> pg = repo.findPageByPayerAccountNumber(
-				new PageRequest(0, 10), "413141000000124");
+				new PageRequest(0, 10), "413141000000124", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
 
 		log.info("Results count: " + pg.getTotalElements());
@@ -96,7 +92,7 @@ public class SpringFundamoTest {
 
 		Assert.assertNotNull("Fundamo repo is null.", repo);
 		Page<Transaction001> pg = repo.findPageByPayeeAccountNumber(
-				new PageRequest(0, 10), "413141000000124");
+				new PageRequest(0, 10), "413141000000124", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
 
 		log.info("Results count: " + pg.getTotalElements());
@@ -120,7 +116,7 @@ public class SpringFundamoTest {
 
 		Assert.assertNotNull("Fundamo repo is null.", ledgerRepo);
 		Page<Object[]> pg = ledgerRepo.getAllSumByAccNo(new PageRequest(0, 10),
-				"");
+				"", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
 
 		log.info("Results count: " + pg.getTotalElements());
@@ -132,7 +128,7 @@ public class SpringFundamoTest {
 
 		Assert.assertNotNull("Fundamo repo is null.", ledgerRepo);
 		Page<Object[]> pg = ledgerRepo.getAllSumByName(new PageRequest(0, 10),
-				"");
+				"", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
 
 		log.info("Results count: " + pg.getTotalElements());
@@ -144,22 +140,25 @@ public class SpringFundamoTest {
 
 		Assert.assertNotNull("Fundamo repo is null.", entryRepo);
 		Page<Entry001> pg = entryRepo.findPageByPayerAccountNumber(
-				new PageRequest(0, 10), "96");
+				new PageRequest(0, 10), "96", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
 
 		log.info("Results count: " + pg.getTotalElements());
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testFindPageByPayerAccountNumberAmount() throws ParseException {
 
 		Assert.assertNotNull("Fundamo repo is null.", entryRepo);
-		double amount = entryRepo.findPageByPayerAccountNumberAmount("96");
+		double amount = entryRepo.findPageByPayerAccountNumberAmount("96", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", amount, 0);
 
 		log.info("Results Amount: " + amount);
 	}
+	
+	
+	
 
 	@Test
 	@Ignore
@@ -167,7 +166,7 @@ public class SpringFundamoTest {
 
 		Assert.assertNotNull("Fundamo repo is null.", entryRepo);
 		Page<Entry001> pg = entryRepo.findPageByPayeeAccountNumber(
-				new PageRequest(0, 10), "413141000000124");
+				new PageRequest(0, 10), "413141000000124", DateFormatFac.toDate("2010-02-01"), DateFormatFac.toDate("2010-02-01"));
 		Assert.assertNotEquals("No transaction record.", pg.getTotalPages(), 0);
 
 		log.info("Results count: " + pg.getTotalElements());
@@ -510,7 +509,7 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	@Transactional
 	public void testfindPageByDateRangeReg() throws ParseException {
 

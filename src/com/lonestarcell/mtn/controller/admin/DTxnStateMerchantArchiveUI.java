@@ -249,7 +249,10 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 	@Override
 	protected void setInDate(InTxn inTxn, int dayOffSet) {
 			inTxn.setfDate( "2010-02-01" );
-			inTxn.settDate( "2010-06-30" );
+			inTxn.settDate( "2010-02-03" );
+			
+			inTxn.setfDefaultDate( inTxn.getfDate() );
+			inTxn.settDefaultDate( inTxn.gettDate() );
 	}
 
 

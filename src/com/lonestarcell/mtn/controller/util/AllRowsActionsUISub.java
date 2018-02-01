@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -138,6 +139,19 @@ public class AllRowsActionsUISub
 				container);
 		tF.addFocusListener(getSearchFocusListener(tF, enterListener));
 		tF.addBlurListener(getSearchBlurListener(tF, enterListener));
+		tF.addValueChangeListener( e->{
+			
+			/*
+			Map< String, Object > searchMap = inTxn.getSearchMap();
+			TextField f =  ( TextField )searchMap.get( "prevTF" );
+			
+			if( !tF.equals( f ) )
+				tF.clear();
+			
+			searchMap.put( "prevTF", tF );
+			
+			*/
+		});
 
 		tF.setDescription("Type to filter / Press Enter to search");
 
@@ -153,6 +167,22 @@ public class AllRowsActionsUISub
 			@Override
 			public void handleAction(Object sender, Object target) {
 				log.debug("Enter search shortcut clicked.");
+				
+				UserError uError = new UserError( "Enter at least 4 characters to search." );;
+				Object obj = tF.getValue();
+				String searchStr = ( String ) obj;
+				tF.setComponentError( null );
+				
+				if( searchStr == null  ) {
+					tF.setComponentError( uError );
+					return;
+				}
+				
+				searchStr = searchStr.trim();
+				if( searchStr.isEmpty() || searchStr.length() < 4 ) {
+					tF.setComponentError( uError );
+					return;
+				}
 
 				container.removeAllItems();
 				log.debug("Proceeding with search.");

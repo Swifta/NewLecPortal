@@ -87,6 +87,17 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 		out = new Out();
 
 		try {
+			
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
+			// Initialize page & revenue on any db call.
+			if( !inTxn.isExportOp() ){
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue( "0" );
+				meta.getTotalRevenue().setValue( "0.00" );
+			}
+			
 			Entry001Repo repo = springAppContext.getBean(Entry001Repo.class);
 			if (repo == null) {
 				log.debug("Transaction001 repo is null");
@@ -97,9 +108,6 @@ public class MMerchant extends MDAO implements IModel, Serializable {
 			Page<Entry001> pages = null;
 
 			Pager pager = springAppContext.getBean(Pager.class);
-
-			BData<?> bInData = in.getData();
-			InTxn inTxn = (InTxn) bInData.getData();
 			BeanItemContainer<OutMerchant> exportRawData = null;
 
 			Map<String, Object> searchMap = inTxn.getSearchMap();

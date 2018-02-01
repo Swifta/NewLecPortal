@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class InTxn {
 	
-	private String searchReqCur, searchToken, searchItronId, searchTokenStatus, searchTxnType, searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
+	private String fDefaultDate, tDefaultDate, searchReqCur, searchToken, searchItronId, searchTokenStatus, searchTxnType, searchEmail, searchUserStatus, searchProfile, searchOrg, searchUsername, username, fDate, tDate, searchSID, searchMoID, searchMSISDN, searchMeterNo, searchStatusDesc;
 	private int page;
 	private int pageExportLimit, exportPgLen;
 	private float pageSize;
@@ -15,9 +15,18 @@ public class InTxn {
 	private OutTxnMeta meta;
 
 	
-	
-	
-	
+	public String getfDefaultDate() {
+		return fDefaultDate;
+	}
+	public void setfDefaultDate(String fDefaultDate) {
+		this.fDefaultDate = fDefaultDate;
+	}
+	public String gettDefaultDate() {
+		return tDefaultDate;
+	}
+	public void settDefaultDate(String tDefaultDate) {
+		this.tDefaultDate = tDefaultDate;
+	}
 	public OutTxnMeta getMeta() {
 		return meta;
 	}

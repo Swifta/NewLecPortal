@@ -12,7 +12,7 @@ import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.TextField;
 
-public class TextChangeListenerSub<O> implements TextChangeListener{
+class TextChangeListenerSub<O> implements TextChangeListener{
 
 	private static final long serialVersionUID = 1L;
 	private BeanItemContainer<O> container;
@@ -38,9 +38,14 @@ public class TextChangeListenerSub<O> implements TextChangeListener{
 			val = null;
 		
 		Map< String, Object > searchMap = inTxn.getSearchMap();
-		searchMap.clear();
-		searchMap.put( itemId, val );
 		
+		searchMap.remove( searchMap.get( "prevItemId" ) );
+		searchMap.put( itemId, val );
+		searchMap.put( "prevItemId", itemId );
+
+		
+		
+		/*
 		if( itemId.equals( "swiftaId" ) ){
 			inTxn.setSearchSID( val );
 		} else if( itemId.equals( "mmoId" ) ) {
@@ -51,7 +56,7 @@ public class TextChangeListenerSub<O> implements TextChangeListener{
 			inTxn.setSearchMSISDN( val );
 		}else if( itemId.equals( "statusDesc" ) ) {
 			inTxn.setSearchStatusDesc( val );
-		}
+		} */
 		
 		container.removeContainerFilters( itemId );
 		if (val != null && !val.isEmpty()) {

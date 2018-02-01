@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -70,7 +71,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		this.pageC = pageC;
 
 	}
-	
 
 	protected abstract void setGrid(Grid grid);
 
@@ -131,7 +131,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 		if (outTxnMeta.getTotalRevenue().getValue() == null)
 			outTxnMeta.getTotalRevenue().setValue("0");
-		
+
 		outTxnMeta.getTotalRecord().getValue();
 
 		double revenue = Double.valueOf(outTxnMeta.getTotalRevenue().getValue()
@@ -145,18 +145,16 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		String tRecord = outTxnMeta.getTotalRecord().getValue();
 		if (tRecord == null)
 			tRecord = "0";
-		
-		long records = Long.valueOf(tRecord
-				.toString().replaceAll(",", ""));
+
+		long records = Long.valueOf(tRecord.toString().replaceAll(",", ""));
 		nf = NumberFormat.getNumberInstance(Locale.US);
 		outTxnMeta.getTotalRecord().setValue(nf.format(records));
-		
-		formatPgExportLimit( pageC.getCurrentPage(), Integer.valueOf( tRecord ));
+
+		formatPgExportLimit(pageC.getCurrentPage(), Integer.valueOf(tRecord));
 	}
-	
-	
-	private void formatPgExportLimit( int pg, int pgCount ){
-		
+
+	private void formatPgExportLimit(int pg, int pgCount) {
+
 	}
 
 	private void attachBtnBeforeNext() {
@@ -284,7 +282,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		});
 	}
 
-	
 	protected abstract void attachBtnExportOps();
 
 	protected abstract void initDataExportUI();
@@ -339,7 +336,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 					.getTotalRevenue());
 			this.lbTotalRecords.setPropertyDataSource(outTxnMeta
 					.getTotalRecord());
-			
 
 			// Paginations for header
 
@@ -365,28 +361,44 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 	private void clearAllFilters() {
 		container.removeAllContainerFilters();
-		this.dFStartDate.clear();
-		this.dFLastDate.clear();
+		
+		if( inTxn == null )
+			log.info( "In Txn is null." );
+		if( inTxn.getfDefaultDate() == null )
+			log.info( "f-default date is null." );
+		
+		
+		this.dFStartDate.setValue(DateFormatFacRuntime.toDate(inTxn
+				.getfDefaultDate()));
+		this.dFLastDate.setValue(DateFormatFacRuntime.toDate(inTxn
+				.gettDefaultDate()));
+		// Effect default filters
+		doFilterByDate(container, dFStartDate, dFLastDate);
 
 		this.dFStartDate.setComponentError(null);
 		this.dFLastDate.setComponentError(null);
 		// TODO Vital part when doing search & filter.
-		inTxn.setSearchMeterNo(null);
-		inTxn.setSearchMoID(null);
-		inTxn.setSearchMSISDN(null);
-		inTxn.setSearchSID(null);
-		inTxn.setSearchStatusDesc(null);
 
-		inTxn.setfDate(null);
-		inTxn.settDate(null);
+		/*
+		 * inTxn.setSearchMeterNo(null); inTxn.setSearchMoID(null);
+		 * inTxn.setSearchMSISDN(null); inTxn.setSearchSID(null);
+		 * inTxn.setSearchStatusDesc(null);
+		 */
+
+		inTxn.setfDate(inTxn.getfDefaultDate());
+		inTxn.settDate(inTxn.gettDefaultDate());
 
 		Iterator<TextField> itr = tFSearchFields.iterator();
 		while (itr.hasNext()) {
-			itr.next().clear();
-
+			TextField tF = itr.next();
+			tF.clear();
+			tF.setComponentError( null );
 		}
 
-		refreshGridData();
+		// TODO Disable data reload on clear filters [ Let it be a user
+		// operation request
+		// ... by clicking filter all pages
+		// refreshGridData();
 	}
 
 	private void doFilterByDate(BeanItemContainer<O> container,
@@ -497,10 +509,40 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 			tF.addShortcutListener(enterListener);
 			tF.addBlurListener(getSearchBlurListener(tF, enterListener));
-			log.debug("Enter search shortcut listener attached.");
+			resetTF(tF);
 
 		}
 
+	}
+
+	private void resetTF(TextField tF) {
+		// Clear content of other text fields
+		Iterator<TextField> itr = tFSearchFields.iterator();
+		while (itr.hasNext()) {
+			TextField f = itr.next();
+			tF.setComponentError( null );
+			if (!f.equals(tF)) {
+				f.clear();
+				// Remove all filters except date
+				container.removeAllContainerFilters();
+				
+				if( dFStartDate.getValue() == null )
+					dFStartDate.setValue(DateFormatFacRuntime.toDate(inTxn
+						.getfDefaultDate()));
+				
+				if( dFLastDate.getValue() == null ) {
+					
+					dFStartDate.setValue(DateFormatFacRuntime.toDate(inTxn
+							.getfDefaultDate()));
+					
+					dFLastDate.setValue(DateFormatFacRuntime.toDate(inTxn
+						.gettDefaultDate()));
+				}
+				
+				doFilterByDate(container, dFStartDate, dFLastDate);
+			}
+
+		}
 	}
 
 	class BlurListenerCustom implements BlurListener {

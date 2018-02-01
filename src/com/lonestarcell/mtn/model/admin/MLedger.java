@@ -82,6 +82,17 @@ public class MLedger extends MDAO implements IModel, Serializable {
 		out = new Out();
 
 		try {
+			
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
+			// Initialize page & revenue on any db call.
+			if( !inTxn.isExportOp() ){
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue( "0" );
+				meta.getTotalRevenue().setValue( "0.00" );
+			}
+			
 			LedgerAccount001Repo repo = springAppContext
 					.getBean(LedgerAccount001Repo.class);
 			if (repo == null) {
@@ -94,9 +105,7 @@ public class MLedger extends MDAO implements IModel, Serializable {
 
 			Pager pager = springAppContext.getBean(Pager.class);
 
-			BData<?> bInData = in.getData();
-			InTxn inTxn = (InTxn) bInData.getData();
-
+			
 			Map<String, Object> searchMap = inTxn.getSearchMap();
 			Set<String> searchKeySet = searchMap.keySet();
 			
@@ -107,6 +116,8 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				inTxn.setfDate("2010-02-01");
 				inTxn.settDate("2010-02-03");
 			}
+			
+			
 
 			Pageable pgR = null;
 
@@ -202,11 +213,12 @@ public class MLedger extends MDAO implements IModel, Serializable {
 				BData<BeanItemContainer<OutLedger>> bData = new BData<>();
 				bData.setData(exportRawData);
 				out.setData(bData);
-			}else {
+			} else {
 				OutTxnMeta meta = inTxn.getMeta();
 				meta.getTotalRecord().setValue(rowCount + "");
 				meta.getTotalRevenue().setValue((tAmount / 100) + "");
 			}
+
 
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");

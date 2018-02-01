@@ -228,6 +228,9 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 	protected void setInDate( InTxn inTxn, int offSet ){
 		inTxn.setfDate( "2010-02-01" );
 		inTxn.settDate( "2014-10-27" );
+		
+		inTxn.setfDefaultDate( inTxn.getfDate() );
+		inTxn.settDefaultDate( inTxn.gettDate() );
 	}
 
 

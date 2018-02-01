@@ -92,6 +92,17 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 		out = new Out();
 
 		try {
+			
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
+			// Initialize page & revenue on any db call.
+			if( !inTxn.isExportOp() ){
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue( "0" );
+				meta.getTotalRevenue().setValue( "0,00" );
+			}
+			
 			Subscriber001Repo repo = springAppContext
 					.getBean(Subscriber001Repo.class);
 			if (repo == null) {
@@ -101,11 +112,7 @@ public class MSubReg extends MDAO implements IModel, Serializable {
 			}
 
 			Page<Subscriber001> pages = null;
-
 			Pager pager = springAppContext.getBean(Pager.class);
-			
-			BData< ? > bInData = in.getData();
-			InTxn inTxn = ( InTxn ) bInData.getData();
 			
 			BeanItemContainer<OutSubReg> exportRawData = null;
 

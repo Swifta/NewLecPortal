@@ -80,6 +80,17 @@ public class MSub extends MDAO implements IModel, Serializable {
 		out = new Out();
 
 		try {
+			
+			BData<?> bInData = in.getData();
+			InTxn inTxn = (InTxn) bInData.getData();
+
+			// Initialize page & revenue on any db call.
+			if( !inTxn.isExportOp() ){
+				OutTxnMeta meta = inTxn.getMeta();
+				meta.getTotalRecord().setValue( "0" );
+				meta.getTotalRevenue().setValue( "0.00" );
+			}
+			
 			Transaction001Repo repo = springAppContext
 					.getBean(Transaction001Repo.class);
 			if (repo == null) {
@@ -91,10 +102,6 @@ public class MSub extends MDAO implements IModel, Serializable {
 			Page<Transaction001> pages = null;
 
 			Pager pager = springAppContext.getBean(Pager.class);
-
-			BData<?> bInData = in.getData();
-			InTxn inTxn = (InTxn) bInData.getData();
-
 			Map<String, Object> searchMap = inTxn.getSearchMap();
 			Set<String> searchKeySet = searchMap.keySet();
 

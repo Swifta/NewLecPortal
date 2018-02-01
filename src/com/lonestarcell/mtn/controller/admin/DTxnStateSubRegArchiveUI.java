@@ -247,7 +247,14 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 	}
 
 
-	
+	@Override
+	protected void setInDate( InTxn inTxn, int offSet ){
+		inTxn.setfDate( "2010-02-01" );
+		inTxn.settDate( "2010-02-06" );
+		
+		inTxn.setfDefaultDate( inTxn.getfDate() );
+		inTxn.settDefaultDate( inTxn.gettDate() );
+	}
 	
 
 
