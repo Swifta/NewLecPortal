@@ -39,15 +39,17 @@
      </vaadin-label> 
     </vaadin-form-layout> 
    </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout style-name="sn-pagination" spacing _id="cPagination" :right> 
-    <vaadin-button icon="fonticon://FontAwesome/f0d9" description="Previous" style-name="link small" plain-text _id="btnPagePrev"></vaadin-button> 
-    <vaadin-button style-name="link small sn-cur-page" plain-text _id="btnPageAfterPrev">
-      2 
-    </vaadin-button> 
-    <vaadin-button style-name="link small" plain-text _id="btnPageBeforeNext">
-      3 
-    </vaadin-button> 
-    <vaadin-button icon="fonticon://FontAwesome/f0da" description="Next" style-name="link small" plain-text _id="btnPageNext"></vaadin-button> 
+   <vaadin-horizontal-layout style-name="sn-c-pg-absolute" size-full :expand> 
+    <vaadin-horizontal-layout style-name="sn-pagination" spacing _id="cPagination"> 
+     <vaadin-button icon="fonticon://FontAwesome/f0d9" description="Previous" style-name="link small" plain-text _id="btnPagePrev"></vaadin-button> 
+     <vaadin-button style-name="link small sn-cur-page" plain-text _id="btnPageAfterPrev">
+       2 
+     </vaadin-button> 
+     <vaadin-button style-name="link small" plain-text _id="btnPageBeforeNext">
+       3 
+     </vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f0da" description="Next" style-name="link small" plain-text _id="btnPageNext"></vaadin-button> 
+    </vaadin-horizontal-layout> 
    </vaadin-horizontal-layout> 
   </vaadin-horizontal-layout>  
  </body>

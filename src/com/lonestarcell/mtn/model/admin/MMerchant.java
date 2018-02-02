@@ -41,7 +41,8 @@ import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializable {
+public class MMerchant extends MDAO implements IModel<Entry001Repo>,
+		Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -89,17 +90,22 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 		out = new Out();
 
 		try {
-			
+
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
 
+			boolean isPgNav = inTxn.isPgNav();
+			inTxn.setPgNav(false);
+
 			// Initialize page & revenue on any db call.
-			if( !inTxn.isExportOp() ){
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue( "0" );
-				meta.getTotalRevenue().setValue( "0.00" );
+			if (!inTxn.isExportOp()) {
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue("0");
+					meta.getTotalRevenue().setValue("0.00");
+				}
 			}
-			
+
 			Entry001Repo repo = springAppContext.getBean(Entry001Repo.class);
 			if (repo == null) {
 				log.debug("Transaction001 repo is null");
@@ -118,18 +124,18 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 			Pageable pgR = null;
 			double tAmount = 0D;
 			long rowCount = 0L;
-			
+
 			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
 				inTxn.setfDate("2010-02-01");
 				inTxn.settDate("2010-02-03");
 			}
-			
-			Date fDate = DateFormatFacRuntime.toDate( inTxn.getfDate() );
+
+			Date fDate = DateFormatFacRuntime.toDate(inTxn.getfDate());
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
-				fDate = this.getExportFDate(inTxn, repo );
+				fDate = this.getExportFDate(inTxn, repo);
 				exportRawData = new BeanItemContainer<>(OutMerchant.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
@@ -146,9 +152,12 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 						BigDecimal tNo = BigDecimal.valueOf(Long
 								.valueOf((String) val));
 						pages = repo.findPageByTransactionNumber(pgR, tNo);
-						
-						if( !inTxn.isExportOp() )
-						tAmount = repo.findPageByTransactionNumberAmount(tNo);
+
+						if (!inTxn.isExportOp()) {
+							if (!isPgNav)
+								tAmount = repo
+										.findPageByTransactionNumberAmount(tNo);
+						}
 
 					}
 
@@ -159,13 +168,18 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayerAccountNumber(pgR,
-								(String) val, fDate,
-								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
-						
-						if( !inTxn.isExportOp() )
-						tAmount = repo
-								.findPageByPayerAccountNumberAmount((String) val, fDate,
-										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+								(String) val, fDate, DateFormatFac
+										.toDateUpperBound(inTxn.gettDate()));
+
+						if (!inTxn.isExportOp()) {
+							if (!isPgNav)
+								tAmount = repo
+										.findPageByPayerAccountNumberAmount(
+												(String) val, fDate,
+												DateFormatFac
+														.toDateUpperBound(inTxn
+																.gettDate()));
+						}
 					}
 
 				} else if (searchKeySet.contains("column10")) {
@@ -174,13 +188,18 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
 						pages = repo.findPageByPayeeAccountNumber(pgR,
-								(String) val, fDate,
-								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
-						
-						if( !inTxn.isExportOp() )
-						tAmount = repo
-								.findPageByPayeeAccountNumberAmount((String) val, fDate,
-										DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+								(String) val, fDate, DateFormatFac
+										.toDateUpperBound(inTxn.gettDate()));
+
+						if (!inTxn.isExportOp()) {
+							if (!isPgNav)
+								tAmount = repo
+										.findPageByPayeeAccountNumberAmount(
+												(String) val, fDate,
+												DateFormatFac
+														.toDateUpperBound(inTxn
+																.gettDate()));
+						}
 					}
 
 				}
@@ -191,14 +210,15 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
-					pages = repo.findPageByDateRange(pgR,
-							fDate,
+					pages = repo.findPageByDateRange(pgR, fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
-					
-					if( !inTxn.isExportOp() )
-					tAmount = repo.findPageByDateRangeAmount(
-							fDate,
-							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+
+					if (!inTxn.isExportOp()) {
+						if (!isPgNav)
+							tAmount = repo.findPageByDateRangeAmount(fDate,
+									DateFormatFac.toDateUpperBound(inTxn
+											.gettDate()));
+					}
 				}
 			}
 
@@ -227,7 +247,7 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 			OutMerchant outMerchant = null;
 
 			rowCount = pages.getTotalElements();
-			log.debug( "row count: "+rowCount, this );
+			log.debug("row count: " + rowCount, this);
 
 			do {
 				entry = itr.next();
@@ -266,13 +286,12 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 					}
 				}
 
-				if ( inTxn.isExportOp() )
+				if (inTxn.isExportOp())
 					outMerchant.setAmount(amount + "");
 				else
-					outMerchant.setAmount(NumberFormatFac
-							.toMoney(amount + ""));
-				
-				//outMerchant.setAmount(NumberFormatFac.toMoney(amount + ""));
+					outMerchant.setAmount(NumberFormatFac.toMoney(amount + ""));
+
+				// outMerchant.setAmount(NumberFormatFac.toMoney(amount + ""));
 				outMerchant.setStatus(t.getSystemCode().getValue());
 				outMerchant.setChannel(t.getChannel());
 				outMerchant.setDesc(entry.getDescription());
@@ -292,9 +311,11 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 				bData.setData(exportRawData);
 				out.setData(bData);
 			} else {
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue(rowCount + "");
-				meta.getTotalRevenue().setValue((tAmount / 100) + "");
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue(rowCount + "");
+					meta.getTotalRevenue().setValue((tAmount / 100) + "");
+				}
 			}
 
 			out.setStatusCode(1);
@@ -357,8 +378,8 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 				// Swap payer for description
 				String payee = tRaw.getColumn10();
 				ExportMerchant t = packer.map(tRaw, ExportMerchant.class);
-				t.setColumn8( payee );
-				
+				t.setColumn8(payee);
+
 				c.addBean(t);
 			}
 
@@ -468,27 +489,23 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 			log.debug("MSub to date:" + inTxn.gettDate(), this);
 
 			/*
-			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
-
-				List<Object[]> lsObj = repo.getTotalAmountAndCountAll();
-				if (lsObj != null) {
-					Object[] obj = lsObj.get(0);
-					rowCount = Long.valueOf(obj[1].toString());
-					amount = Double.valueOf(obj[0].toString());
-				}
-
-			} else if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
-				log.debug("In date filter: ", this);
-
-				List<Object[]> lsObj = repo.findByDateRangeAmountAndCount(
-						DateFormatFac.toDate(inTxn.getfDate()),
-						DateFormatFac.toDateUpperBound(inTxn.gettDate()));
-				if (lsObj != null) {
-					Object[] obj = lsObj.get(0);
-					rowCount = Long.valueOf(obj[1].toString());
-					amount = Double.valueOf(obj[0].toString());
-				}
-			} */
+			 * if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
+			 * 
+			 * List<Object[]> lsObj = repo.getTotalAmountAndCountAll(); if
+			 * (lsObj != null) { Object[] obj = lsObj.get(0); rowCount =
+			 * Long.valueOf(obj[1].toString()); amount =
+			 * Double.valueOf(obj[0].toString()); }
+			 * 
+			 * } else if (inTxn.getfDate() != null && inTxn.gettDate() != null)
+			 * { log.debug("In date filter: ", this);
+			 * 
+			 * List<Object[]> lsObj = repo.findByDateRangeAmountAndCount(
+			 * DateFormatFac.toDate(inTxn.getfDate()),
+			 * DateFormatFac.toDateUpperBound(inTxn.gettDate())); if (lsObj !=
+			 * null) { Object[] obj = lsObj.get(0); rowCount =
+			 * Long.valueOf(obj[1].toString()); amount =
+			 * Double.valueOf(obj[0].toString()); } }
+			 */
 
 			log.info("Amount: " + amount);
 			log.info("Total: " + rowCount);
@@ -544,31 +561,32 @@ public class MMerchant extends MDAO implements IModel< Entry001Repo >, Serializa
 
 		return out;
 	}
-	
-	
+
 	@Override
-	public Date getExportFDate( InTxn inTxn, Entry001Repo repo ){
-		
+	public Date getExportFDate(InTxn inTxn, Entry001Repo repo) {
+
 		int fromPgNo = inTxn.getExportFPgNo();
-		log.info( "In export F-PgNo "+fromPgNo );
+		log.info("In export F-PgNo " + fromPgNo);
 		int excludePgNo = fromPgNo - 1;
-		if( fromPgNo <= 1 ) {
+		if (fromPgNo <= 1) {
 			excludePgNo = 1;
 			fromPgNo = 1;
 		}
-		
-		Page< Entry001 > expoExcludePage = repo.findPageByDateRange(
-				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
-						));
-		Date expoFDate  = null;
+
+		Page<Entry001> expoExcludePage = repo.findPageByDateRange(
+				new Pager().getPageRequest(excludePgNo),
+				DateFormatFacRuntime.toDate(inTxn.getfDate()),
+				DateFormatFacRuntime.toDateUpperBound(inTxn.gettDate()));
+		Date expoFDate = null;
 		int tElements = expoExcludePage.getNumberOfElements();
-		
-		if( fromPgNo == 1 )
-			expoFDate = expoExcludePage.getContent().get( 1 ).getLastUpdate();
+
+		if (fromPgNo == 1)
+			expoFDate = expoExcludePage.getContent().get(1).getLastUpdate();
 		else
-			expoFDate = expoExcludePage.getContent().get( tElements - 1 ).getLastUpdate();
-		log.info( "Export F-Date?: "+expoFDate.toString() );
-		
+			expoFDate = expoExcludePage.getContent().get(tElements - 1)
+					.getLastUpdate();
+		log.info("Export F-Date?: " + expoFDate.toString());
+
 		return expoFDate;
 	}
 

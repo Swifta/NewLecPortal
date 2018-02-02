@@ -41,13 +41,12 @@ import com.lonestarcell.mtn.spring.fundamo.repo.UserAccount001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serializable {
+public class MSubReg extends MDAO implements IModel<Subscriber001Repo>,
+		Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Logger log = LogManager.getLogger(MSubReg.class.getName());
-
-	
 
 	public MSubReg(Long d, String s, String t, ApplicationContext cxt) {
 		super(d, s, cxt);
@@ -80,9 +79,6 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 		return out;
 	}
 
-	
-	
-	
 	@Override
 	public Out search(In in, BeanItemContainer<AbstractDataBean> container) {
 
@@ -94,17 +90,23 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 		out = new Out();
 
 		try {
-			
+
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
 
+			boolean isPgNav = inTxn.isPgNav();
+			inTxn.setPgNav(false);
+
 			// Initialize page & revenue on any db call.
-			if( !inTxn.isExportOp() ){
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue( "0" );
-				meta.getTotalRevenue().setValue( "0,00" );
+			if (!inTxn.isExportOp()) {
+
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue("0");
+					meta.getTotalRevenue().setValue("0,00");
+				}
 			}
-			
+
 			Subscriber001Repo repo = springAppContext
 					.getBean(Subscriber001Repo.class);
 			if (repo == null) {
@@ -115,7 +117,7 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 
 			Page<Subscriber001> pages = null;
 			Pager pager = springAppContext.getBean(Pager.class);
-			
+
 			BeanItemContainer<OutSubReg> exportRawData = null;
 
 			Map<String, Object> searchMap = inTxn.getSearchMap();
@@ -124,50 +126,48 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 			Pageable pgR = null;
 			double tAmount = 0D;
 			long rowCount = 0L;
-			
+
 			if (inTxn.getfDate() == null || inTxn.gettDate() == null) {
 				inTxn.setfDate("2010-02-01");
 				inTxn.settDate("2010-02-03");
 			}
 
-			Date fDate = DateFormatFacRuntime.toDate( inTxn.getfDate() );
+			Date fDate = DateFormatFacRuntime.toDate(inTxn.getfDate());
 
 			if (inTxn.isExportOp()) {
 				pgR = pager.getPageRequest(inTxn.getPage(),
 						inTxn.getExportPgLen());
-				fDate = this.getExportFDate(inTxn, repo );
+				fDate = this.getExportFDate(inTxn, repo);
 				exportRawData = new BeanItemContainer<>(OutSubReg.class);
 			} else {
 				pgR = pager.getPageRequest(inTxn.getPage());
 			}
 
 			boolean isSearch = false;
-			
-			
+
 			if (searchKeySet.size() != 0) {
 				if (searchKeySet.contains("column1")) {
 
 					Object val = searchMap.get("column1");
 					if (val != null && !val.toString().trim().isEmpty()) {
 						isSearch = true;
-						pages = repo.findPageByName(pgR, ( String ) val,fDate,
-								DateFormatFac.toDateUpperBound(inTxn.gettDate()));
+						pages = repo
+								.findPageByName(pgR, (String) val, fDate,
+										DateFormatFac.toDateUpperBound(inTxn
+												.gettDate()));
 					}
 
-				} 
+				}
 
 			}
 
 			if (!isSearch) {
 				if (inTxn.getfDate() != null && inTxn.gettDate() != null) {
 					log.debug("In date filter: ", this);
-					pages = repo.findPageByDateRange(pgR,
-							fDate,
+					pages = repo.findPageByDateRange(pgR, fDate,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 				}
 			}
-
-
 
 			if (pages == null) {
 				log.debug("Page object is null.");
@@ -177,8 +177,8 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 
 			if (pages.getNumberOfElements() == 0) {
 
-				container.addBean( new OutMerchant());
-				BData<BeanItemContainer< AbstractDataBean >> bOutData = new BData<>();
+				container.addBean(new OutMerchant());
+				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
 				out.setMsg("No records found.");
@@ -188,84 +188,87 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 
 			Iterator<Subscriber001> itr = pages.getContent().iterator();
 			rowCount = pages.getTotalElements();
-			log.debug( "row count: "+rowCount, this );
-			
+			log.debug("row count: " + rowCount, this);
+
 			UserAccount001 ua = null;
 			Subscriber001 sub = null;
 			Person001 per = null;
 			RegistrationRequestData001 regData = null;
-			
+
 			OutSubReg outSubReg = null;
 			do {
 				sub = itr.next();
 
 				outSubReg = new OutSubReg();
-				
-				List< UserAccount001> uaList = sub.getUserAccount001s();
-				if( uaList == null || uaList.size() == 0 )
+
+				List<UserAccount001> uaList = sub.getUserAccount001s();
+				if (uaList == null || uaList.size() == 0)
 					ua = new UserAccount001();
 				else
-					ua = uaList.get( 0 );
-				
+					ua = uaList.get(0);
+
 				per = sub.getPerson001();
-				if( per == null )
+				if (per == null)
 					per = new Person001();
-				
-				List< RegistrationRequestData001 >regDataList = per.getRegistrationRequestData001s();
-				if( regDataList == null || regDataList.size() == 0 )
+
+				List<RegistrationRequestData001> regDataList = per
+						.getRegistrationRequestData001s();
+				if (regDataList == null || regDataList.size() == 0)
 					regData = new RegistrationRequestData001();
 				else
-					regData = regDataList.get( 0 );
-				
-				outSubReg.setName( sub.getName() );
-				outSubReg.setMsisdn( regData.getMsisdn() );
-				outSubReg.setIdNo( per.getIdNumber() );
-				outSubReg.setIdType( regData.getIdType() );
-				outSubReg.setDob( DateFormatFac.toStringDateOnly( per.getDateOfBirth() ) );
-				outSubReg.setStatus( ua.getSystemCode().getValue() );
-				outSubReg.setRegDate( DateFormatFac.toString( sub.getLastUpdate() ) );
-				
-				
+					regData = regDataList.get(0);
+
+				outSubReg.setName(sub.getName());
+				outSubReg.setMsisdn(regData.getMsisdn());
+				outSubReg.setIdNo(per.getIdNumber());
+				outSubReg.setIdType(regData.getIdType());
+				outSubReg.setDob(DateFormatFac.toStringDateOnly(per
+						.getDateOfBirth()));
+				outSubReg.setStatus(ua.getSystemCode().getValue());
+				outSubReg
+						.setRegDate(DateFormatFac.toString(sub.getLastUpdate()));
 
 				container.addBean(outSubReg);
 				if (inTxn.isExportOp())
 					exportRawData.addBean(outSubReg);
-				
 
 			} while (itr.hasNext());
-			
+
 			if (inTxn.isExportOp()) {
 				BData<BeanItemContainer<OutSubReg>> bData = new BData<>();
 				bData.setData(exportRawData);
 				out.setData(bData);
 			} else {
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue(rowCount + "");
-				meta.getTotalRevenue().setValue((tAmount / 100) + "");
+
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue(rowCount + "");
+					meta.getTotalRevenue().setValue((tAmount / 100) + "");
+				}
 			}
-			
+
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 
-		} catch ( Exception e ) {
-			
-			container.addBean( new OutSubReg() );
+		} catch (Exception e) {
+
+			container.addBean(new OutSubReg());
 			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
-			
+
 			e.printStackTrace();
-			out.setMsg( "Data fetch error" );
-			log.error( e.getMessage(), this );
+			out.setMsg("Data fetch error");
+			log.error(e.getMessage(), this);
 		}
 
 		return out;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Out setExportData(In in, BeanItemContainer<AbstractDataBean> container) {
+	public Out setExportData(In in,
+			BeanItemContainer<AbstractDataBean> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -314,23 +317,20 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 			out.setStatusCode(1);
 			out.setMsg("Data fetch successful.");
 
-		} catch ( Exception e ) {
-			
-			container.addBean(new OutSubscriber() );
+		} catch (Exception e) {
+
+			container.addBean(new OutSubscriber());
 			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
-			
+
 			e.printStackTrace();
-			out.setMsg( "Data fetch error - 1" );
+			out.setMsg("Data fetch error - 1");
 		}
 
 		return out;
 	}
 
-
-	
-	
 	@Override
 	public Out setMeta(In in, OutTxnMeta outSubscriber) {
 
@@ -355,7 +355,7 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 		out.setMsg("Txn meta computed successfully.");
 
 		return out;
-	} 
+	}
 
 	@Override
 	public Out searchMeta(In in, OutTxnMeta outSubscriber) {
@@ -390,7 +390,8 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 
 	@Override
 	public Out setExportDataMulti(In in,
-			BeanItemContainer<AbstractDataBean> container, Collection<Item> records) {
+			BeanItemContainer<AbstractDataBean> container,
+			Collection<Item> records) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -424,32 +425,32 @@ public class MSubReg extends MDAO implements IModel< Subscriber001Repo >, Serial
 
 		return out;
 	}
-	
-	
-	
+
 	@Override
-	public Date getExportFDate( InTxn inTxn, Subscriber001Repo repo ){
-		
+	public Date getExportFDate(InTxn inTxn, Subscriber001Repo repo) {
+
 		int fromPgNo = inTxn.getExportFPgNo();
-		log.info( "In export F-PgNo "+fromPgNo );
+		log.info("In export F-PgNo " + fromPgNo);
 		int excludePgNo = fromPgNo - 1;
-		if( fromPgNo <= 1 ) {
+		if (fromPgNo <= 1) {
 			excludePgNo = 1;
 			fromPgNo = 1;
 		}
-		
-		//  - find max date in excludePgNo page of that.
-		Page< Subscriber001 > expoExcludePage = repo.findPageByDateRange(
-				new Pager().getPageRequest( excludePgNo ), DateFormatFacRuntime.toDate( inTxn.getfDate() ), DateFormatFacRuntime.toDateUpperBound(  inTxn.gettDate() 
-						));
-		Date expoFDate  = null;
+
+		// - find max date in excludePgNo page of that.
+		Page<Subscriber001> expoExcludePage = repo.findPageByDateRange(
+				new Pager().getPageRequest(excludePgNo),
+				DateFormatFacRuntime.toDate(inTxn.getfDate()),
+				DateFormatFacRuntime.toDateUpperBound(inTxn.gettDate()));
+		Date expoFDate = null;
 		int tElements = expoExcludePage.getNumberOfElements();
-		
-		if( fromPgNo == 1 )
-			expoFDate = expoExcludePage.getContent().get( 1 ).getLastUpdate();
+
+		if (fromPgNo == 1)
+			expoFDate = expoExcludePage.getContent().get(1).getLastUpdate();
 		else
-			expoFDate = expoExcludePage.getContent().get( tElements - 1 ).getLastUpdate();
-		log.info( "Export F-Date?: "+expoFDate.toString() );
+			expoFDate = expoExcludePage.getContent().get(tElements - 1)
+					.getLastUpdate();
+		log.info("Export F-Date?: " + expoFDate.toString());
 		return expoFDate;
 	}
 

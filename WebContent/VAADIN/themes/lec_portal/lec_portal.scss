@@ -1865,6 +1865,10 @@
   		border:none;
   	}
   	
+  	.v-grid-row.sn-date-filter-row {
+  		width: 100%;
+  	}
+  	
   	.sn-grid-title .v-label {
   	
   		padding: 10px;
@@ -2213,6 +2217,17 @@
     	color: #fcca09;
     }
 	 
+	 
+	 // Pagination positioning corrections
+	 
+	 .sn-c-pg-absolute {
+	 	position: relative;
+	 }
+	 
+	 .sn-c-pg-absolute .v-horizontallayout{
+	 	position: absolute;
+	 	right: 0px;
+	 }
 	 
 	   
      

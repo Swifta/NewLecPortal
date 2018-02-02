@@ -14361,6 +14361,10 @@ div.v-layout.v-horizontal.v-widget {
 	border: none;
 }
 
+.lec_portal .v-grid-row.sn-date-filter-row {
+	width: 100%;
+}
+
 .lec_portal .sn-grid-title .v-label {
 	padding: 10px;
 }
@@ -14645,4 +14649,13 @@ div.v-layout.v-horizontal.v-widget {
 
 .lec_portal .v-select-twincol-buttons .v-button {
 	color: #fcca09;
+}
+
+.lec_portal .sn-c-pg-absolute {
+	position: relative;
+}
+
+.lec_portal .sn-c-pg-absolute .v-horizontallayout {
+	position: absolute;
+	right: 0px;
 }

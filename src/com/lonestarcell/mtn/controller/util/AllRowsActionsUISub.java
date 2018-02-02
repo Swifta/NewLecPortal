@@ -79,17 +79,18 @@ public class AllRowsActionsUISub
 	@Override
 	protected void setNewPage(int page) {
 		super.setNewPage(page);
-
 		container.removeAllItems();
-		inTxn.setPage(page);
+		inTxn.setPage( page );
+		log.info( "New item: "+newPage );
 		model.search(in, container);
-		format();
+		// format();
 
 	}
 
 	@Override
 	protected void refreshGridData() {
 
+		container.removeAllContainerFilters();
 		container.removeAllItems();
 
 		try {

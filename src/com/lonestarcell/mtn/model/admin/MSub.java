@@ -87,12 +87,17 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
+			boolean isPgNav = inTxn.isPgNav();
+			inTxn.setPgNav(false);
 
-			// Initialize page & revenue on any db call.
+			// [ Initialize page & revenue on any db call??? ] Noooo... only on
+			// some calls.
 			if (!inTxn.isExportOp()) {
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue("0");
-				meta.getTotalRevenue().setValue("0.00");
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue("0");
+					meta.getTotalRevenue().setValue("0.00");
+				}
 			}
 
 			Transaction001Repo repo = springAppContext
@@ -145,9 +150,11 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 						BigDecimal tNo = BigDecimal.valueOf(Long
 								.valueOf((String) val));
 						pages = repo.findPageByTransactionNumber(pgR, tNo);
-						if (!inTxn.isExportOp())
-							tAmount = repo
-									.findPageByTransactionNumberAmount(tNo);
+						if (!inTxn.isExportOp()) {
+							if (!isPgNav)
+								tAmount = repo
+										.findPageByTransactionNumberAmount(tNo);
+						}
 
 					}
 
@@ -160,12 +167,16 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 						pages = repo.findPageByPayerAccountNumber(pgR,
 								(String) val, fDate, DateFormatFac
 										.toDateUpperBound(inTxn.gettDate()));
-						if (!inTxn.isExportOp())
-							tAmount = repo
-									.findPageByPayerAccountNumberAmount(
-											(String) val, fDate, DateFormatFac
-													.toDateUpperBound(inTxn
-															.gettDate()));
+						if (!inTxn.isExportOp()) {
+
+							if (!isPgNav)
+								tAmount = repo
+										.findPageByPayerAccountNumberAmount(
+												(String) val, fDate,
+												DateFormatFac
+														.toDateUpperBound(inTxn
+																.gettDate()));
+						}
 					}
 
 				} else if (searchKeySet.contains("column6")) {
@@ -176,12 +187,15 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 						pages = repo.findPageByPayeeAccountNumber(pgR,
 								(String) val, fDate, DateFormatFac
 										.toDateUpperBound(inTxn.gettDate()));
-						if (!inTxn.isExportOp())
-							tAmount = repo
-									.findPageByPayeeAccountNumberAmount(
-											(String) val, fDate, DateFormatFac
-													.toDateUpperBound(inTxn
-															.gettDate()));
+						if (!inTxn.isExportOp() || !isPgNav) {
+							if (!isPgNav)
+								tAmount = repo
+										.findPageByPayeeAccountNumberAmount(
+												(String) val, fDate,
+												DateFormatFac
+														.toDateUpperBound(inTxn
+																.gettDate()));
+						}
 					}
 
 				}
@@ -195,10 +209,12 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 
 					// Amount should not be called in data export
-					if (!inTxn.isExportOp())
-						tAmount = repo
-								.findPageByDateRangeAmount(fDate, DateFormatFac
-										.toDateUpperBound(inTxn.gettDate()));
+					if (!inTxn.isExportOp() || !isPgNav) {
+						if (!isPgNav)
+							tAmount = repo.findPageByDateRangeAmount(fDate,
+									DateFormatFac.toDateUpperBound(inTxn
+											.gettDate()));
+					}
 				}
 			}
 
@@ -234,13 +250,13 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 						.getTransactionNumber() + "");
 				outSubscriber.setType(transaction.getTransactionType001()
 						.getSystemCode().getValue());
-				
+
 				if (inTxn.isExportOp())
 					outSubscriber.setAmount(amount + "");
 				else
 					outSubscriber.setAmount(NumberFormatFac
 							.toMoney(amount + ""));
-				
+
 				outSubscriber.setStatus(transaction.getSystemCode().getValue());
 				outSubscriber.setPayer(transaction.getPayerAccountNumber());
 				outSubscriber.setPayee(transaction.getPayeeAccountNumber());
@@ -258,9 +274,12 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 				bData.setData(exportRawData);
 				out.setData(bData);
 			} else {
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue(rowCount + "");
-				meta.getTotalRevenue().setValue((tAmount / 100) + "");
+
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue(rowCount + "");
+					meta.getTotalRevenue().setValue((tAmount / 100) + "");
+				}
 			}
 
 			out.setStatusCode(1);

@@ -13,45 +13,40 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 
-public class PaginationUIController implements DUIControllable, Serializable{
-	
+public class PaginationUIController implements DUIControllable, Serializable {
+
 	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger();
 
-	private Map< String, Button > mapPageBtns;
-		
+	private Map<String, Button> mapPageBtns;
+
 	private Button btnNextH;
 	private Button btnNextF;
-	
+
 	private Button btnPrevH;
 	private Button btnPrevF;
-	
+
 	private Button btnAfterPrevH;
 	private Button btnAfterPrevF;
-	
+
 	private Button btnBeforeNextH;
 	private Button btnBeforeNextF;
-	
+
 	private int currentPage = 2;
 	private int newPage = 1;
 	private int pages = 0;
 	private Label lbTotalRecords;
 	private float pageLength;
 	private long rowCount;
-	
-	
-	public PaginationUIController(){
+
+	public PaginationUIController() {
 		mapPageBtns = new HashMap<>(8);
+		log.info( "Pagination instantiated." );
 	}
-	
-	public Map<String, Button> getListPageBtns(){
+
+	public Map<String, Button> getListPageBtns() {
 		return mapPageBtns;
 	}
-
-	
-
-
-	
 
 	public long getRowCount() {
 		return rowCount;
@@ -76,8 +71,6 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	public void setNewPage(int newPage) {
 		this.newPage = newPage;
 	}
-	
-	
 
 	public int getCurrentPage() {
 		return currentPage;
@@ -99,314 +92,301 @@ public class PaginationUIController implements DUIControllable, Serializable{
 	public void attachCommandListeners() {
 		this.attachOPTotalRecords();
 	}
-	
 
-	
-	public void next( ){
-		
-		if( currentPage < pages ) {
+	public void next() {
+
+		log.info("Pages: " + pages);
+		log.info("currentPage: " + currentPage);
+		if (currentPage < pages) {
 			// currentPage++;
 			newPage = currentPage + 1;
 		}
-		navigation( );
 
+		log.info("Next called [ newPage ] : " + newPage);
+		log.info("Next called [ currentPage ] : " + currentPage);
+		navigation();
 
-		
 	}
-	
-	public void prev( ){
-		
-		if( currentPage > 1) {
+
+	public void prev() {
+
+		if (currentPage > 1) {
 			// currentPage--;
 			newPage = currentPage - 1;
 		}
-		navigation( );
-		
-		
+		navigation();
+
 	}
-	
-	public void beforeNext( ){
-		
-			newPage = Integer.valueOf( btnBeforeNextH.getData().toString() );
-			if( newPage == currentPage )
-				return;
-			navigation();
-			
-			
-	}		
-	
-	public void afterPrev( ){	
-		newPage = Integer.valueOf( btnAfterPrevH.getData().toString() );
-		if( newPage == currentPage )
+
+	public void beforeNext() {
+
+		newPage = Integer.valueOf(btnBeforeNextH.getData().toString());
+		if (newPage == currentPage)
 			return;
 		navigation();
-	}		
-	
-	
+
+	}
+
+	public void afterPrev() {
+		newPage = Integer.valueOf(btnAfterPrevH.getData().toString());
+		if (newPage == currentPage)
+			return;
+		navigation();
+	}
 
 	public void init() {
-		log.info( "Pagination has been initiated." );
+		log.info("Pagination has been initiated.");
 		this.initBtns();
 		this.attachCommandListeners();
 	}
-	
-	
+
 	public int getPages() {
 		return pages;
 	}
 
+	private int getTotalPages(Long total) {
 
-	private int getTotalPages( Long total ){
-		
 		int pages = 0;
 		Float pageLength = 15F;
-		this.setPageLength( pageLength );
-		pages = (int)Math.ceil( total/pageLength );
-		
+		this.setPageLength(pageLength);
+		pages = (int) Math.ceil(total / pageLength);
+
 		return pages;
-		
+
 	}
-	
-	private void attachOPTotalRecords(){
-		
-		 Long total = Long.valueOf( this.lbTotalRecords.getValue().toString().replaceAll(",", "") );
-		 setRowCount( total );
-		 initNavigation( total );
-		
-		this.lbTotalRecords.addValueChangeListener( new ValueChangeListener(){
+
+	private void attachOPTotalRecords() {
+
+		Long total = Long.valueOf(this.lbTotalRecords.getValue().toString()
+				.replaceAll(",", ""));
+		setRowCount(total);
+		initNavigation(total);
+
+		this.lbTotalRecords.addValueChangeListener(new ValueChangeListener() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				
-					Long total = Long.valueOf( event.getProperty().getValue().toString().replaceAll(",", "") );
-					setRowCount( total );
-					currentPage = 2;
-					newPage = 1;
-					initNavigation( total );
-					log.debug( "Pagination initialized with total: "+total );
-					
-				
+
+				Long total = Long.valueOf(event.getProperty().getValue()
+						.toString().replaceAll(",", ""));
+				setRowCount(total);
+				currentPage = 2;
+				newPage = 1;
+				initNavigation(total);
+				log.info("Pagination initialized with total: " + total);
+
 			}
-			
+
 		});
 	}
-	
-	private void initBtns(){
-		
-		btnNextH = mapPageBtns.get( "nextH" );
-		btnNextF = mapPageBtns.get( "nextF" );
-		
-		btnPrevH = mapPageBtns.get( "prevH" );
-		btnPrevF = mapPageBtns.get( "prevF" );
-		
-		btnAfterPrevH = mapPageBtns.get( "afterPrevH" );
-		btnAfterPrevF = mapPageBtns.get( "afterPrevF" );
-		
-		btnAfterPrevH.setCaption( currentPage+"" );
-		btnAfterPrevF.setCaption( currentPage+"" );
-		
-		btnAfterPrevH.setData( currentPage );
-		btnAfterPrevF.setData( currentPage );
-		
-		btnBeforeNextH = mapPageBtns.get( "beforeNextH" );
-		btnBeforeNextF = mapPageBtns.get( "beforeNextF" );
-		
-		btnBeforeNextH.setCaption( ( currentPage + 1)+"" );
-		btnBeforeNextF.setCaption( ( currentPage + 1)+"" );
-		
-		btnBeforeNextH.setData( ( currentPage + 1) );
-		btnBeforeNextF.setData( ( currentPage + 1) );
-	}
-	
-	private void initNavigation( Long total ){
-		log.debug( "Pagination initialization with total: "+total );
-		pages = getTotalPages( total );
-		if( pages <= 1 ){
-			
-			btnPrevH.addStyleName( "sn-invisible" );
-			btnPrevF.addStyleName( "sn-invisible" );
-			btnPrevH.setEnabled( false );
-			btnPrevF.setEnabled( false );
-			
-			
-			btnNextH.addStyleName( "sn-invisible" );
-			btnNextF.addStyleName( "sn-invisible" );
-			btnNextH.setEnabled( false );
-			btnNextF.setEnabled( false );
-			
-			btnAfterPrevH.setVisible( false );
-			btnAfterPrevF.setVisible( false );
-			btnBeforeNextH.setVisible( false );
-			btnBeforeNextF.setVisible( false );
-			
-		} else if( pages == 2){
-			
-			
-			btnPrevH.addStyleName( "sn-invisible" );
-			btnPrevF.addStyleName( "sn-invisible" );
-			btnPrevH.setEnabled( false );
-			btnPrevF.setEnabled( false );
-			
-			
-			btnNextH.addStyleName( "sn-invisible" );
-			btnNextF.addStyleName( "sn-invisible" );
-			btnNextH.setEnabled( false );
-			btnNextF.setEnabled( false );
-			
-			
-			btnAfterPrevH.setVisible( true );
-			btnAfterPrevF.setVisible( true );
-			btnBeforeNextH.setVisible( true );
-			btnBeforeNextF.setVisible( true );
-			
-			this.navigation();
-			
-		} else if( pages >=  3){
-			
-			btnPrevH.addStyleName( "sn-invisible" );
-			btnPrevF.addStyleName( "sn-invisible" );
-			btnPrevH.setEnabled( false );
-			btnPrevF.setEnabled( false );
-			
-			btnNextH.removeStyleName( "sn-invisible" );
-			btnNextF.removeStyleName( "sn-invisible" );
-			btnNextH.setEnabled( true );
-			btnNextF.setEnabled( true );
-			
-			
-			btnAfterPrevH.setVisible( true );
-			btnAfterPrevF.setVisible( true );
-			btnBeforeNextH.setVisible( true );
-			btnBeforeNextF.setVisible( true );
-			
-			pages = getTotalPages( total );
-			this.navigation();
-			
-			
-		} 
-		
-	}
-	
 
+	private void initBtns() {
 
-	
-	private void navigation(){
-		
-			if( pages == 2 ) {
-				setActivePage();
-				
-			} else if( pages >=  3 ){
-			
-				if( newPage > 1 ){
-					
-					btnPrevH.removeStyleName( "sn-invisible" );
-					btnPrevF.removeStyleName( "sn-invisible" );
-					btnPrevH.setEnabled( true );
-					btnPrevF.setEnabled( true );
-					
-				} else {
-					
-					btnPrevH.addStyleName( "sn-invisible" );
-					btnPrevF.addStyleName( "sn-invisible" );
-					btnPrevH.setEnabled( false );
-					btnPrevF.setEnabled( false );
-				}
-			
-				log.debug( "Current page: "+newPage+" Total pages: "+pages );
-			
-				if( newPage < pages ){
-					
-					btnNextH.removeStyleName( "sn-invisible" );
-					btnNextF.removeStyleName( "sn-invisible" );
-					btnNextH.setEnabled( true );
-					btnNextF.setEnabled( true );
-					
-					log.debug( "btnNextH set to visible." );
-					
-					
-				} else {
-					
-					btnNextH.addStyleName( "sn-invisible" );
-					btnNextF.addStyleName( "sn-invisible" );
-					btnNextH.setEnabled( false );
-					btnNextF.setEnabled( false );
-					
-					log.debug( "btnNextH set to INvisible." );
-				}
-				
-				setActivePage();
-			
-		} 
-		
+		btnNextH = mapPageBtns.get("nextH");
+		btnNextF = mapPageBtns.get("nextF");
+
+		btnPrevH = mapPageBtns.get("prevH");
+		btnPrevF = mapPageBtns.get("prevF");
+
+		btnAfterPrevH = mapPageBtns.get("afterPrevH");
+		btnAfterPrevF = mapPageBtns.get("afterPrevF");
+
+		btnAfterPrevH.setCaption(currentPage + "");
+		btnAfterPrevF.setCaption(currentPage + "");
+
+		btnAfterPrevH.setData(currentPage);
+		btnAfterPrevF.setData(currentPage);
+
+		btnBeforeNextH = mapPageBtns.get("beforeNextH");
+		btnBeforeNextF = mapPageBtns.get("beforeNextF");
+
+		btnBeforeNextH.setCaption((currentPage + 1) + "");
+		btnBeforeNextF.setCaption((currentPage + 1) + "");
+
+		btnBeforeNextH.setData((currentPage + 1));
+		btnBeforeNextF.setData((currentPage + 1));
 	}
-	
-	private void setActivePage(){
-		log.debug( "New Page: "+newPage );
-		
-		if( newPage >= 1 && newPage <= pages ) {
-			
-			if( currentPage < newPage ){
-				
-				btnBeforeNextH.setCaption( newPage+"" );
-				btnBeforeNextF.setCaption( newPage+"" );
-				
-				btnBeforeNextH.setDescription( newPage+"/"+pages );
-				btnBeforeNextF.setDescription( newPage+"/"+pages );
-				
-				btnBeforeNextH.setData( newPage );
-				btnBeforeNextF.setData( newPage );
-				
-				btnBeforeNextH.addStyleName( "sn-cur-page" );
-				btnBeforeNextF.addStyleName( "sn-cur-page" );
-				
-				btnAfterPrevH.setCaption( ( currentPage  )+"" );
-				btnAfterPrevF.setCaption( ( currentPage )+"" );
-				
-				btnBeforeNextH.setDescription( ( currentPage )+"/"+pages );
-				btnBeforeNextF.setDescription(  ( currentPage )+"/"+pages );
-				
-				btnAfterPrevH.setData( ( currentPage ) );
-				btnAfterPrevF.setData( ( currentPage ) );
-				
-				btnAfterPrevH.removeStyleName( "sn-cur-page" );
-				btnAfterPrevF.removeStyleName( "sn-cur-page" );
-				
+
+	private void initNavigation(Long total) {
+		log.debug("Pagination initialization with total: " + total);
+		pages = getTotalPages(total);
+		if (pages <= 1) {
+
+			btnPrevH.addStyleName("sn-invisible");
+			btnPrevF.addStyleName("sn-invisible");
+			btnPrevH.setEnabled(false);
+			btnPrevF.setEnabled(false);
+
+			btnNextH.addStyleName("sn-invisible");
+			btnNextF.addStyleName("sn-invisible");
+			btnNextH.setEnabled(false);
+			btnNextF.setEnabled(false);
+
+			btnAfterPrevH.setVisible(false);
+			btnAfterPrevF.setVisible(false);
+			btnBeforeNextH.setVisible(false);
+			btnBeforeNextF.setVisible(false);
+
+		} else if (pages == 2) {
+
+			btnPrevH.addStyleName("sn-invisible");
+			btnPrevF.addStyleName("sn-invisible");
+			btnPrevH.setEnabled(false);
+			btnPrevF.setEnabled(false);
+
+			btnNextH.addStyleName("sn-invisible");
+			btnNextF.addStyleName("sn-invisible");
+			btnNextH.setEnabled(false);
+			btnNextF.setEnabled(false);
+
+			btnAfterPrevH.setVisible(true);
+			btnAfterPrevF.setVisible(true);
+			btnBeforeNextH.setVisible(true);
+			btnBeforeNextF.setVisible(true);
+
+			this.navigation();
+
+		} else if (pages >= 3) {
+
+			btnPrevH.addStyleName("sn-invisible");
+			btnPrevF.addStyleName("sn-invisible");
+			btnPrevH.setEnabled(false);
+			btnPrevF.setEnabled(false);
+
+			btnNextH.removeStyleName("sn-invisible");
+			btnNextF.removeStyleName("sn-invisible");
+			btnNextH.setEnabled(true);
+			btnNextF.setEnabled(true);
+
+			btnAfterPrevH.setVisible(true);
+			btnAfterPrevF.setVisible(true);
+			btnBeforeNextH.setVisible(true);
+			btnBeforeNextF.setVisible(true);
+
+			pages = getTotalPages(total);
+			this.navigation();
+
+		}
+
+	}
+
+	private void navigation() {
+
+		log.info("Navingation page value: " + pages);
+
+		if (pages == 2) {
+			setActivePage();
+
+		} else if (pages >= 3) {
+
+			if (newPage > 1) {
+
+				btnPrevH.removeStyleName("sn-invisible");
+				btnPrevF.removeStyleName("sn-invisible");
+				btnPrevH.setEnabled(true);
+				btnPrevF.setEnabled(true);
+
+			} else {
+
+				btnPrevH.addStyleName("sn-invisible");
+				btnPrevF.addStyleName("sn-invisible");
+				btnPrevH.setEnabled(false);
+				btnPrevF.setEnabled(false);
+			}
+
+			log.debug("Current page: " + newPage + " Total pages: " + pages);
+
+			if (newPage < pages) {
+
+				btnNextH.removeStyleName("sn-invisible");
+				btnNextF.removeStyleName("sn-invisible");
+				btnNextH.setEnabled(true);
+				btnNextF.setEnabled(true);
+
+				log.debug("btnNextH set to visible.");
+
+			} else {
+
+				btnNextH.addStyleName("sn-invisible");
+				btnNextF.addStyleName("sn-invisible");
+				btnNextH.setEnabled(false);
+				btnNextF.setEnabled(false);
+
+				log.debug("btnNextH set to INvisible.");
+			}
+
+			setActivePage();
+
+		}
+
+	}
+
+	private void setActivePage() {
+		log.info(" Before setActive - New Page: " + newPage);
+		log.info(" Before setActive - Current Page [ prev ]: " + currentPage );
+
+		if (newPage >= 1 && newPage <= pages) {
+
+			if (currentPage < newPage) {
+
+				btnBeforeNextH.setCaption(newPage + "");
+				btnBeforeNextF.setCaption(newPage + "");
+
+				btnBeforeNextH.setDescription(newPage + "/" + pages);
+				btnBeforeNextF.setDescription(newPage + "/" + pages);
+
+				btnBeforeNextH.setData(newPage);
+				btnBeforeNextF.setData(newPage);
+
+				btnBeforeNextH.addStyleName("sn-cur-page");
+				btnBeforeNextF.addStyleName("sn-cur-page");
+
+				btnAfterPrevH.setCaption((currentPage) + "");
+				btnAfterPrevF.setCaption((currentPage) + "");
+
+				btnBeforeNextH.setDescription((currentPage) + "/" + pages);
+				btnBeforeNextF.setDescription((currentPage) + "/" + pages);
+
+				btnAfterPrevH.setData((currentPage));
+				btnAfterPrevF.setData((currentPage));
+
+				btnAfterPrevH.removeStyleName("sn-cur-page");
+				btnAfterPrevF.removeStyleName("sn-cur-page");
+
 				currentPage = newPage;
-				
-				
-			}else {
-			
-				btnAfterPrevH.setCaption( newPage+"" );
-				btnAfterPrevF.setCaption( newPage+"" );
-				
-				btnAfterPrevH.setDescription( newPage+"/"+pages );
-				btnAfterPrevF.setDescription( newPage+"/"+pages );
-				
-				
-				btnAfterPrevH.setData( newPage );
-				btnAfterPrevF.setData( newPage );
-				
-				btnAfterPrevH.addStyleName( "sn-cur-page" );
-				btnAfterPrevF.addStyleName( "sn-cur-page" );
-				
-				btnBeforeNextH.setCaption( ( currentPage )+"" );
-				btnBeforeNextF.setCaption( ( currentPage )+"" );
-				
-				btnBeforeNextH.setDescription( ( currentPage )+"/"+pages );
-				btnBeforeNextF.setDescription(  ( currentPage )+"/"+pages );
-				
-				btnBeforeNextH.setData( ( currentPage ) );
-				btnBeforeNextF.setData( ( currentPage ) );
-				
-				btnBeforeNextH.removeStyleName( "sn-cur-page" );
-				btnBeforeNextF.removeStyleName( "sn-cur-page" );
+
+			} else {
+
+				btnAfterPrevH.setCaption(newPage + "");
+				btnAfterPrevF.setCaption(newPage + "");
+
+				btnAfterPrevH.setDescription(newPage + "/" + pages);
+				btnAfterPrevF.setDescription(newPage + "/" + pages);
+
+				btnAfterPrevH.setData(newPage);
+				btnAfterPrevF.setData(newPage);
+
+				btnAfterPrevH.addStyleName("sn-cur-page");
+				btnAfterPrevF.addStyleName("sn-cur-page");
+
+				btnBeforeNextH.setCaption((currentPage) + "");
+				btnBeforeNextF.setCaption((currentPage) + "");
+
+				btnBeforeNextH.setDescription((currentPage) + "/" + pages);
+				btnBeforeNextF.setDescription((currentPage) + "/" + pages);
+
+				btnBeforeNextH.setData((currentPage));
+				btnBeforeNextF.setData((currentPage));
+
+				btnBeforeNextH.removeStyleName("sn-cur-page");
+				btnBeforeNextF.removeStyleName("sn-cur-page");
 				currentPage = newPage;
 			}
+		}
+		
+		log.info("After setActive - New Page: " + newPage);
+		log.info(" After setActive - Current Page [ prev ]: " + currentPage );
 	}
-	}
-	
-	
-	
-}
 
+}

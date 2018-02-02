@@ -1,7 +1,6 @@
 package com.lonestarcell.mtn.controller.util;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,8 +8,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +18,8 @@ import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
-import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
+import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
@@ -56,6 +53,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 	protected InTxn inTxn;
 	protected OutTxnMeta outTxnMeta;
 	protected List<TextField> tFSearchFields = new ArrayList<>(4);
+	protected int newPage;
 
 	protected Set<String> gridColumnRemnantSet = new HashSet<>(10);
 
@@ -123,8 +121,15 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 	}
 
 	protected void setNewPage(int page) {
-		log.debug("All rows deselected");
+		log.info( "New page called." );
+		this.newPage = page;
 		grid.deselectAll();
+	}
+	
+	
+
+	public int getNewPage() {
+		return newPage;
 	}
 
 	protected void format() {
@@ -132,30 +137,23 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		if (outTxnMeta.getTotalRevenue().getValue() == null)
 			outTxnMeta.getTotalRevenue().setValue("0");
 
-		outTxnMeta.getTotalRecord().getValue();
-
-		double revenue = Double.valueOf(outTxnMeta.getTotalRevenue().getValue()
-				.replaceAll(",", ""));
-		NumberFormat nf = NumberFormat.getCurrencyInstance();
-
-		log.debug("Formated revenue: " + nf.format(revenue));
-		outTxnMeta.getTotalRevenue().setValue(
-				nf.format(revenue).replace("$", ""));
+		String sMoney = outTxnMeta.getTotalRevenue().getValue()
+		.replaceAll(",", "");
+		
+		String money = NumberFormatFac.toMoney( sMoney );
+		outTxnMeta.getTotalRevenue().setValue( money );
 
 		String tRecord = outTxnMeta.getTotalRecord().getValue();
 		if (tRecord == null)
 			tRecord = "0";
 
-		long records = Long.valueOf(tRecord.toString().replaceAll(",", ""));
-		nf = NumberFormat.getNumberInstance(Locale.US);
-		outTxnMeta.getTotalRecord().setValue(nf.format(records));
-
-		formatPgExportLimit(pageC.getCurrentPage(), Integer.valueOf(tRecord));
+		String sThousands = tRecord.toString().replaceAll(",", "");
+		String thousands = NumberFormatFac.toThousands( sThousands );
+		outTxnMeta.getTotalRecord().setValue( thousands );
+		
+		log.info( "Format called." );
 	}
 
-	private void formatPgExportLimit(int pg, int pgCount) {
-
-	}
 
 	private void attachBtnBeforeNext() {
 
@@ -167,6 +165,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 				log.debug("btnBeforeNextH has been clicked");
 				pageC.beforeNext();
+				inTxn.setPgNav( true );
 				setNewPage(pageC.getNewPage());
 
 			}
@@ -184,6 +183,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 				log.debug("btnAfterPrevH has been clicked");
 				pageC.afterPrev();
+				inTxn.setPgNav( true );
 				setNewPage(pageC.getNewPage());
 
 			}
@@ -201,7 +201,8 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 				log.debug("btnNextH has been clicked");
 				pageC.next();
-				setNewPage(pageC.getNewPage());
+				inTxn.setPgNav( true );
+				setNewPage( pageC.getNewPage() );
 
 			}
 
@@ -218,6 +219,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 				log.debug("btnPrevH has been clicked");
 				pageC.prev();
+				inTxn.setPgNav( true );
 				setNewPage(pageC.getNewPage());
 
 			}
@@ -362,12 +364,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 	private void clearAllFilters() {
 		container.removeAllContainerFilters();
 		
-		if( inTxn == null )
-			log.info( "In Txn is null." );
-		if( inTxn.getfDefaultDate() == null )
-			log.info( "f-default date is null." );
-		
-		
 		this.dFStartDate.setValue(DateFormatFacRuntime.toDate(inTxn
 				.getfDefaultDate()));
 		this.dFLastDate.setValue(DateFormatFacRuntime.toDate(inTxn
@@ -377,13 +373,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 		this.dFStartDate.setComponentError(null);
 		this.dFLastDate.setComponentError(null);
-		// TODO Vital part when doing search & filter.
-
-		/*
-		 * inTxn.setSearchMeterNo(null); inTxn.setSearchMoID(null);
-		 * inTxn.setSearchMSISDN(null); inTxn.setSearchSID(null);
-		 * inTxn.setSearchStatusDesc(null);
-		 */
 
 		inTxn.setfDate(inTxn.getfDefaultDate());
 		inTxn.settDate(inTxn.gettDefaultDate());
@@ -394,11 +383,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 			tF.clear();
 			tF.setComponentError( null );
 		}
-
-		// TODO Disable data reload on clear filters [ Let it be a user
-		// operation request
-		// ... by clicking filter all pages
-		// refreshGridData();
 	}
 
 	private void doFilterByDate(BeanItemContainer<O> container,

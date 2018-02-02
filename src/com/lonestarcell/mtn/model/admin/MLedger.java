@@ -88,12 +88,16 @@ public class MLedger extends MDAO implements IModel<LedgerAccount001Repo>,
 
 			BData<?> bInData = in.getData();
 			InTxn inTxn = (InTxn) bInData.getData();
+			boolean isPgNav = inTxn.isPgNav();
+			inTxn.setPgNav(false);
 
 			// Initialize page & revenue on any db call.
 			if (!inTxn.isExportOp()) {
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue("0");
-				meta.getTotalRevenue().setValue("0.00");
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue("0");
+					meta.getTotalRevenue().setValue("0.00");
+				}
 			}
 
 			LedgerAccount001Repo repo = springAppContext
@@ -198,7 +202,7 @@ public class MLedger extends MDAO implements IModel<LedgerAccount001Repo>,
 
 				outLedger.setAccNo(obj[0].toString());
 				outLedger.setName(obj[1].toString());
-				
+
 				if (inTxn.isExportOp())
 					outLedger.setAmount(String.valueOf((Double.valueOf(obj[2]
 							.toString()) / 100)));
@@ -220,9 +224,12 @@ public class MLedger extends MDAO implements IModel<LedgerAccount001Repo>,
 				bData.setData(exportRawData);
 				out.setData(bData);
 			} else {
-				OutTxnMeta meta = inTxn.getMeta();
-				meta.getTotalRecord().setValue(rowCount + "");
-				meta.getTotalRevenue().setValue((tAmount / 100) + "");
+
+				if (!isPgNav) {
+					OutTxnMeta meta = inTxn.getMeta();
+					meta.getTotalRecord().setValue(rowCount + "");
+					meta.getTotalRevenue().setValue((tAmount / 100) + "");
+				}
 			}
 
 			out.setStatusCode(1);

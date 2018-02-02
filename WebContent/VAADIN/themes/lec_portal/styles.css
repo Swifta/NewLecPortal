@@ -14683,3 +14683,12 @@ div.v-layout.v-horizontal.v-widget {
 .lec_portal .v-select-twincol-buttons .v-button {
 	color: #fcca09;
 }
+
+.lec_portal .sn-c-pg-absolute {
+	position: relative;
+}
+
+.lec_portal .sn-c-pg-absolute .v-horizontallayout {
+	position: absolute;
+	right: 0px;
+}

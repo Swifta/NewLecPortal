@@ -10,11 +10,19 @@ public class InTxn {
 	private int pageExportLimit, exportPgLen, exportFPgNo;
 	private float pageSize;
 	private boolean isExportOp = false;
+	private boolean isPgNav = false;
 	private Map< String, Object > searchMap = new HashMap< >();
 	
 	private OutTxnMeta meta;
 
 	
+	
+	public boolean isPgNav() {
+		return isPgNav;
+	}
+	public void setPgNav(boolean isPgNav) {
+		this.isPgNav = isPgNav;
+	}
 	public int getExportFPgNo() {
 		return exportFPgNo;
 	}

@@ -9,7 +9,7 @@ public class NumberFormatFac {
 	public static String toMoney(String sMoney) {
 
 		if (sMoney == null)
-			sMoney = "";
+			sMoney = "0";
 		//log.debug( "In money: "+sMoney, NumberFormatFac.class );
 		
 		double revenue = Double.valueOf(sMoney);

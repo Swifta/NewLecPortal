@@ -151,9 +151,13 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			
 			PaginationUIController pageC = new PaginationUIController();
 			AllRowsActionsUIMerchant allRowsActionsUIH = new AllRowsActionsUIMerchant( mSub, grid, in, true, true, pageC );
+			allRowsActionsUIH.setWidth( "100%" );
 			dateFilterCellH.setComponent(allRowsActionsUIH);
 
 			header.setStyleName("sn-date-filter-row");
+			
+			
+		
 			dateFilterCellH
 					.setStyleName("sn-no-border-right sn-no-border-left");
 			
@@ -223,12 +227,13 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 			grid.getColumn("column6").setWidth(100);
 			grid.getColumn("column7").setWidth(100);
 			// grid.getColumn("column2").setWidth( 150 ).setResizable(false);
-			// grid.getColumn("column3").setWidth( 150);
-			// grid.getColumn("column5").setWidth( 150 ).setResizable(false);
-			// grid.getColumn("column6").setWidth( 150 ).setResizable(false);
-			// grid.getColumn("date").setWidth(178).setResizable(false);
+			grid.getColumn("column3").setWidth( 120);
+			grid.getColumn("column8").setWidth( 150 );
+			grid.getColumn("column9").setWidth( 150 );
+			grid.getColumn("column10").setWidth( 150 );
+			//grid.getColumn("date").setWidth(178).setResizable(false);
 			
-			// grid.addStyleName( "sn-small-grid" );
+			grid.addStyleName( "sn-small-grid" );
 
 			allRowsActionsUIH.removeUnnecessaryColumns(grid);
 
