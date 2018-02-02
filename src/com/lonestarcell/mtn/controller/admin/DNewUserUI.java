@@ -217,7 +217,7 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 		tFNewUsername.clear();
 		tFNewFirstName.clear();
 		tFNewLastName.clear();
-		tFNewSurname.clear();
+		// tFNewSurname.clear();
 		tFNewEmail.clear();
 		setDefaultProfile((BeanItemContainer<OutProfile>) comboProfile.getContainerDataSource(), 4);
 		
@@ -234,8 +234,8 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 			return false;
 		if( !this.isRequiredTFValid( this.tFNewLastName ) )
 			return false;
-		if( !this.isTFValid( this.tFNewSurname ) )
-			return false;
+		// if( !this.isTFValid( this.tFNewSurname ) )
+			// return false;
 	
 		return true;
 	}
@@ -462,7 +462,7 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 		this.tFNewEmail.setPropertyDataSource( record.getItemProperty( "email" ) );
 		this.tFNewFirstName.setPropertyDataSource( record.getItemProperty( "newFirstName" ) );
 		this.tFNewLastName.setPropertyDataSource( record.getItemProperty( "newLastName" ) );
-		this.tFNewSurname.setPropertyDataSource( record.getItemProperty( "newSurname" ) );
+		// this.tFNewSurname.setPropertyDataSource( record.getItemProperty( "newSurname" ) );
 		
 		EmailValidatorCustom emailValidator = new EmailValidatorCustom( "Field required in valid format" );
 		emailValidator.init(lbNormalMsg, lbErrorMsg, "" );
@@ -475,7 +475,7 @@ public class DNewUserUI extends DNewUserUIDesign implements DUserUIInitializable
 		
 		this.tFNewFirstName.addValidator( new RequiredTFValidator( "Field required in valid format" ) );
 		this.tFNewLastName.addValidator( new RequiredTFValidator( "Field required in valid format" ) );
-		this.tFNewSurname.addValidator( new TFValidator( "Field not in valid format" ) );
+		// this.tFNewSurname.addValidator( new TFValidator( "Field not in valid format" ) );
 		
 		this.tFNewUsername.setInvalidCommitted( true );
 		this.tFNewEmail.setInvalidCommitted( true );

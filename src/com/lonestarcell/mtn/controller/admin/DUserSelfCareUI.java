@@ -398,7 +398,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 		// Personal Info
 		this.lbFirstName.setPropertyDataSource( record.getItemProperty( "firstName" ) );
 		this.lbLastName.setPropertyDataSource( record.getItemProperty( "lastName" ) );
-		this.lbSurname.setPropertyDataSource( record.getItemProperty( "surname" ) );
+		// this.lbSurname.setPropertyDataSource( record.getItemProperty( "surname" ) );
 		this.lbEmail.setPropertyDataSource( record.getItemProperty( "email" ) );
 		
 		// Organization
