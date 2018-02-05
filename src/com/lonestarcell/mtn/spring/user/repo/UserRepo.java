@@ -14,8 +14,11 @@ public interface UserRepo extends JpaRepository< User, Long >{
 	
 	@Override
 	public long count();
-	@Query( "SELECT COUNT(*) FROM User u WHERE u.userSession != null OR u.userSession != ''" )
-	public long countLoggedIn();
+	@Query( "SELECT COUNT(*) FROM User u WHERE u.status = 1" )
+	public long countActive();
+	
+	@Query( "SELECT COUNT(*) FROM User u WHERE u.status != 1" )
+	public long countOther();
 	
 	
 	

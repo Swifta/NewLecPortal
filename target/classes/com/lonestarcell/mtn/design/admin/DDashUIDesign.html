@@ -6,7 +6,7 @@
  </head> 
  <body> 
   <vaadin-horizontal-layout style-name="sn-default-home" size-full> 
-   <vaadin-panel style-name="sn-left-menu-c sn-eagle-blue sn-test3" width="226px" height-full _id="leftBar"> 
+   <vaadin-panel style-name="sn-left-menu-c sn-eagle-blue sn-test3 sn-invisible" width="226px" height-full _id="leftBar" :middle :center> 
     <vaadin-vertical-layout> 
      <vaadin-horizontal-layout width-full> 
       <vaadin-button icon="fonticon://FontAwesome/f080" description="Overview of data state" style-name="borderless icon-align-top sn-left-menu-active" plain-text _id="btnDash" :center>
@@ -15,10 +15,10 @@
      </vaadin-horizontal-layout> 
     </vaadin-vertical-layout> 
    </vaadin-panel> 
-   <vaadin-panel style-name="sn-grid-panel" size-full :expand> 
+   <vaadin-panel style-name="sn-grid-panel" size-full :middle :center :expand> 
     <vaadin-vertical-layout style-name="sn-c-ads sn-ref sn-ref-less-margin" spacing size-auto _id="cForms"> 
-     <vaadin-vertical-layout spacing size-auto> 
-      <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto _id="cBookingDetails3" :center> 
+     <vaadin-vertical-layout spacing size-auto margin-top :center> 
+      <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-c-booking-details" size-auto _id="cBookingDetails3" :middle :center> 
        <vaadin-horizontal-layout style-name="sn-cbd-head sn-ref" margin _id="cBDHead3"> 
         <vaadin-label style-name="bold" width="442px" plain-text _id="lbFormHeader">
           Enter New User Details 

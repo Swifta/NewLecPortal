@@ -30,6 +30,12 @@ public interface Subscriber001Repo extends JpaRepository< Subscriber001, Long >{
 	
 	*/
 	
+	@Query("SELECT COUNT( * ) FROM Subscriber001 sub JOIN sub.userAccount001s uas JOIN uas.systemCode s WHERE s.code = 'STS001' ")
+	public long countActive();
+	
+	@Query("SELECT COUNT( * ) FROM Subscriber001 sub JOIN sub.userAccount001s uas JOIN uas.systemCode s WHERE s.code != 'STS001' ")
+	public long countOther();
+	
     @Query( "SELECT sub FROM Subscriber001 sub JOIN sub.person001 p WHERE "+conStrDateRange )
 	public Page< Subscriber001 > findPageByDateRange( Pageable pageable, @Param( "fDate" ) Date fDate, @Param( "tDate" ) Date tDate );
     

@@ -40,7 +40,7 @@ public class UserRepoTest {
 	public void testCountLoggedIn(){
 		Assert.assertNotNull( "User repo is null.", userRepo );
 		
-		log.info( "User count "+userRepo.countLoggedIn(), this );
+		log.info( "User count "+userRepo.countActive(), this );
 	}
 	
 	

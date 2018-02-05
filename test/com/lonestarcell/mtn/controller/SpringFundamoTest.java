@@ -34,6 +34,7 @@ import com.lonestarcell.mtn.spring.fundamo.entity.Subscriber001;
 import com.lonestarcell.mtn.spring.fundamo.entity.Transaction001;
 import com.lonestarcell.mtn.spring.fundamo.entity.TransactionType001;
 import com.lonestarcell.mtn.spring.fundamo.entity.UserAccount001;
+import com.lonestarcell.mtn.spring.fundamo.repo.CorporateAccountHolder001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.Entry001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.LedgerAccount001Repo;
 import com.lonestarcell.mtn.spring.fundamo.repo.RegistrationRequestData001Repo;
@@ -67,12 +68,70 @@ public class SpringFundamoTest {
 	
 	@Autowired
 	private Subscriber001Repo reg;
+	
+	@Autowired
+	private CorporateAccountHolder001Repo corpRepo;
+	
 
 	@Test
 	@Ignore
 	public void testSayHello() {
 		Assert.assertNotNull("Fundamo repo is null.", repo);
 		Assert.assertNotNull("Fundamo entry repo is null.", entryRepo);
+	}
+	
+	
+	@Test
+	@Ignore
+	public void testSubCountSuccesAndOther() throws ParseException {
+
+		Assert.assertNotNull("Fundamo repo is null.", repo);
+		
+		long tSuccess = repo.countSuccess();
+		long tOther = repo.countOther();
+
+		log.info("Results count [ success ]: " + tSuccess );
+		log.info("Results count [ other ]: " + tOther );
+	}
+	
+	
+	@Test
+	@Ignore
+	public void testSubCountActiveAndOther() throws ParseException {
+
+		Assert.assertNotNull("Fundamo repo is null.", subRepo);
+		
+		long tActive = subRepo.countActive();
+		long tOther = subRepo.countOther();
+
+		log.info("Results count [ active ]: " + tActive );
+		log.info("Results count [ other ]: " + tOther );
+	}
+	
+	@Test
+	// @Ignore
+	public void testCorpCountActiveAndOther() throws ParseException {
+
+		Assert.assertNotNull("Fundamo repo is null.", corpRepo);
+		
+		long tActive = corpRepo.countActive();
+		long tOther = corpRepo.countOther();
+
+		log.info("Results corp count [ active ]: " + tActive );
+		log.info("Results corp count [ other ]: " + tOther );
+	}
+	
+	@Test
+	@Ignore
+	public void testMCorpCountActiveAndOther() throws ParseException {
+
+		Assert.assertNotNull("Fundamo repo is null.", corpRepo);
+		
+		long tActive = corpRepo.countActive();
+		long tOther = corpRepo.countOther();
+
+		log.info("Results corp count [ active ]: " + tActive );
+		log.info("Results corp count [ other ]: " + tOther );
 	}
 
 	@Test
@@ -86,6 +145,8 @@ public class SpringFundamoTest {
 
 		log.info("Results count: " + pg.getTotalElements());
 	}
+	
+	
 	
 	
 	@Test
@@ -177,7 +238,7 @@ public class SpringFundamoTest {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testSearchLedgerByAccNo() throws ParseException {
 
 		Assert.assertNotNull("Fundamo repo is null.", ledgerRepo);
@@ -576,7 +637,7 @@ public class SpringFundamoTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	@Transactional
 	public void testfindPageByDateRangeReg() throws ParseException {
 

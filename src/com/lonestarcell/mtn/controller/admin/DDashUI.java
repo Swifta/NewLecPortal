@@ -6,6 +6,7 @@ import java.util.Calendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.design.admin.DDashUIDesign;
 import com.vaadin.ui.Component;
@@ -18,8 +19,10 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 	
 	private DMainUI ancestor;
 	private Logger log = LogManager.getLogger( DDashUI.class.getName() );
+	private ApplicationContext springAppContext;
 	
 	DDashUI(DMainUI a){
+		this.setSpringAppContext( a.getSpringAppContext() );
 		init( a );
 		
 	}
@@ -31,6 +34,18 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 	}
 	
 	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
 
 	@Override
 	public void setHeader() {

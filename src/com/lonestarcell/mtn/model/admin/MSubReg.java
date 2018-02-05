@@ -224,7 +224,7 @@ public class MSubReg extends MDAO implements IModel<Subscriber001Repo>,
 				outSubReg.setIdType(regData.getIdType());
 				outSubReg.setDob(DateFormatFac.toStringDateOnly(per
 						.getDateOfBirth()));
-				outSubReg.setStatus(ua.getSystemCode().getValue());
+				outSubReg.setStatus(ua.getSystemCode().getCode());
 				outSubReg
 						.setRegDate(DateFormatFac.toString(sub.getLastUpdate()));
 

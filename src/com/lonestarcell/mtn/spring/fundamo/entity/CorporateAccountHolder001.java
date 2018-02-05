@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Proxy;
 
 import java.math.BigDecimal;
@@ -37,6 +39,13 @@ public class CorporateAccountHolder001 implements Serializable {
 
 	@Column(name="CLASS_TYPE")
 	private BigDecimal classType;
+	
+	// @OneToMany( mappedBy = "corporateAccountHolder001", fetch = FetchType.LAZY )
+	// private List< Entry001 > userAccount001;
+	
+	@NotFound( action = NotFoundAction.IGNORE )
+	@OneToOne( fetch = FetchType.LAZY, mappedBy = "corporateAccountHolder001" )
+	private UserAccount001 userAccount001;
 
 	/*
 	@Column(name="CORPORATE_ACC_HOLDER_G_OID")
@@ -256,5 +265,15 @@ public class CorporateAccountHolder001 implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public UserAccount001 getUserAccount001() {
+		return userAccount001;
+	}
+
+	public void setUserAccount001(UserAccount001 userAccount001) {
+		this.userAccount001 = userAccount001;
+	}
+	
+	
 
 }

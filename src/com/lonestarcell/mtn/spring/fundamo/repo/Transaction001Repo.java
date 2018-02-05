@@ -24,6 +24,12 @@ public interface Transaction001Repo extends JpaRepository<Transaction001, Long> 
 	
 	@Query("SELECT SUM( t.payeeAmount ) FROM Transaction001 t")
 	public double getTotalPayeeAmount();
+	
+	@Query("SELECT COUNT( * ) FROM Transaction001 t JOIN t.systemCode s WHERE s.code = 'STS012' ")
+	public long countSuccess();
+	
+	@Query("SELECT COUNT( * ) FROM Transaction001 t JOIN t.systemCode s WHERE s.code != 'STS012' ")
+	public long countOther();
 
 	@Query("SELECT SUM( t.payeeAmount ) AS amount, COUNT( t.oid ) AS count FROM Transaction001 t")
 	public List<Object[]> getTotalAmountAndCountAll();

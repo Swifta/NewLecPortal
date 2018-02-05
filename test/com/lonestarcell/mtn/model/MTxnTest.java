@@ -462,16 +462,6 @@ public class MTxnTest {
 		
 		Assert.assertNotNull( out );
 		
-		log.debug( "Dash  Info Failed: "+data.getTotalInfoFail() );
-		log.debug( "Dash  Info Success: "+data.getTotalInfoSuccess() );
-		
-		log.debug( "Dash  SMS Failed: "+data.getTotalSMSFail() );
-		log.debug( "Dash  SMS Success: "+data.getTotalSMSSuccess() );
-		
-		log.debug( "Dash  Token Failed: "+data.getTotalTokenFail() );
-		log.debug( "Dash  Token Success: "+data.getTotalTokenSuccess() );
-		
-		log.debug( "Dash  Txt Failed: "+data.getTotalTxnFail() );
 		log.debug( "Dash  Txn Success: "+data.getTotalTxnSuccess() );
 		
 		
