@@ -425,6 +425,21 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			super(mTxn, grid, record);
 			init();
 		}
+		
+		private boolean isAllowedFeature( Button btn, Short permId ){
+			
+			if( !permSet.contains( permId )){
+				btn.setVisible( false );
+				btn.setEnabled( false );
+				return false;
+				
+			} else {
+				btn.setVisible( true );
+				btn.setEnabled( true );
+				return true;
+			}
+			
+		}
 
 		public Item getRecordDetails() {
 			return recordDetails;
@@ -509,6 +524,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserExpireSession() {
+			
+			if( !isAllowedFeature( btnExpireSession, EnumPermission.USER_CANCEL_LOGIN_SESSION.val) )
+				return;
+			
 			this.btnExpireSession.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -522,6 +541,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserExpirePassword() {
+			
+			if( !isAllowedFeature( btnExpirePass, EnumPermission.USER_EXPIRE_PASSWORD.val) )
+				return;
+			
 			this.btnExpirePass.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -535,6 +558,9 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserActivate() {
+			
+			if( !isAllowedFeature( btnEnable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+				return;
 			this.btnEnable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -548,6 +574,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserBlock() {
+			
+			if( !isAllowedFeature( btnDisable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+				return;
+			
 			this.btnDisable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -589,6 +619,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		private void attachBtnDetails() {
+			
+			if( !isAllowedFeature( btnDetails, EnumPermission.USER_VIEW_DETAILS.val) )
+				return;
+			
 			this.btnDetails.addClickListener(new ClickListener() {
 
 				private static final long serialVersionUID = 1L;
@@ -857,15 +891,14 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 		
 		private boolean isAllowedFeature( Button btn, Short permId ){
-			
 			if( !permSet.contains( permId )){
-				this.btnExpireSession.setVisible( false );
-				this.btnExpireSession.setEnabled( false );
+				btn.setVisible( false );
+				btn.setEnabled( false );
 				return false;
 				
 			} else {
-				this.btnExpireSession.setVisible( true );
-				this.btnExpireSession.setEnabled( true );
+				btn.setVisible( true );
+				btn.setEnabled( true );
 				return true;
 			}
 			

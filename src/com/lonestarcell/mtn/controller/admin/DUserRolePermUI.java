@@ -208,7 +208,7 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 					}
 
 	
-					if (profile.getProfileId() == 1 ) {
+					if (profile.getProfileId() == 2 ) {
 						showSuccess("Super admin role one & whole. No more edit.");
 						return;
 					}

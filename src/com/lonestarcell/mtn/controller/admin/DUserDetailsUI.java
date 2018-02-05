@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.controller.admin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +17,9 @@ import com.lonestarcell.mtn.design.admin.DUserDetailsUIDesign;
 import com.lonestarcell.mtn.model.admin.MUser;
 import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.model.admin.MUserSelfCare;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
@@ -36,13 +39,35 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	private Collection<Item> records;
 	private MUser mTxn = new MUser(  getCurrentUserId(), getCurrentUserSession()  );
 	
+	protected Set< Short > permSet;
+	
 
 	public DUserDetailsUI( Item record) {
 		this.setRecord( record );
+		this.setPermSet( null );
 		init();
 	}
 	
 	
+	
+	
+
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setPermSet(Set<Short> permSet) {
+		if( permSet == null )
+			this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+		else
+			this.permSet = permSet;
+		
+	}
+
+
+
+
 
 	public Collection<Item> getRecords() {
 		return records;
@@ -84,8 +109,26 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	}
 	
 	
+	private boolean isAllowedFeature( Button btn, Short permId ){
+		
+		if( !permSet.contains( permId )){
+			btn.setVisible( false );
+			btn.setEnabled( false );
+			return false;
+			
+		} else {
+			btn.setVisible( true );
+			btn.setEnabled( true );
+			return true;
+		}
+		
+	}
 	
 	private void attachBtnUserSetCreds(){
+		
+		if( !isAllowedFeature( btnUserSetCreds, EnumPermission.USER_SET_RESET_PASSWORD.val) )
+			return;
+		
 		this.btnUserSetCreds.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -102,6 +145,10 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	private void attachBtnUserChangeProfile(){
+		
+		if( !isAllowedFeature( btnUserChangeProfile, EnumPermission.USER_CHANGE_PROFILE.val) )
+			return;
+		
 		this.btnUserChangeProfile.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -121,6 +168,9 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	private void attachBtnUserExpireSession(){
+		if( !isAllowedFeature( btnUserExpireSession, EnumPermission.USER_CANCEL_LOGIN_SESSION.val) )
+			return;
+		
 		this.btnUserExpireSession.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -137,6 +187,9 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 
 	
 	private void attachBtnUserExpirePassword(){
+		
+		if( !isAllowedFeature( btnUserExpirePassword, EnumPermission.USER_EXPIRE_PASSWORD.val) )
+			return;
 		this.btnUserExpirePassword.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -152,6 +205,10 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	}
 	
 	private void attachBtnUserActivate(){
+		
+		if( !isAllowedFeature( btnUserActivate, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+			return;
+		
 		this.btnUserActivate.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -168,6 +225,9 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	private void attachBtnUserBlock(){
+		
+		if( !isAllowedFeature( btnUserBlock, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+			return;
 		this.btnUserBlock.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 

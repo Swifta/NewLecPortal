@@ -65,11 +65,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out setUsers(In in, BeanItemContainer<OutUser> container) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
@@ -384,11 +385,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 	@SuppressWarnings("unchecked")
 	public Out refreshMultiUserRecord(Collection<Item> records) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
@@ -523,11 +525,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out blockMultiUserRecord(Collection<Item> records) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
@@ -591,11 +594,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out activateMultiUserRecord(Collection<Item> records) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
@@ -659,11 +663,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out expireSessionMultiUserRecord(Collection<Item> records) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
@@ -727,11 +732,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out expirePassMultiUserRecord(Collection<Item> records) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
@@ -796,11 +802,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out searchUserMeta(In in, OutTxnMeta outTxn) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();
