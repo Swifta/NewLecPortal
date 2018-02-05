@@ -32,6 +32,8 @@ public class DLedgerUI extends DTxnUI implements DUserUIInitializable<DMainUI,IS
 			attachCommandListeners();
 		} else {
 			VerticalLayout c = new VerticalLayout();
+			c.setWidth( "100%" );
+			c.setHeight( "100%" );
 			swap( c );
 		}
 	}

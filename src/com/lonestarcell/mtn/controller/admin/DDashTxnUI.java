@@ -23,6 +23,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 public class DDashTxnUI extends DDashTxnUIDesign implements
 		DUserUIInitializable<DDashUI, DDashTxnUI>, DUIControllable {
@@ -228,11 +229,12 @@ public class DDashTxnUI extends DDashTxnUIDesign implements
 
 	private void setDashData() {
 
-		
+		VerticalLayout v = new VerticalLayout();
 		// Sub
 		if( permSet.contains( EnumPermission.DASH_SUBSCRIBER_STAT.val )){
 			this.loadDataHandlerSub();
 			this.cCardSub.setVisible( true );
+			v = null;
 		} else {
 			this.cCardSub.setVisible( false );
 		}
@@ -241,6 +243,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements
 		if( permSet.contains( EnumPermission.DASH_MERCHANT_STAT.val )){
 			this.loadDataHandlerMer();
 			this.cCardMer.setVisible( true );
+			v = null;
 		} else {
 			this.cCardMer.setVisible( false );
 		}
@@ -249,6 +252,7 @@ public class DDashTxnUI extends DDashTxnUIDesign implements
 		if( permSet.contains( EnumPermission.DASH_TRANSACTION_STAT.val )){
 			this.loadDataHandlerTxn();
 			this.cCardTxn.setVisible( true );
+			v = null;
 		} else {
 			this.cCardTxn.setVisible( false );
 		}
@@ -258,8 +262,16 @@ public class DDashTxnUI extends DDashTxnUIDesign implements
 		if( permSet.contains( EnumPermission.DASH_SYS_USER_STAT.val )){
 			this.loadDataHandlerUser();
 			this.cCardUser.setVisible( true );
+			
+			v = null;
 		} else {
 			this.cCardUser.setVisible( false );
+		}
+		
+		if( v != null ){
+			v.setWidth( "100%" );
+			v.setHeight( "100%" );
+			this.swap( v );
 		}
 		
 

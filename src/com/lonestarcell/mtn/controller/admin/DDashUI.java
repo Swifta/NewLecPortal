@@ -57,6 +57,7 @@ public class DDashUI extends DDashUIDesign implements DUserUIInitializable<DMain
 	public void setContent() {
 		setHeader();
 		setFooter();
+		
 		swap( new DDashTxnUI( getParentUI() ) ); 
 		attachCommandListeners();
 		this.setVMenu();
