@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.controller.admin;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,15 +53,18 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 
 	protected IModel mSub;
 	protected InTxn inTxn;
+	protected Set< Short > permSet;
 
 	private ApplicationContext springAppContext;
 
 	DTxnStateUI( ISubUI a) {
 		this(a.getSpringAppContext());
+		this.setPermSet( a.getPermSet() );
 		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
 				getCurrentTimeCorrection(), springAppContext );
 		init(a);
 	}
+	
 
 	/*
 	 * Shared constructor by both DTxnStateUI [ Parent class ] &
@@ -69,11 +73,28 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 	 */
 	protected DTxnStateUI(ApplicationContext cxt) {
 		this.setSpringAppContext(cxt);
+		this.setPermSet( null );
 		inTxn = new InTxn();
 		this.setInDate(inTxn, 1);
 	}
 	
 	
+
+	
+
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public void setPermSet(Set<Short> permSet) {
+		if( permSet == null )
+			this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+		else
+			this.permSet = permSet;
+		
+	}
 
 
 	public ApplicationContext getSpringAppContext() {
@@ -190,6 +211,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			BData<InTxn> inBData = new BData<>();
 
 			inTxn.setPage(1);
+			inTxn.setPermSet( this.getPermSet() );
 			
 			// Set OutTxnMeta
 			OutTxnMeta outTxnMeta = new OutTxnMeta();
@@ -258,6 +280,8 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			PaginationUIController pageC = new PaginationUIController();
 			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
 					grid, in, pageC);
+			
+			
 			dateFilterCellH.setComponent(allRowsActionsUIH);
 
 			header.setStyleName("sn-date-filter-row");

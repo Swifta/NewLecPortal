@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.admin;
 
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -12,6 +14,7 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.design.admin.DDashTxnUIDesign;
 import com.lonestarcell.mtn.model.admin.MDash;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
@@ -31,13 +34,30 @@ public class DDashTxnUI extends DDashTxnUIDesign implements
 	private Item record;
 	private OutTxnMeta data;
 	private ApplicationContext springAppContext;
+	private Set< Integer > permSet;
 
 	private MDash mDash;
 
 	DDashTxnUI(DDashUI a) {
 		this.setSpringAppContext(a.getSpringAppContext());
+		this.setPermSet( null );
 		init(a);
 	}
+	
+	
+
+	public Set<Integer> getPermSet() {
+		return permSet;
+	}
+
+
+
+	@SuppressWarnings("unchecked")
+	public void setPermSet(Set<Integer> permSet) {
+		 this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+	}
+
+
 
 	public ApplicationContext getSpringAppContext() {
 		return springAppContext;
@@ -208,10 +228,40 @@ public class DDashTxnUI extends DDashTxnUIDesign implements
 
 	private void setDashData() {
 
-		this.loadDataHandlerSub();
-		this.loadDataHandlerMer();
-		this.loadDataHandlerTxn();
-		this.loadDataHandlerUser();
+		
+		// Sub
+		if( permSet.contains( EnumPermission.DASH_SUBSCRIBER_STAT.val )){
+			this.loadDataHandlerSub();
+			this.cCardSub.setVisible( true );
+		} else {
+			this.cCardSub.setVisible( false );
+		}
+		
+		// Mer
+		if( permSet.contains( EnumPermission.DASH_MERCHANT_STAT.val )){
+			this.loadDataHandlerMer();
+			this.cCardMer.setVisible( true );
+		} else {
+			this.cCardMer.setVisible( false );
+		}
+		
+		// Tran
+		if( permSet.contains( EnumPermission.DASH_TRANSACTION_STAT.val )){
+			this.loadDataHandlerTxn();
+			this.cCardTxn.setVisible( true );
+		} else {
+			this.cCardTxn.setVisible( false );
+		}
+		
+		
+		// User
+		if( permSet.contains( EnumPermission.DASH_SYS_USER_STAT.val )){
+			this.loadDataHandlerUser();
+			this.cCardUser.setVisible( true );
+		} else {
+			this.cCardUser.setVisible( false );
+		}
+		
 
 	}
 

@@ -10,6 +10,7 @@ import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.admin.MTxn;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -35,6 +36,19 @@ public class MultiRowActionsUIMerchant extends MultiRowActionsUISub {
 
 	@Override
 	protected void attachBtnExport(){
+		
+
+		if( !permSet.contains( EnumPermission.REPORT_EXPORT_MERCHANT.val )){
+			this.btnExport.setVisible( false );
+			this.btnExport.setEnabled( false );
+			return;
+			
+		} else {
+			this.btnExport.setVisible( true );
+			this.btnExport.setEnabled( true );
+		}
+		
+		
 		this.btnExport.addClickListener( new ClickListener(){
 
 			

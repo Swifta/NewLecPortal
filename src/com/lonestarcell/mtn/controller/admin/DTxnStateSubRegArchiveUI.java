@@ -10,11 +10,8 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
-import com.lonestarcell.mtn.controller.util.AllRowsActionsUILedger;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISubReg;
-import com.lonestarcell.mtn.controller.util.MultiRowActionsUILedger;
-import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISubReg;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
@@ -49,6 +46,9 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 		log.debug( "Archive UI loaded successfully." );
 	}
 	
+	
+
+
 	@Override
 	public void setHeader() {
 		this.lbDataTitle.setValue("Subscriber Registration Archive");
@@ -93,6 +93,7 @@ public class DTxnStateSubRegArchiveUI extends DTxnStateArchiveUI {
 
 			BData<InTxn> inBData = new BData<>();
 
+			inTxn.setPermSet( this.getPermSet() );
 			inTxn.setPage(1);
 			// this.setInDate(inTxn, ( 365 * 3) );
 			inBData.setData(inTxn);

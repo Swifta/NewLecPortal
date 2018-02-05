@@ -1,11 +1,14 @@
 package com.lonestarcell.mtn.controller.admin;
 
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.design.admin.DUserUIDesign;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
@@ -21,17 +24,30 @@ public class DUserUI extends DUserUIDesign implements
 	 */
 
 	private DMainUI ancestor;
-	private Button btnActive;
+	private Button btnActive = new Button();
 	private Component rightContent;
 	private Logger log = LogManager.getLogger(DMainUI.class.getName());
+	protected Set< Short > permSet;
 
 	private ApplicationContext springAppContext;
 
 	public DUserUI(DMainUI a) {
 
 		this.setSpringAppContext(a.getSpringAppContext());
+		this.setPermSet( a.getPermSet() );
 		init(a);
 	}
+
+	
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+
+	public void setPermSet(Set<Short> permSet) {
+		this.permSet = permSet;
+	}
+
 
 	public ApplicationContext getSpringAppContext() {
 		return springAppContext;
@@ -53,9 +69,44 @@ public class DUserUI extends DUserUIDesign implements
 
 	@Override
 	public void attachCommandListeners() {
-		this.attachBtnNewUser();
-		this.attachBtnUsers();
-		this.attachBtnRolePerm();
+		
+		Button btnDefault = null;
+		
+		if( permSet.contains( EnumPermission.USER_ROLE_MANAGE.val ) ){
+			this.attachBtnRolePerm();
+			this.btnUserRolePerm.setVisible( true );
+			this.btnUserRolePerm.setEnabled( true );
+			btnDefault = btnUserRolePerm;
+		} else {
+			this.btnUserRolePerm.setVisible( false );
+			this.btnUserRolePerm.setEnabled( false );
+		}
+		
+		if( permSet.contains( EnumPermission.USER_ADD.val ) ){
+			this.attachBtnNewUser();
+			this.btnNewUser.setVisible( true );
+			this.btnNewUser.setEnabled( true );
+			btnDefault = btnNewUser;
+		} else {
+			this.btnNewUser.setVisible( false );
+			this.btnNewUser.setEnabled( false );
+		}
+		
+		if( permSet.contains( EnumPermission.USER_VIEW.val ) ){
+			this.attachBtnUsers();
+			this.btnUsers.setVisible( true );
+			this.btnUsers.setEnabled( true );
+			btnDefault = btnUsers;
+		} else {
+			this.btnUsers.setVisible( false );
+			this.btnUsers.setEnabled( false );
+		}
+		
+		if( btnDefault != null )
+			btnDefault.click();
+		
+		
+		
 	}
 
 	private void attachBtnNewUser() {
@@ -79,7 +130,6 @@ public class DUserUI extends DUserUIDesign implements
 	}
 
 	private void attachBtnUsers() {
-		btnActive = btnUsers;
 		this.btnUsers.addClickListener(new ClickListener() {
 
 			private static final long serialVersionUID = 1L;
@@ -138,7 +188,7 @@ public class DUserUI extends DUserUIDesign implements
 	public void setContent() {
 		setHeader();
 		setFooter();
-		swap(new DUserStateUI(getParentUI()));
+		// swap(new DUserStateUI(getParentUI()));
 		attachCommandListeners();
 
 	}

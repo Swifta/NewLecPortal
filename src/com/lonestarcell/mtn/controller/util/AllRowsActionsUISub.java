@@ -15,6 +15,7 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -265,6 +266,17 @@ public class AllRowsActionsUISub
 
 	@Override
 	protected void attachBtnExportOps() {
+		
+		if( !permSet.contains( EnumPermission.REPORT_EXPORT_TRANSACTION.val )){
+			this.btnExportOps.setVisible( false );
+			this.btnExportOps.setEnabled( false );
+			return;
+			
+		} else {
+			this.btnExportOps.setVisible( true );
+			this.btnExportOps.setEnabled( true );
+		}
+		
 
 		this.btnExportOps.addClickListener(new ClickListener() {
 

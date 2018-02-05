@@ -21,6 +21,12 @@ public class Permission implements Serializable {
 	private short id;
 
 	private String name;
+	
+	//@OneToOne( fetch = FetchType.LAZY)
+	//@JoinColumn( name = "parent_perm_id", referencedColumnName = "id" )
+	//private Permission parentPerm;
+	@Column( name = "parent_perm_id" )
+	private short parentPermId;
 
 	//bi-directional many-to-one association to ProfilePermissionMap
 	@OneToMany(mappedBy="permission")
@@ -28,6 +34,19 @@ public class Permission implements Serializable {
 
 	public Permission() {
 	}
+
+
+	
+	public short getParentPermId() {
+		return parentPermId;
+	}
+
+
+
+	public void setParentPermId(short parentPermId) {
+		this.parentPermId = parentPermId;
+	}
+
 
 
 	public short getId() {

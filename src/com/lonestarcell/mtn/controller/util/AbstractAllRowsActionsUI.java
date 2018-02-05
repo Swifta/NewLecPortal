@@ -19,6 +19,7 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
 import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -54,6 +55,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 	protected OutTxnMeta outTxnMeta;
 	protected List<TextField> tFSearchFields = new ArrayList<>(4);
 	protected int newPage;
+	protected Set< Short > permSet;
 
 	protected Set<String> gridColumnRemnantSet = new HashSet<>(10);
 
@@ -63,12 +65,34 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 	public AbstractAllRowsActionsUI(In in, boolean allowDateFilters,
 			boolean isHeader, PaginationUIController pageC) {
 
+		
 		this.in = in;
+		
 		this.allowDateFilters = allowDateFilters;
 		this.isHeader = isHeader;
 		this.pageC = pageC;
 
 	}
+	
+	
+
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+
+
+	public void setPermSet( InTxn inTxn ) {
+		Set< Short > pSet = new HashSet<>();
+		if( inTxn == null )
+			this.permSet = pSet;
+		Set< Short > set = inTxn.getPermSet();
+		if( set == null )
+			this.permSet = pSet;
+		this.permSet = set;
+	}
+
+
 
 	protected abstract void setGrid(Grid grid);
 
@@ -76,6 +100,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 	private void setInTxn(In in) {
 		inTxn = (InTxn) in.getData().getData();
+		this.setPermSet( inTxn );
 	}
 
 	protected abstract void setOutTxnMeta();
@@ -115,10 +140,14 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		this.attachBtnAfterPrev();
 
 		// Data Export
+		
+		
 		this.attachBtnExportOps();
 		this.initDataExportUI();
 
 	}
+	
+
 
 	protected void setNewPage(int page) {
 		log.info( "New page called." );

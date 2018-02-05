@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.controller.admin;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,8 +29,10 @@ public abstract class AbstractDTxnStateUI< T > extends DTxnStateUIDesign impleme
 
 	private static final long serialVersionUID = 1L;
 	
+	
 	protected ISubUI ancestor;
 	protected Logger log = LogManager.getLogger(AbstractDTxnStateUI.class.getName());
+	protected Set< Short > permSet;
 
 	protected IModel mSub;
 	protected InTxn inTxn;
@@ -38,6 +41,7 @@ public abstract class AbstractDTxnStateUI< T > extends DTxnStateUIDesign impleme
 
 	AbstractDTxnStateUI( ISubUI a) {
 		this(a.getSpringAppContext());
+		this.setPermSet( a.getPermSet() );
 		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
 				getCurrentTimeCorrection(), springAppContext );
 		init(a);
@@ -50,12 +54,27 @@ public abstract class AbstractDTxnStateUI< T > extends DTxnStateUIDesign impleme
 	 */
 	protected AbstractDTxnStateUI(ApplicationContext cxt) {
 		this.setSpringAppContext(cxt);
+		this.setPermSet( null );
 		inTxn = new InTxn();
 		this.setInDate(inTxn, 1);
 	}
 	
 	
 
+	
+
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setPermSet(Set<Short> permSet) {
+		if( permSet == null )
+			this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+		else
+			this.permSet = permSet;
+		
+	}
 
 	public ApplicationContext getSpringAppContext() {
 		return springAppContext;

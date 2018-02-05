@@ -326,6 +326,7 @@ public class MMerchant extends MDAO implements IModel<Entry001Repo>,
 			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
+			
 
 			e.printStackTrace();
 			out.setMsg("Data fetch error.");

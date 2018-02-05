@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,7 @@ import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.design.admin.DUserStateUIDesign;
 import com.lonestarcell.mtn.model.admin.MUser;
 import com.lonestarcell.mtn.model.admin.MUserDetails;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -63,13 +65,31 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	private MUser mTxn;
 	private InTxn inTxn;
+	protected Set< Short > permSet;
 
 	private ApplicationContext springAppContext;
 
 	DUserStateUI(DUserUI a) {
 		this.setSpringAppContext(a.getSpringAppContext());
+		this.setPermSet( a.getPermSet() );
 		init(a);
 	}
+
+	
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public void setPermSet(Set<Short> permSet) {
+		if( permSet == null )
+			this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+		else
+			this.permSet = permSet;
+		
+	}
+
 
 	public ApplicationContext getSpringAppContext() {
 		return springAppContext;
@@ -239,6 +259,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			String fDate = sdf.format(cal.getTime());
 			log.debug("From: " + fDate);
 
+			inTxn.setPermSet( this.getPermSet() );
 			inTxn.setfDate(fDate);
 
 			inBData.setData(inTxn);
@@ -834,8 +855,27 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			this.attachCommandListeners();
 
 		}
+		
+		private boolean isAllowedFeature( Button btn, Short permId ){
+			
+			if( !permSet.contains( permId )){
+				this.btnExpireSession.setVisible( false );
+				this.btnExpireSession.setEnabled( false );
+				return false;
+				
+			} else {
+				this.btnExpireSession.setVisible( true );
+				this.btnExpireSession.setEnabled( true );
+				return true;
+			}
+			
+		}
 
 		protected void attachBtnUserExpireSession() {
+			
+			if( !isAllowedFeature( btnExpireSession, EnumPermission.USER_CANCEL_LOGIN_SESSION.val) )
+				return;
+			
 			this.btnExpireSession.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -868,6 +908,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserExpirePassword() {
+			
+			if( !isAllowedFeature( btnExpirePass, EnumPermission.USER_EXPIRE_PASSWORD.val) )
+				return;
+			
 			this.btnExpirePass.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -902,6 +946,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserActivate() {
+			
+			if( !isAllowedFeature( btnEnable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+				return;
+			
 			this.btnEnable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -934,6 +982,10 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserBlock() {
+			
+			if( !isAllowedFeature( btnDisable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+				return;
+			
 			this.btnDisable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -967,6 +1019,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		
 		
 		private void attachBtnExport(){
+			
+			
+			if( !isAllowedFeature( btnExport, EnumPermission.USER_EXPORT.val) )
+				return;
+			
 			this.btnExport.addClickListener( new ClickListener(){
 
 				

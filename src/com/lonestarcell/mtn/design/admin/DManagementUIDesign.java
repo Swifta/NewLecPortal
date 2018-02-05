@@ -34,9 +34,9 @@ public class DManagementUIDesign extends VerticalLayout {
 	protected VerticalLayout logoArea;
 	protected Button btnHMenuDash;
 	protected Button btnHMenuTxn;
-	protected Button btnHMenuPayment;
+	protected Button btnHMenuSubReg;
 	protected Button btnHMenuToken;
-	protected Button btnHMenuInfo;
+	protected Button btnHMenuLedger;
 	protected Button btnHMenuUser;
 	protected Button btnHMenuMisc;
 	protected VerticalLayout midContent;

@@ -2,9 +2,12 @@ package com.lonestarcell.mtn.controller.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.model.admin.MTxn;
@@ -32,6 +35,7 @@ public class AbstractMultiRowActionsUI extends VerticalLayout implements DUICont
 	
 	protected Component exportUI;
 	protected VerticalLayout otherOpUI;
+	protected Set< Short > permSet;
 	
 	private PopupView popupView;
 
@@ -40,6 +44,7 @@ public class AbstractMultiRowActionsUI extends VerticalLayout implements DUICont
 		this.grid = grid;
 		this.mTxn = mTxn;
 		this.in = in;
+		this.setPermSet( in );
 		init( );
 	}
 	
@@ -48,6 +53,24 @@ public class AbstractMultiRowActionsUI extends VerticalLayout implements DUICont
 	}
 	
 	
+	
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+	public void setPermSet( In in ) {
+		Set< Short > pSet = new HashSet<>();
+		if( in == null )
+			this.permSet = pSet;
+		InTxn inTxn = ( InTxn ) in.getData().getData();
+		if( inTxn == null )
+			this.permSet = pSet;
+		Set< Short > set = inTxn.getPermSet();
+		if( set == null )
+			this.permSet = pSet;
+		this.permSet = set;
+	}
+
 	private void init() {
 		setContent();
 		this.attachCommandListeners();
@@ -120,6 +143,10 @@ public class AbstractMultiRowActionsUI extends VerticalLayout implements DUICont
 	}
 	
 	protected void attachBtnExport(){
+		
+		
+
+		
 		this.btnExport.addClickListener( new ClickListener(){
 
 			

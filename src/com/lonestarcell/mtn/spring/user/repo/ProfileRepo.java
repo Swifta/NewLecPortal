@@ -13,4 +13,6 @@ import com.lonestarcell.mtn.spring.user.entity.Profile;
 @Transactional( propagation = Propagation.REQUIRED )
 public interface ProfileRepo extends JpaRepository< Profile, Short >{
 	public Profile findByProfileName( @Param( "profileName" ) String name );
+	public Profile findByProfileStatus( @Param( "profileStatus" ) Short status );
+	
 }

@@ -207,7 +207,8 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 						return;
 					}
 
-					if (profile.getProfileId() == 1) {
+	
+					if (profile.getProfileId() == 1 ) {
 						showSuccess("Super admin role one & whole. No more edit.");
 						return;
 					}
@@ -240,7 +241,7 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 
 					try {
 						// Activate role
-						Profile profile = repoProfile.getOne((short) 1);
+						Profile profile = repoProfile.getOne( profileId );
 						if (profile == null) {
 							showError("No such role found");
 							return;

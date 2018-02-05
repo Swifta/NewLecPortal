@@ -17,7 +17,6 @@ public class DTxnStateArchiveUI extends DTxnStateUI {
 	
 	protected Logger log = LogManager.getLogger( DTxnStateArchiveUI.class.getName() );
 	
-	
 	DTxnStateArchiveUI( ISubUI a ){
 		super( a.getSpringAppContext() );
 		this.setInDate( inTxn, 4*365 );
@@ -36,7 +35,7 @@ public class DTxnStateArchiveUI extends DTxnStateUI {
 		super( cxt );
 		this.setInDate( inTxn, 4*365 );
 	}
-	
+
 	@Override
 	public void setHeader() {
 		this.lbDataTitle.setValue("Subscriber Transaction Archive");

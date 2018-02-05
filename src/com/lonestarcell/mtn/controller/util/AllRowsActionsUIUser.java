@@ -12,6 +12,7 @@ import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.model.admin.MUser;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -198,6 +199,17 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 
 	@Override
 	protected void attachBtnExportOps() {
+		
+		
+		if( !permSet.contains( EnumPermission.USER_EXPORT.val )){
+			this.btnExportOps.setVisible( false );
+			this.btnExportOps.setEnabled( false );
+			return;
+			
+		} else {
+			this.btnExportOps.setVisible( true );
+			this.btnExportOps.setEnabled( true );
+		}
 
 		this.btnExportOps.addClickListener(new ClickListener() {
 

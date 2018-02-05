@@ -11,55 +11,57 @@
       Roles &amp; Permissions 
     </vaadin-label> 
    </vaadin-vertical-layout> 
-   <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-ref" margin _id="cMobileNumber3"> 
-    <vaadin-label visible="false" style-name="bold tiny success light" immediate _id="lbNormalMsg">
-      Enter details 
-    </vaadin-label> 
-    <vaadin-label visible="false" style-name="bold tiny failure" height="33px" plain-text _id="lbErrorMsg">
-      Invalid value 
-    </vaadin-label> 
-    <vaadin-accordion _id="accoRoles"> 
-     <tab caption="Support" selected> 
-      <vaadin-tree caption="Support"> 
-       <node text="Permission(s)"> 
-        <node text="Transactions"></node> 
-        <node text="Export"></node> 
-        <node text="Disable"></node> 
-       </node> 
-      </vaadin-tree> 
-     </tab> 
-     <tab caption="Admin"> 
-      <vaadin-vertical-layout> 
-       <vaadin-tree> 
+   <vaadin-panel size-full> 
+    <vaadin-vertical-layout style-name="sn-c-ref-form sn-c-form sn-ref" margin _id="cMobileNumber3"> 
+     <vaadin-label visible="false" style-name="bold tiny success light" immediate _id="lbNormalMsg">
+       Enter details 
+     </vaadin-label> 
+     <vaadin-label visible="false" style-name="bold tiny failure" height="33px" plain-text _id="lbErrorMsg">
+       Invalid value 
+     </vaadin-label> 
+     <vaadin-accordion _id="accoRoles"> 
+      <tab caption="Support" selected> 
+       <vaadin-tree caption="Support"> 
         <node text="Permission(s)"> 
-         <node text="Access"></node> 
-         <node text="Export Reports"></node> 
-         <node text="Add User"></node> 
+         <node text="Transactions"></node> 
+         <node text="Export"></node> 
+         <node text="Disable"></node> 
         </node> 
        </vaadin-tree> 
-       <vaadin-horizontal-layout style-name="sn-c-accordion-ctrls"> 
-        <vaadin-button icon="fonticon://FontAwesome/f044" description="Edit Role Permissions" style-name="icon-only borderless" width-full plain-text>
-          Edit Role Permissions 
-        </vaadin-button> 
-        <vaadin-button icon="fonticon://FontAwesome/f023" description="Disable Role" style-name="icon-only borderless" width-full plain-text>
-          Disable Role 
-        </vaadin-button> 
-        <vaadin-button icon="fonticon://FontAwesome/f084" description="Activate Role" style-name="icon-only borderless" width-full plain-text>
-          Activate Role 
-        </vaadin-button> 
-        <vaadin-button icon="fonticon://FontAwesome/f171" description="Delete Role" style-name="icon-only borderless" width-full plain-text>
-          Delete Role 
-        </vaadin-button> 
-       </vaadin-horizontal-layout> 
-      </vaadin-vertical-layout> 
-     </tab> 
-    </vaadin-accordion> 
-    <vaadin-horizontal-layout spacing margin-top _id="cControls3"> 
-     <vaadin-button icon="fonticon://FontAwesome/f0fe" description="Add New Role" style-name="friendly icon-only" plain-text _id="btnAddNewRole">
-       Add New Role 
-     </vaadin-button> 
-    </vaadin-horizontal-layout> 
-   </vaadin-vertical-layout> 
+      </tab> 
+      <tab caption="Admin"> 
+       <vaadin-vertical-layout> 
+        <vaadin-tree> 
+         <node text="Permission(s)"> 
+          <node text="Access"></node> 
+          <node text="Export Reports"></node> 
+          <node text="Add User"></node> 
+         </node> 
+        </vaadin-tree> 
+        <vaadin-horizontal-layout style-name="sn-c-accordion-ctrls"> 
+         <vaadin-button icon="fonticon://FontAwesome/f044" description="Edit Role Permissions" style-name="icon-only borderless" width-full plain-text>
+           Edit Role Permissions 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f023" description="Disable Role" style-name="icon-only borderless" width-full plain-text>
+           Disable Role 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f084" description="Activate Role" style-name="icon-only borderless" width-full plain-text>
+           Activate Role 
+         </vaadin-button> 
+         <vaadin-button icon="fonticon://FontAwesome/f171" description="Delete Role" style-name="icon-only borderless" width-full plain-text>
+           Delete Role 
+         </vaadin-button> 
+        </vaadin-horizontal-layout> 
+       </vaadin-vertical-layout> 
+      </tab> 
+     </vaadin-accordion> 
+     <vaadin-horizontal-layout spacing margin-top _id="cControls3"> 
+      <vaadin-button icon="fonticon://FontAwesome/f0fe" description="Add New Role" style-name="friendly icon-only" plain-text _id="btnAddNewRole">
+        Add New Role 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-panel> 
   </vaadin-vertical-layout>  
  </body>
 </html>

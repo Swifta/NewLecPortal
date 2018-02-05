@@ -181,11 +181,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 
 	public Out searchUsers(In in, BeanItemContainer<OutUser> container) {
 
+		/*
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
 			out.setStatusCode(100);
 			return out;
-		}
+		} */
 
 		Connection conn = null;
 		out = new Out();

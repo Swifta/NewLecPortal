@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.admin;
 
+import java.util.Set;
+
 import org.springframework.context.ApplicationContext;
 
 import com.vaadin.ui.Component;
@@ -13,5 +15,7 @@ public interface ISubUI {
 	VerticalLayout getcMainContent();
 	void swap( Component cuid );
 	void setHeight( String height );
+	Set< Short > getPermSet();
+	void setPermSet( Set< Short > permSet );
 
 }

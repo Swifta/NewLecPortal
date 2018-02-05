@@ -12,7 +12,6 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUIMerchant;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUIMerchant;
-import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
 import com.lonestarcell.mtn.model.admin.IModel;
@@ -41,7 +40,6 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 	
 	private Logger log = LogManager.getLogger( DTxnStateMerchantArchiveUI.class.getName() );
 	
-	
 	DTxnStateMerchantArchiveUI( ISubUI a){
 		super( a.getSpringAppContext() );
 		mSub = new MMerchant(getCurrentUserId(), getCurrentUserSession(),
@@ -49,9 +47,8 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 		this.init(a);
 		log.debug( "Archive UI loaded successfully." );
 	}
-	
-	
-	
+
+
 	@Override
 	public void setHeader() {
 		this.lbDataTitle.setValue("Merchant Transaction Archive");
@@ -88,6 +85,7 @@ public class DTxnStateMerchantArchiveUI extends DTxnStateArchiveUI {
 
 			inTxn.setPage(1);
 			// this.setInDate(inTxn, ( 365 * 3) );
+			inTxn.setPermSet( this.getPermSet() );
 			inBData.setData(inTxn);
 			in.setData(inBData);
 			

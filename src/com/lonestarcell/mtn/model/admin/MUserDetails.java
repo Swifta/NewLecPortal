@@ -5,6 +5,10 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +16,11 @@ import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.spring.user.entity.Permission;
+import com.lonestarcell.mtn.spring.user.entity.Profile;
+import com.lonestarcell.mtn.spring.user.entity.ProfilePermissionMap;
+import com.lonestarcell.mtn.spring.user.repo.ProfilePermissionMapRepo;
+import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 
 public class MUserDetails extends Model {
@@ -134,6 +143,9 @@ public class MUserDetails extends Model {
 		
 		return out;
 	}
+	
+	
+
 	
 	
 	public Out addNewUser( In in ) {

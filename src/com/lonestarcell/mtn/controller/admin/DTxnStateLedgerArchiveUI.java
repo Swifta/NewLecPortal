@@ -13,12 +13,10 @@ import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUILedger;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUILedger;
-import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MLedger;
-import com.lonestarcell.mtn.model.admin.MSubReg;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -40,6 +38,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 
 	private static final long serialVersionUID = 1L;
     private Logger log = LogManager.getLogger( DTxnStateLedgerArchiveUI.class.getName() );
+   
 	DTxnStateLedgerArchiveUI( ISubUI a){
 		super( a.getSpringAppContext() );
 		mSub = new MLedger(getCurrentUserId(), getCurrentUserSession(),
@@ -48,6 +47,8 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 		log.debug( "Archive UI loaded successfully." );
 	}
 	
+
+
 	@Override
 	public void setHeader() {
 		this.lbDataTitle.setValue("Ledger Archive");
@@ -88,6 +89,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 			// this.setInDate(inTxn, ( 365 * 3) );
 			inBData.setData(inTxn);
 			in.setData(inBData);
+			inTxn.setPermSet( this.getPermSet() );
 			
 			// Set OutTxnMeta
 			OutTxnMeta outTxnMeta = new OutTxnMeta();

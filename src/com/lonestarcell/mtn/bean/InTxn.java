@@ -2,6 +2,7 @@ package com.lonestarcell.mtn.bean;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class InTxn {
 	
@@ -12,11 +13,18 @@ public class InTxn {
 	private boolean isExportOp = false;
 	private boolean isPgNav = false;
 	private Map< String, Object > searchMap = new HashMap< >();
+	private Set< Short > permSet;
 	
 	private OutTxnMeta meta;
 
 	
 	
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+	public void setPermSet(Set<Short> permSet) {
+		this.permSet = permSet;
+	}
 	public boolean isPgNav() {
 		return isPgNav;
 	}

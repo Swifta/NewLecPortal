@@ -2,14 +2,18 @@ package com.lonestarcell.mtn.controller.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.lonestarcell.mtn.bean.In;
+import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.admin.MTxn;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -32,6 +36,8 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 	private IModel mSub;
 	private In in;
 	
+	protected Set< Short > permSet;
+	
 	private Component exportUI;
 	private VerticalLayout otherOpUI;
 	
@@ -44,9 +50,31 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 		this.grid = grid;
 		this.mSub = mSub;
 		this.in = in;
+		this.setPermSet( in );
 		init( );
 	}
 	
+	
+	public void setPermSet( In in ) {
+		Set< Short > pSet = new HashSet<>();
+		if( in == null )
+			this.permSet = pSet;
+		InTxn inTxn = ( InTxn ) in.getData().getData();
+		if( inTxn == null )
+			this.permSet = pSet;
+		Set< Short > set = inTxn.getPermSet();
+		if( set == null )
+			this.permSet = pSet;
+		this.permSet = set;
+	}
+
+	
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+	public void setPermSet(Set<Short> permSet) {
+		this.permSet = permSet;
+	}
 	private void setPopupView( PopupView pop ){
 		popupView = pop;
 	}
@@ -124,6 +152,18 @@ public class MultiRowActionsUISub extends VerticalLayout implements DUIControlla
 	}
 	
 	protected void attachBtnExport(){
+		
+		if( !permSet.contains( EnumPermission.REPORT_EXPORT_TRANSACTION.val )){
+			this.btnExport.setVisible( false );
+			this.btnExport.setEnabled( false );
+			return;
+			
+		} else {
+			this.btnExport.setVisible( true );
+			this.btnExport.setEnabled( true );
+		}
+		
+		
 		this.btnExport.addClickListener( new ClickListener(){
 
 			
