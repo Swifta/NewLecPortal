@@ -555,7 +555,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
-				new DUserDetailsUI( record );
+				new DUserDetailsUI( record, springAppContext );
 				
 					
 

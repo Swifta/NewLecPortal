@@ -5,6 +5,8 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -151,11 +153,12 @@ public class MUserDetails extends Model {
 	public Out addNewUser( In in ) {
 		
 		
+		/*
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}
+		} */
 		
 		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
@@ -165,11 +168,11 @@ public class MUserDetails extends Model {
 		out = new Out();
 		String q = "INSERT INTO users ";
 			   q += "( organization_id, username, email, password, firstname, lastname, surname, ";
-			   q += "added_by, change_password, profile_id, last_login, user_session, pass_salt ";
+			   q += "added_by, change_password, profile_id, last_login, user_session, pass_salt, status ";
 		   	   q += ") ";
 		   	   q += "VALUES ";
 		   	   q += "(?,?,?,?,?,?,?,";
-		   	   q += "?,?,?,?,?,? ";
+		   	   q += "?,?,?,?,?,?, 1 ";
 		   	   q += ");";
 		
 		try {
@@ -225,11 +228,14 @@ public class MUserDetails extends Model {
 			ps.setString( 6, inUser.getRecord().getItemProperty( "newLastName" ).getValue().toString()  );
 			ps.setString( 7, inUser.getRecord().getItemProperty( "newSurname" ).getValue().toString()  );
 			ps.setLong( 8,  authId );
-			ps.setShort( 9,  Short.valueOf( inUser.getRecord().getItemProperty( "changePass" ).getValue().toString() )  );
+			
+			// Short.valueOf( inUser.getRecord().getItemProperty( "changePass" ).getValue().toString() )
+			ps.setShort( 9,  ( short ) 1);
 			ps.setShort( 10, Short.valueOf( inUser.getRecord().getItemProperty( "profileId" ).getValue().toString()  ) );
 			
-			// Last login as NULL
-			ps.setString( 11, null  );
+			Timestamp timestamp = new Timestamp( new Date().getTime());
+			// [ Needed for password reset possible date comparison ]
+			ps.setTimestamp( 11, timestamp );
 			// User session as NULL
 			ps.setString( 12, null  );
 			
@@ -262,11 +268,12 @@ public class MUserDetails extends Model {
 	
 	public Out checkUsernameUnique( In in ) {
 		
+		/*
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}
+		}*/
 		
 		
 		Connection conn = null; out = new Out();
@@ -333,11 +340,12 @@ public class MUserDetails extends Model {
 	public Out checkEmailUnique( In in ) {
 		
 		
+		/*
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}
+		} */
 		
 		
 		Connection conn = null; out = new Out();
@@ -561,13 +569,13 @@ public class MUserDetails extends Model {
 			conn.setReadOnly( false );
 			
 			q = "UPDATE users AS u";
-			q += " SET u.change_password = ?, u.user_session = ?";
+			q += " SET u.change_password = ? ";
 			q += " WHERE u.username = ?";
 			
 			ps = conn.prepareStatement( q );
 			ps.setInt( 1, 1 );
-			ps.setString( 2, null );
-			ps.setString( 3, inUser.getRecord().getItemProperty( "username" ).getValue().toString() );
+			// ps.setString( 2, null );
+			ps.setString( 2, inUser.getRecord().getItemProperty( "username" ).getValue().toString() );
 			
 			log.debug( "Query: "+ps.toString() );
 			
@@ -775,7 +783,7 @@ public class MUserDetails extends Model {
 		ResultSet rs = null;
 		
 		String q = "UPDATE users AS u";
-		q += " SET u.status = 1, u.change_password = ?, u.user_session = ?, u.password = ?, u.pass_salt = ?";
+		q += " SET u.status = 1, u.change_password = ?, u.user_session = ?, u.password = ?, u.pass_salt = ?, u.last_login = ?";
 		q += " WHERE u.user_id = ?";
 		
 		try {
@@ -812,7 +820,11 @@ public class MUserDetails extends Model {
 			ps.setString( 2, null );
 			ps.setString( 3, this.generatePassHash( inUser.getRecord() ) );
 			ps.setString( 4, inUser.getRecord().getItemProperty( "passSalt" ).getValue().toString() );
-			ps.setLong( 5, userId );
+			// [ Needed for password reset possible date comparison ]
+			Timestamp timestamp = new Timestamp( new Date().getTime());
+			ps.setTimestamp( 5, timestamp );
+			
+			ps.setLong( 6, userId );
 			
 			log.debug( "Query: "+ps.toString() );
 			
@@ -1123,11 +1135,12 @@ public class MUserDetails extends Model {
 	@SuppressWarnings("unchecked")
 	public Out validUserCurrentCreds( In in ) {
 		
+		/*
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}
+		}*/
 		
 		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;

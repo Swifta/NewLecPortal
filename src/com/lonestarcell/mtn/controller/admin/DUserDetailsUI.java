@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -40,9 +41,11 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	private MUser mTxn = new MUser(  getCurrentUserId(), getCurrentUserSession()  );
 	
 	protected Set< Short > permSet;
+	private ApplicationContext springAppContext;
 	
 
-	public DUserDetailsUI( Item record) {
+	public DUserDetailsUI( Item record, ApplicationContext springAppContext ) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
 		this.setPermSet( null );
 		init();
@@ -51,6 +54,22 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
+
 
 	public Set<Short> getPermSet() {
 		return permSet;
@@ -105,22 +124,23 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		this.attachBtnUserSetCreds();
 		this.attachBtnUserChangeProfile();
 		this.attachBtnUserRefresh();
-		this.attachBtnUserDetailsClose();
 	}
 	
 	
 	private boolean isAllowedFeature( Button btn, Short permId ){
-		
+		boolean is = false;
 		if( !permSet.contains( permId )){
 			btn.setVisible( false );
 			btn.setEnabled( false );
-			return false;
 			
 		} else {
 			btn.setVisible( true );
 			btn.setEnabled( true );
-			return true;
+			is = true;
 		}
+		
+		log.info( "Is permission "+btn.getCaption()+" of id "+permId+" on?: "+is );
+		return is;
 		
 	}
 	
@@ -136,7 +156,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserSetCredsUI( record );
+				new DUserSetCredsUI( record, springAppContext );
 				
 			}
 			
@@ -156,7 +176,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditProfileUI( record );
+				new DUserEditProfileUI( record, springAppContext );
 				
 			}
 			
@@ -272,18 +292,6 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		});
 	}
 	
-	private void attachBtnUserDetailsClose(){
-		btnUserDetailsClose.addClickListener( new ClickListener() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				processingPopup.close();
-				
-			}
-			
-		} );
-	}
 	
 	
 	private boolean refreshRecord(){
@@ -336,7 +344,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditCredsUI( record );
+				new DUserEditCredsUI( record, springAppContext );
 				
 			}
 			
@@ -353,7 +361,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditPersonalInfoUI( record );
+				new DUserEditPersonalInfoUI( record, springAppContext );
 				
 			}
 			
@@ -445,7 +453,13 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			if( record.getItemProperty( "userSession" ).getValue() == null || record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty() ){
 				 btnUserExpireSession.setVisible( false );
 			} else {
-				btnUserExpireSession.setVisible( true );
+				
+				
+				// Only show this if change pass button is not on
+				if( !record.getItemProperty( "changePass" ).getValue().toString().trim().equals( "1" ) ){
+					btnUserExpireSession.setVisible( true );
+				}
+				
 			}
 			
 			log.debug( "Change password state: "+record.getItemProperty( "changePass" ).getValue() );
@@ -453,13 +467,18 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			if( record.getItemProperty( "changePass" ).getValue().toString().trim().equals( "1" ) ){
 				 btnUserExpirePassword.setVisible( false );
 			} else {
-				btnUserExpirePassword.setVisible( true );
+				// Only show this if expire session button is not on [ This avoid account lockout due to password expiration & session expiration done to a single user
+				// ... due to password reset timeout
+				if( ! ( record.getItemProperty( "userSession" ).getValue() == null || record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty() ) ){
+					btnUserExpirePassword.setVisible( true );
+				}
 			}
 			
 			
 
 			log.debug( " Logged in profile id: "+getCurrentUserProfileId() );
-			if ( getCurrentUserProfileId() == 1 ) {
+			
+			if ( permSet.contains( EnumPermission.USER_SET_RESET_PASSWORD.val ) ) {
 				this.btnUserSetCreds.setVisible( true );
 			}
 			

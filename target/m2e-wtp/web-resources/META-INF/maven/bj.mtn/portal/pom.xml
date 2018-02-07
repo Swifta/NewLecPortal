@@ -158,19 +158,39 @@
 		</dependency>
 
 		<!-- scope provided because the processor is only needed at compile time -->
-		<!-- dependency>
-			<groupId>fr.xebia.extras</groupId>
-			<artifactId>selma-processor</artifactId>
-			<version>1.0</version>
-			<scope>provided</scope>
-		</dependency -->
+		<!-- dependency> <groupId>fr.xebia.extras</groupId> <artifactId>selma-processor</artifactId> 
+			<version>1.0</version> <scope>provided</scope> </dependency -->
 
 		<!-- This is the only real dependency you will have in your binaries -->
-		<!--  dependency>
-			<groupId>fr.xebia.extras</groupId>
-			<artifactId>selma</artifactId>
-			<version>1.0</version>
-		</dependency-->
+		<!-- dependency> <groupId>fr.xebia.extras</groupId> <artifactId>selma</artifactId> 
+			<version>1.0</version> </dependency -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>5.0.3.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-io -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
+
 
 
 	</dependencies>

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -42,14 +43,29 @@ public class DUserEditCredsUI extends DEditCredsUIDesign implements
 	private Window processingPopup;
 	private Logger log = LogManager.getLogger( DUserEditCredsUI.class.getName() );
 	private Item record;
+	private ApplicationContext springAppContext;
+	
 	
 
-	public DUserEditCredsUI( Item record) {
+	public DUserEditCredsUI( Item record, ApplicationContext springAppContext ) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
 		init();
 	}
 	
 	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
 
 	public Window getProcessingPopup() {
 		return processingPopup;
@@ -501,7 +517,7 @@ public class DUserEditCredsUI extends DEditCredsUIDesign implements
 				
 				refreshRecord();
 				processingPopup.close();
-				new DUserDetailsUI( record );
+				new DUserDetailsUI( record, springAppContext );
 				
 			}
 			
@@ -516,7 +532,7 @@ public class DUserEditCredsUI extends DEditCredsUIDesign implements
 			@Override
 			public void windowClose(CloseEvent e) {
 				refreshRecord();
-				new DUserDetailsUI( record );
+				new DUserDetailsUI( record, springAppContext );
 				
 			}
 			

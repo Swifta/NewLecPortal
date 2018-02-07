@@ -752,7 +752,7 @@ public class MUser extends Model implements IModel< UserRepo > {
 			StringBuilder sBuilder = new StringBuilder();
 
 			sBuilder.append("UPDATE users AS u");
-			sBuilder.append(" SET  u.change_password = 1, u.user_session = NULL");
+			sBuilder.append(" SET  u.change_password = 1 ");
 			sBuilder.append(" WHERE u.user_id IN ( ");
 
 			while (max != 0) {

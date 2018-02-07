@@ -640,7 +640,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 						String username = (String) recordDetails
 								.getItemProperty("username").getValue();
 						log.debug("Details username: " + username);
-						new DUserDetailsUI(recordDetails);
+						new DUserDetailsUI(recordDetails, springAppContext);
 
 					} else {
 						Notification

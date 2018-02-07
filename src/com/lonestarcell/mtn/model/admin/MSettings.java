@@ -36,11 +36,12 @@ public class MSettings extends Model {
 	
 	public Out setProfiles( In in ) {
 		
+		/*
 		Out out = super.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}
+		}*/
 		
 		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
