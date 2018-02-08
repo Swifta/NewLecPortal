@@ -153,12 +153,12 @@ public class MUserDetails extends Model {
 	public Out addNewUser( In in ) {
 		
 		
-		/*
+		
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		} */
+		} 
 		
 		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;
@@ -268,12 +268,12 @@ public class MUserDetails extends Model {
 	
 	public Out checkUsernameUnique( In in ) {
 		
-		/*
+		
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}*/
+		}
 		
 		
 		Connection conn = null; out = new Out();
@@ -340,12 +340,12 @@ public class MUserDetails extends Model {
 	public Out checkEmailUnique( In in ) {
 		
 		
-		/*
+		
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		} */
+		} 
 		
 		
 		Connection conn = null; out = new Out();
@@ -1135,12 +1135,12 @@ public class MUserDetails extends Model {
 	@SuppressWarnings("unchecked")
 	public Out validUserCurrentCreds( In in ) {
 		
-		/*
+		
 		Out out = this.checkAuthorization( );
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;
-		}*/
+		}
 		
 		Connection conn = null; out = new Out();
 		PreparedStatement ps = null;

@@ -997,11 +997,12 @@ public class MUser extends Model implements IModel< UserRepo > {
 				return out;
 			}
 
+			/*
 			if (rs.getShort("profile_id") != 1) {
 				log.debug("Not authorized");
 				out.setMsg("Not authorized [ Insufficient profile permissions ]");
 				return out;
-			}
+			} */
 
 			BData<Long> bOutData = new BData<>();
 			bOutData.setData(rs.getLong("user_id"));

@@ -30,9 +30,7 @@ public class MTxn extends Model implements Serializable {
 	private OutTxn outTxn;
 	private InTxn inTxn;
 	
-	public MTxn(){
-		
-	}
+	
 	public MTxn( Long d, String s, String t ) {
 		super( d, s );
 		if (dataSource == null) {

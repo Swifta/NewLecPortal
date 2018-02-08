@@ -35,7 +35,7 @@ public class EmailTest {
 		Assert.assertNotNull( "Template is null", content );
 		// String content = loader.loadAsString( "acc_creation.html" );
 		Assert.assertNotNull( "Template is null", content ); */
-		Assert.assertTrue( "Email could not be sent.", emailTemplate.sendCredentials("nambi", "SmU+JKlkk") );
+		Assert.assertTrue( "Email could not be sent.", emailTemplate.sendCredentials("nambi", "SmU+JKlkk", "pkigozi@swifta.com") );
 		log.info( "Email send request issued." );
 	}
 	

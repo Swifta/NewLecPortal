@@ -130,7 +130,6 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 
 		BData<?> bdata = out.getData();
 		OutLogin outData = (OutLogin) bdata.getData();
-		
 		log.debug( out.getStatusCode() );
 		
 		
@@ -196,8 +195,7 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 		.getSession()
 		.setAttribute(DLoginUIController.TIME_CORRECTION,
 				outData.getTimeCorrection() );
-		
-		
+	
 		UI.getCurrent().getNavigator().navigateTo( "management" );
 	}
 	
@@ -214,8 +212,8 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 		possibleResetDate = cal.getTime();
 		
 		Date now = new Date();
-		log.info( "Password reset time limit:"+possibleResetDate.toString() );
-		log.info( "Current timestamp:"+now.toString() );
+		log.debug( "Password reset time limit:"+possibleResetDate.toString() );
+		log.debug( "Current timestamp:"+now.toString() );
 		
 		// Check password reset timeout only if previous session is null 
 		// [ This is only on user registration & administrator password reset ]

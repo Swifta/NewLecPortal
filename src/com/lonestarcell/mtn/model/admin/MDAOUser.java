@@ -22,9 +22,7 @@ import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.bean.OutUser;
-import com.lonestarcell.mtn.bean.OutUserExport;
 import com.lonestarcell.mtn.model.util.Pager;
-import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
@@ -954,11 +952,12 @@ public class MDAOUser extends Model implements IModel< UserRepo > {
 				return out;
 			}
 
+			/*
 			if (rs.getShort("profile_id") != 1) {
 				log.debug("Not authorized");
 				out.setMsg("Not authorized [ Insufficient profile permissions ]");
 				return out;
-			}
+			}*/
 
 			BData<Long> bOutData = new BData<>();
 			bOutData.setData(rs.getLong("user_id"));

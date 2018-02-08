@@ -313,12 +313,12 @@ protected Out checkAuthorization() {
 			return out;
 		}
 		
+		/*
 		if( rs.getShort( "profile_id" ) != 1 && rs.getShort( "profile_id" ) != 3  ){
 			log.debug( "Not authorized" );
 			out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
 			return out;
-		}
-		
+		}*/
 		
 		
 		BData<Long> bOutData = new BData<>();

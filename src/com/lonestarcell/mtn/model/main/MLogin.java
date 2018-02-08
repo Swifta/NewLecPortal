@@ -89,6 +89,9 @@ public class MLogin extends Model {
 				outLogin.setResetLoginSession( userSession );
 				log.debug( "Last login timestamp "+outLogin.getLastLogin(), this );
 				
+				log.info( "user id: "+outLogin.getUserId() );
+				log.info( "user id [ rs ]: "+ rs.getLong( "user_id" ) );
+				
 				
 				
 				

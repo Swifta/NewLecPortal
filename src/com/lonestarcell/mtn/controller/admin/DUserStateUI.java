@@ -65,31 +65,28 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	private MUser mTxn;
 	private InTxn inTxn;
-	protected Set< Short > permSet;
+	protected Set<Short> permSet;
 
 	private ApplicationContext springAppContext;
 
 	DUserStateUI(DUserUI a) {
 		this.setSpringAppContext(a.getSpringAppContext());
-		this.setPermSet( a.getPermSet() );
+		this.setPermSet(a.getPermSet());
 		init(a);
 	}
 
-	
 	public Set<Short> getPermSet() {
 		return permSet;
 	}
 
-
 	@SuppressWarnings("unchecked")
 	public void setPermSet(Set<Short> permSet) {
-		if( permSet == null )
-			this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+		if (permSet == null)
+			this.permSet = UI.getCurrent().getSession().getAttribute(Set.class);
 		else
 			this.permSet = permSet;
-		
-	}
 
+	}
 
 	public ApplicationContext getSpringAppContext() {
 		return springAppContext;
@@ -236,16 +233,14 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 			BData<InTxn> inBData = new BData<>();
 
-			
 			// Set OutTxnMeta
 			OutTxnMeta outTxnMeta = new OutTxnMeta();
-			outTxnMeta
-					.setTotalRevenue(new ObjectProperty<String>("0", String.class));
-			outTxnMeta
-					.setTotalRecord(new ObjectProperty<String>("0", String.class));
-			inTxn.setMeta( outTxnMeta );
-			
-			
+			outTxnMeta.setTotalRevenue(new ObjectProperty<String>("0",
+					String.class));
+			outTxnMeta.setTotalRecord(new ObjectProperty<String>("0",
+					String.class));
+			inTxn.setMeta(outTxnMeta);
+
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();
 
@@ -259,7 +254,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			String fDate = sdf.format(cal.getTime());
 			log.debug("From: " + fDate);
 
-			inTxn.setPermSet( this.getPermSet() );
+			inTxn.setPermSet(this.getPermSet());
 			inTxn.setfDate(fDate);
 
 			inBData.setData(inTxn);
@@ -425,20 +420,20 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			super(mTxn, grid, record);
 			init();
 		}
-		
-		private boolean isAllowedFeature( Button btn, Short permId ){
-			
-			if( !permSet.contains( permId )){
-				btn.setVisible( false );
-				btn.setEnabled( false );
+
+		private boolean isAllowedFeature(Button btn, Short permId) {
+
+			if (!permSet.contains(permId)) {
+				btn.setVisible(false);
+				btn.setEnabled(false);
 				return false;
-				
+
 			} else {
-				btn.setVisible( true );
-				btn.setEnabled( true );
+				btn.setVisible(true);
+				btn.setEnabled(true);
 				return true;
 			}
-			
+
 		}
 
 		public Item getRecordDetails() {
@@ -524,10 +519,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserExpireSession() {
-			
-			if( !isAllowedFeature( btnExpireSession, EnumPermission.USER_CANCEL_LOGIN_SESSION.val) )
+
+			if (!isAllowedFeature(btnExpireSession,
+					EnumPermission.USER_CANCEL_LOGIN_SESSION.val))
 				return;
-			
+
 			this.btnExpireSession.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -541,10 +537,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserExpirePassword() {
-			
-			if( !isAllowedFeature( btnExpirePass, EnumPermission.USER_EXPIRE_PASSWORD.val) )
+
+			if (!isAllowedFeature(btnExpirePass,
+					EnumPermission.USER_EXPIRE_PASSWORD.val))
 				return;
-			
+
 			this.btnExpirePass.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -558,8 +555,9 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserActivate() {
-			
-			if( !isAllowedFeature( btnEnable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+
+			if (!isAllowedFeature(btnEnable,
+					EnumPermission.USER_ACTIVATE_BLOCK.val))
 				return;
 			this.btnEnable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
@@ -574,10 +572,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserBlock() {
-			
-			if( !isAllowedFeature( btnDisable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+
+			if (!isAllowedFeature(btnDisable,
+					EnumPermission.USER_ACTIVATE_BLOCK.val))
 				return;
-			
+
 			this.btnDisable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -619,10 +618,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		private void attachBtnDetails() {
-			
-			if( !isAllowedFeature( btnDetails, EnumPermission.USER_VIEW_DETAILS.val) )
+
+			if (!isAllowedFeature(btnDetails,
+					EnumPermission.USER_VIEW_DETAILS.val))
 				return;
-			
+
 			this.btnDetails.addClickListener(new ClickListener() {
 
 				private static final long serialVersionUID = 1L;
@@ -630,22 +630,27 @@ public class DUserStateUI extends DUserStateUIDesign implements
 				@Override
 				public void buttonClick(ClickEvent event) {
 
-					if (record == null) {
-						Notification.show("No record set for operaton.",
-								Notification.Type.ERROR_MESSAGE);
-						return;
-					}
+					try {
+						if (record == null) {
+							Notification.show("No record set for operaton.",
+									Notification.Type.ERROR_MESSAGE);
+							return;
+						}
 
-					if (isUserDetailsSet() && recordDetails != null) {
-						String username = (String) recordDetails
-								.getItemProperty("username").getValue();
-						log.debug("Details username: " + username);
-						new DUserDetailsUI(recordDetails, springAppContext);
+						if (isUserDetailsSet() && recordDetails != null) {
+							String username = (String) recordDetails
+									.getItemProperty("username").getValue();
+							log.debug("Details username: " + username);
+							new DUserDetailsUI(recordDetails, springAppContext);
 
-					} else {
-						Notification
-								.show("User data error. Please try again / Contact support.",
-										Notification.Type.ERROR_MESSAGE);
+						} else {
+							Notification
+									.show("User data error. Please try again / Contact support.",
+											Notification.Type.ERROR_MESSAGE);
+						}
+
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 
@@ -752,7 +757,8 @@ public class DUserStateUI extends DUserStateUIDesign implements
 				.getAttribute(DLoginUIController.SESSION_VAR);
 	}
 
-	public class MultiRowActionsUI extends VerticalLayout implements DUIControllable {
+	public class MultiRowActionsUI extends VerticalLayout implements
+			DUIControllable {
 
 		private static final long serialVersionUID = 1L;
 		protected MUser mTxn;
@@ -839,7 +845,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			btnExport.setIcon(FontAwesome.SHARE_SQUARE_O);
 			btnRefresh.setIcon(FontAwesome.REFRESH);
 
-			this.addComponent( btnExport );
+			this.addComponent(btnExport);
 			this.addComponent(btnRefresh);
 
 			btnEnable = new Button();
@@ -862,7 +868,6 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			btnExpirePass.addStyleName("borderless icon-align-top");
 			btnExpirePass.setIcon(FontAwesome.USER_TIMES);
 
-			
 			this.addComponent(btnEnable);
 			this.addComponent(btnDisable);
 			this.addComponent(btnExpireSession);
@@ -889,26 +894,27 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			this.attachCommandListeners();
 
 		}
-		
-		private boolean isAllowedFeature( Button btn, Short permId ){
-			if( !permSet.contains( permId )){
-				btn.setVisible( false );
-				btn.setEnabled( false );
+
+		private boolean isAllowedFeature(Button btn, Short permId) {
+			if (!permSet.contains(permId)) {
+				btn.setVisible(false);
+				btn.setEnabled(false);
 				return false;
-				
+
 			} else {
-				btn.setVisible( true );
-				btn.setEnabled( true );
+				btn.setVisible(true);
+				btn.setEnabled(true);
 				return true;
 			}
-			
+
 		}
 
 		protected void attachBtnUserExpireSession() {
-			
-			if( !isAllowedFeature( btnExpireSession, EnumPermission.USER_CANCEL_LOGIN_SESSION.val) )
+
+			if (!isAllowedFeature(btnExpireSession,
+					EnumPermission.USER_CANCEL_LOGIN_SESSION.val))
 				return;
-			
+
 			this.btnExpireSession.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -941,10 +947,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserExpirePassword() {
-			
-			if( !isAllowedFeature( btnExpirePass, EnumPermission.USER_EXPIRE_PASSWORD.val) )
+
+			if (!isAllowedFeature(btnExpirePass,
+					EnumPermission.USER_EXPIRE_PASSWORD.val))
 				return;
-			
+
 			this.btnExpirePass.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -979,10 +986,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserActivate() {
-			
-			if( !isAllowedFeature( btnEnable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+
+			if (!isAllowedFeature(btnEnable,
+					EnumPermission.USER_ACTIVATE_BLOCK.val))
 				return;
-			
+
 			this.btnEnable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -1015,10 +1023,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 		protected void attachBtnUserBlock() {
-			
-			if( !isAllowedFeature( btnDisable, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+
+			if (!isAllowedFeature(btnDisable,
+					EnumPermission.USER_ACTIVATE_BLOCK.val))
 				return;
-			
+
 			this.btnDisable.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -1049,47 +1058,41 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 			});
 		}
-		
-		
-		private void attachBtnExport(){
-			
-			
-			if( !isAllowedFeature( btnExport, EnumPermission.USER_EXPORT.val) )
-				return;
-			
-			this.btnExport.addClickListener( new ClickListener(){
 
-				
+		private void attachBtnExport() {
+
+			if (!isAllowedFeature(btnExport, EnumPermission.USER_EXPORT.val))
+				return;
+
+			this.btnExport.addClickListener(new ClickListener() {
+
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void buttonClick(ClickEvent event) {
-					
+
 					Collection<?> itemIds = grid.getSelectedRows();
-					
-					if( itemIds == null || itemIds.size() == 0 ) {
+
+					if (itemIds == null || itemIds.size() == 0) {
 						Notification.show(
 								"Please select at least on record to refresh.",
-								Notification.Type.WARNING_MESSAGE );
+								Notification.Type.WARNING_MESSAGE);
 						return;
 					}
-					
-					
-					Iterator< ? > itr = itemIds.iterator();
-					
+
+					Iterator<?> itr = itemIds.iterator();
+
 					Collection<Item> records = new ArrayList<>();
-					
-					
-					
-					
-					while( itr.hasNext() ){
+
+					while (itr.hasNext()) {
 						Object itemId = itr.next();
-						records.add( grid.getContainerDataSource().getItem( itemId ) );		
+						records.add(grid.getContainerDataSource().getItem(
+								itemId));
 					}
-					
-					new DPgExportLimitUIUser( records );
+
+					new DPgExportLimitUIUser(records);
 				}
-				
+
 			});
 		}
 
@@ -1212,15 +1215,14 @@ public class DUserStateUI extends DUserStateUIDesign implements
 		}
 
 	}
-	
-	
+
 	protected void setInDate(InTxn inTxn, int dayOffSet) {
 
-		inTxn.setfDate( "2016-01-01" );
-		inTxn.settDate( "2017-12-31" );
-		
-		inTxn.setfDefaultDate( inTxn.getfDate() );
-		inTxn.settDefaultDate( inTxn.gettDate() );
+		inTxn.setfDate("2016-01-01");
+		inTxn.settDate("2017-12-31");
+
+		inTxn.setfDefaultDate(inTxn.getfDate());
+		inTxn.settDefaultDate(inTxn.gettDate());
 
 	}
 

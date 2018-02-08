@@ -30,9 +30,6 @@ public class Model  implements Serializable {
 	private Logger log = LogManager.getLogger();
 	protected ApplicationContext springAppContext;
 	
-	public Model(){
-		
-	}
 	
 	static {
 		try {
@@ -210,15 +207,17 @@ public class Model  implements Serializable {
 				return out;
 			}
 			
+			/*
 			if( rs.getShort( "profile_id" ) != 1 ){
 				log.debug( "Not authorized" );
 				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
 				return out;
-			}
+			} */
 			
 			BData<Long> bOutData = new BData<>();
 			bOutData.setData(  rs.getLong( "user_id" ) );
 			out.setData( bOutData );
+			
 			
 			
 			out.setStatusCode( 1 );
