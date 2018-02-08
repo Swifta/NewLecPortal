@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
@@ -32,7 +33,7 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUser, TextChangeListenerUser<OutUser> > {
+public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, AbstractDataBean, TextChangeListenerSub<AbstractDataBean> > {
 	private static final long serialVersionUID = 1L;
 	
 	private Logger log = LogManager.getLogger( AllRowsActionsUITxn.class.getName() );
@@ -83,7 +84,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 		super.setNewPage( page );
 		container.removeAllItems();
 		inTxn.setPage( page );
-		model.searchUsers(in, container );
+		model.search(in, container );
 		format();
 		
 	}
@@ -92,7 +93,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	protected void refreshGridData() {
 	
 		container.removeAllItems();
-		Out out = model.searchUsers(in, container );
+		Out out = model.search(in, container );
 		model.searchUserMeta(in, outTxnMeta );
 		
 		if( out.getStatusCode() != 1 ) {
@@ -105,7 +106,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	}
 
 	@Override
-	protected void addFilterField(BeanItemContainer<OutUser> container,
+	protected void addFilterField(BeanItemContainer<AbstractDataBean> container,
 			HeaderRow filterHeader, String itemId) {
 		TextField tF = new TextField();
 		tF.setStyleName("sn-tf-filter");
@@ -115,7 +116,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 		HeaderCell cFilter = filterHeader.getCell(itemId);
 		cFilter.setComponent(tF);
 		
-		TextChangeListenerUser<OutUser> tChangeListener = getTextChangeListner( container, itemId, tF );
+		TextChangeListenerSub<AbstractDataBean> tChangeListener = getTextChangeListner( container, itemId, tF );
 		tF.addTextChangeListener( tChangeListener );
 		tFSearchFields.add( tF );
 		
@@ -130,7 +131,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 
 	@Override
 	protected ShortcutListener getSearchShortcutListener(TextField tF,
-			String itemId, BeanItemContainer<OutUser> container) {
+			String itemId, BeanItemContainer<AbstractDataBean> container) {
 		
 		return new ShortcutListener( "", KeyCode.ENTER, null){
 			private static final long serialVersionUID = 1L;
@@ -154,7 +155,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 				
 				
 				
-				Out out = model.searchUsers( in, container );
+				Out out = model.search( in, container );
 				
 				model.searchUserMeta( in, outTxnMeta );
 				
@@ -173,7 +174,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void setBeanItemContainer() {
-		container = ((BeanItemContainer<OutUser>) ((GeneratedPropertyContainer)  grid.getContainerDataSource())
+		container = ((BeanItemContainer<AbstractDataBean>) ((GeneratedPropertyContainer)  grid.getContainerDataSource())
 				.getWrappedContainer());
 		super.container = container;
 		
@@ -186,9 +187,9 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUs
 	}
 
 	@Override
-	protected TextChangeListenerUser<OutUser> getTextChangeListner(
-			BeanItemContainer<OutUser> container, String itemId, TextField tF) {
-		return new TextChangeListenerUser<OutUser>( container, inTxn, itemId, tF );
+	protected TextChangeListenerSub<AbstractDataBean> getTextChangeListner(
+			BeanItemContainer<AbstractDataBean> container, String itemId, TextField tF) {
+		return new TextChangeListenerSub<AbstractDataBean>( container, inTxn, itemId, tF );
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 public class MultiRowActionsUIMerchant extends MultiRowActionsUISub {
 	
 	private static final long serialVersionUID = 1L;
+	
 	public MultiRowActionsUIMerchant(){
 	}
 	public MultiRowActionsUIMerchant( IModel mSub, In in, Grid grid, PopupView popupView ){

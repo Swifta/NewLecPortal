@@ -446,7 +446,7 @@ public class MSubReg extends MDAO implements IModel<Subscriber001Repo>,
 		int tElements = expoExcludePage.getNumberOfElements();
 
 		if (fromPgNo == 1)
-			expoFDate = expoExcludePage.getContent().get(1).getLastUpdate();
+			expoFDate = expoExcludePage.getContent().get(0).getLastUpdate();
 		else
 			expoFDate = expoExcludePage.getContent().get(tElements - 1)
 					.getLastUpdate();

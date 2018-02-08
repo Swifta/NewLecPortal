@@ -20,6 +20,8 @@ import com.lonestarcell.mtn.bean.OutTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class MTxn extends Model implements Serializable {
 
@@ -4104,6 +4106,13 @@ public class MTxn extends Model implements Serializable {
 				// log.debug( "Admin username: "+username+" Session: "+userSession );
 				out.setMsg( "Not authorized [ Authorization session expired. ]" );
 				out.setStatusCode( 403 );
+				
+				//Too bad, should be moved to controller.
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
+				
 				return out;
 			}
 		

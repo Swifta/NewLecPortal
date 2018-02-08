@@ -15,6 +15,8 @@ import com.lonestarcell.mtn.bean.OutConfig;
 import com.lonestarcell.mtn.bean.OutMo;
 import com.lonestarcell.mtn.service.client.MTNMomoClient;
 import com.lonestarcell.mtn.util.Money;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class MMo extends Model{
 
@@ -313,6 +315,13 @@ public class MMo extends Model{
 				// log.debug( "Admin username: "+username+" Session: "+userSession );
 				out.setMsg( "Not authorized [ Authorization session expired. ]" );
 				out.setStatusCode( 403 );
+				
+				//Too bad, should be moved to controller.
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
+				
 				return out;
 			}
 		

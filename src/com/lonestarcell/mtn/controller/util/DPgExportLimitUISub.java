@@ -28,6 +28,8 @@ public class DPgExportLimitUISub extends
 	private static final long serialVersionUID = 1L;
 
 	private Logger log = LogManager.getLogger();
+	
+	private String reportTitle = "Subscriber Transactions Report";
 
 	public DPgExportLimitUISub(Collection<Item> records) {
 		super(records);
@@ -41,14 +43,14 @@ public class DPgExportLimitUISub extends
 	@Override
 	public void attachBtnXLS() {
 		this.btnXLS.addClickListener(e -> {
-			exportHandler(xlsExporter, btnXLS);
+			exportHandler(xlsExporter, btnXLS, reportTitle );
 		});
 	}
 
 	@Override
 	public void attachBtnCSV() {
 		this.btnCSV.addClickListener(e -> {
-			exportHandler(cSVExporter, btnCSV);
+			exportHandler(cSVExporter, btnCSV, reportTitle );
 
 		});
 	}
@@ -56,7 +58,7 @@ public class DPgExportLimitUISub extends
 	@Override
 	public void attachBtnPDF() {
 		this.btnPDF.addClickListener(e -> {
-			exportHandler(pdfExporter, btnPDF);
+			exportHandler(pdfExporter, btnPDF, reportTitle );
 
 		});
 	}

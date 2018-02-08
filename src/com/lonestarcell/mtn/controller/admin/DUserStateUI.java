@@ -13,15 +13,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
-import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
+import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUIUser;
 import com.lonestarcell.mtn.controller.util.DPgExportLimitUIUser;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
@@ -61,7 +62,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	private DUserUI ancestor;
 	private Logger log = LogManager.getLogger();
-	private BeanItemContainer<OutUser> beanItemContainer;
+	private BeanItemContainer<AbstractDataBean> beanItemContainer;
 
 	private MUser mTxn;
 	private InTxn inTxn;
@@ -111,7 +112,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 		setHeader();
 		setFooter();
-		setBeanItemContainer(new BeanItemContainer<>(OutUser.class));
+		setBeanItemContainer(new BeanItemContainer<>(AbstractDataBean.class));
 
 		swap(this);
 		attachCommandListeners();
@@ -122,12 +123,12 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	}
 
-	public BeanItemContainer<OutUser> getBeanItemContainer() {
+	public BeanItemContainer<AbstractDataBean> getBeanItemContainer() {
 		return beanItemContainer;
 	}
 
 	public void setBeanItemContainer(
-			BeanItemContainer<OutUser> beanItemContainer) {
+			BeanItemContainer<AbstractDataBean> beanItemContainer) {
 		this.beanItemContainer = beanItemContainer;
 	}
 
@@ -220,7 +221,8 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	}
 
-	public Grid loadGridData(BeanItemContainer<OutUser> beanItemContainer) {
+	public Grid loadGridData(
+			BeanItemContainer<AbstractDataBean> beanItemContainer) {
 		try {
 
 			Grid grid = new Grid();
@@ -257,12 +259,14 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			inTxn.setPermSet(this.getPermSet());
 			inTxn.setfDate(fDate);
 
+			// Set OutTxnMeta
+
 			inBData.setData(inTxn);
 			in.setData(inBData);
 
 			// TODO validate response
 
-			mTxn.setUsers(in, beanItemContainer);
+			mTxn.search(in, beanItemContainer);
 
 			// Add actions
 
@@ -298,8 +302,8 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 			// userId, profileId, changePass, userSession,
 
-			grid.setColumnOrder("username", "email", "org", "userStatus",
-					"profile", "lastLogin", "date", "actions");
+			grid.setColumnOrder("column1", "column2", "column3", "column4",
+					"column5", "column6", "date", "actions");
 
 			grid.setFrozenColumnCount(2);
 
@@ -308,22 +312,22 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			HeaderRow headerTextFilter = grid.addHeaderRowAt(2);
 
 			// Header config
-			HeaderCell dateFilterCellH = header.join("username", "email",
-					"org", "userStatus", "profile", "lastLogin", "date",
+			HeaderCell dateFilterCellH = header.join("column1", "column2",
+					"column3", "column4", "column5", "column6", "date",
 					"actions");
 			PaginationUIController pageC = new PaginationUIController();
 
-			AllRowsActionsUIUser allRowsActionsUIUse = new AllRowsActionsUIUser(
+			AllRowsActionsUISub allRowsActionsUIUser = new AllRowsActionsUISub(
 					mTxn, grid, in, true, true, pageC);
-			dateFilterCellH.setComponent(allRowsActionsUIUse);
+			dateFilterCellH.setComponent(allRowsActionsUIUser);
 
 			header.setStyleName("sn-date-filter-row");
 			dateFilterCellH
 					.setStyleName("sn-no-border-right sn-no-border-left");
 
 			// Footer config
-			FooterCell dateFilterCellF = footer.join("username", "email",
-					"org", "userStatus", "profile", "lastLogin", "date",
+			FooterCell dateFilterCellF = footer.join("column1", "column2",
+					"column3", "column4", "column5", "column6", "date",
 					"actions");
 
 			dateFilterCellF.setComponent(new AllRowsActionsUIUser(mTxn, grid,
@@ -354,45 +358,42 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			cellActions.setStyleName("sn-cell-actions");
 			cellBulkActions.setStyleName("sn-cell-actions");
 
-			// Hide unnecessary bean fields
-
-			grid.removeColumn("userId");
-			grid.removeColumn("profileId");
-			grid.removeColumn("changePass");
-			grid.removeColumn("userSession");
-
 			// Add search field
 
-			allRowsActionsUIUse.prepareGridHeader(grid, "username", "Username",
+			allRowsActionsUIUser.prepareGridHeader(grid, "column1", "Username",
 					true);
-			allRowsActionsUIUse.prepareGridHeader(grid, "email", "Email", true);
-			allRowsActionsUIUse.prepareGridHeader(grid, "org", "Organization",
+			allRowsActionsUIUser.prepareGridHeader(grid, "column2", "Email",
 					true);
-			allRowsActionsUIUse.prepareGridHeader(grid, "userStatus", "Status",
+			allRowsActionsUIUser.prepareGridHeader(grid, "column3",
+					"Organization", false);
+			allRowsActionsUIUser.prepareGridHeader(grid, "column4", "Status",
 					true);
-			allRowsActionsUIUse.prepareGridHeader(grid, "profile", "Profile",
+			allRowsActionsUIUser.prepareGridHeader(grid, "column5", "Profile",
 					true);
-			allRowsActionsUIUse.prepareGridHeader(grid, "lastLogin",
+			allRowsActionsUIUser.prepareGridHeader(grid, "column6",
 					"Last Login", false);
-			allRowsActionsUIUse.prepareGridHeader(grid, "date", "Added On",
+			allRowsActionsUIUser.prepareGridHeader(grid, "date", "Added On",
 					false);
-			allRowsActionsUIUse
-					.prepareGridHeader(grid, "actions", "...", false);
+			allRowsActionsUIUser.prepareGridHeader(grid, "actions", "...",
+					false);
 
 			// Set column widths
 
-			grid.getColumn("userStatus").setWidth(120).setResizable(false);
-			grid.getColumn("profile").setWidth(125);
-			grid.getColumn("username").setWidth(125);
-			grid.getColumn("org").setWidth(125);
-			grid.getColumn("email").setWidth(215);
+			grid.getColumn("column1").setWidth(125);
+			grid.getColumn("column2").setWidth(215);
+			grid.getColumn("column3").setWidth(125);
+			grid.getColumn("column4").setWidth(120).setResizable(false);
+			grid.getColumn("column5").setWidth(125);
 
-			// grid.addStyleName( "sn-small-grid" );
+			// Hide unnecessary bean fields
 
-			// grid.setSelectionMode(SelectionMode.MULTI);
-			// grid.setHeight( "500px" );
-			// grid.setWidth( "100%" );
+			/*
+			 * grid.removeColumn("userId"); grid.removeColumn("profileId");
+			 * grid.removeColumn("changePass");
+			 * grid.removeColumn("userSession");
+			 */
 
+			allRowsActionsUIUser.removeUnnecessaryColumns(grid);
 			Notification.show("Data loaded successfully.",
 					Notification.Type.HUMANIZED_MESSAGE);
 
@@ -436,18 +437,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 		}
 
-		public Item getRecordDetails() {
-			return recordDetails;
-		}
-
-		public void setRecordDetails(Item record) {
-
-			String username = (String) record.getItemProperty("username")
-					.getValue();
-			log.debug(" In setRecordDetails username: " + username);
-			this.recordDetails = record;
-
-		}
+	
 
 		@Override
 		protected void init() {
@@ -666,29 +656,37 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			btnExpirePass.setVisible(false);
 			btnExpireSession.setVisible(false);
 
-			if (getCurrentUserId() != (long) record.getItemProperty("userId")
-					.getValue()) {
-				if (record.getItemProperty("userStatus").getValue().toString()
+			if (getCurrentUserId() != Long.valueOf(record.getItemProperty("column8")
+					.getValue()+"" )) {
+				if (record.getItemProperty("column4").getValue().toString()
 						.equals("BLOCKED")) {
 					btnEnable.setVisible(true);
-				} else if (record.getItemProperty("userStatus").getValue()
+				} else if (record.getItemProperty("column4").getValue()
 						.toString().equals("ACTIVE")) {
 					btnDisable.setVisible(true);
 				}
 
-				String changePass = record.getItemProperty("changePass")
+				String changePass = record.getItemProperty("column7")
 						.getValue().toString();
 				if (changePass.equals("0")
-						&& !record.getItemProperty("userStatus").getValue()
+						&& !record.getItemProperty("column4").getValue()
 								.toString().equals("REGISTERED")) {
-					btnExpirePass.setVisible(true);
+
+					if (record.getItemProperty("column10").getValue() == null
+							|| record.getItemProperty("column10").getValue()
+									.toString().trim().isEmpty())
+						btnExpirePass.setVisible(true);
 				}
 
-				if (record.getItemProperty("userSession").getValue() == null
-						|| record.getItemProperty("userSession").getValue()
+				if (record.getItemProperty("column10").getValue() == null
+						|| record.getItemProperty("column10").getValue()
 								.toString().trim().isEmpty()) {
 				} else {
-					btnExpireSession.setVisible(true);
+
+					if (!(changePass.equals("0") && !record
+							.getItemProperty("column4").getValue().toString()
+							.equals("REGISTERED")))
+						btnExpireSession.setVisible(true);
 				}
 
 			}
@@ -700,7 +698,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			InUserDetails inData = new InUserDetails();
 			setAuth(inData);
 
-			String username = record.getItemProperty("username").getValue()
+			String username = record.getItemProperty("column1").getValue()
 					.toString();
 			log.debug("Username at setting user details: " + username);
 
@@ -800,11 +798,11 @@ public class DUserStateUI extends DUserStateUIDesign implements
 			setRecords(r);
 		}
 
-		protected Collection<Item> getRecords() {
+		public Collection<Item> getRecords() {
 			return records;
 		}
 
-		protected void setRecords(Collection<Item> records) {
+		public void setRecords(Collection<Item> records) {
 			this.records = records;
 		}
 
@@ -934,8 +932,12 @@ public class DUserStateUI extends DUserStateUIDesign implements
 					List<Item> selectedRecords = new ArrayList<>(itemIds.size());
 					while (itr.hasNext()) {
 						Object itemId = itr.next();
-						selectedRecords.add(grid.getContainerDataSource()
-								.getItem(itemId));
+						
+						grid.setReadOnly( true );
+						
+						Item item = grid.getContainerDataSource()
+						.getItem(itemId);
+						selectedRecords.add( item );
 					}
 
 					setRecords(selectedRecords);

@@ -19,6 +19,7 @@ public class TFValidator extends UserTFUtil{
 			status = false;
 			msg = "Enter More than 2 and less than 21 characters.";
 		} else {
+			value = value.replaceAll( " ", "" );
 			status = value.matches( "^[a-zA-Z0-9._-]{3,20}$" );
 			msg = "Enter only Alpha numeric characters A-Z, 0 - 9 and '_'.";
 		} 

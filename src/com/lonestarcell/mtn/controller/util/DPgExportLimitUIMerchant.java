@@ -18,6 +18,7 @@ public class DPgExportLimitUIMerchant extends
 		AbstractDPgExportLimitUI< ExportMerchant > {
 
 	private static final long serialVersionUID = 1L;
+	private String reportTitle = "Merchant Transactions Report";
 
 	public DPgExportLimitUIMerchant(Collection<Item> records) {
 		super(records);
@@ -32,7 +33,7 @@ public class DPgExportLimitUIMerchant extends
 	public void attachBtnXLS() {
 		this.btnXLS
 				.addClickListener(e -> {
-					exportHandler( xlsExporter, btnXLS );
+					exportHandler( xlsExporter, btnXLS, reportTitle );
 				});
 	}
 
@@ -40,7 +41,7 @@ public class DPgExportLimitUIMerchant extends
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
-					exportHandler( cSVExporter, btnCSV );
+					exportHandler( cSVExporter, btnCSV, reportTitle );
 
 				});
 	}
@@ -49,7 +50,7 @@ public class DPgExportLimitUIMerchant extends
 	public void attachBtnPDF() {
 		this.btnCSV
 				.addClickListener(e -> {
-					exportHandler( pdfExporter, btnPDF );
+					exportHandler( pdfExporter, btnPDF, reportTitle );
 				});
 	}
 

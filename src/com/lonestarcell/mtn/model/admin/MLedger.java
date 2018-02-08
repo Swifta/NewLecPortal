@@ -466,7 +466,7 @@ public class MLedger extends MDAO implements IModel<LedgerAccount001Repo>,
 		int tElements = expoExcludePage.getNumberOfElements();
 
 		if (fromPgNo == 1)
-			expoFDate = (Date) expoExcludePage.getContent().get(1)[3];
+			expoFDate = (Date) expoExcludePage.getContent().get(0)[3];
 		else
 			expoFDate = (Date) expoExcludePage.getContent().get(tElements - 1)[3];
 		log.info("Export F-Date?: " + expoFDate.toString());

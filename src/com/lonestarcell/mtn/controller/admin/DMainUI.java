@@ -641,7 +641,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	
 	
 	private void logoutRedir(){
-		Notification.show( "SET ERROR" , "Invalid user data", Notification.Type.ERROR_MESSAGE );
+		Notification.show( "SET ERROR" , "Invalid user data/ Expired session", Notification.Type.ERROR_MESSAGE );
 		log.debug( " No user data set " );
 		this.resetSessionData();
 		UI.getCurrent().getNavigator().navigateTo("login");

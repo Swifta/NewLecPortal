@@ -44,20 +44,6 @@ class TextChangeListenerSub<O> implements TextChangeListener{
 		searchMap.put( "prevItemId", itemId );
 
 		
-		
-		/*
-		if( itemId.equals( "swiftaId" ) ){
-			inTxn.setSearchSID( val );
-		} else if( itemId.equals( "mmoId" ) ) {
-			inTxn.setSearchMoID( val );
-		}else if( itemId.equals( "meterNo" ) ) {
-			inTxn.setSearchMeterNo( val );
-		}else if( itemId.equals( "msisdn" ) ) {
-			inTxn.setSearchMSISDN( val );
-		}else if( itemId.equals( "statusDesc" ) ) {
-			inTxn.setSearchStatusDesc( val );
-		} */
-		
 		container.removeContainerFilters( itemId );
 		if (val != null && !val.isEmpty()) {
 			container.addContainerFilter(new SimpleStringFilter(itemId,

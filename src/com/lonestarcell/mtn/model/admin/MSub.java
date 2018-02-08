@@ -168,7 +168,6 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 								(String) val, fDate, DateFormatFac
 										.toDateUpperBound(inTxn.gettDate()));
 						if (!inTxn.isExportOp()) {
-
 							if (!isPgNav)
 								tAmount = repo
 										.findPageByPayerAccountNumberAmount(
@@ -187,7 +186,7 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 						pages = repo.findPageByPayeeAccountNumber(pgR,
 								(String) val, fDate, DateFormatFac
 										.toDateUpperBound(inTxn.gettDate()));
-						if (!inTxn.isExportOp() || !isPgNav) {
+						if (!inTxn.isExportOp()) {
 							if (!isPgNav)
 								tAmount = repo
 										.findPageByPayeeAccountNumberAmount(
@@ -209,7 +208,7 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 							DateFormatFac.toDateUpperBound(inTxn.gettDate()));
 
 					// Amount should not be called in data export
-					if (!inTxn.isExportOp() || !isPgNav) {
+					if ( !inTxn.isExportOp() ) {
 						if (!isPgNav)
 							tAmount = repo.findPageByDateRangeAmount(fDate,
 									DateFormatFac.toDateUpperBound(inTxn
@@ -322,7 +321,7 @@ public class MSub extends MDAO implements IModel<Transaction001Repo>,
 		// - Get fast date of 1st date if fromPgNo == 1, else, get last date of
 		// current page
 		if (fromPgNo == 1)
-			expoFDate = expoExcludePage.getContent().get(1).getLastUpdate();
+			expoFDate = expoExcludePage.getContent().get(0).getLastUpdate();
 		else
 			expoFDate = expoExcludePage.getContent().get(tElements - 1)
 					.getLastUpdate();

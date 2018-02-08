@@ -21,6 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 
 	private static final long serialVersionUID = 1L;
+	private String reportTitle = "Portal Users Report";
 
 	public DPgExportLimitUIUser(Collection<Item> records) {
 		super(records);
@@ -36,45 +37,8 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 		this.btnXLS
 				.addClickListener(e -> {
 
-					exportHandler( xlsExporter, btnXLS );
-					/*
-					try {
-						if (!isMulti())
-							if (!combosSet())
-								return;
-
-						btnXLS.setIcon(FontAwesome.SPINNER);
-						btnXLS.setImmediate(true);
-						btnXLS.setComponentError(null);
-
-						BeanItemContainer<ExportUser> c = this.getExportData();
-
-						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
-						btnXLS.setEnabled(true);
-
-						if (c == null) {
-							showWarn("Failed to load export data. Please try again/contact support.");
-							return;
-						}
-
-						Table table = new Table( "Portal Users Report" );
-						table.setContainerDataSource( c );
-						xlsExporter.setTableToBeExported( table );
-						renameColumns( xlsExporter );
-						
-						// xlsExporter.setContainerToBeExported(c);
-						xlsExporter.removeStyleName("sn-display-none");
-						btnXLS.setVisible(false);
-						showSuccess("File ready. Click download icon");
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						btnXLS.setComponentError(new UserError(
-								"Data export failed. Please try again/contact support."));
-						btnXLS.setIcon(FontAwesome.FILE_EXCEL_O);
-						btnXLS.setEnabled(true);
-					} */
-
+					exportHandler( xlsExporter, btnXLS, reportTitle );
+					
 				});
 	}
 
@@ -82,7 +46,7 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
-					exportHandler( cSVExporter, btnCSV );
+					exportHandler( cSVExporter, btnCSV, reportTitle );
 
 				});
 	}
@@ -91,7 +55,7 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 	public void attachBtnPDF() {
 		this.btnPDF
 				.addClickListener(e -> {
-					exportHandler( pdfExporter, btnPDF );
+					exportHandler( pdfExporter, btnPDF, reportTitle );
 
 				});
 	}
@@ -106,12 +70,12 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 				Item record = itr.next();
 				
 				ExportUser u = new ExportUser();
-				u.setColumn1( ( String ) record.getItemProperty("username").getValue() );
-				u.setColumn2(  ( String ) record.getItemProperty("email").getValue()  );
-				u.setColumn3(  ( String ) record.getItemProperty("org").getValue()  );
-				u.setColumn4(  ( String ) record.getItemProperty("userStatus").getValue()  );
-				u.setColumn5(  ( String ) record.getItemProperty("profile").getValue()  );
-				u.setColumn6(  ( String ) record.getItemProperty("lastLogin").getValue()  );
+				u.setColumn1( ( String ) record.getItemProperty("column1").getValue() );
+				u.setColumn2(  ( String ) record.getItemProperty("column2").getValue()  );
+				u.setColumn3(  ( String ) record.getItemProperty("column3").getValue()  );
+				u.setColumn4(  ( String ) record.getItemProperty("column4").getValue()  );
+				u.setColumn5(  ( String ) record.getItemProperty("column5").getValue()  );
+				u.setColumn6(  ( String ) record.getItemProperty("column6").getValue()  );
 				u.setDate( ( String ) record.getItemProperty("date").getValue()  );
 				
 				c.addBean(u);
@@ -138,7 +102,7 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 		exporter.setColumnHeader( "column3", "Organization" );
 		exporter.setColumnHeader( "column4", "Status" );
 		exporter.setColumnHeader( "column5", "Profile" );
-		exporter.setColumnHeader( "column6", "Lastest login Timestamp" );
+		exporter.setColumnHeader( "column6", "Latest login Timestamp" );
 		exporter.setColumnHeader( "date", "Creation Timestamp" );
 	}
 

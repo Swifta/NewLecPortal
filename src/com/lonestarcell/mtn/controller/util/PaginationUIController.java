@@ -41,7 +41,6 @@ public class PaginationUIController implements DUIControllable, Serializable {
 
 	public PaginationUIController() {
 		mapPageBtns = new HashMap<>(8);
-		log.info( "Pagination instantiated." );
 	}
 
 	public Map<String, Button> getListPageBtns() {
@@ -95,15 +94,11 @@ public class PaginationUIController implements DUIControllable, Serializable {
 
 	public void next() {
 
-		log.info("Pages: " + pages);
-		log.info("currentPage: " + currentPage);
 		if (currentPage < pages) {
 			// currentPage++;
 			newPage = currentPage + 1;
 		}
 
-		log.info("Next called [ newPage ] : " + newPage);
-		log.info("Next called [ currentPage ] : " + currentPage);
 		navigation();
 
 	}
@@ -135,7 +130,6 @@ public class PaginationUIController implements DUIControllable, Serializable {
 	}
 
 	public void init() {
-		log.info("Pagination has been initiated.");
 		this.initBtns();
 		this.attachCommandListeners();
 	}
@@ -174,7 +168,6 @@ public class PaginationUIController implements DUIControllable, Serializable {
 				currentPage = 2;
 				newPage = 1;
 				initNavigation(total);
-				log.info("Pagination initialized with total: " + total);
 
 			}
 
@@ -273,7 +266,6 @@ public class PaginationUIController implements DUIControllable, Serializable {
 
 	private void navigation() {
 
-		log.info("Navingation page value: " + pages);
 
 		if (pages == 2) {
 			setActivePage();
@@ -323,9 +315,6 @@ public class PaginationUIController implements DUIControllable, Serializable {
 	}
 
 	private void setActivePage() {
-		log.info(" Before setActive - New Page: " + newPage);
-		log.info(" Before setActive - Current Page [ prev ]: " + currentPage );
-
 		if (newPage >= 1 && newPage <= pages) {
 
 			if (currentPage < newPage) {
@@ -385,8 +374,6 @@ public class PaginationUIController implements DUIControllable, Serializable {
 			}
 		}
 		
-		log.info("After setActive - New Page: " + newPage);
-		log.info(" After setActive - Current Page [ prev ]: " + currentPage );
 	}
 
 }

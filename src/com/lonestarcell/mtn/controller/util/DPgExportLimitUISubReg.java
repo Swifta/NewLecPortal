@@ -26,6 +26,7 @@ public class DPgExportLimitUISubReg extends
 		AbstractDPgExportLimitUI< ExportSubReg > {
 
 	private static final long serialVersionUID = 1L;
+	private String reportTitle = "Subscriber Registration Report";
 
 	public DPgExportLimitUISubReg(Collection<Item> records) {
 		super(records);
@@ -41,7 +42,7 @@ public class DPgExportLimitUISubReg extends
 		this.btnXLS
 				.addClickListener(e -> {
 
-					exportHandler( xlsExporter, btnXLS );
+					exportHandler( xlsExporter, btnXLS, reportTitle );
 				});
 	}
 
@@ -49,7 +50,7 @@ public class DPgExportLimitUISubReg extends
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
-					exportHandler(cSVExporter, btnCSV);
+					exportHandler(cSVExporter, btnCSV, reportTitle );
 				});
 	}
 	
@@ -57,7 +58,7 @@ public class DPgExportLimitUISubReg extends
 	public void attachBtnPDF() {
 		this.btnPDF
 				.addClickListener(e -> {
-					exportHandler(pdfExporter, btnPDF);
+					exportHandler(pdfExporter, btnPDF, reportTitle );
 				});
 	}
 

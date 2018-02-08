@@ -27,16 +27,18 @@ import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
-public class MDAOUser extends Model implements IModel< UserRepo > {
+public class MDAOUserx extends Model implements IModel< UserRepo > {
 
 	private static final long serialVersionUID = 1L;
-	private Logger log = LogManager.getLogger(MDAOUser.class.getName());
+	private Logger log = LogManager.getLogger(MDAOUserx.class.getName());
 
 	private OutUser outTxn;
 	private InTxn inTxn;
 
-	public MDAOUser(Long userId, String userSession, ApplicationContext cxt ) {
+	public MDAOUserx(Long userId, String userSession, ApplicationContext cxt ) {
 		super(userId, userSession);
 		this.springAppContext = cxt;
 		
@@ -49,299 +51,9 @@ public class MDAOUser extends Model implements IModel< UserRepo > {
 
 	}
 
-	public Out setUsers(In in, BeanItemContainer<OutUser> container) {
 
-		Out out = this.checkAuthorization();
-		if (out.getStatusCode() != 1) {
-			out.setStatusCode(100);
-			return out;
-		}
 
-		Connection conn = null;
-		out = new Out();
-		PreparedStatement ps = null;
-		ResultSet rs = null;
 
-		String q = "SELECT DATE_FORMAT( u.date_added, '%Y-%m-%e %T') AS date_added, DATE_FORMAT( u.last_login, '%Y-%m-%e %T') AS last_login, o.name AS org, u.username, u.email, u.status, u.profile_id, p.profile_name, u.change_password, u.user_session, user_id FROM users as u";
-		q += " JOIN organization AS o ON o.id = u.organization_id";
-		q += " JOIN profile AS p ON p.profile_id = u.profile_id";
-		q += " WHERE u.user_id != ?";
-		q += " ORDER BY u.date_added, u.last_login DESC";
-		q += " LIMIT ?, ?;";
-
-		try {
-
-			// TODO Check if user session is valid before operation.
-			// TODO Check if user profile is authorized
-			// TODO This should be implemented in one place, the mother class
-			conn = dataSource.getConnection();
-			conn.setReadOnly(true);
-
-			BData<?> bInData = in.getData();
-			inTxn = (InTxn) bInData.getData();
-
-			int page = inTxn.getPage();
-			int pageLength = 15;
-			int pageMin = 0;
-			if (page > 1) {
-				pageMin = (page - 1) * pageLength + 1;
-			}
-
-			// TODO Delete Test Data
-			// String timeCorrection = " 23:13:59";
-			// inTxn.setfDate( "2017-01-01" );
-			// inTxn.settDate( "2017-01-14" );
-
-			conn.setReadOnly(true);
-			ps = conn.prepareStatement(q);
-			// ps.setString( 1, inTxn.getfDate()+timeCorrection );
-			// ps.setString( 2, inTxn.gettDate()+timeCorrection );
-			ps.setLong(1, super.userAuthId);
-			ps.setInt(2, pageMin);
-			ps.setInt(3, pageLength);
-
-			log.debug("Query: " + ps.toString());
-
-			rs = ps.executeQuery();
-			if (!rs.next()) {
-				log.debug("No result");
-
-				outTxn = new OutUser();
-				container.addBean(outTxn);
-
-				BData<BeanItemContainer<OutUser>> bOutData = new BData<>();
-				bOutData.setData(container);
-
-				out.setData(bOutData);
-				return out;
-			}
-
-			do {
-
-				outTxn = new OutUser();
-
-				outTxn.setUserId(rs.getLong("user_id"));
-				outTxn.setUsername(rs.getString("username"));
-				outTxn.setUserSession(rs.getString("user_session"));
-
-				String userStatus = rs.getString("status");
-				String userStatusDesc = null;
-				if (userStatus.equals("0")) {
-					userStatusDesc = "REGISTERED";
-				} else if (userStatus.equals("1")) {
-					userStatusDesc = "ACTIVE";
-				} else if (userStatus.equals("2")) {
-					userStatusDesc = "BLOCKED";
-				} else {
-					userStatusDesc = "N/A";
-				}
-				outTxn.setUserStatus(userStatusDesc);
-
-				outTxn.setChangePass(rs.getString("change_password"));
-				outTxn.setDate(rs.getString("date_added"));
-				outTxn.setLastLogin(rs.getString("last_login"));
-				outTxn.setOrg(rs.getString("org"));
-				outTxn.setProfile(rs.getString("profile_name"));
-				outTxn.setProfileId(rs.getInt("profile_id"));
-
-				outTxn.setEmail(rs.getString("email"));
-
-				container.addBean(outTxn);
-
-			} while (rs.next());
-
-			out.setStatusCode(1);
-			out.setMsg("Data fetch successful.");
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			out.setMsg("Could not complete operation. ");
-			e.printStackTrace();
-
-		} finally {
-			connCleanUp(conn, ps, rs);
-		}
-
-		return out;
-	}
-
-	public Out searchUsers(In in, BeanItemContainer<OutUser> container) {
-
-		Out out = this.checkAuthorization();
-		if (out.getStatusCode() != 1) {
-			out.setStatusCode(100);
-			return out;
-		}
-
-		Connection conn = null;
-		out = new Out();
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-
-			conn = dataSource.getConnection();
-			conn.setReadOnly(true);
-
-			BData<?> bInData = in.getData();
-			inTxn = (InTxn) bInData.getData();
-
-			Map<String, Integer> searchFieldMap = new HashMap<>();
-			String qVariable = "";
-
-			String q = "SELECT DATE_FORMAT( u.date_added, '%Y-%m-%e %T') AS date_added, DATE_FORMAT( u.last_login, '%Y-%m-%e %T') AS last_login, o.name AS org, u.username, u.email, u.status, u.profile_id, p.profile_name, u.change_password, u.user_session, user_id FROM users as u";
-			q += " JOIN organization AS o ON o.id = u.organization_id";
-			q += " JOIN profile AS p ON p.profile_id = u.profile_id";
-			q += " WHERE ";
-
-			if (inTxn.getSearchUsername() != null) {
-				qVariable += " u.username LIKE ? AND";
-				searchFieldMap.put("username", searchFieldMap.size() + 1);
-			}
-
-			if (inTxn.getSearchEmail() != null) {
-				qVariable += " u.email LIKE ? AND";
-				searchFieldMap.put("email", searchFieldMap.size() + 1);
-			}
-
-			if (inTxn.getSearchOrg() != null) {
-				qVariable += " o.name LIKE ? AND";
-				searchFieldMap.put("org", searchFieldMap.size() + 1);
-			}
-
-			if (inTxn.getSearchProfile() != null) {
-				qVariable += " p.profile_name ? AND";
-				searchFieldMap.put("profile", searchFieldMap.size() + 1);
-			}
-
-			if (inTxn.getSearchUserStatus() != null) {
-				if ("REGISTERED".contains(inTxn.getSearchUserStatus()
-						.toUpperCase())) {
-
-					qVariable += " ( u.status = 0 ";
-					qVariable += " )";
-					qVariable += " AND";
-
-				} else if ("ACTIVE".contains(inTxn.getSearchUserStatus()
-						.toUpperCase())) {
-
-					qVariable += " ( u.status = 1 ";
-					qVariable += " )";
-					qVariable += " AND";
-
-				} else if ("BLOCKED".contains(inTxn.getSearchUserStatus()
-						.toUpperCase())) {
-
-					qVariable += " ( u.status = 2 ";
-					qVariable += " )";
-					qVariable += " AND";
-
-				} else {
-
-					// Dummy status for no match
-					qVariable += " ( u.status = '404' ) ";
-					qVariable += " AND";
-				}
-
-			}
-
-			q += qVariable;
-
-			q += " u.user_id != ?";
-			q += " ORDER BY u.date_added, u.last_login DESC";
-			q += " LIMIT ?, ?;";
-
-			int page = inTxn.getPage();
-			int pageLength = 15;
-			int pageMin = 0;
-			if (page > 1) {
-				pageMin = (page - 1) * pageLength + 1;
-			}
-
-			conn.setReadOnly(true);
-			ps = conn.prepareStatement(q);
-			if (inTxn.getSearchUsername() != null) {
-				ps.setString(searchFieldMap.get("username"),
-						"%" + inTxn.getSearchUsername() + "%");
-			}
-
-			if (inTxn.getSearchEmail() != null) {
-				ps.setString(searchFieldMap.get("email"),
-						"%" + inTxn.getSearchEmail() + "%");
-			}
-
-			if (inTxn.getSearchProfile() != null) {
-				ps.setString(searchFieldMap.get("profile"),
-						"%" + inTxn.getSearchProfile() + "%");
-			}
-
-			if (inTxn.getSearchOrg() != null) {
-				ps.setString(searchFieldMap.get("org"),
-						"%" + inTxn.getSearchOrg() + "%");
-			}
-
-			int paramIndexOffset = searchFieldMap.size();
-			ps.setLong(paramIndexOffset + 1, super.userAuthId);
-			ps.setInt(paramIndexOffset + 2, pageMin);
-			ps.setInt(paramIndexOffset + 3, pageLength);
-
-			log.debug("Query: " + ps.toString());
-
-			rs = ps.executeQuery();
-			if (!rs.next()) {
-				log.debug("No result");
-				out.setMsg("No records found.");
-				return out;
-			}
-
-			do {
-
-				outTxn = new OutUser();
-
-				outTxn.setUserId(rs.getLong("user_id"));
-				outTxn.setUsername(rs.getString("username"));
-				outTxn.setUserSession(rs.getString("user_session"));
-
-				String userStatus = rs.getString("status");
-				String userStatusDesc = null;
-				if (userStatus.equals("0")) {
-					userStatusDesc = "REGISTERED";
-				} else if (userStatus.equals("1")) {
-					userStatusDesc = "ACTIVE";
-				} else if (userStatus.equals("2")) {
-					userStatusDesc = "BLOCKED";
-				} else {
-					userStatusDesc = "N/A";
-				}
-				outTxn.setUserStatus(userStatusDesc);
-
-				outTxn.setChangePass(rs.getString("change_password"));
-				outTxn.setDate(rs.getString("date_added"));
-				outTxn.setLastLogin(rs.getString("last_login"));
-				outTxn.setOrg(rs.getString("org"));
-				outTxn.setProfile(rs.getString("profile_name"));
-				outTxn.setProfileId(rs.getInt("profile_id"));
-
-				outTxn.setEmail(rs.getString("email"));
-
-				container.addBean(outTxn);
-
-			} while (rs.next());
-
-			out.setStatusCode(1);
-			out.setMsg("Data fetch successful.");
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			out.setMsg("Could not complete operation. ");
-			e.printStackTrace();
-
-		} finally {
-			connCleanUp(conn, ps, rs);
-		}
-
-		return out;
-	}
 
 	@SuppressWarnings("unchecked")
 	public Out refreshMultiUserRecord(Collection<Item> records) {
@@ -930,6 +642,13 @@ public class MDAOUser extends Model implements IModel< UserRepo > {
 				// "Admin username: "+username+" Session: "+userSession );
 				out.setMsg("Not authorized [ Authorization session expired. ]");
 				out.setStatusCode(403);
+				
+				//Too bad, should be moved to controller.
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
+				
 				return out;
 			}
 

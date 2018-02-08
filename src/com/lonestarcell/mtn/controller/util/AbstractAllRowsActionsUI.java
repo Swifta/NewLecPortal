@@ -150,7 +150,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 
 	protected void setNewPage(int page) {
-		log.info( "New page called." );
+		log.debug( "New page called." );
 		this.newPage = page;
 		grid.deselectAll();
 	}
@@ -180,7 +180,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		String thousands = NumberFormatFac.toThousands( sThousands );
 		outTxnMeta.getTotalRecord().setValue( thousands );
 		
-		log.info( "Format called." );
 	}
 
 

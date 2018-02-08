@@ -463,7 +463,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	}
 	
 	
-	protected void exportHandler( Exporter exporter, Button btn ){
+	protected void exportHandler( Exporter exporter, Button btn, String reportTitle ){
 		
 		Resource icon = btn.getIcon();
 		
@@ -488,7 +488,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 				return;
 			}
 
-			Table table = new Table( "Subscriber Transaction Report" );
+			Table table = new Table( reportTitle );
 			table.setContainerDataSource( c );
 			exporter.setTableToBeExported( table );
 			renameColumns( exporter );

@@ -23,10 +23,10 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name="user_id")
-	private String userId;
+	private Long userId;
 
 	@Column(name="change_password")
-	private byte changePassword;
+	private Short changePassword;
 
 	@Column(name="date_added")
 	private Timestamp dateAdded;
@@ -45,7 +45,7 @@ public class User implements Serializable {
 
 	private String password;
 
-	private byte status;
+	private Short status;
 
 	private String surname;
 
@@ -75,19 +75,19 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public String getUserId() {
+	public Long getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
-	public byte getChangePassword() {
+	public Short getChangePassword() {
 		return this.changePassword;
 	}
 
-	public void setChangePassword(byte changePassword) {
+	public void setChangePassword( Short changePassword) {
 		this.changePassword = changePassword;
 	}
 
@@ -147,11 +147,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public byte getStatus() {
+	public Short getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(byte status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 

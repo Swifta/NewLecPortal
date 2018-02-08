@@ -21,6 +21,7 @@ public class DPgExportLimitUILedger extends
 		AbstractDPgExportLimitUI<ExportLedger> {
 
 	private static final long serialVersionUID = 1L;
+	private String reportTitle = "Ledger Report";
 
 	public DPgExportLimitUILedger(Collection<Item> records) {
 		super(records);
@@ -35,7 +36,7 @@ public class DPgExportLimitUILedger extends
 	public void attachBtnXLS() {
 		this.btnXLS
 				.addClickListener(e -> {
-					exportHandler( xlsExporter, btnXLS );
+					exportHandler( xlsExporter, btnXLS, reportTitle );
 
 				});
 	}
@@ -44,7 +45,7 @@ public class DPgExportLimitUILedger extends
 	public void attachBtnCSV() {
 		this.btnCSV
 				.addClickListener(e -> {
-					exportHandler(cSVExporter, btnCSV);
+					exportHandler(cSVExporter, btnCSV, reportTitle );
 				});
 	}
 	
@@ -52,7 +53,7 @@ public class DPgExportLimitUILedger extends
 	public void attachBtnPDF() {
 		this.btnPDF
 				.addClickListener(e -> {
-					exportHandler(pdfExporter, btnPDF);
+					exportHandler(pdfExporter, btnPDF, reportTitle);
 				});
 	}
 	

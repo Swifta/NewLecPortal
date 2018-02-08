@@ -3,6 +3,7 @@ package com.lonestarcell.mtn.model.admin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +12,8 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InSettings;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutProfile;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class MSettings extends Model {
 	
@@ -289,6 +292,13 @@ protected Out checkAuthorization() {
 			// log.debug( "Admin username: "+username+" Session: "+userSession );
 			out.setMsg( "Not authorized [ Authorization session expired. ]" );
 			out.setStatusCode( 403 );
+			
+			//Too bad, should be moved to controller.
+			if( UI.getCurrent() != null ){
+				Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+				UI.getCurrent().getNavigator().navigateTo( "login" );
+			}
+			
 			return out;
 		}
 	

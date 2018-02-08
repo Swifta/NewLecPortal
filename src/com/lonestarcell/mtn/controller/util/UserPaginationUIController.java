@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
@@ -29,7 +30,7 @@ public class UserPaginationUIController implements DUIControllable, Serializable
 	private Logger log = LogManager.getLogger();
 
 	private Map< String, Button > mapPageBtns;
-	private BeanItemContainer<OutUser> beanItemContainer;
+	private BeanItemContainer<AbstractDataBean> beanItemContainer;
 		
 	private Button btnNextH;
 	private Button btnNextF;
@@ -53,7 +54,7 @@ public class UserPaginationUIController implements DUIControllable, Serializable
 	private In in;
 	private OutTxnMeta outTxnMeta;
 	
-	public UserPaginationUIController( BeanItemContainer<OutUser> container, MUser mTxn, InTxn inTxn ){
+	public UserPaginationUIController( BeanItemContainer<AbstractDataBean> container, MUser mTxn, InTxn inTxn ){
 		this.beanItemContainer = container;
 		this.mTxn = mTxn;
 		this.inTxn = inTxn;
@@ -410,7 +411,7 @@ public class UserPaginationUIController implements DUIControllable, Serializable
 		
 		//TODO validate response
 		
-		mTxn.setUsers(in, beanItemContainer );
+		mTxn.search(in, beanItemContainer );
 		
 		//mTxn.setTxnMeta(in, outTxnMeta );
 		
