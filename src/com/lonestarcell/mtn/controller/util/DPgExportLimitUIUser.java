@@ -9,7 +9,9 @@ import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.ExportUser;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.Out;
+import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.model.admin.IModel;
+import com.lonestarcell.mtn.model.admin.MUser;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
@@ -18,7 +20,7 @@ import com.vaadin.server.UserError;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
+public class DPgExportLimitUIUser extends AbstractDPgExportLimitUIUser<ExportUser> {
 
 	private static final long serialVersionUID = 1L;
 	private String reportTitle = "Portal Users Report";
@@ -27,9 +29,9 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 		super(records);
 	}
 
-	public DPgExportLimitUIUser(PaginationUIController pageC, IModel mSub,
+	public DPgExportLimitUIUser(PaginationUIController pageC, MUser model,
 			In in, Collection<Item> records, VerticalLayout cMoreOps) {
-		super(pageC, mSub, in, records, cMoreOps);
+		super(pageC, model, in, records, cMoreOps);
 	}
 
 	@Override
@@ -84,8 +86,8 @@ public class DPgExportLimitUIUser extends AbstractDPgExportLimitUI<ExportUser> {
 		} else {
 
 			Out out = model.setExportData(in,
-					new BeanItemContainer<AbstractDataBean>(
-							AbstractDataBean.class));
+					new BeanItemContainer<OutUser>(
+							OutUser.class));
 			if (out.getStatusCode() != 1)
 				return null;
 			c = (BeanItemContainer<ExportUser>) out.getData().getData();

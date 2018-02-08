@@ -43,15 +43,15 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesign implements
+public abstract class AbstractDPgExportLimitUIUser< T > extends DPgExportLimitUIDesign implements
 		DUIControllable, IExporter< T > {
 
 	private static final long serialVersionUID = 1L;
 
 	private Window processingPopup;
-	private Logger log = LogManager.getLogger(AbstractDPgExportLimitUI.class.getName());
+	private Logger log = LogManager.getLogger(AbstractDPgExportLimitUIUser.class.getName());
 	private Item record;
-	protected IModel<?> model;
+	protected MUser model;
 	protected In in;
 	private VerticalLayout cMoreOps;
 	protected Collection<Item> records;
@@ -66,7 +66,7 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	private long rowCount;
 	private InTxn inTxn;
 
-	public AbstractDPgExportLimitUI(PaginationUIController pageC, IModel mSub, In in,
+	public AbstractDPgExportLimitUIUser(PaginationUIController pageC, MUser mSub, In in,
 			Collection<Item> records, VerticalLayout cMoreOps) {
 		this.records = records;
 		this.pageC = pageC;
@@ -81,12 +81,12 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 	
 
 
-	public AbstractDPgExportLimitUI(Collection<Item> records) {
+	public AbstractDPgExportLimitUIUser(Collection<Item> records) {
 		this.records = records;
 		init(null);
 	}
 
-	public AbstractDPgExportLimitUI(DUserRoleUI a, Item record, Accordion accoRoles) {
+	public AbstractDPgExportLimitUIUser(DUserRoleUI a, Item record, Accordion accoRoles) {
 		this.setRecord(record);
 		this.setSpringAppContext(a.getSpringAppContext());
 		this.setProfileRepo(this.springAppContext.getBean(ProfileRepo.class));
@@ -110,11 +110,12 @@ public abstract class AbstractDPgExportLimitUI< T > extends DPgExportLimitUIDesi
 		this.records = records;
 	}
 
-	public IModel getModel() {
+	public MUser getModel() {
 		return model;
 	}
 
-	public void setModel(IModel model) {
+	public void setModel(MUser model) {
+		
 		this.model = model;
 	}
 

@@ -33,7 +33,7 @@ import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class MUser extends Model implements IModel<UserRepo> {
+public class MUser extends Model {
 
 	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(MUser.class.getName());
@@ -66,7 +66,7 @@ public class MUser extends Model implements IModel<UserRepo> {
 
 	}
 
-	private Out setUsers(In in, BeanItemContainer<OutUser> container) {
+	private Out setUsersxxx(In in, BeanItemContainer<OutUser> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -182,7 +182,7 @@ public class MUser extends Model implements IModel<UserRepo> {
 		return out;
 	}
 
-	private Out searchUsers(In in, BeanItemContainer<OutUser> container) {
+	private Out searchUsersxx(In in, BeanItemContainer<OutUser> container) {
 
 		/*
 		 * Out out = this.checkAuthorization(); if (out.getStatusCode() != 1) {
@@ -497,7 +497,7 @@ public class MUser extends Model implements IModel<UserRepo> {
 					record.getItemProperty("column5").setValue(
 							rs.getString("profile_name"));
 					record.getItemProperty("column9").setValue(
-							rs.getInt("profile_id"));
+							String.valueOf(rs.getInt("profile_id")));
 					record.getItemProperty("column2").setValue(
 							rs.getString("email"));
 
@@ -1023,8 +1023,8 @@ public class MUser extends Model implements IModel<UserRepo> {
 		return out;
 	}
 
-	@Override
-	public Out search(In in, BeanItemContainer<AbstractDataBean> container) {
+	
+	public Out search(In in, BeanItemContainer<OutUser> container) {
 
 		Out out = this.checkAuthorization();
 		if (out.getStatusCode() != 1) {
@@ -1198,7 +1198,7 @@ public class MUser extends Model implements IModel<UserRepo> {
 
 				log.info("Record count is 0.");
 				container.addBean(new OutUser());
-				BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
+				BData<BeanItemContainer<OutUser>> bOutData = new BData<>();
 				bOutData.setData(container);
 				out.setData(bOutData);
 				out.setMsg("No records found.");
@@ -1266,7 +1266,7 @@ public class MUser extends Model implements IModel<UserRepo> {
 
 		} catch (Exception e) {
 			container.addBean(new OutUser());
-			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
+			BData<BeanItemContainer<OutUser>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
 
@@ -1278,28 +1278,10 @@ public class MUser extends Model implements IModel<UserRepo> {
 		return out;
 	}
 
-	@Override
-	public Out set(In in, BeanItemContainer<AbstractDataBean> container) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Out setMeta(In in, OutTxnMeta outSubscriber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Out searchMeta(In in, OutTxnMeta outSubscriber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	@SuppressWarnings("unchecked")
-	@Override
 	public Out setExportData(In in,
-			BeanItemContainer<AbstractDataBean> container) {
+			BeanItemContainer<OutUser> container) {
 
 		try {
 			BData<?> bInData = in.getData();
@@ -1349,7 +1331,7 @@ public class MUser extends Model implements IModel<UserRepo> {
 		} catch (Exception ex) {
 
 			container.addBean(new OutUser());
-			BData<BeanItemContainer<AbstractDataBean>> bOutData = new BData<>();
+			BData<BeanItemContainer<OutUser>> bOutData = new BData<>();
 			bOutData.setData(container);
 			out.setData(bOutData);
 
@@ -1360,15 +1342,15 @@ public class MUser extends Model implements IModel<UserRepo> {
 		return out;
 	}
 
-	@Override
+	
 	public Out setExportDataMulti(In in,
-			BeanItemContainer<AbstractDataBean> container,
+			BeanItemContainer<OutUser> container,
 			Collection<Item> records) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public Date getExportFDate(InTxn inTxn, UserRepo repo) {
 
 		int fromPgNo = inTxn.getExportFPgNo();

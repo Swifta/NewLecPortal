@@ -108,7 +108,7 @@ public class MUserTest {
 		inBData.setData( inTxn );
 		in.setData( inBData );
 	
-		Out out = m.search(in, new BeanItemContainer<AbstractDataBean>(AbstractDataBean.class) );
+		Out out = m.search(in, new BeanItemContainer<OutUser>(OutUser.class) );
 
 		Assert.assertNotNull( out );
 		Assert.assertTrue( "Status should be 1", out.getStatusCode() == 1 );

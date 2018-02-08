@@ -20,6 +20,7 @@ import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
+import com.lonestarcell.mtn.bean.OutUser;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
@@ -62,7 +63,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	private DUserUI ancestor;
 	private Logger log = LogManager.getLogger();
-	private BeanItemContainer<AbstractDataBean> beanItemContainer;
+	private BeanItemContainer<OutUser> beanItemContainer;
 
 	private MUser mTxn;
 	private InTxn inTxn;
@@ -112,7 +113,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 		setHeader();
 		setFooter();
-		setBeanItemContainer(new BeanItemContainer<>(AbstractDataBean.class));
+		setBeanItemContainer(new BeanItemContainer<>(OutUser.class));
 
 		swap(this);
 		attachCommandListeners();
@@ -123,12 +124,12 @@ public class DUserStateUI extends DUserStateUIDesign implements
 
 	}
 
-	public BeanItemContainer<AbstractDataBean> getBeanItemContainer() {
+	public BeanItemContainer<OutUser> getBeanItemContainer() {
 		return beanItemContainer;
 	}
 
 	public void setBeanItemContainer(
-			BeanItemContainer<AbstractDataBean> beanItemContainer) {
+			BeanItemContainer<OutUser> beanItemContainer) {
 		this.beanItemContainer = beanItemContainer;
 	}
 
@@ -222,7 +223,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 	}
 
 	public Grid loadGridData(
-			BeanItemContainer<AbstractDataBean> beanItemContainer) {
+			BeanItemContainer<OutUser> beanItemContainer) {
 		try {
 
 			Grid grid = new Grid();
@@ -317,7 +318,7 @@ public class DUserStateUI extends DUserStateUIDesign implements
 					"actions");
 			PaginationUIController pageC = new PaginationUIController();
 
-			AllRowsActionsUISub allRowsActionsUIUser = new AllRowsActionsUISub(
+			AllRowsActionsUIUser allRowsActionsUIUser = new AllRowsActionsUIUser(
 					mTxn, grid, in, true, true, pageC);
 			dateFilterCellH.setComponent(allRowsActionsUIUser);
 

@@ -33,7 +33,7 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, AbstractDataBean, TextChangeListenerSub<AbstractDataBean> > {
+public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, OutUser, TextChangeListenerSub<OutUser> > {
 	private static final long serialVersionUID = 1L;
 	
 	private Logger log = LogManager.getLogger( AllRowsActionsUITxn.class.getName() );
@@ -106,7 +106,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, Abstr
 	}
 
 	@Override
-	protected void addFilterField(BeanItemContainer<AbstractDataBean> container,
+	protected void addFilterField(BeanItemContainer<OutUser> container,
 			HeaderRow filterHeader, String itemId) {
 		TextField tF = new TextField();
 		tF.setStyleName("sn-tf-filter");
@@ -116,7 +116,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, Abstr
 		HeaderCell cFilter = filterHeader.getCell(itemId);
 		cFilter.setComponent(tF);
 		
-		TextChangeListenerSub<AbstractDataBean> tChangeListener = getTextChangeListner( container, itemId, tF );
+		TextChangeListenerSub<OutUser> tChangeListener = getTextChangeListner( container, itemId, tF );
 		tF.addTextChangeListener( tChangeListener );
 		tFSearchFields.add( tF );
 		
@@ -131,7 +131,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, Abstr
 
 	@Override
 	protected ShortcutListener getSearchShortcutListener(TextField tF,
-			String itemId, BeanItemContainer<AbstractDataBean> container) {
+			String itemId, BeanItemContainer<OutUser> container) {
 		
 		return new ShortcutListener( "", KeyCode.ENTER, null){
 			private static final long serialVersionUID = 1L;
@@ -174,7 +174,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, Abstr
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void setBeanItemContainer() {
-		container = ((BeanItemContainer<AbstractDataBean>) ((GeneratedPropertyContainer)  grid.getContainerDataSource())
+		container = ((BeanItemContainer<OutUser>) ((GeneratedPropertyContainer)  grid.getContainerDataSource())
 				.getWrappedContainer());
 		super.container = container;
 		
@@ -187,9 +187,9 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, Abstr
 	}
 
 	@Override
-	protected TextChangeListenerSub<AbstractDataBean> getTextChangeListner(
-			BeanItemContainer<AbstractDataBean> container, String itemId, TextField tF) {
-		return new TextChangeListenerSub<AbstractDataBean>( container, inTxn, itemId, tF );
+	protected TextChangeListenerSub<OutUser> getTextChangeListner(
+			BeanItemContainer<OutUser> container, String itemId, TextField tF) {
+		return new TextChangeListenerSub<OutUser>( container, inTxn, itemId, tF );
 	}
 
 	@Override
@@ -219,6 +219,7 @@ public class AllRowsActionsUIUser extends AbstractAllRowsActionsUI< MUser, Abstr
 			@Override
 			public void buttonClick(ClickEvent event) {
 				new DPgExportLimitUIUser( pageC, model, in, new ArrayList<Item>(), moreDropDown );
+				
 			    // new DataExportUISub( model, in, new ArrayList<Item>(), moreDropDown );
 			}
 
