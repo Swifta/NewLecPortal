@@ -315,6 +315,7 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 	private void setPropertyDataSource(){
 		
 		
+		
 		this.tFNewFirstName.setPropertyDataSource( record.getItemProperty( "newFirstName" ) );
 		this.tFNewLastName.setPropertyDataSource( record.getItemProperty( "newLastName" ) );
 		this.tFNewSurname.setPropertyDataSource( record.getItemProperty( "newSurname" ) );
@@ -332,7 +333,9 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 		
 		// Optional fields
 		TFValidator tFValidator = new TFValidator( "Field required in valid format" );
-		this.tFNewSurname.addValidator( tFValidator );
+		// this.tFNewSurname.addValidator( tFValidator );
+		
+		tFNewSurname.setVisible( false );
 		
 		
 		record.getItemProperty( "newFirstName" ).setValue( record.getItemProperty( "firstName" ).getValue() );

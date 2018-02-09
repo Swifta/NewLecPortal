@@ -1,5 +1,7 @@
 package com.lonestarcell.mtn.controller.util;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,22 +37,14 @@ public class TextChangeListenerUser<O> implements TextChangeListener{
 		if( val != null && val.trim().isEmpty() )
 			val = null;
 		
+		Map< String, Object > searchMap = inTxn.getSearchMap();
+		
+		searchMap.remove( searchMap.get( "prevItemId" ) );
+		searchMap.put( itemId, val );
+		searchMap.put( "prevItemId", itemId );
 
 		
-		
-		if( itemId.equals( "email" ) ){
-			inTxn.setSearchEmail( val );
-		} else if( itemId.equals( "username" ) ) {
-			inTxn.setSearchUsername( val );
-		}else if( itemId.equals( "profile" ) ) {
-			inTxn.setSearchProfile( val );
-		}else if( itemId.equals( "org" ) ) {
-			inTxn.setSearchOrg( val );
-		}else if( itemId.equals( "userStatus" ) ) {
-			inTxn.setSearchUserStatus( val );
-		}
-		
-		container.removeContainerFilters(itemId);
+		container.removeContainerFilters( itemId );
 		if (val != null && !val.isEmpty()) {
 			container.addContainerFilter(new SimpleStringFilter(itemId,
 					val, true, false));

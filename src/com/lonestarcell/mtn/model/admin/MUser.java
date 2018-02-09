@@ -421,10 +421,17 @@ public class MUser extends Model {
 			itr = records.iterator();
 			max = records.size();
 			while (itr.hasNext()) {
+				
+				Item item = itr.next();
+				Object obj = item.getItemProperty("column8");
+				if( item.getItemProperty("column8") == null ){
+					obj = item.getItemProperty("userId").getValue();
+				}else{
+					obj = item.getItemProperty("column8").getValue();
+				}
 				ps.setLong(
 						max,
-						Long.valueOf(itr.next().getItemProperty("column8")
-								.getValue().toString()));
+						Long.valueOf(obj.toString()));
 				max--;
 			}
 
@@ -573,10 +580,18 @@ public class MUser extends Model {
 			itr = records.iterator();
 			max = records.size();
 			while (itr.hasNext()) {
+				
+				Item item = itr.next();
+				Object obj = item.getItemProperty("column8");
+				if( item.getItemProperty("column8") == null ){
+					obj = item.getItemProperty("userId").getValue();
+				} else {
+					obj =  item.getItemProperty("column8").getValue();
+				}
+				
 				ps.setLong(
 						max,
-						Long.valueOf(itr.next().getItemProperty("column8")
-								.getValue().toString()));
+						Long.valueOf(obj.toString()));
 				max--;
 			}
 
@@ -640,10 +655,18 @@ public class MUser extends Model {
 			itr = records.iterator();
 			max = records.size();
 			while (itr.hasNext()) {
+				
+				Item item = itr.next();
+				Object obj = item.getItemProperty("column8");
+				if( item.getItemProperty("column8") == null ){
+					obj = item.getItemProperty("userId").getValue();
+				} else {
+					obj =  item.getItemProperty("column8").getValue();
+				}
+				
 				ps.setLong(
 						max,
-						Long.valueOf(itr.next().getItemProperty("column8")
-								.getValue().toString()));
+						Long.valueOf( obj.toString()));
 				max--;
 			}
 
@@ -707,10 +730,17 @@ public class MUser extends Model {
 			itr = records.iterator();
 			max = records.size();
 			while (itr.hasNext()) {
+				Item item = itr.next();
+				Object obj = item.getItemProperty("column8");
+				if( item.getItemProperty("column8") == null ){
+					obj = item.getItemProperty("userId").getValue();
+				} else {
+					obj =  item.getItemProperty("column8").getValue();
+				}
+				
 				ps.setLong(
 						max,
-						Long.valueOf(itr.next().getItemProperty("column8")
-								.getValue().toString()));
+						Long.valueOf(obj.toString()));
 				max--;
 			}
 
@@ -775,10 +805,18 @@ public class MUser extends Model {
 			itr = records.iterator();
 			max = records.size();
 			while (itr.hasNext()) {
+				
+				Item item = itr.next();
+				Object obj = item.getItemProperty("column8");
+				if( item.getItemProperty("column8") == null ){
+					obj = item.getItemProperty("userId").getValue();
+				} else {
+					obj =  item.getItemProperty("column8").getValue();
+				}
+				
 				ps.setLong(
 						max,
-						Long.valueOf(itr.next().getItemProperty("column8")
-								.getValue().toString()));
+						Long.valueOf(obj.toString()));
 				max--;
 			}
 
