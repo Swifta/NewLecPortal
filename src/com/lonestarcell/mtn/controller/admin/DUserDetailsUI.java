@@ -3,9 +3,11 @@ package com.lonestarcell.mtn.controller.admin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -16,7 +18,9 @@ import com.lonestarcell.mtn.design.admin.DUserDetailsUIDesign;
 import com.lonestarcell.mtn.model.admin.MUser;
 import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.model.admin.MUserSelfCare;
+import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.vaadin.data.Item;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
@@ -36,13 +40,53 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	private Collection<Item> records;
 	private MUser mTxn = new MUser(  getCurrentUserId(), getCurrentUserSession()  );
 	
+	protected Set< Short > permSet;
+	private ApplicationContext springAppContext;
+	
 
-	public DUserDetailsUI( Item record) {
+	public DUserDetailsUI( Item record, ApplicationContext springAppContext ) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
+		this.setPermSet( null );
 		init();
 	}
 	
 	
+	
+	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
+
+
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setPermSet(Set<Short> permSet) {
+		if( permSet == null )
+			this.permSet = UI.getCurrent().getSession().getAttribute( Set.class );
+		else
+			this.permSet = permSet;
+		
+	}
+
+
+
+
 
 	public Collection<Item> getRecords() {
 		return records;
@@ -80,12 +124,31 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		this.attachBtnUserSetCreds();
 		this.attachBtnUserChangeProfile();
 		this.attachBtnUserRefresh();
-		this.attachBtnUserDetailsClose();
 	}
 	
 	
+	private boolean isAllowedFeature( Button btn, Short permId ){
+		boolean is = false;
+		if( !permSet.contains( permId )){
+			btn.setVisible( false );
+			btn.setEnabled( false );
+			
+		} else {
+			btn.setVisible( true );
+			btn.setEnabled( true );
+			is = true;
+		}
+		
+		log.info( "Is permission "+btn.getCaption()+" of id "+permId+" on?: "+is );
+		return is;
+		
+	}
 	
 	private void attachBtnUserSetCreds(){
+		
+		if( !isAllowedFeature( btnUserSetCreds, EnumPermission.USER_SET_RESET_PASSWORD.val) )
+			return;
+		
 		this.btnUserSetCreds.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -93,7 +156,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserSetCredsUI( record );
+				new DUserSetCredsUI( record, springAppContext );
 				
 			}
 			
@@ -102,6 +165,10 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	private void attachBtnUserChangeProfile(){
+		
+		if( !isAllowedFeature( btnUserChangeProfile, EnumPermission.USER_CHANGE_PROFILE.val) )
+			return;
+		
 		this.btnUserChangeProfile.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -109,7 +176,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditProfileUI( record );
+				new DUserEditProfileUI( record, springAppContext );
 				
 			}
 			
@@ -121,6 +188,9 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	private void attachBtnUserExpireSession(){
+		if( !isAllowedFeature( btnUserExpireSession, EnumPermission.USER_CANCEL_LOGIN_SESSION.val) )
+			return;
+		
 		this.btnUserExpireSession.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -137,6 +207,9 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 
 	
 	private void attachBtnUserExpirePassword(){
+		
+		if( !isAllowedFeature( btnUserExpirePassword, EnumPermission.USER_EXPIRE_PASSWORD.val) )
+			return;
 		this.btnUserExpirePassword.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -152,6 +225,10 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	}
 	
 	private void attachBtnUserActivate(){
+		
+		if( !isAllowedFeature( btnUserActivate, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+			return;
+		
 		this.btnUserActivate.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -168,6 +245,9 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	
 	
 	private void attachBtnUserBlock(){
+		
+		if( !isAllowedFeature( btnUserBlock, EnumPermission.USER_ACTIVATE_BLOCK.val) )
+			return;
 		this.btnUserBlock.addClickListener( new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -212,18 +292,6 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		});
 	}
 	
-	private void attachBtnUserDetailsClose(){
-		btnUserDetailsClose.addClickListener( new ClickListener() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				processingPopup.close();
-				
-			}
-			
-		} );
-	}
 	
 	
 	private boolean refreshRecord(){
@@ -276,7 +344,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditCredsUI( record );
+				new DUserEditCredsUI( record, springAppContext );
 				
 			}
 			
@@ -293,7 +361,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditPersonalInfoUI( record );
+				new DUserEditPersonalInfoUI( record, springAppContext );
 				
 			}
 			
@@ -385,7 +453,13 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			if( record.getItemProperty( "userSession" ).getValue() == null || record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty() ){
 				 btnUserExpireSession.setVisible( false );
 			} else {
-				btnUserExpireSession.setVisible( true );
+				
+				
+				// Only show this if change pass button is not on
+				if( !record.getItemProperty( "changePass" ).getValue().toString().trim().equals( "1" ) ){
+					btnUserExpireSession.setVisible( true );
+				}
+				
 			}
 			
 			log.debug( "Change password state: "+record.getItemProperty( "changePass" ).getValue() );
@@ -393,13 +467,18 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			if( record.getItemProperty( "changePass" ).getValue().toString().trim().equals( "1" ) ){
 				 btnUserExpirePassword.setVisible( false );
 			} else {
-				btnUserExpirePassword.setVisible( true );
+				// Only show this if expire session button is not on [ This avoid account lockout due to password expiration & session expiration done to a single user
+				// ... due to password reset timeout
+				if( ! ( record.getItemProperty( "userSession" ).getValue() == null || record.getItemProperty( "userSession" ).getValue().toString().trim().isEmpty() ) ){
+					btnUserExpirePassword.setVisible( true );
+				}
 			}
 			
 			
 
 			log.debug( " Logged in profile id: "+getCurrentUserProfileId() );
-			if ( getCurrentUserProfileId() == 1 ) {
+			
+			if ( permSet.contains( EnumPermission.USER_SET_RESET_PASSWORD.val ) ) {
 				this.btnUserSetCreds.setVisible( true );
 			}
 			

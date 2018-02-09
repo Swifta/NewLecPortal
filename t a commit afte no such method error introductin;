@@ -1,0 +1,103 @@
+commit 8604c94eb956c05669815dba3a5c39d08bae010e
+Merge: eb2752b a4a7950
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Tue Jan 16 14:04:21 2018 +0300
+
+    resolving merge after ben_dev_momo merge into local branch
+
+commit eb2752bc1dd886d00bd32b9e8c45fcc8dd1fccb9
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Tue Jan 16 13:54:21 2018 +0300
+
+    update role UI features
+
+commit a4a7950f2bdbf7d4cd570655cbd7e1c33d76d583
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Tue Jan 16 13:44:43 2018 +0300
+
+    integrate momo entity
+
+commit 6c0a3f0249b4885376d6c2948145a7f2bc541a25
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Mon Jan 8 02:53:32 2018 +0300
+
+    Role, Permission data binding, controller logic
+
+commit b4857d8d0deca273c434cf27dc04df71bc6f9341
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Tue Jan 2 12:26:23 2018 +0300
+
+    Roles & Perm View, Edit, Add Views, UI Controller inititiation
+
+commit 89c7c418b5ad0b044c4bb264efb66457c05638b6
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Mon Jan 1 14:17:51 2018 +0300
+
+    Roles & Permissions UI design
+
+commit 5e687e1199c88df7d5435798a2bd228016f284ff
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Sat Dec 30 08:24:47 2017 +0300
+
+    Recompile widgets
+
+commit 592c7a1429559c9386a3e33b6c62611e0436810b
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Sat Dec 30 07:57:51 2017 +0300
+
+    Conversion to support Spring, Pre benin development
+
+commit 89f76de1adeeac85da6370916a142cf7ab88597c
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Sat May 13 02:45:47 2017 +0300
+
+    .war compilation
+
+commit 7b6c9ef3bb66ed59e37b5e979c901185dceab468
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Sat May 13 02:43:27 2017 +0300
+
+    Refactor D*StateUI classes, pagination
+
+commit 3be87e3fede121a6a9c5790c59802dcb7d3c062d
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Wed May 10 20:11:50 2017 +0300
+
+     Fix pagination bug, remove unnecessary classes, scale state controllers to archive controllers
+
+commit f66239a18ffcf57df34124e4230ad36d7e38aa32
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Wed May 10 01:05:01 2017 +0300
+
+     before clearing unnecessary code after removing DSEagle* lib
+
+commit 02e20ecd2909d618c2689f1249a2964157c2a6df
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Tue May 9 21:28:39 2017 +0300
+
+    Dashboard
+
+commit 651182e4bfc020ed672797a126bb901d1e5f6711
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Tue May 9 12:38:25 2017 +0300
+
+    User management complete
+
+commit a25b37a7c60007adfc52e1a59153964b3629ab31
+Merge: 1e3509a 48ae344
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Mon Apr 24 14:13:20 2017 +0300
+
+    Merge branch 'master' of https://github.com/Swifta/NewLecPortal
+
+commit 48ae34420cf584984edbb38b56e35862e51be6ec
+Author: Paul Kigozi <pwndz172@gmail.com>
+Date:   Mon Apr 24 13:56:24 2017 +0300
+
+    Initial commit
+
+commit 1e3509a7324edccc613d7ae39af1470c81d3f4fa
+Author: LivePwndz <pwndz172@gmail.com>
+Date:   Mon Apr 24 13:53:53 2017 +0300
+
+     1st commit

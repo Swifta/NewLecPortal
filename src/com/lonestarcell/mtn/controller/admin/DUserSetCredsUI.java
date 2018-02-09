@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -14,6 +15,7 @@ import com.lonestarcell.mtn.controller.util.RequiredTFValidator;
 import com.lonestarcell.mtn.design.admin.DSetCredsUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserDetails;
 import com.lonestarcell.mtn.model.admin.MUtil;
+import com.lonestarcell.mtn.spring.email.EmailTemplate;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Button.ClickEvent;
@@ -33,14 +35,28 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 	private Window processingPopup;
 	private Logger log = LogManager.getLogger( DUserSetCredsUI.class.getName() );
 	private Item record;
+	private ApplicationContext springAppContext;
 	
 
-	public DUserSetCredsUI( Item record) {
+	public DUserSetCredsUI( Item record, ApplicationContext springAppContext ) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
 		init();
 	}
 	
 	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
 
 	public Window getProcessingPopup() {
 		return processingPopup;
@@ -75,8 +91,24 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 				try {
 					if( isFormValid() ){
 						
+						// Capture values for email before data reset call
+						String username = record.getItemProperty( "newUsername" ).getValue().toString();
+						String password = record.getItemProperty( "newPassword" ).getValue().toString();
+						String email = record.getItemProperty( "email" ).getValue().toString();
+						
 						Out out = resetUserPassAdmin();
 						if( out.getStatusCode() == 1 ){
+							
+							// Send email
+							boolean emailSent = emailSent( username, password, email );
+							log.info("Is email sent?: " + emailSent);
+							if ( emailSent ) {
+								showSuccess("Password reset email notification sent");
+							} else {
+								showWarm("Password reset but email notification could not be sent");
+							}
+							
+							
 							Notification.show( out.getMsg(),
 									Notification.Type.HUMANIZED_MESSAGE );
 							processingPopup.close();
@@ -102,6 +134,37 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 			}
 			
 		});
+	}
+	
+	private void showSuccess( String msg ){
+		
+		Notification.show( msg,
+				Notification.Type.HUMANIZED_MESSAGE );
+		lbNormalMsg.removeStyleName("sn-display-none");
+		lbErrorMsg.addStyleName("sn-display-none");
+		lbNormalMsg.setValue( msg );
+		
+	}
+	
+	private void showWarm( String msg ){
+		
+		Notification.show( msg,
+				Notification.Type.WARNING_MESSAGE );
+		lbErrorMsg.removeStyleName("sn-display-none");
+		lbNormalMsg.addStyleName("sn-display-none");
+		lbErrorMsg.setValue( msg );
+			
+	}
+
+	
+	
+	
+	private boolean emailSent( String username, String password, String email ) {
+
+		EmailTemplate emailTemplate = springAppContext
+				.getBean(EmailTemplate.class);
+		return emailTemplate.sendCredentials( username, password, email );
+
 	}
 	
 	
@@ -208,7 +271,7 @@ public class DUserSetCredsUI extends DSetCredsUIDesign implements
 			@Override
 			public void windowClose(CloseEvent e) {
 				refreshRecord();
-				new DUserDetailsUI( record );
+				new DUserDetailsUI( record, springAppContext );
 				
 			}
 			

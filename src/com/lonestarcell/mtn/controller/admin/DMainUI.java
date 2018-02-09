@@ -1,10 +1,13 @@
 package com.lonestarcell.mtn.controller.admin;
 
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -12,17 +15,16 @@ import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutUserDetails;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.main.Person;
 import com.lonestarcell.mtn.design.admin.DManagementUIDesign;
 import com.lonestarcell.mtn.model.admin.MUserSelfCare;
-import com.lonestarcell.mtn.spring.repo.ProfileRepo;
+import com.lonestarcell.mtn.model.util.EnumPermission;
+import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -33,7 +35,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SpringComponent
 @UIScope
-public class DMainUI extends DManagementUIDesign implements View,
+public class DMainUI extends DManagementUIDesign implements ISubUI, View,
 DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 
 	/**
@@ -46,17 +48,69 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	
 	private Item record;
 	
+	private ApplicationContext springAppContext;
+	
 	@Autowired
 	private ProfileRepo person;
 	
-	@Autowired
-	private DUserUI dUserUI;
+	private short profileId;
+	private MUserSelfCare mUserDetails;
+	private Set< Short > permSet;
+	
+	
 	
 	public DMainUI(){
 		init( this );
 	}
 	
 	
+	
+	
+
+	public Set<Short> getPermSet() {
+		return permSet;
+	}
+
+
+
+
+
+	public void setPermSet(Set<Short> permSet) {
+		this.permSet = permSet;
+	}
+
+
+
+
+
+	public short getProfileId() {
+		return profileId;
+	}
+
+
+
+
+
+	public void setProfileId(short profileId) {
+		this.profileId = profileId;
+	}
+
+
+
+
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+	
+	@Autowired
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
+
 
 	public Item getRecord() {
 		return record;
@@ -85,8 +139,8 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		
 		setHeader();
 		setFooter();
-		swap( new DDashUI( getParentUI() ) );
-		setHMenuState( btnHMenuDash );
+		// swap( new DDashUI( getParentUI() ) );
+		// setHMenuState( btnHMenuDash );
 		attachCommandListeners();
 		
 		
@@ -118,9 +172,18 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		in.setData( bData );
 		
 		if( record != null ) {
-			MUserSelfCare mUserDetails = new MUserSelfCare();
-			Out out = mUserDetails.setUserDetails(in );
-			return out.getStatusCode() == 1;
+			mUserDetails = new MUserSelfCare();
+			Out out = mUserDetails.setUserDetails( in );
+			
+			boolean is = out.getStatusCode() == 1;
+			if( is ){
+				
+				Object obj = record.getItemProperty( "profileId" ).getValue();
+				if( obj == null )
+					is = false;
+				this.setProfileId( Short.valueOf( obj.toString() ) );
+			}
+			return is;
 		
 		} 
 		
@@ -159,7 +222,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		String currentYear = cal.get( Calendar.YEAR )+"";
 		
 		
-		this.lbClient.setValue( "&nbspMTN Liberia,&nbsp" );
+		this.lbClient.setValue( "&nbspMTN Benin,&nbsp" );
 		this.lbCRYearStart.setValue( startYear );
 		this.lbCRYearCurrent.setValue( currentYear );
 		
@@ -209,12 +272,89 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	public void attachCommandListeners() {
 		
 		//H Menu
-		this.attachBtnHMenuUser();
-		this.attachBtnHMenuDash();
-		this.attachBtnHMenuTxn();
-		this.attachBtnHMenuPayment();
-		this.attachBtnHMenuToken();
-		this.attachBtnHMenuInfo();
+		// this.attachBtnHMenuDash();
+		// this.attachBtnHMenuTxn();
+		
+		Button btnDefault = null;
+		// User
+		if( permSet.contains( EnumPermission.USER_MANAGE.val ) ){
+			this.attachBtnHMenuUser();
+			this.btnHMenuUser.setVisible( true );
+			this.btnHMenuUser.setVisible( true );
+			btnDefault = btnHMenuUser;
+		} else {
+			
+			this.btnHMenuUser.setVisible( false );
+			this.btnHMenuUser.setVisible( false );
+			
+		}
+		
+		// Ledger
+		if( permSet.contains( EnumPermission.REPORT_VIEW_LEDGER.val )){
+			this.attachBtnHMenuLedger();
+			this.btnHMenuLedger.setEnabled( true );
+			this.btnHMenuLedger.setVisible( true );
+			btnDefault = btnHMenuLedger;
+		} else {
+			this.btnHMenuLedger.setEnabled( false );
+			this.btnHMenuLedger.setVisible( false );
+		}
+		
+		// Sub. Reg.
+		if( permSet.contains( EnumPermission.REPORT_VIEW_SUBSCRIBER_REG.val )){
+			this.attachBtnHMenuSubReg();
+			this.btnHMenuSubReg.setEnabled( true );
+			this.btnHMenuSubReg.setVisible( true );
+			btnDefault = btnHMenuSubReg;
+		} else {
+			this.btnHMenuSubReg.setEnabled( false );
+			this.btnHMenuSubReg.setVisible( false );
+		}
+		
+		// Transaction [ Both subscriber & merchant ]
+		
+		if( permSet.contains( EnumPermission.REPORT_TRANSACTION.val ) ){
+			this.attachBtnHMenuTxn();
+			this.btnHMenuTxn.setEnabled( true );
+			this.btnHMenuTxn.setVisible( true );
+			btnDefault = btnHMenuTxn;
+		} else {
+			this.btnHMenuTxn.setEnabled( false );
+			this.btnHMenuTxn.setVisible( false );
+		}
+		
+		
+		
+		
+		// Dash
+		if( permSet.contains( EnumPermission.DASH_VIEW.val )){
+			this.attachBtnHMenuDash();
+			this.btnHMenuDash.setEnabled( true );
+			this.btnHMenuDash.setVisible( true );
+			btnDefault = btnHMenuDash;
+		} else {
+			this.btnHMenuDash.setEnabled( false );
+			this.btnHMenuDash.setVisible( false );
+		}
+		
+
+		if( btnDefault != null )
+			btnDefault.click();
+		
+
+		
+		
+
+		
+		
+
+		
+		
+		
+		
+		
+		// this.attachBtnHMenuToken();
+		
 		
 		//Drop Down Menu
 		this.attachBtnFx();
@@ -226,52 +366,43 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		
 		// Disable Misc. for now
 		
+		// this.btnHMenuDash.setEnabled( true );
+		// this.btnHMenuTxn.setEnabled( true );
+		
+		
+		this.btnHMenuMisc.setEnabled( false );
+		
+		
+		// this.btnHMenuToken.setEnabled( true );
+		// this.btnHMenuPayment.setCaption( "x-subscriber 1" );
+		// this.btnHMenuToken.setCaption( "x-subscriber 3" );
+		
+		
 		
 	}
 	
-	private void attachBtnHMenuInfo(){
-		this.btnHMenuInfo.addClickListener(new ClickListener(){
+	private void attachBtnHMenuLedger(){
+		this.btnHMenuLedger.addClickListener(new ClickListener(){
 
-			/**
-			 * 
-			 */
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				log.debug( "Token menu clicked. " );
 				
-				if( setHMenuState( btnHMenuInfo ) )
-					swap( new DInfoUI( getParentUI() ) );
+				if( setHMenuState( btnHMenuLedger ) )
+					swap( new DLedgerUI( getParentUI() ) );
 				
 			}
 			
 		});
 	}
 	
-	
-	private void attachBtnHMenuToken(){
-		this.btnHMenuToken.addClickListener(new ClickListener(){
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				log.debug( "Token menu clicked. " );
-				
-				if( setHMenuState( btnHMenuToken ) )
-					swap( new DTokenUI( getParentUI() ) );
-				
-			}
-			
-		});
-	}
 	
-	private void attachBtnHMenuPayment(){
-		this.btnHMenuPayment.addClickListener(new ClickListener(){
+	private void attachBtnHMenuSubReg(){
+		this.btnHMenuSubReg.addClickListener(new ClickListener(){
 
 			/**
 			 * 
@@ -282,8 +413,8 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 			public void buttonClick(ClickEvent event) {
 				log.debug( "Payment menu clicked. " );
 				
-				if( setHMenuState( btnHMenuPayment ) )
-					swap( new DPaymentUI( getParentUI() ) );
+				if( setHMenuState( btnHMenuSubReg ) )
+					swap( new DSubRegUI( getParentUI() ) );
 				
 			}
 			
@@ -292,10 +423,11 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	
 	private void attachBtnHMenuUser(){
 		
+		/*
 		if( this.getCurrentUserProfileId() != 1 ){
 			btnHMenuUser.setVisible( false );
 			btnHMenuUser.setEnabled( false );
-		}
+		} */
 		
 		this.btnHMenuUser.addClickListener(new ClickListener(){
 
@@ -310,7 +442,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 				
 				if( setHMenuState( btnHMenuUser ) ){
 					//swap( new DUserUI( getParentUI() ) );
-					dUserUI.init( getParentUI() );
+					DUserUI dUserUI = new DUserUI( getParentUI() );
 					swap( dUserUI );
 				}
 				
@@ -404,7 +536,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
-				new DUserDetailsUI( record );
+				new DUserDetailsUI( record, springAppContext );
 				
 					
 
@@ -458,22 +590,42 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 	
 		if (UI.getCurrent().getSession().getAttribute("username") == null) {
 			
-			
-			
 			log.debug( " No username set " );
 			this.resetSessionData();
 			UI.getCurrent().getNavigator().navigateTo("login");
 			
 		} else if( !this.isUserDetailsSet() ){
-			Notification.show( "SET ERROR" , "Invalid user data", Notification.Type.ERROR_MESSAGE );
-			log.debug( " No user data set " );
-			this.resetSessionData();
-			UI.getCurrent().getNavigator().navigateTo("login");
+			logoutRedir();
 			
 		} else {
-			setContent();
+			
+			// TODO load & set permissions
+			if( isPermSet( profileId ) ) {
+				setContent();
+			} else {
+				logoutRedir();
+			}
+			
 		}
 		
+	}
+	
+	private boolean isPermSet( short profileId ){
+		Set< Short > permSet = new HashSet< >();
+		this.setPermSet( permSet );
+		UI.getCurrent().getSession().setAttribute( Set.class, permSet );
+		if( mUserDetails == null )
+			return false;
+		mUserDetails.setSpringAppContext(springAppContext);
+		return mUserDetails.setProfilePermissionSet(profileId, permSet).getStatusCode() == 1;
+	}
+	
+	
+	private void logoutRedir(){
+		Notification.show( "SET ERROR" , "Invalid user data/ Expired session", Notification.Type.ERROR_MESSAGE );
+		log.debug( " No user data set " );
+		this.resetSessionData();
+		UI.getCurrent().getNavigator().navigateTo("login");
 	}
 	
 	private void resetSessionData(){

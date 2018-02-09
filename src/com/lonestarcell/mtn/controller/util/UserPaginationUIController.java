@@ -410,7 +410,7 @@ public class UserPaginationUIController implements DUIControllable, Serializable
 		
 		//TODO validate response
 		
-		mTxn.setUsers(in, beanItemContainer );
+		mTxn.search(in, beanItemContainer );
 		
 		//mTxn.setTxnMeta(in, outTxnMeta );
 		

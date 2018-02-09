@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -35,13 +36,31 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 	private Collection<Item> records;
 	private MUser mTxn = new MUser(  getCurrentUserId(), getCurrentUserSession() );
 	
+	private ApplicationContext springAppContext;
+	
 
-	public DUserSelfCareUI( Item record) {
+	public DUserSelfCareUI( Item record, ApplicationContext springAppContext) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
 		init();
 	}
 	
 	
+
+	
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
 
 	public Collection<Item> getRecords() {
 		return records;
@@ -91,7 +110,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserSetCredsUI( record );
+				new DUserSetCredsUI( record, springAppContext );
 				
 			}
 			
@@ -107,7 +126,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditProfileUI( record );
+				new DUserEditProfileUI( record, springAppContext );
 				
 			}
 			
@@ -342,7 +361,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditCredsUI( record );
+				new DUserEditCredsUI( record, springAppContext );
 				
 			}
 			
@@ -359,7 +378,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 			public void buttonClick(ClickEvent event) {
 				
 				processingPopup.close();
-				new DUserEditPersonalInfoUI( record );
+				new DUserEditPersonalInfoUI( record, springAppContext );
 				
 			}
 			
@@ -398,7 +417,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 		// Personal Info
 		this.lbFirstName.setPropertyDataSource( record.getItemProperty( "firstName" ) );
 		this.lbLastName.setPropertyDataSource( record.getItemProperty( "lastName" ) );
-		this.lbSurname.setPropertyDataSource( record.getItemProperty( "surname" ) );
+		// this.lbSurname.setPropertyDataSource( record.getItemProperty( "surname" ) );
 		this.lbEmail.setPropertyDataSource( record.getItemProperty( "email" ) );
 		
 		// Organization

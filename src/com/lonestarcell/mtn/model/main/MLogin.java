@@ -38,7 +38,7 @@ public class MLogin extends Model {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
-		String q = "SELECT u.user_id, u.password, u.pass_salt, u.status, u.change_password,  u.profile_id  from users AS u WHERE u.username = ? LIMIT 1";
+		String q = "SELECT u.user_id, u.password, u.pass_salt, u.status, u.change_password,  u.profile_id, u.last_login, u.user_session  from users AS u WHERE u.username = ? LIMIT 1";
 		
 		try {
 			 conn = dataSource.getConnection();
@@ -79,6 +79,19 @@ public class MLogin extends Model {
 				outLogin.setStatus(  rs.getInt( "status" )+"" );
 				outLogin.setChangePassword( rs.getInt( "change_password" )+"");
 				outLogin.setTimeCorrection( getTimeCorrection() );
+				outLogin.setLastLogin( rs.getTimestamp( "last_login" ) );
+				
+				String userSession = rs.getString( "user_session" );
+				if( userSession == null || userSession.trim().isEmpty()){
+					userSession = null;
+					log.info( "Reset login session is null." );
+				}
+				outLogin.setResetLoginSession( userSession );
+				log.debug( "Last login timestamp "+outLogin.getLastLogin(), this );
+				
+				log.info( "user id: "+outLogin.getUserId() );
+				log.info( "user id [ rs ]: "+ rs.getLong( "user_id" ) );
+				
 				
 				
 				
@@ -124,7 +137,7 @@ public class MLogin extends Model {
 		return new BigInteger(130, random).toString(32);
 	}
 	
-	public boolean setLoginSession( String session, Long userId ) {
+	private boolean setLoginSession( String session, Long userId ) {
 		
 		Connection conn = null;
 		PreparedStatement ps = null;

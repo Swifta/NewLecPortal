@@ -15,15 +15,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lonestarcell.mtn.spring.config.Config;
-import com.lonestarcell.mtn.spring.config.DataAccessConfig;
+import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
 import com.lonestarcell.mtn.spring.config.JpaConfig;
-import com.lonestarcell.mtn.spring.entity.Profile;
-import com.lonestarcell.mtn.spring.entity.ProfilePermissionMap;
-import com.lonestarcell.mtn.spring.repo.ProfilePermissionMapRepo;
-import com.lonestarcell.mtn.spring.repo.ProfileRepo;
+import com.lonestarcell.mtn.spring.user.entity.Profile;
+import com.lonestarcell.mtn.spring.user.entity.ProfilePermissionMap;
+import com.lonestarcell.mtn.spring.user.repo.ProfilePermissionMapRepo;
+import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration( classes = { Config.class, DataAccessConfig.class, JpaConfig.class } )
+@ContextConfiguration( classes = { Config.class, DataAccessConfigUser.class, JpaConfig.class } )
 public class ProfilePermissionMapTest {
 	
 	private static Logger log = LogManager.getLogger( ProfilePermissionMapTest.class );
@@ -54,7 +54,7 @@ public class ProfilePermissionMapTest {
 	
 	@Test
 	@Transactional
-	// @Ignore
+	@Ignore
 	public void testFindByProfileId(){
 		Assert.assertNotNull( "Repo is null.", repo );
 		
@@ -70,6 +70,19 @@ public class ProfilePermissionMapTest {
 			
 		}
 		
+		
+	}
+	
+	
+	@Test
+	@Transactional
+	// @Ignore
+	public void testFindByProfileIdAndPermissionId(){
+		Assert.assertNotNull( "Repo is null.", repo );
+		
+		ProfilePermissionMap profilePermMap = repo.findByProfileProfileIdAndPermissionId( ( short ) 1, ( short ) 1 );
+		Assert.assertNotNull( "No such profile permission map", profilePermMap );
+		log.debug( "Profile Permission map id: "+profilePermMap.getId(), repo );
 		
 	}
 	

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -37,18 +38,33 @@ public class DUserEditProfileUI extends DEditProfileUIDesign implements
 		DUIControllable {
 
 	private static final long serialVersionUID = 1L;
+	
 
 	private Window processingPopup;
 	private Logger log = LogManager.getLogger( DUserEditProfileUI.class.getName() );
 	private Item record;
+	private ApplicationContext springAppContext;
 	
 
-	public DUserEditProfileUI( Item record) {
+	public DUserEditProfileUI( Item record, ApplicationContext springAppContext ) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
 		init();
 	}
 	
 	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
 
 	public Window getProcessingPopup() {
 		return processingPopup;
@@ -495,9 +511,10 @@ public class DUserEditProfileUI extends DEditProfileUIDesign implements
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
-				refreshRecord();
 				processingPopup.close();
-				new DUserDetailsUI( record );
+				refreshRecord();
+				
+				// new DUserDetailsUI( record );
 				
 			}
 			
@@ -511,8 +528,10 @@ public class DUserEditProfileUI extends DEditProfileUIDesign implements
 
 			@Override
 			public void windowClose(CloseEvent e) {
+				processingPopup.close();
 				refreshRecord();
-				new DUserDetailsUI( record );
+				
+				// new DUserDetailsUI( record );
 				
 			}
 			

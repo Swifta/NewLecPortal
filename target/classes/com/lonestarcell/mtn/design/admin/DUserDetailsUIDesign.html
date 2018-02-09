@@ -19,11 +19,6 @@
         <vaadin-label style-name="bold sn-label-underline" plain-text :expand>
           Details 
         </vaadin-label> 
-        <vaadin-horizontal-layout margin-left> 
-         <vaadin-button icon="fonticon://FontAwesome/f00d" description="Close window" style-name="icon-only icon-align-top link sn-details-close" plain-text _id="btnUserDetailsClose">
-           Close window 
-         </vaadin-button> 
-        </vaadin-horizontal-layout> 
        </vaadin-horizontal-layout> 
        <vaadin-horizontal-layout style-name="sn-c-right-panel-v" margin-top> 
         <vaadin-vertical-layout description="Account Access Control" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card sn-barred" size-auto _id="cBookingDetails2"> 
@@ -45,23 +40,27 @@
          </vaadin-form-layout> 
          <vaadin-horizontal-layout spacing margin-left> 
           <vaadin-label caption="Action" size-auto plain-text></vaadin-label> 
-          <vaadin-horizontal-layout> 
-           <vaadin-button icon="fonticon://FontAwesome/f044" description="Change Credentials" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserChangeCreds"></vaadin-button> 
-           <vaadin-button icon="fonticon://FontAwesome/f0f0" description="Change Profile" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserChangeProfile">
-             Change Profile 
-           </vaadin-button> 
-           <vaadin-button icon="fonticon://FontAwesome/f127" description="Expire Login Session" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserExpireSession">
-             Expire Login Session 
-           </vaadin-button> 
-          </vaadin-horizontal-layout> 
-          <vaadin-button icon="fonticon://FontAwesome/f023" description="Block" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserBlock"></vaadin-button> 
-          <vaadin-button icon="fonticon://FontAwesome/f09c" description="Activate" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserActivate"></vaadin-button> 
-          <vaadin-button icon="fonticon://FontAwesome/f084" description="Set/Reset Password" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserSetCreds">
-            Set/Reset Password 
-          </vaadin-button> 
-          <vaadin-button icon="fonticon://FontAwesome/f235" description="Expire Password" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserExpirePassword">
-            Expire Password 
-          </vaadin-button> 
+          <vaadin-vertical-layout size-auto> 
+           <vaadin-horizontal-layout> 
+            <vaadin-button icon="fonticon://FontAwesome/f044" description="Change Credentials" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserChangeCreds"></vaadin-button> 
+            <vaadin-button icon="fonticon://FontAwesome/f0f0" description="Change Profile" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserChangeProfile">
+              Change Profile 
+            </vaadin-button> 
+            <vaadin-button icon="fonticon://FontAwesome/f127" description="Expire Login Session" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserExpireSession">
+              Expire Login Session 
+            </vaadin-button> 
+           </vaadin-horizontal-layout> 
+           <vaadin-horizontal-layout> 
+            <vaadin-button icon="fonticon://FontAwesome/f023" description="Block" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserBlock"></vaadin-button> 
+            <vaadin-button icon="fonticon://FontAwesome/f09c" description="Activate" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserActivate"></vaadin-button> 
+            <vaadin-button icon="fonticon://FontAwesome/f084" description="Set/Reset Password" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserSetCreds">
+              Set/Reset Password 
+            </vaadin-button> 
+            <vaadin-button icon="fonticon://FontAwesome/f235" description="Expire Password" style-name="sn-details-action icon-only icon-align-top link" plain-text _id="btnUserExpirePassword">
+              Expire Password 
+            </vaadin-button> 
+           </vaadin-horizontal-layout> 
+          </vaadin-vertical-layout> 
          </vaadin-horizontal-layout> 
         </vaadin-vertical-layout> 
         <vaadin-vertical-layout description="Personal Information" style-name="sn-c-ref-form sn-c-form sn-c-fx-details sn-details-card" size-auto _id="cBookingDetails11"> 
@@ -74,7 +73,7 @@
           <vaadin-label caption="First Name" style-name="small" size-auto plain-text _id="lbFirstName">
             Paul 
           </vaadin-label> 
-          <vaadin-label caption="Surname" style-name="small" size-auto plain-text _id="lbSurname">
+          <vaadin-label visible="false" caption="Surname" style-name="small" size-auto plain-text _id="lbSurname">
             Kigozi 
           </vaadin-label> 
           <vaadin-label caption="Last Name" style-name="small" size-auto plain-text _id="lbLastName">

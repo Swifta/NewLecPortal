@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.controller.main;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +30,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 public class DLoginUIController extends DLoginUIDesign implements View,
@@ -128,7 +130,6 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 
 		BData<?> bdata = out.getData();
 		OutLogin outData = (OutLogin) bdata.getData();
-		
 		log.debug( out.getStatusCode() );
 		
 		
@@ -194,8 +195,7 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 		.getSession()
 		.setAttribute(DLoginUIController.TIME_CORRECTION,
 				outData.getTimeCorrection() );
-		
-		
+	
 		UI.getCurrent().getNavigator().navigateTo( "management" );
 	}
 	
@@ -204,6 +204,28 @@ public class DLoginUIController extends DLoginUIDesign implements View,
 	private void preResetPasswordHandler( OutLogin outData ){
 		
 		clearResetError();
+		
+		Calendar cal = Calendar.getInstance();
+		Date possibleResetDate = outData.getLastLogin();
+		cal.setTime( possibleResetDate );
+		cal.add( Calendar.MINUTE, 2 );
+		possibleResetDate = cal.getTime();
+		
+		Date now = new Date();
+		log.debug( "Password reset time limit:"+possibleResetDate.toString() );
+		log.debug( "Current timestamp:"+now.toString() );
+		
+		// Check password reset timeout only if previous session is null 
+		// [ This is only on user registration & administrator password reset ]
+		if( outData.getResetLoginSession() == null && now.compareTo( possibleResetDate ) > 0 ){
+			Notification.show( "Temporary credentials have expired. Please contact support for help", Notification.Type.ERROR_MESSAGE );
+			UI.getCurrent().getNavigator().navigateTo( "login" );
+			return;
+		}
+		
+		
+		
+		//outData.getLastLogin().com
 
 		UI.getCurrent().getSession()
 				.setAttribute("TMP_PASS", record.getItemProperty( "password" ).getValue() );

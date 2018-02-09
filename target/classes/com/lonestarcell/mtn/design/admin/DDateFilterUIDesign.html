@@ -5,20 +5,20 @@
   <meta charset="UTF-8" name="vaadin-version" content="7.7.0">
  </head> 
  <body> 
-  <vaadin-horizontal-layout description="Export all records in .xls format" style-name="sn-date-filter" spacing width-full height="36px"> 
+  <vaadin-horizontal-layout style-name="sn-date-filter" spacing width-full height="36px"> 
    <vaadin-horizontal-layout spacing _id="cLeftDateFilter"> 
     <vaadin-horizontal-layout spacing _id="cDateFilters"> 
      <vaadin-popup-date-field description="From" style-name="tiny" immediate width="140px" height="27px" _id="dFStartDate"></vaadin-popup-date-field> 
      <vaadin-popup-date-field description="To" style-name="tiny" immediate width="140px" height="27px" _id="dFLastDate"></vaadin-popup-date-field> 
-     <vaadin-button icon="fonticon://FontAwesome/f0b0" description="Filter" style-name="link tiny" plain-text _id="btnFilter"></vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f0b0" description="Filter Current Page" style-name="link tiny" plain-text _id="btnFilter"></vaadin-button> 
     </vaadin-horizontal-layout> 
     <vaadin-horizontal-layout> 
-     <vaadin-button icon="fonticon://FontAwesome/f021" description="Refresh" style-name="link tiny" plain-text _id="btnRefresh"></vaadin-button> 
-     <vaadin-button icon="fonticon://FontAwesome/f00d" description="Clear all filters" style-name="link tiny" plain-text _id="btnClearFilters"></vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f021" description="Filter All Pages" style-name="link tiny" plain-text _id="btnRefresh"></vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f00d" description="Reset filters" style-name="link tiny" plain-text _id="btnClearFilters"></vaadin-button> 
      <vaadin-horizontal-layout visible="false" _id="cDataExport"></vaadin-horizontal-layout> 
      <vaadin-button visible="false" icon="fonticon://FontAwesome/f142" style-name="borderless sn-more-btnx" plain-text _id="btnExport"></vaadin-button> 
      <vaadin-horizontal-layout style-name="sn-c-more-export-ops"> 
-      <vaadin-button icon="fonticon://FontAwesome/f045" description="Export All Pages" style-name="link tiny" immediate plain-text _id="btnExportOps"></vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f045" description="Export Multiple Pages" style-name="link tiny" immediate plain-text _id="btnExportOps"></vaadin-button> 
       <vaadin-vertical-layout style-name="sn-data-export" immediate size-auto _id="moreDropDown"> 
        <vaadin-button visible="false" icon="fonticon://FontAwesome/f045" description="Export All Pages" style-name="link tiny sn-btn-export-ops" immediate plain-text _id="btnExportOps1" :right></vaadin-button> 
        <vaadin-button visible="false" icon="fonticon://FontAwesome/f045" description="Export All Pages" style-name="link tiny sn-btn-export-ops" immediate plain-text _id="btnExportOps11"></vaadin-button> 
@@ -34,20 +34,22 @@
      <vaadin-label caption="record(s)" size-auto></vaadin-label> 
     </vaadin-form-layout> 
     <vaadin-form-layout size-auto margin-top="false" margin-bottom="false" _id="cRevenue"> 
-     <vaadin-label caption="USD" style-name="sn-revenue-total" size-auto _id="lbTotalRevenue">
+     <vaadin-label caption="XOF" style-name="sn-revenue-total" size-auto _id="lbTotalRevenue">
        15,000,000.00 
      </vaadin-label> 
     </vaadin-form-layout> 
    </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout style-name="sn-pagination" spacing _id="cPagination" :right> 
-    <vaadin-button icon="fonticon://FontAwesome/f0d9" description="Previous" style-name="link small" plain-text _id="btnPagePrev"></vaadin-button> 
-    <vaadin-button style-name="link small sn-cur-page" plain-text _id="btnPageAfterPrev">
-      2 
-    </vaadin-button> 
-    <vaadin-button style-name="link small" plain-text _id="btnPageBeforeNext">
-      3 
-    </vaadin-button> 
-    <vaadin-button icon="fonticon://FontAwesome/f0da" description="Next" style-name="link small" plain-text _id="btnPageNext"></vaadin-button> 
+   <vaadin-horizontal-layout style-name="sn-c-pg-absolute" size-full :expand> 
+    <vaadin-horizontal-layout style-name="sn-pagination" spacing _id="cPagination"> 
+     <vaadin-button icon="fonticon://FontAwesome/f0d9" description="Previous" style-name="link small" plain-text _id="btnPagePrev"></vaadin-button> 
+     <vaadin-button style-name="link small sn-cur-page" plain-text _id="btnPageAfterPrev">
+       2 
+     </vaadin-button> 
+     <vaadin-button style-name="link small" plain-text _id="btnPageBeforeNext">
+       3 
+     </vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f0da" description="Next" style-name="link small" plain-text _id="btnPageNext"></vaadin-button> 
+    </vaadin-horizontal-layout> 
    </vaadin-horizontal-layout> 
   </vaadin-horizontal-layout>  
  </body>

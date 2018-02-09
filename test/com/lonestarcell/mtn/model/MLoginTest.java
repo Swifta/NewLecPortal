@@ -60,7 +60,7 @@ public class MLoginTest {
 	@Test
 	@Ignore( "Closed pool." )
 	public void setLoginSessionTest(){
-		Assert.assertTrue( m.setLoginSession( "dummy_session_id xxxx ",1L ) );
+		//Assert.assertTrue( m.setLoginSession( "dummy_session_id xxxx ",1L ) );
 	}
 
 }

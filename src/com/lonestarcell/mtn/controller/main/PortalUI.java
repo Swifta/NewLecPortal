@@ -6,17 +6,19 @@ import javax.servlet.annotation.WebServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.context.ContextLoaderListener;
 
 import com.lonestarcell.mtn.controller.admin.DMainUI;
 import com.lonestarcell.mtn.spring.config.Config;
-import com.lonestarcell.mtn.spring.config.DataAccessConfig;
+import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
 import com.lonestarcell.mtn.spring.config.JpaConfig;
-import com.lonestarcell.mtn.spring.repo.ProfileRepo;
+import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
@@ -30,11 +32,12 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 @Theme("lec_portal")
 @Push
+@Title( "MTN Benin Reports Portal" )
 public class PortalUI extends UI {
 	
 	@Configuration
 	@EnableVaadin
-	@ContextConfiguration( classes = { Config.class, DataAccessConfig.class, JpaConfig.class } )
+	@ContextConfiguration( classes = { Config.class, DataAccessConfigUser.class, JpaConfig.class } )
 	public static class VaadinSpringConfig {
 
 	}
@@ -46,11 +49,12 @@ public class PortalUI extends UI {
 	@Autowired
 	private DMainUI defaultUI;
 	
+	
 	@Autowired
 	private ProfileRepo profileRepo;
 
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = PortalUI.class, widgetset = "com.lonestarcell.mtn.controller.main.widgetset.Lec_portalWidgetset")
+	@VaadinServletConfiguration(productionMode = true, ui = PortalUI.class, widgetset = "com.lonestarcell.mtn.controller.main.widgetset.Lec_portalWidgetset")
 	
 	/*
 	 * Instead of VaadinServlet, extend SpringVaadinServlet
@@ -66,20 +70,8 @@ public class PortalUI extends UI {
     }
 
 	@Override
+	
 	protected void init(VaadinRequest request) {
-		
-		if( profileRepo != null ){
-			log.debug( "Profile repo is wired.", this );
-		} else {
-			log.debug( "Profile repo is null.", this );
-		}
-		
-		if( defaultUI != null ){
-			log.debug( "Main UI component is wired.", this );
-		} else {
-			log.debug( "Main UI component is null.", this );
-		}
-		
 		
 		
 		Navigator nav = UI.getCurrent().getNavigator();

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -35,8 +36,10 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 	private Logger log = LogManager.getLogger( DUserEditPersonalInfoUI.class.getName() );
 	private Item record;
 	private MUserSelfCare mUserDetails;
+	private ApplicationContext springAppContext;
 
-	public DUserEditPersonalInfoUI( Item record) {
+	public DUserEditPersonalInfoUI( Item record, ApplicationContext springAppContext ) {
+		this.setSpringAppContext(springAppContext);
 		this.setRecord( record );
 		init();
 	}
@@ -44,6 +47,22 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 	
 	
 	
+
+	public ApplicationContext getSpringAppContext() {
+		return springAppContext;
+	}
+
+
+
+
+
+	public void setSpringAppContext(ApplicationContext springAppContext) {
+		this.springAppContext = springAppContext;
+	}
+
+
+
+
 
 	public MUserSelfCare getmUserDetails() {
 		return mUserDetails;
@@ -225,7 +244,7 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 			@Override
 			public void windowClose(CloseEvent e) {
 				refreshRecord();
-				new DUserDetailsUI( record );
+				new DUserDetailsUI( record, springAppContext );
 				
 			}
 			
@@ -296,6 +315,7 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 	private void setPropertyDataSource(){
 		
 		
+		
 		this.tFNewFirstName.setPropertyDataSource( record.getItemProperty( "newFirstName" ) );
 		this.tFNewLastName.setPropertyDataSource( record.getItemProperty( "newLastName" ) );
 		this.tFNewSurname.setPropertyDataSource( record.getItemProperty( "newSurname" ) );
@@ -313,7 +333,9 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 		
 		// Optional fields
 		TFValidator tFValidator = new TFValidator( "Field required in valid format" );
-		this.tFNewSurname.addValidator( tFValidator );
+		// this.tFNewSurname.addValidator( tFValidator );
+		
+		tFNewSurname.setVisible( false );
 		
 		
 		record.getItemProperty( "newFirstName" ).setValue( record.getItemProperty( "firstName" ).getValue() );

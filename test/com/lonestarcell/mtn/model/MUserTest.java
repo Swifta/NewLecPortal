@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
+import com.lonestarcell.mtn.bean.AbstractDataBean;
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
@@ -25,6 +25,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
+
 
 public class MUserTest {
 
@@ -41,6 +42,7 @@ public class MUserTest {
 	
 	
 	
+	/*
 	@Test
 	@Ignore
 	public void setTxnUsersTest(){
@@ -75,6 +77,44 @@ public class MUserTest {
 		//Assert.assertNotNull( out.getData() );
 		//Assert.assertNotNull( out.getData().getData() );
 		Assert.assertTrue( out.getStatusCode() == 1 );
+	}*/
+	
+	@Test
+	// @Ignore
+	public void testSearch(){
+			
+		
+		In in = new In();
+		BData<InTxn> inBData = new BData<>();
+		InTxn inTxn = new InTxn();
+		
+		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+		Calendar cal = Calendar.getInstance();
+		
+		String tDate = sdf.format( cal.getTime() );
+		log.debug( "To: "+tDate );
+		
+		inTxn.settDate(  tDate );
+		inTxn.setPage( 1 );
+		
+		
+		
+		cal.add(Calendar.DAY_OF_MONTH, -300 );
+		String fDate =  sdf.format( cal.getTime() );
+		log.debug( "From: "+fDate );
+		
+		inTxn.setfDate( fDate );
+		
+		inBData.setData( inTxn );
+		in.setData( inBData );
+	
+		Out out = m.search(in, new BeanItemContainer<OutUser>(OutUser.class) );
+
+		Assert.assertNotNull( out );
+		Assert.assertTrue( "Status should be 1", out.getStatusCode() == 1 );
+		//Assert.assertNotNull( out.getData() );
+		// Assert.assertNotNull( out.getData().getData() );
+		
 	}
 	
 	
@@ -84,13 +124,13 @@ public class MUserTest {
 			
 		List< Item > records = new ArrayList<>( 2 );
 		OutUser outUser = new OutUser();
-		outUser.setUserId( 1L );
+		outUser.setUserId( 1L+"" );
 		
 		Item record = new BeanItem<OutUser>( outUser );
 		records.add( record );
 		
 		outUser = new OutUser();
-		outUser.setUserId( 2L );
+		outUser.setUserId( 2L+"" );
 		record = new BeanItem<OutUser>( outUser );
 		records.add( record );
 		
@@ -103,11 +143,11 @@ public class MUserTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void blockMultiUserRecordTest(){
 			
 		OutUser outUser = new OutUser();
-		outUser.setUserId( 1L );
+		outUser.setUserId( 1L+"" );
 		
 		Item record = new BeanItem<OutUser>( outUser );
 		
@@ -116,7 +156,7 @@ public class MUserTest {
 		records.add( record );
 		
 		outUser = new OutUser();
-		outUser.setUserId( 2L );
+		outUser.setUserId( 2L+"" );
 		record = new BeanItem<OutUser>( outUser );
 		records.add( record );
 		
@@ -129,11 +169,11 @@ public class MUserTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void activateMultiUserRecordTest(){
 			
 		OutUser outUser = new OutUser();
-		outUser.setUserId( 1L );
+		outUser.setUserId( 1L+"" );
 		
 		Item record = new BeanItem<OutUser>( outUser );
 		
@@ -142,7 +182,7 @@ public class MUserTest {
 		records.add( record );
 		
 		outUser = new OutUser();
-		outUser.setUserId( 2L );
+		outUser.setUserId( 2L+"" );
 		record = new BeanItem<OutUser>( outUser );
 		records.add( record );
 		
@@ -155,11 +195,11 @@ public class MUserTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void expireSessionMultiUserRecordTest(){
 			
 		OutUser outUser = new OutUser();
-		outUser.setUserId( 1L );
+		outUser.setUserId( 1L+"" );
 		
 		Item record = new BeanItem<OutUser>( outUser );
 		
@@ -168,7 +208,7 @@ public class MUserTest {
 		records.add( record );
 		
 		outUser = new OutUser();
-		outUser.setUserId( 2L );
+		outUser.setUserId( 2L+"" );
 		record = new BeanItem<OutUser>( outUser );
 		records.add( record );
 		
@@ -181,11 +221,11 @@ public class MUserTest {
 	
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void expirePassMultiUserRecordTest(){
 			
 		OutUser outUser = new OutUser();
-		outUser.setUserId( 1L );
+		outUser.setUserId( 1L+"" );
 		
 		Item record = new BeanItem<OutUser>( outUser );
 		
@@ -194,7 +234,7 @@ public class MUserTest {
 		records.add( record );
 		
 		outUser = new OutUser();
-		outUser.setUserId( 2L );
+		outUser.setUserId( 2L+"" );
 		record = new BeanItem<OutUser>( outUser );
 		records.add( record );
 		

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.springframework.context.ApplicationContext;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -18,6 +19,8 @@ import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutConfig;
 import com.lonestarcell.mtn.model.util.JDBCPoolManager;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class Model  implements Serializable {
 	
@@ -25,12 +28,10 @@ public class Model  implements Serializable {
 	protected static DataSource dataSource;
 	protected Long userAuthId;
 	protected String userAuthSession, timeCorrection;
-	public Out out;
+	protected Out out;
 	private Logger log = LogManager.getLogger();
+	protected ApplicationContext springAppContext;
 	
-	public Model(){
-		
-	}
 	
 	static {
 		try {
@@ -42,6 +43,23 @@ public class Model  implements Serializable {
 	}
 	
 	public Model( Long userAuthId, String userSession ) {
+		this.setUserAuthId( userAuthId );
+		this.setUserAuthSession( userSession );
+		
+		try {
+			if( dataSource == null )
+				throw new IllegalStateException( "Data source is null." );
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		
+		out = new Out();
+		
+
+	}
+	
+	public Model( Long userAuthId, String userSession, ApplicationContext springAppContext ) {
+		this.springAppContext = springAppContext;
 		this.setUserAuthId( userAuthId );
 		this.setUserAuthSession( userSession );
 		
@@ -167,6 +185,12 @@ public class Model  implements Serializable {
 				// log.debug( "Admin username: "+username+" Session: "+userSession );
 				out.setMsg( "Not authorized [ Authorization session expired. ]" );
 				out.setStatusCode( 403 );
+				
+				//Too bad, should be moved to controller.
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
 				return out;
 			}
 		
@@ -191,15 +215,17 @@ public class Model  implements Serializable {
 				return out;
 			}
 			
+			/*
 			if( rs.getShort( "profile_id" ) != 1 ){
 				log.debug( "Not authorized" );
 				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
 				return out;
-			}
+			} */
 			
 			BData<Long> bOutData = new BData<>();
 			bOutData.setData(  rs.getLong( "user_id" ) );
 			out.setData( bOutData );
+			
 			
 			
 			out.setStatusCode( 1 );
@@ -278,11 +304,12 @@ public class Model  implements Serializable {
 				return out;
 			}
 			
+			/*
 			if( rs.getShort( "profile_id" ) != 1 ){
 				log.debug( "Not authorized" );
 				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
 				return out;
-			}
+			}*/
 			
 			BData<Long> bOutData = new BData<>();
 			bOutData.setData(  rs.getLong( "user_id" ) );

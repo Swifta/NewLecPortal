@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.vaadin.data.Item;
 
@@ -10,9 +11,24 @@ public class OutLogin implements Serializable{
 	private String timeCorrection, sessionVar, username, password, status, changePassword;
 	private int profileId;
 	private Long userId;
+	private Date lastLogin;
+	private String resetLoginSession;
 	
 	private Item record;
 	
+	
+	public String getResetLoginSession() {
+		return resetLoginSession;
+	}
+	public void setResetLoginSession(String resetLoginSession) {
+		this.resetLoginSession = resetLoginSession;
+	}
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
 	public String getSessionVar() {
 		return sessionVar;
 	}
