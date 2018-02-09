@@ -85,6 +85,10 @@ public class PaginationUIController implements DUIControllable, Serializable {
 
 	public void setLbTotalRecords(Label lbTotalRecords) {
 		this.lbTotalRecords = lbTotalRecords;
+		if( this.lbTotalRecords == null )
+			log.info( "lbTotalRecords is null" );
+		else
+			log.info( "lbTotalRecords is set" );
 	}
 
 	@Override
@@ -185,6 +189,11 @@ public class PaginationUIController implements DUIControllable, Serializable {
 		btnAfterPrevH = mapPageBtns.get("afterPrevH");
 		btnAfterPrevF = mapPageBtns.get("afterPrevF");
 
+		if( btnAfterPrevH == null ){
+			log.info( "btnAfterPrevH is null" );
+			return;
+		} 
+		
 		btnAfterPrevH.setCaption(currentPage + "");
 		btnAfterPrevF.setCaption(currentPage + "");
 

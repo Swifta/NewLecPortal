@@ -12,7 +12,7 @@ import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.TextField;
 
-class TextChangeListenerSub<O> implements TextChangeListener{
+public class TextChangeListenerSub<O> implements TextChangeListener{
 
 	private static final long serialVersionUID = 1L;
 	private BeanItemContainer<O> container;

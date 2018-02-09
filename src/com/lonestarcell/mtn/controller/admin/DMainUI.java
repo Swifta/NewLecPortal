@@ -399,26 +399,7 @@ DUIControllable, DUserUIInitializable<DMainUI, DMainUI> {
 		});
 	}
 	
-	
-	private void attachBtnHMenuToken(){
-		this.btnHMenuToken.addClickListener(new ClickListener(){
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				log.debug( "Token menu clicked. " );
-				
-				if( setHMenuState( btnHMenuToken ) )
-					swap( new DTokenUI( getParentUI() ) );
-				
-			}
-			
-		});
-	}
 	
 	private void attachBtnHMenuSubReg(){
 		this.btnHMenuSubReg.addClickListener(new ClickListener(){

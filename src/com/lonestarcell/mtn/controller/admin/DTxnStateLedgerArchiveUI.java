@@ -2,6 +2,7 @@ package com.lonestarcell.mtn.controller.admin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.vaadin.ui.UI;
 import com.lonestarcell.mtn.bean.BData;
@@ -10,13 +11,15 @@ import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
+import com.lonestarcell.mtn.controller.util.AbstractAllRowsActionsUI;
 import com.lonestarcell.mtn.controller.util.AllRowsActionsUILedger;
-import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUILedger;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
+import com.lonestarcell.mtn.controller.util.TextChangeListenerSub;
 import com.lonestarcell.mtn.model.admin.IModel;
 import com.lonestarcell.mtn.model.admin.MLedger;
+import com.lonestarcell.mtn.spring.fundamo.repo.LedgerAccount001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -34,35 +37,31 @@ import com.vaadin.ui.PopupView;
 
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
-public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
+public class DTxnStateLedgerArchiveUI extends DTxnStateUI<LedgerAccount001Repo> {
 
 	private static final long serialVersionUID = 1L;
     private Logger log = LogManager.getLogger( DTxnStateLedgerArchiveUI.class.getName() );
    
 	DTxnStateLedgerArchiveUI( ISubUI a){
 		super( a.getSpringAppContext() );
-		mSub = new MLedger(getCurrentUserId(), getCurrentUserSession(),
-				getCurrentTimeCorrection(), a.getSpringAppContext() );
 		this.init(a);
 		log.debug( "Archive UI loaded successfully." );
 	}
 	
 
+	@Override
+	protected IModel<LedgerAccount001Repo> getiModel(ApplicationContext cxt) {
+		return new MLedger(getCurrentUserId(), getCurrentUserSession(),
+				getCurrentTimeCorrection(), cxt );
+	}
+	
 
 	@Override
 	public void setHeader() {
 		this.lbDataTitle.setValue("Ledger Archive");
 	}
 	
-	@Override
-	protected AllRowsActionsUISub getHeaderController( IModel mSub, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUISub( mSub, grid, in, true, true, pageC );
-	}
-	
-	@Override
-	protected AllRowsActionsUISub getFooterController( IModel mSub, Grid grid, In in, PaginationUIController pageC ){
-		return new AllRowsActionsUISub( mSub, grid, in, false, false, pageC );
-	}
+
 	
 	@Override
 	protected Grid loadGridData(
@@ -102,7 +101,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 
 			// TODO validate response
 
-			Out out = mSub.search(in, beanItemContainer);
+			Out out = iModel.search(in, beanItemContainer);
 			if (out.getStatusCode() != 1) {
 				Notification.show(out.getMsg(),
 						Notification.Type.WARNING_MESSAGE);
@@ -125,7 +124,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 						public Component getValue(Item item, Object itemId,
 								Object propertyId) {
 							PopupView v = new PopupView("...",
-									new RowActionsUISub(mSub, item));
+									new RowActionsUISub(iModel, item));
 							v.setWidth("100%");
 							v.setHeight("100%");
 							return v;
@@ -151,7 +150,9 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
-			AllRowsActionsUISub allRowsActionsUIH = new AllRowsActionsUILedger( mSub, grid, in, true, true, pageC );
+			AbstractAllRowsActionsUI<LedgerAccount001Repo, AbstractDataBean, TextChangeListenerSub< AbstractDataBean> > allRowsActionsUIH = getHeaderController(iModel,
+					grid, in, pageC);
+			
 			dateFilterCellH.setComponent(allRowsActionsUIH);
 
 			header.setStyleName("sn-date-filter-row");
@@ -161,7 +162,8 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 			// Preparing footer
 			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4", "actions");
 			
-			dateFilterCellF.setComponent( new AllRowsActionsUILedger( mSub, grid, in, false, false, pageC ) );
+			dateFilterCellF.setComponent( getFooterController(iModel, grid, in,
+					pageC) );
 
 			// Initialize pagination controller after both header and footer have been set.
 			pageC.init();
@@ -171,7 +173,7 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 					.setStyleName("sn-no-border-right sn-no-border-left");
 
 			PopupView v = new PopupView("HHHH", null);
-			v.setContent(new MultiRowActionsUILedger(mSub, in, grid, v));
+			v.setContent(new MultiRowActionsUILedger(iModel, in, grid, v));
 			v.setHideOnMouseOut(true);
 			v.setVisible(true);
 
@@ -235,6 +237,21 @@ public class DTxnStateLedgerArchiveUI extends DTxnStateArchiveUI {
 		inTxn.settDefaultDate( inTxn.gettDate() );
 	}
 
+	@Override
+	protected AbstractAllRowsActionsUI<LedgerAccount001Repo, AbstractDataBean, TextChangeListenerSub<AbstractDataBean>> getHeaderController(
+			IModel<LedgerAccount001Repo> mSub, Grid grid, In in,
+			PaginationUIController pageC) {
+		return new AllRowsActionsUILedger( mSub, grid, in, true, true, pageC );
+	}
+
+
+
+	@Override
+	protected AbstractAllRowsActionsUI<LedgerAccount001Repo, AbstractDataBean, TextChangeListenerSub<AbstractDataBean>> getFooterController(
+			IModel<LedgerAccount001Repo> mSub, Grid grid, In in,
+			PaginationUIController pageC) {
+		return new AllRowsActionsUILedger( mSub, grid, in, false, false, pageC );
+	}
 
 	
 	

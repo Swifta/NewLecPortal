@@ -1,8 +1,5 @@
 package com.lonestarcell.mtn.controller.admin;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,13 +13,13 @@ import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.main.DLoginUIController;
-import com.lonestarcell.mtn.controller.util.AllRowsActionsUISub;
+import com.lonestarcell.mtn.controller.util.AbstractAllRowsActionsUI;
 import com.lonestarcell.mtn.controller.util.MultiRowActionsUISub;
 import com.lonestarcell.mtn.controller.util.PaginationUIController;
 import com.lonestarcell.mtn.controller.util.RowActionsUISub;
+import com.lonestarcell.mtn.controller.util.TextChangeListenerSub;
 import com.lonestarcell.mtn.design.admin.DTxnStateUIDesign;
 import com.lonestarcell.mtn.model.admin.IModel;
-import com.lonestarcell.mtn.model.admin.MSub;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
@@ -43,28 +40,34 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 
-public class DTxnStateUI extends DTxnStateUIDesign implements
-		DUserUIInitializable<ISubUI, DTxnStateUI>, DUIControllable {
+public abstract class DTxnStateUI<R> extends DTxnStateUIDesign implements
+		DUserUIInitializable<ISubUI, DTxnStateUI<R>>, DUIControllable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private ISubUI ancestor;
 	protected Logger log = LogManager.getLogger(DTxnStateUI.class.getName());
 
-	protected IModel mSub;
+	protected IModel<R> iModel;
 	protected InTxn inTxn;
 	protected Set< Short > permSet;
+	
 
 	private ApplicationContext springAppContext;
 
 	DTxnStateUI( ISubUI a) {
 		this(a.getSpringAppContext());
 		this.setPermSet( a.getPermSet() );
-		mSub = new MSub(getCurrentUserId(), getCurrentUserSession(),
-				getCurrentTimeCorrection(), springAppContext );
+		this.setiModel( a.getSpringAppContext() );
 		init(a);
 	}
+
+	protected abstract IModel<R> getiModel( ApplicationContext cxt );
 	
+	
+	private void setiModel( ApplicationContext cxt) {
+		this.iModel = getiModel( cxt );
+	}
 
 	/*
 	 * Shared constructor by both DTxnStateUI [ Parent class ] &
@@ -72,6 +75,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 	 * only set's up data objects
 	 */
 	protected DTxnStateUI(ApplicationContext cxt) {
+		this.setiModel( cxt );
 		this.setSpringAppContext(cxt);
 		this.setPermSet( null );
 		inTxn = new InTxn();
@@ -182,12 +186,12 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 	}
 
 	@Override
-	public DTxnStateUI getParentUI() {
+	public DTxnStateUI<R> getParentUI() {
 		return this;
 	}
 
 	@Override
-	public void setParentUI(DTxnStateUI p) {
+	public void setParentUI(DTxnStateUI<R> p) {
 		// TODO Auto-generated method stub
 
 	}
@@ -229,7 +233,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 
 			// TODO validate response
 
-			Out out = mSub.search(in, beanItemContainer);
+			Out out = iModel.search(in, beanItemContainer);
 			if (out.getStatusCode() != 1) {
 				Notification.show(out.getMsg(),
 						Notification.Type.WARNING_MESSAGE);
@@ -252,7 +256,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 						public Component getValue(Item item, Object itemId,
 								Object propertyId) {
 							PopupView v = new PopupView("...",
-									new RowActionsUISub(mSub, item));
+									new RowActionsUISub(iModel, item));
 							v.setWidth("100%");
 							v.setHeight("100%");
 							return v;
@@ -278,7 +282,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			HeaderCell dateFilterCellH = header.join("column1", "column2","column3","column4","column5","column6","column7", "date", "actions");
 			
 			PaginationUIController pageC = new PaginationUIController();
-			AllRowsActionsUISub allRowsActionsUIH = getHeaderController(mSub,
+			AbstractAllRowsActionsUI<R, AbstractDataBean, TextChangeListenerSub< AbstractDataBean> > allRowsActionsUIH = getHeaderController(iModel,
 					grid, in, pageC);
 			
 			
@@ -291,7 +295,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 			// Preparing footer
 			FooterCell dateFilterCellF = footer.join("column1", "column2","column3","column4","column5","column6","column7","date", "actions");
 			
-			dateFilterCellF.setComponent(getFooterController(mSub, grid, in,
+			dateFilterCellF.setComponent(getFooterController(iModel, grid, in,
 					pageC));
 
 			// Initialize pagination controller after both header and footer have been set.
@@ -302,7 +306,7 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 					.setStyleName("sn-no-border-right sn-no-border-left");
 
 			PopupView v = new PopupView("HHHH", null);
-			v.setContent(new MultiRowActionsUISub(mSub, in, grid, v));
+			v.setContent(new MultiRowActionsUISub(iModel, in, grid, v));
 			v.setHideOnMouseOut(true);
 			v.setVisible(true);
 
@@ -367,15 +371,21 @@ public class DTxnStateUI extends DTxnStateUIDesign implements
 		return grid;
 	}
 
+	
+	/*
 	protected AllRowsActionsUISub getHeaderController(IModel mSub, Grid grid,
 			In in, PaginationUIController pageC) {
 		return new AllRowsActionsUISub(mSub, grid, in, false, true, pageC);
-	}
+		
+		
+	}*/
+	
+	
+	protected abstract AbstractAllRowsActionsUI<R, AbstractDataBean, TextChangeListenerSub<AbstractDataBean> > getHeaderController(IModel<R> mSub, Grid grid,
+			In in, PaginationUIController pageC);
 
-	protected AllRowsActionsUISub getFooterController(IModel mSub, Grid grid,
-			In in, PaginationUIController pageC) {
-		return new AllRowsActionsUISub(mSub, grid, in, false, false, pageC);
-	}
+	protected abstract AbstractAllRowsActionsUI<R, AbstractDataBean, TextChangeListenerSub<AbstractDataBean> > getFooterController(IModel<R> mSub, Grid grid,
+			In in, PaginationUIController pageC);
 
 	protected long getCurrentUserId() {
 		return (long) UI.getCurrent().getSession()

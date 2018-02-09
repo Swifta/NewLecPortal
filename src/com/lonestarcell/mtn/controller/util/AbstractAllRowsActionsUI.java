@@ -13,22 +13,28 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.lonestarcell.mtn.bean.AbstractDataBean;
+import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
+import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.controller.admin.DUIControllable;
 import com.lonestarcell.mtn.design.admin.DDateFilterUIDesign;
+import com.lonestarcell.mtn.model.admin.IModel;
+import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.DateFormatFacRuntime;
-import com.lonestarcell.mtn.model.util.EnumPermission;
 import com.lonestarcell.mtn.model.util.NumberFormatFac;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.filter.Between;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button.ClickEvent;
@@ -36,21 +42,23 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public abstract class AbstractAllRowsActionsUI<M, O, T> extends
+public abstract class AbstractAllRowsActionsUI<R, O, T> extends
 		DDateFilterUIDesign implements DUIControllable {
 
 	private static final long serialVersionUID = 1L;
 
 	protected In in;
-	protected M model;
+	protected IModel<R> model;
 	protected Grid grid;
 	private boolean allowDateFilters;
 	private boolean isHeader;
 	protected PaginationUIController pageC;
-	protected BeanItemContainer<O> container;
+	protected BeanItemContainer<AbstractDataBean> container;
 	protected InTxn inTxn;
 	protected OutTxnMeta outTxnMeta;
 	protected List<TextField> tFSearchFields = new ArrayList<>(4);
@@ -64,10 +72,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 	public AbstractAllRowsActionsUI(In in, boolean allowDateFilters,
 			boolean isHeader, PaginationUIController pageC) {
-
-		
 		this.in = in;
-		
 		this.allowDateFilters = allowDateFilters;
 		this.isHeader = isHeader;
 		this.pageC = pageC;
@@ -94,16 +99,29 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 
 
-	protected abstract void setGrid(Grid grid);
+	protected void setGrid(Grid grid) {
+		this.grid = grid;
 
-	protected abstract void setBeanItemContainer();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void setBeanItemContainer() {
+		
+		container = ((BeanItemContainer<AbstractDataBean>) ((GeneratedPropertyContainer) grid
+				.getContainerDataSource()).getWrappedContainer());
+
+	}
 
 	private void setInTxn(In in) {
 		inTxn = (InTxn) in.getData().getData();
 		this.setPermSet( inTxn );
 	}
 
-	protected abstract void setOutTxnMeta();
+
+	protected void setOutTxnMeta() {
+		outTxnMeta = inTxn.getMeta();
+		
+	}
 
 	public void removeUnnecessaryColumns(Grid grid) {
 		if (grid == null)
@@ -314,7 +332,10 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 	protected abstract void attachBtnExportOps();
 
-	protected abstract void initDataExportUI();
+	
+	protected void initDataExportUI() {
+		
+	}
 
 	private void attachBtnRefresh() {
 
@@ -330,7 +351,38 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		});
 	}
 
-	protected abstract void refreshGridData();
+	
+	protected void refreshGridData() {
+
+		container.removeAllContainerFilters();
+		container.removeAllItems();
+
+		try {
+			
+			inTxn.setfDate((this.dFStartDate.getValue() == null) ? null
+					: DateFormatFac.toString(this.dFStartDate.getValue()));
+			
+			inTxn.settDate((this.dFLastDate.getValue() == null) ? null
+					: DateFormatFac.toString(this.dFLastDate.getValue()));
+			
+		} catch (Exception e) {
+			Notification.show("Error parsing date object",
+					Notification.Type.ERROR_MESSAGE);
+			
+			return;
+		}
+
+		// TODO validate response
+		Out out = model.search(in, container);
+		//model.searchMeta(in, outTxnMeta);
+		if (out.getStatusCode() != 1) {
+			Notification.show(out.getMsg(), Notification.Type.ERROR_MESSAGE);
+			return;
+		}
+
+		format();
+
+	}
 
 	protected void init() {
 
@@ -343,8 +395,12 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 	}
 
+	
 	protected void setContent() {
 
+		log.info( "Is header?: "+this.isHeader, this );
+		
+		
 		this.cDateFilters.setVisible(this.allowDateFilters);
 
 		if (this.isHeader) {
@@ -413,7 +469,7 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		}
 	}
 
-	private void doFilterByDate(BeanItemContainer<O> container,
+	private void doFilterByDate(BeanItemContainer<AbstractDataBean> container,
 			DateField dFStart, DateField dFLast) {
 
 		Date fDate = dFStart.getValue();
@@ -432,11 +488,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 			return;
 		}
 
-		// Calendar cal = Calendar.getInstance();
-		// cal.setTime(tDate);
-		// Not sure about this.
-		// cal.add(Calendar.DAY_OF_MONTH, -1);
-		// tDate = cal.getTime();
 
 		if (fDate.compareTo(tDate) > 0) {
 
@@ -450,11 +501,6 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		// Not sure about this.
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		Date tFilterTDate = cal.getTime();
-
-		// cal.setTime(tDate);
-		// Not sure about this.
-		// cal.add(Calendar.DAY_OF_MONTH, 1);
-		// tDate = cal.getTime();
 
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strSDate = sdf.format(fDate);
@@ -497,8 +543,32 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 
 	}
 
-	protected abstract void addFilterField(BeanItemContainer<O> container,
-			HeaderRow filterHeader, String itemId);
+	
+	protected void addFilterField(BeanItemContainer<AbstractDataBean> container,
+			HeaderRow filterHeader, String itemId) {
+		TextField tF = new TextField();
+		tF.setStyleName("sn-tf-filter");
+		tF.setDescription("Search");
+		tF.setInputPrompt("Filter/Search");
+		tF.setWidth("100%");
+		HeaderCell cFilter = filterHeader.getCell(itemId);
+		cFilter.setComponent(tF);
+
+		TextChangeListenerSub<AbstractDataBean> tChangeListener = getTextChangeListner(
+				container, itemId, tF);
+		tF.addTextChangeListener(tChangeListener);
+		tFSearchFields.add(tF);
+
+		ShortcutListener enterListener = getSearchShortcutListener(tF, itemId,
+				container);
+		tF.addFocusListener(getSearchFocusListener(tF, enterListener));
+		tF.addBlurListener(getSearchBlurListener(tF, enterListener));
+		tF.addValueChangeListener( e->{
+		});
+
+		tF.setDescription("Type to filter / Press Enter to search");
+
+	}
 
 	protected BlurListener getSearchBlurListener(TextField tF,
 			ShortcutListener listener) {
@@ -582,15 +652,96 @@ public abstract class AbstractAllRowsActionsUI<M, O, T> extends
 		return new FocusListenerCustom(enterListener, tF);
 	}
 
-	protected abstract ShortcutListener getSearchShortcutListener(TextField tF,
-			String itemId, BeanItemContainer<O> container);
+	
+	protected ShortcutListener getSearchShortcutListener(TextField tF,
+			String itemId, BeanItemContainer<AbstractDataBean> container) {
 
-	protected abstract T getTextChangeListner(BeanItemContainer<O> container,
-			String itemId, TextField tF);
+		return new ShortcutListener("", KeyCode.ENTER, null) {
+			private static final long serialVersionUID = 1L;
 
-	protected void setModel(M m) {
+			@Override
+			public void handleAction(Object sender, Object target) {
+				log.debug("Enter search shortcut clicked.");
+				
+				UserError uError = new UserError( "Enter at least 4 characters to search." );;
+				Object obj = tF.getValue();
+				String searchStr = ( String ) obj;
+				tF.setComponentError( null );
+				
+				if( searchStr == null  ) {
+					tF.setComponentError( uError );
+					return;
+				}
+				
+				searchStr = searchStr.trim();
+				if( searchStr.isEmpty() || searchStr.length() < 4 ) {
+					tF.setComponentError( uError );
+					return;
+				}
+
+				container.removeAllItems();
+				log.debug("Proceeding with search.");
+
+				In in = new In();
+
+				BData<InTxn> inBData = new BData<>();
+				inTxn.setPage(1);
+				inBData.setData(inTxn);
+				in.setData(inBData);
+				
+				// Set OutTxnMeta
+				
+				// Set OutTxnMeta
+				
+				/*
+				OutTxnMeta outTxnMeta = new OutTxnMeta();
+				outTxnMeta
+						.setTotalRevenue(new ObjectProperty<String>("0", String.class));
+				outTxnMeta
+						.setTotalRecord(new ObjectProperty<String>("0", String.class));
+				inTxn.setMeta( outTxnMeta ); */
+				
+				
+
+				Out out = model.search(in, container);
+
+				// model.searchMeta(in, outTxnMeta);
+
+				if (out.getStatusCode() != 1) {
+					Notification.show(out.getMsg(),
+							Notification.Type.WARNING_MESSAGE);
+					return;
+				}
+				
+				format();
+
+			}
+
+		};
+
+	}
+
+
+	
+	
+	protected TextChangeListenerSub<AbstractDataBean> getTextChangeListner(
+			BeanItemContainer<AbstractDataBean> container, String itemId,
+			TextField tF) {
+		return new TextChangeListenerSub<AbstractDataBean>(container, inTxn,
+				itemId, tF);
+	}
+	
+	
+
+	protected void setIModel(IModel<R> m) {
 		this.model = m;
 
 	}
+	
+	protected IModel<R> getIModel() {
+		return this.model;
+
+	}
+	
 
 }

@@ -1,7 +1,6 @@
 package com.lonestarcell.mtn.controller.util;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,15 +10,13 @@ import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
 import com.lonestarcell.mtn.bean.InTxn;
 import com.lonestarcell.mtn.bean.Out;
-import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.IModel;
-import com.lonestarcell.mtn.model.admin.MSub;
 import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.EnumPermission;
+import com.lonestarcell.mtn.spring.fundamo.repo.Transaction001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -37,24 +34,24 @@ import com.vaadin.ui.TextField;
 
 public class AllRowsActionsUISub
 		extends
-		AbstractAllRowsActionsUI<IModel, AbstractDataBean, TextChangeListenerSub<AbstractDataBean>> {
+		AbstractAllRowsActionsUI<Transaction001Repo, AbstractDataBean, TextChangeListenerSub<AbstractDataBean>> {
 
 	private static final long serialVersionUID = 1L;
 
 	private Logger log = LogManager.getLogger(AllRowsActionsUISub.class
 			.getName());
 
-	public AllRowsActionsUISub(IModel mSub, Grid grid, In in,
+	public AllRowsActionsUISub(IModel<Transaction001Repo> mSub, Grid grid, In in,
 			boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
 		super(in, allowDateFilters, isHeader, pageC);
-		this.setModel(mSub);
+		this.setIModel(mSub);
 		this.setGrid(grid);
 		this.init();
 	}
 
 	@Override
-	protected void setModel(IModel model) {
+	protected void setIModel(IModel<Transaction001Repo> model) {
 		this.model = model;
 	}
 

@@ -6,48 +6,33 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lonestarcell.mtn.bean.AbstractDataBean;
-import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
-import com.lonestarcell.mtn.bean.InTxn;
-import com.lonestarcell.mtn.bean.Out;
-import com.lonestarcell.mtn.bean.OutTxnMeta;
 import com.lonestarcell.mtn.model.admin.IModel;
-import com.lonestarcell.mtn.model.admin.MSub;
-import com.lonestarcell.mtn.model.util.DateFormatFac;
 import com.lonestarcell.mtn.model.util.EnumPermission;
+import com.lonestarcell.mtn.spring.fundamo.repo.Subscriber001Repo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.GeneratedPropertyContainer;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.server.UserError;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 public class AllRowsActionsUISubReg
 		extends
-		AllRowsActionsUISub {
+		AbstractAllRowsActionsUI<Subscriber001Repo, AbstractDataBean, TextChangeListenerSub<AbstractDataBean>> {
 
 	private static final long serialVersionUID = 1L;
 	private Logger log = LogManager.getLogger(AllRowsActionsUISubReg.class
 			.getName());
 
-	public AllRowsActionsUISubReg(IModel mSub, Grid grid, In in,
+	public AllRowsActionsUISubReg(IModel< Subscriber001Repo >mSub, Grid grid, In in,
 			boolean allowDateFilters, boolean isHeader,
 			PaginationUIController pageC) {
-		super(mSub,grid,in,
-				allowDateFilters,isHeader,
-				 pageC);
+		super(in, allowDateFilters, isHeader, pageC);
+		this.setIModel(mSub);
+		this.setGrid(grid);
+		this.init();
 	}
 	
 
@@ -76,5 +61,22 @@ public class AllRowsActionsUISubReg
 
 		});
 	}
+
+
+	
+
+
+
+
+
+	@Override
+	protected ShortcutListener getSearchShortcutListener(TextField tF,
+			String itemId, BeanItemContainer<AbstractDataBean> container) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	
 
 }
