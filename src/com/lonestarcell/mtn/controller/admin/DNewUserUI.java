@@ -81,7 +81,7 @@ public class DNewUserUI extends DNewUserUIDesign implements
 		comboProfile.setContainerDataSource(profiles);
 		comboProfile.setItemCaptionMode(ItemCaptionMode.PROPERTY);
 		comboProfile.setItemCaptionPropertyId("profileName");
-		setDefaultProfile(profiles, 4);
+		setDefaultProfile(profiles, -1); // 4
 
 	}
 
@@ -269,7 +269,7 @@ public class DNewUserUI extends DNewUserUIDesign implements
 		setDefaultProfile(
 				(BeanItemContainer<OutProfile>) comboProfile
 						.getContainerDataSource(),
-				4);
+				-1);
 
 	}
 

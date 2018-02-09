@@ -1,11 +1,13 @@
 package com.lonestarcell.mtn.controller.admin;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lonestarcell.mtn.bean.BData;
 import com.lonestarcell.mtn.bean.In;
@@ -19,11 +21,14 @@ import com.lonestarcell.mtn.model.admin.MSettings;
 import com.lonestarcell.mtn.model.admin.MUtil;
 import com.lonestarcell.mtn.spring.user.entity.Profile;
 import com.lonestarcell.mtn.spring.user.entity.ProfilePermissionMap;
+import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.ProfilePermissionMapRepo;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
+import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -192,7 +197,83 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 
 	}
 
+
+
+	private boolean isProfileModifAllowed(Button btn) {
+		if (profileId == -1 || profileId == 0
+				|| profileId == getCurrentUserProfileId()) {
+			btn.setVisible(false);
+			btn.setEnabled(false);
+			return false;
+		}
+
+		return true;
+	}
+
+	@Transactional
+	private boolean resetUserProfileToDefault( Profile resetProfile,
+			ProfileRepo profileRepo) {
+
+		UserRepo userRepo = springAppContext.getBean(UserRepo.class);
+
+		if (userRepo == null)
+			return false;
+
+		List<User> uList = userRepo.findByProfileProfileId(resetProfile.getProfileId());
+
+		if (uList == null)
+			return false;
+
+		if (uList.size() == 0)
+			return true;
+
+		Profile defaultProfile = profileRepo.findOne((short) -1);
+
+		if (defaultProfile == null)
+			return false;
+
+		List<User> uListUpdate = new ArrayList<>(uList.size());
+		Iterator<User> itr = uList.iterator();
+		while (itr.hasNext()) {
+			User user = itr.next();
+
+			user.setProfile(defaultProfile);
+			uListUpdate.add(user);
+		}
+
+		userRepo.save(uListUpdate);
+
+		return true;
+	}
+
+	@Transactional
+	private boolean deleteProfile(Profile deleteProfile, ProfileRepo profileRepo) {
+
+		try {
+			
+			if (!resetUserProfileToDefault( deleteProfile, profileRepo )) {
+				showWarn("Operation not possible. Role could be assigned to some users already.");
+				return false;
+			}
+			
+			repoProfile.delete( deleteProfile );
+			showSuccess("Role deleted successfully ");
+			accoRoles.removeTab(accoRoles.getTab(accoRoles.getSelectedTab()));
+			return true;
+
+		} catch (Exception ex) {
+
+			ex.printStackTrace();
+			return false;
+		}
+
+	}
+	
+	
 	private void attachBtnEdit() {
+
+		if (!this.isProfileModifAllowed(btnEdit))
+			return;
 
 		this.btnEdit.addClickListener(e -> {
 
@@ -207,18 +288,11 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 						return;
 					}
 
-	
-					if (profile.getProfileId() == 2 ) {
-						showSuccess("Super admin role one & whole. No more edit.");
+					if (profile.getProfileId() == -1
+							|| profile.getProfileId() == 0) {
+						showSuccess("System role. No modification.");
 						return;
 					}
-
-					/*
-					 * repoProfile.delete(profile.getProfileId());
-					 * showSuccess("Role deleted successfully ");
-					 * accoRoles.removeTab(accoRoles.getTab(accoRoles
-					 * .getSelectedTab()));
-					 */
 
 					new DUserEditRoleUI(getParentUI(), record, accoRoles,
 							profileRecord, profilePermMapRecords);
@@ -234,6 +308,9 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 
 	private void attachBtnActivate() {
 
+		if (!this.isProfileModifAllowed(btnActivate))
+			return;
+
 		this.btnActivate
 				.addClickListener(e -> {
 
@@ -241,7 +318,7 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 
 					try {
 						// Activate role
-						Profile profile = repoProfile.getOne( profileId );
+						Profile profile = repoProfile.getOne(profileId);
 						if (profile == null) {
 							showError("No such role found");
 							return;
@@ -269,42 +346,50 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 
 	private void attachBtnDisable() {
 
-		this.btnDisable.addClickListener(e -> {
+		if (!this.isProfileModifAllowed(btnDisable))
+			return;
 
-			try {
+		this.btnDisable
+				.addClickListener(e -> {
 
-				Profile profile = repoProfile.getOne(profileId);
-				if (profile == null) {
-					showError("No such role found");
-					return;
+					try {
+
+						Profile profile = repoProfile.getOne(profileId);
+						if (profile == null) {
+							showError("No such role found");
+							return;
+						}
+
+						if (profile.getProfileId() == -1
+								|| profile.getProfileId() == 0) {
+							showSuccess("System role. No more modification.");
+							return;
+						}
+
+						profile.setProfileStatus((short) 0);
+						profile = repoProfile.saveAndFlush(profile);
+						if (profile == null) {
+							showError("Error disabling role");
+							return;
+						}
+
+						showSuccess("Role disabled successfully");
+						btnActivate.setVisible(profile.getProfileStatus() != 1);
+						btnDisable.setVisible(profile.getProfileStatus() != 0);
+
+					} catch (Exception ex) {
+						showError("Error performing operation");
+					}
+
 				}
 
-				if (profile.getProfileId() == 1) {
-					showError("Super admin role can not be disabled");
-					return;
-				}
-
-				profile.setProfileStatus((short) 0);
-				profile = repoProfile.saveAndFlush(profile);
-				if (profile == null) {
-					showError("Error disabling role");
-					return;
-				}
-
-				showSuccess("Role disabled successfully");
-				btnActivate.setVisible(profile.getProfileStatus() != 1);
-				btnDisable.setVisible(profile.getProfileStatus() != 0);
-
-			} catch (Exception ex) {
-				showError("Error performing operation");
-			}
-
-		}
-
-		);
+				);
 	}
 
 	private void attachBtnDelete() {
+
+		if (!this.isProfileModifAllowed(btnDelete))
+			return;
 
 		this.btnDelete
 				.addClickListener(e -> {
@@ -317,17 +402,16 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 							return;
 						}
 
-						if (profile.getProfileId() == 1) {
-							showError("Super admin role can not be deleted");
+						if (profile.getProfileId() == -1
+								|| profile.getProfileId() == 0) {
+							showSuccess("System role. No modification.");
 							return;
 						}
-						
-						repoProfile.delete(profile.getProfileId());
-						showSuccess("Role deleted successfully ");
-						
-						accoRoles.removeTab(accoRoles.getTab(accoRoles
-								.getSelectedTab()));
-						
+
+						if( !this.deleteProfile( profile, repoProfile ) ){
+							showWarn( "Operation not possible. Role could be assigned to some users already." );
+						}
+
 					} catch (Exception ex) {
 						showError("Error performing operation");
 					}
@@ -340,6 +424,10 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 
 	private void showSuccess(String msg) {
 		Notification.show(msg, Notification.Type.HUMANIZED_MESSAGE);
+	}
+
+	private void showWarn(String msg) {
+		Notification.show(msg, Notification.Type.WARNING_MESSAGE);
 	}
 
 	private BeanItemContainer<OutProfile> getProfiles() {
@@ -640,13 +728,18 @@ public class DUserRolePermUI extends DUserRolePermDesign implements
 	}
 
 	private long getCurrentUserId() {
-		return (long) UI.getCurrent().getSession()
-				.getAttribute(DLoginUIController.USER_ID);
+		return Long.valueOf(UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.USER_ID).toString());
 	}
 
 	private String getCurrentUserSession() {
 		return (String) UI.getCurrent().getSession()
 				.getAttribute(DLoginUIController.SESSION_VAR);
+	}
+
+	private short getCurrentUserProfileId() {
+		return Short.valueOf(UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.PROFILE_ID).toString());
 	}
 
 }

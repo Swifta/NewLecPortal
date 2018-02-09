@@ -68,7 +68,7 @@ public class User implements Serializable {
 	private Organization organization;
 
 	//bi-directional many-to-one association to Profile
-	@ManyToOne
+	@ManyToOne( cascade = { CascadeType.MERGE } )
 	@JoinColumn(name="profile_id")
 	private Profile profile;
 

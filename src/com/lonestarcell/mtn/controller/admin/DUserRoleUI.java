@@ -103,7 +103,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 		 * comboProfile.setItemCaptionMode( ItemCaptionMode.PROPERTY );
 		 * comboProfile.setItemCaptionPropertyId( "profileName" );
 		 */
-		setDefaultProfile(profiles, 4);
+		setDefaultProfile(profiles, -1);
 		
 		
 
@@ -118,6 +118,7 @@ public class DUserRoleUI extends DRoleUIDesign implements
 	private void attachAccoRole() {
 
 		
+		short curProfileId = this.getCurrentUserProfileId();
 		// Initialize tabs with role [ Should be in a loop ]
 		List< Profile > lsProfile = profileRepo.findAll();
 		log.debug( "Total roles: "+lsProfile.size(), this );
@@ -129,7 +130,15 @@ public class DUserRoleUI extends DRoleUIDesign implements
 		
 		while( itrProfile.hasNext() ){
 			
+			
 			Profile profile = itrProfile.next();
+			
+			// Don't add current role of user for modification.
+			if( curProfileId == profile.getProfileId() )
+				continue;
+			
+				
+			
 			Tree tL = new Tree();
 			tL.addItem("Loading...");
 			
@@ -588,6 +597,12 @@ public class DUserRoleUI extends DRoleUIDesign implements
 	private String getCurrentUserSession() {
 		return (String) UI.getCurrent().getSession()
 				.getAttribute(DLoginUIController.SESSION_VAR);
+	}
+	
+	
+	private short getCurrentUserProfileId() {
+		return Short.valueOf(UI.getCurrent().getSession()
+				.getAttribute(DLoginUIController.PROFILE_ID).toString());
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.controller;
 
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ import com.lonestarcell.mtn.spring.config.Config;
 import com.lonestarcell.mtn.spring.config.DataAccessConfigUser;
 import com.lonestarcell.mtn.spring.config.JpaConfig;
 import com.lonestarcell.mtn.spring.user.entity.Profile;
+import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.ProfileRepo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,7 +53,7 @@ public class ProfileTest {
 	}
 	
 	@Test
-	// @Ignore
+	@Ignore
 	public void testSetProfilePermissionSet(){
 		
 		Assert.assertNotNull( "Apo context is null.", springAppContext );
@@ -61,6 +63,9 @@ public class ProfileTest {
 		Assert.assertEquals( "Permission added successfully.",1,  out.getStatusCode() );
 		
 	}
+	
+	
+
 	
 	
 	

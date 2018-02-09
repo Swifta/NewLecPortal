@@ -1,6 +1,7 @@
 package com.lonestarcell.mtn.spring.user.repo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,8 @@ public interface UserRepo extends JpaRepository< User, Long >{
 	@Query( "SELECT COUNT(*) FROM User u WHERE u.status != 1" )
 	public long countOther();
 	
-	// TODO Pending unit test
+	public List< User > findByProfileProfileId( short profileId );
+	
 	@Query( "SELECT u FROM User u WHERE u.userId != :userId AND u.dateAdded BETWEEN :fDate AND :tDate ORDER BY u.dateAdded" )
 	public Page< User > findPageByDateRange( Pageable pgR, @Param( "userId" ) Long userId, @Param( "fDate" ) Date fDate,  @Param( "tDate" )Date tDate );
 	

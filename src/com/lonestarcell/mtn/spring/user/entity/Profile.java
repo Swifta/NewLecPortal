@@ -36,7 +36,7 @@ public class Profile implements Serializable {
 	//bi-directional many-to-one association to ProfilePermissionMap
 	
 	// TODO Performance hit here [ look into if you get time ]
-	@OneToMany(mappedBy="profile", fetch = FetchType.EAGER )
+	@OneToMany(mappedBy="profile", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE, CascadeType.MERGE } )
 	private List<ProfilePermissionMap> profilePermissionMaps;
 
 	//bi-directional many-to-one association to User
