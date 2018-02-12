@@ -287,6 +287,12 @@ public class Model  implements Serializable {
 				// log.debug( "Admin username: "+username+" Session: "+userSession );
 				out.setMsg( "Not authorized [ Authorization session expired. ]" );
 				out.setStatusCode( 403 );
+				
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
+				
 				return out;
 			}
 		
@@ -331,171 +337,7 @@ public class Model  implements Serializable {
 		return out;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Out setFinanceUserId( In in ) {
-		
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		
-		out = new Out();
-		
-		
-		
-		String q = "SELECT o.organization_status AS org_status, u.user_id, u.status, u.profile_id, u.user_session, u.change_password FROM users AS u";
-		q += " JOIN organization AS o ON o.id = u.organization_id";
-		q += " WHERE u.username = ?";
-		q += " LIMIT 1;";
-		
-		
-		try {
-			
-			 conn = dataSource.getConnection();
-			 conn.setReadOnly(true);
-			 
-			 BData< ? > bInData = in.getData();
-			 InUserDetails inUser = ( InUserDetails ) bInData.getData();
-			ps = conn.prepareStatement( q );
-			ps.setString( 1, inUser.getUsername() );
-			
-			
-			log.debug( "Query: "+ps.toString() );
-			
-			rs = ps.executeQuery();
-			
-			
-			if( !rs.next() ) {
-				log.debug( "No authorization data" );
-				out.setMsg( "No authorization data" );
-				return out;
-			}
-			
-			if( rs.getString( "user_session" ) == null || !rs.getString( "user_session" ).equals( inUser.getUserSession() ) || rs.getShort( "change_password" ) != 0 ){
-				log.debug( "Login session expired" );
-				out.setMsg( "Not authorized [ Authorization session expired. ]" );
-				out.setStatusCode( 403 );
-				return out;
-			}
-		
-			
-			if( rs.getShort( "status" ) != 1 ){
-				log.debug( "Not authorized" );
-				out.setMsg( "Not authorized [ invalid account state ]" );
-				return out;
-			}
-					
-			
-			if( rs.getShort( "org_status" ) != 1 ){
-				log.debug( "Not authorized" );
-				out.setMsg( "Not authorized [ Invalid organization state ]" );
-				return out;
-			}
-			
-			if( rs.getShort( "profile_id" ) != 2 ){
-				log.debug( "Not authorized" );
-				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
-				return out;
-			}
-			
-			inUser.getRecord().getItemProperty( "userId" ).setValue( rs.getLong( "user_id" ) );
-			
-			out.setStatusCode( 1 );
-			out.setMsg( "Account authorized for operation." );
 
-		} catch (Exception e) {
-			log.error( e.getMessage() );
-			out.setMsg( "Could not complete operation. " );
-			e.printStackTrace();
-			
-		} finally {
-			connCleanUp( conn, ps, rs );
-		}
-		
-		return out;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Out setBackofficeUserId( In in ) {
-		
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		
-		out = new Out();
-		
-		
-		String q = "SELECT o.organization_status AS org_status, u.user_id, u.status, u.profile_id, u.user_session, u.change_password FROM users AS u";
-		q += " JOIN organization AS o ON o.id = u.organization_id";
-		q += " WHERE u.username = ?";
-		q += " LIMIT 1;";
-		
-		
-		try {
-			
-			 conn = dataSource.getConnection();
-			 conn.setReadOnly(true);
-			 
-			 BData< ? > bInData = in.getData();
-			 InUserDetails inUser = ( InUserDetails ) bInData.getData();
-			ps = conn.prepareStatement( q );
-			ps.setString( 1, inUser.getUsername() );
-			
-			
-			log.debug( "Query: "+ps.toString() );
-			
-			rs = ps.executeQuery();
-			
-			
-			if( !rs.next() ) {
-				log.debug( "No authorization data" );
-				out.setMsg( "No authorization data" );
-				return out;
-			}
-			
-			if( rs.getString( "user_session" ) == null || !rs.getString( "user_session" ).equals( inUser.getUserSession() ) || rs.getShort( "change_password" ) != 0 ){
-				log.debug( "Login session expired" );
-				out.setMsg( "Not authorized [ Authorization session expired. ]" );
-				out.setStatusCode( 403 );
-				return out;
-			}
-		
-			
-			if( rs.getShort( "status" ) != 1 ){
-				log.debug( "Not authorized" );
-				out.setMsg( "Not authorized [ invalid account state ]" );
-				return out;
-			}
-					
-			
-			if( rs.getShort( "org_status" ) != 1 ){
-				log.debug( "Not authorized" );
-				out.setMsg( "Not authorized [ Invalid organization state ]" );
-				return out;
-			}
-			
-			if( rs.getShort( "profile_id" ) != 3 ){
-				log.debug( "Not authorized" );
-				out.setMsg( "Not authorized [ Insufficient profile permissions ]" );
-				return out;
-			}
-		
-			inUser.getRecord().getItemProperty( "userId" ).setValue( rs.getLong( "user_id" ) );
-			
-			out.setStatusCode( 1 );
-			out.setMsg( "Account authorized for operation." );
-
-		} catch (Exception e) {
-			log.error( e.getMessage() );
-			out.setMsg( "Could not complete operation. " );
-			e.printStackTrace();
-			
-		} finally {
-			connCleanUp( conn, ps, rs );
-		}
-		
-		return out;
-	}
-	
 	protected OutConfig getConfig(){
 		
 		MSettings m = new MSettings( this.userAuthId, this.userAuthSession );

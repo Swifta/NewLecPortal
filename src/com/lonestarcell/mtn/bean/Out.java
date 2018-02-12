@@ -22,7 +22,7 @@ public class Out implements Serializable {
 		return msg;
 	}
 
-	public void setMsg(String msg) {
+	public void setMsg(String msg) { // out =
 		this.msg = msg;
 	}
 

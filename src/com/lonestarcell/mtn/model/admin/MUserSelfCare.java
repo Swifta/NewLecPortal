@@ -77,7 +77,7 @@ public class MUserSelfCare extends ModelSelfCare {
 			inUser = (InUserDetails) bInData.getData();
 
 			// Authorization
-			if (setAuthUserId(inUser.getUsername(), inUser.getUserSession())
+			if (setAuthUserId( inUser )
 					.getStatusCode() != 1) {
 				return out;
 			}
@@ -150,7 +150,7 @@ public class MUserSelfCare extends ModelSelfCare {
 			inUser = (InUserDetails) bInData.getData();
 
 			// Authorization
-			if (setAuthUserId(inUser.getUsername(), inUser.getUserSession())
+			if ( setAuthUserId( inUser )
 					.getStatusCode() != 1) {
 				log.debug("Login session: " + inUser.getUserSession());
 				return out;
@@ -253,7 +253,7 @@ public class MUserSelfCare extends ModelSelfCare {
 			log.debug("Authorization prior.");
 
 			// Authorization
-			if (setAuthUserId(inUser.getUsername(), inUser.getUserSession())
+			if ( setAuthUserId( inUser )
 					.getStatusCode() != 1) {
 				return out;
 			}
@@ -331,7 +331,7 @@ public class MUserSelfCare extends ModelSelfCare {
 			inUser = (InUserDetails) bInData.getData();
 
 			// Authorization
-			if (setAuthUserId(inUser.getUsername(), inUser.getUserSession())
+			if (setAuthUserId( inUser )
 					.getStatusCode() != 1) {
 				return out;
 			}
@@ -423,7 +423,7 @@ public class MUserSelfCare extends ModelSelfCare {
 			inUser = (InUserDetails) bInData.getData();
 
 			// Authorization
-			if (setAuthUserId(inUser.getUsername(), inUser.getUserSession())
+			if (setAuthUserId( inUser )
 					.getStatusCode() != 1) {
 				return out;
 			}
@@ -514,7 +514,7 @@ public class MUserSelfCare extends ModelSelfCare {
 			inUser = (InUserDetails) bInData.getData();
 
 			// Authorization
-			if (setAuthUserId(inUser.getUsername(), inUser.getUserSession())
+			if (setAuthUserId( inUser )
 					.getStatusCode() != 1) {
 				return out;
 			}
@@ -586,7 +586,7 @@ public class MUserSelfCare extends ModelSelfCare {
 						Permission perm = permMap.getPermission();
 						if (perm != null) {
 							permSet.add(perm.getId());
-							log.info("Original Perm loaded: " + perm.getName());
+							log.debug("Original Perm loaded: " + perm.getName());
 							perm = this.getParentPerm(permSet,
 									perm.getParentPermId());
 							if (perm != null)
@@ -612,7 +612,7 @@ public class MUserSelfCare extends ModelSelfCare {
 	private Permission addParentPermId(Set<Short> permSet, Permission perm) {
 		if (perm != null && !permSet.contains(perm.getId())) {
 			permSet.add(perm.getId());
-			log.info("Parent Perm loaded: " + perm.getName());
+			log.debug("Parent Perm loaded: " + perm.getName());
 			perm = this.getParentPerm(permSet, perm.getParentPermId());
 			if( perm != null ) {
 				return addParentPermId(permSet, perm);

@@ -1037,7 +1037,7 @@ public class MUserDetails extends Model {
 	@SuppressWarnings("unchecked")
 	public Out updateUserPersonalInfo( In in ) {
 		
-		Out out = this.checkAuthorization( );
+		Out out = this.checkAuthorization( ); 
 		if( out.getStatusCode() != 1 ){
 			out.setStatusCode( 100 );
 			return out;

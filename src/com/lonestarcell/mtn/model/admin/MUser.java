@@ -32,6 +32,8 @@ import com.lonestarcell.mtn.spring.user.entity.User;
 import com.lonestarcell.mtn.spring.user.repo.UserRepo;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class MUser extends Model {
 
@@ -1013,6 +1015,12 @@ public class MUser extends Model {
 				// "Admin username: "+username+" Session: "+userSession );
 				out.setMsg("Not authorized [ Authorization session expired. ]");
 				out.setStatusCode(403);
+				
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
+				
 				return out;
 			}
 

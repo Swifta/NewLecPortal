@@ -51,57 +51,6 @@ public class ModelTest {
 		Assert.assertTrue( out.getStatusCode() == 1 );
 	}
 	
-	
-	@Test
-	@Ignore
-	public void setFinanceUserIdTest(){
-			
-		InUserDetails inData = new InUserDetails();
-		inData.setUsername( "admin3" );
-		inData.setUserSession( "v9ql8pjlo6mm2agoqrcl2h6jg2" );
-		
-		
-		inData.setRecord( new BeanItem<>( new OutUserDetails(), OutUserDetails.class ) );
-		
-		BData<InUserDetails> bData = new BData<>();
-		bData.setData( inData );
-		
-		In in = new In();
-		in.setData( bData );
-		
-		Out out = m.setFinanceUserId( in );
-		Assert.assertNotNull( out );
-		log.debug( "Set Finance user id msg: "+out.getMsg() );
-		log.debug( "Set Finance user id status: "+out.getStatusCode() );
-		log.debug( "Finance user id: "+inData.getRecord().getItemProperty( "userId" ).getValue() );
-		
-		Assert.assertTrue( out.getStatusCode() == 1 );
-	}
-	
-	@Test
-	@Ignore
-	public void setBackofficeUserIdTest(){
-			
-		InUserDetails inData = new InUserDetails();
-		inData.setUsername( "admin2" );
-		inData.setUserSession( "v9ql8pjlo6mm2agoqrcl2h6jg2" );
-		
-		
-		inData.setRecord( new BeanItem<>( new OutUserDetails(), OutUserDetails.class ) );
-		
-		BData<InUserDetails> bData = new BData<>();
-		bData.setData( inData );
-		
-		In in = new In();
-		in.setData( bData );
-		
-		Out out = m.setBackofficeUserId( in );
-		Assert.assertNotNull( out );
-		log.debug( "Set backoffice user id msg: "+out.getMsg() );
-		log.debug( "Set backoffice user id status: "+out.getStatusCode() );
-		log.debug( "Backoffice user id: "+inData.getRecord().getItemProperty( "userId" ).getValue() );
-		
-		Assert.assertTrue( out.getStatusCode() == 1 );
-	}
+
 
 }

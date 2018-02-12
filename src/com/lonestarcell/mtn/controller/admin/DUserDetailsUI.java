@@ -139,7 +139,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			is = true;
 		}
 		
-		log.info( "Is permission "+btn.getCaption()+" of id "+permId+" on?: "+is );
+		log.debug( "Is permission "+btn.getCaption()+" of id "+permId+" on?: "+is );
 		return is;
 		
 	}
@@ -301,6 +301,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 		
 		if( record != null ) {
 			
+			
 			InUserDetails inData = new InUserDetails();
 			setAuth( inData );
 			inData.setRecord( record );
@@ -310,11 +311,12 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 			
 			In in = new In();
 			in.setData( bData );
+			
 			Out out = null;
-			if( getCurrentUserProfileId() == 1 ) {
-				out =  new MUserDetails(  getCurrentUserId(), getCurrentUserSession()  ).setUserDetails(in );
+			if( getCurrentUserId() != Long.valueOf( record.getItemProperty( "userId" ).getValue().toString() ) ) {
+								out =  new MUserDetails(  getCurrentUserId(), getCurrentUserSession()  ).setUserDetails(in );
 			} else {
-				out =  new MUserSelfCare().setUserDetails(in );
+				out =  new MUserSelfCare().setUserDetails( in ); 
 			}
 			return out.getStatusCode() == 1;
 		
@@ -457,7 +459,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 				
 				// Only show this if change pass button is not on
 				if( !record.getItemProperty( "changePass" ).getValue().toString().trim().equals( "1" ) ){
-					btnUserExpireSession.setVisible( true );
+					btnUserExpireSession.setVisible( true ); 
 				}
 				
 			}
@@ -504,6 +506,7 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 				record.getItemProperty( "userStatus" ).setValue( "Registered" );
 			} else {
 				record.getItemProperty( "userStatus" ).setValue( "Unknown" );
+				log.info( "Unknown user status: "+record.getItemProperty( "userStatus" ).getValue() );
 			}
 			
 		}
@@ -670,8 +673,8 @@ public class DUserDetailsUI extends DUserDetailsUIDesign implements
 	}
 	
 
-	private int getCurrentUserProfileId(){
-		return ( int ) UI.getCurrent().getSession().getAttribute( DLoginUIController.PROFILE_ID );
+	private short getCurrentUserProfileId(){
+		return Short.valueOf( UI.getCurrent().getSession().getAttribute( DLoginUIController.PROFILE_ID ).toString() );
 	}
 	
 	private long getCurrentUserId(){

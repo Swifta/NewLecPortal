@@ -11,8 +11,11 @@ import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 
 import com.lonestarcell.mtn.bean.BData;
+import com.lonestarcell.mtn.bean.InUserDetails;
 import com.lonestarcell.mtn.bean.Out;
 import com.lonestarcell.mtn.model.util.JDBCPoolManager;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class ModelSelfCare {
 	protected static DataSource dataSource;
@@ -28,7 +31,7 @@ public class ModelSelfCare {
 		}
 	}
 
-	public ModelSelfCare() {
+	protected ModelSelfCare() {
 		try {
 			if( dataSource == null )
 				throw new IllegalStateException( "Data source is null." );
@@ -87,13 +90,16 @@ public class ModelSelfCare {
 	}
 	
 	
-	public Out setAuthUserId( String username, String userSession ) {
+	public Out setAuthUserId( InUserDetails inUser ) {
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
 		out = new Out();
+		
+		String username = inUser.getUsername();
+		String userSession = inUser.getUserSession();
 		
 		
 		
@@ -130,6 +136,12 @@ public class ModelSelfCare {
 				// log.debug( "Admin username: "+username+" Session: "+userSession );
 				out.setMsg( "Not authorized [ Authorization session expired. ]" );
 				out.setStatusCode( 403 );
+				
+				if( UI.getCurrent() != null ){
+					Notification.show( "Login session expired. Please login again.", Notification.Type.ERROR_MESSAGE );
+					UI.getCurrent().getNavigator().navigateTo( "login" );
+				}
+				
 				return out;
 			}
 					
@@ -144,6 +156,7 @@ public class ModelSelfCare {
 			BData<Long> bOutData = new BData<>();
 			bOutData.setData(  rs.getLong( "user_id" ) );
 			out.setData( bOutData );
+			
 			
 			
 			out.setStatusCode( 1 );

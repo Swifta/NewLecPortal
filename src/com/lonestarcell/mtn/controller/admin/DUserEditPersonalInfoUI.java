@@ -124,13 +124,14 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 						
 					}
 				
-				} catch( Exception e ){
+				} catch( Exception ex ){
 					
 					Notification.show( "Error occured. Please try again / Contact support",
 							Notification.Type.ERROR_MESSAGE );
 					lbErrorMsg.removeStyleName("sn-display-none");
 					lbNormalMsg.addStyleName("sn-display-none");
 					lbErrorMsg.setValue( "Error occured. Please try again / Contact support"  );
+					ex.printStackTrace();
 					
 				}
 				
@@ -144,7 +145,6 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 		
 		InUserDetails inData = new InUserDetails();
 		setAuth( inData );
-		
 		record.getItemProperty( "email" ).setValue( record.getItemProperty( "newEmail" ).getValue() );
 		
 		inData.setRecord( record );
@@ -273,6 +273,8 @@ public class DUserEditPersonalInfoUI extends DEditPersonalInfoUIDesign implement
 		InUserDetails inData = new InUserDetails();
 		inData.setUsername( username );
 		inData.setRecord( record );
+		
+		this.setAuth( inData );
 		
 		BData<InUserDetails> bData = new BData<>();
 		bData.setData( inData );

@@ -322,6 +322,7 @@ public class DUserSelfCareUI extends DUserDetailsUIDesign implements
 		
 		if( record != null ) {
 			
+			log.info( "Refresh record running... ", this );
 			InUserDetails inData = new InUserDetails();
 			setAuth( inData );
 			inData.setRecord( record );

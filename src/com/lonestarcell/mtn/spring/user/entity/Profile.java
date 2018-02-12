@@ -1,11 +1,8 @@
 package com.lonestarcell.mtn.spring.user.entity;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.Proxy;
-
 import java.util.List;
 
 
